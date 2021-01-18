@@ -1,0 +1,6 @@
+{
+  "id": "Country",
+  "extends": {
+    "def": "https://raw.githubusercontent.com/datatug/datatug-meta-iso/main/geo/country/country.json"
+  }
+}
