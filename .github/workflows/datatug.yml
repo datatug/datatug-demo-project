@@ -30,7 +30,7 @@ jobs:
         run: echo Hello, world!
 
       - name: DataTug
-        uses: datatug/datatug-github-action@v0.0.1-alpha
+        uses: datatug/datatug-github-action@main
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
