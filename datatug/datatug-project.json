@@ -15,5 +15,11 @@
     }
   ],
   "environments": [
+    {
+      "id": "local"
+    },
+    {
+      "id": "prod"
+    }
   ]
 }
