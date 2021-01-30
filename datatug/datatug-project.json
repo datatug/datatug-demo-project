@@ -12,6 +12,9 @@
   "entities": [
     {
       "id": "Country"
+    },
+    {
+      "id": "Person"
     }
   ],
   "environments": [

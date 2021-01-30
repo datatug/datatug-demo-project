@@ -1,0 +1,6 @@
+[
+  {
+    "id": "Country",
+    "note": "Defines fields specific to a country, e.g. ISO code, name, population, etc."
+  }
+]

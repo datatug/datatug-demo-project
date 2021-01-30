@@ -1,0 +1,11 @@
+{
+  "id": "Person",
+  "fields": [
+    {
+      "id": "id"
+    },
+    {
+      "id": "name"
+    }
+  ]
+}
