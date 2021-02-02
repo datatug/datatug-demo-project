@@ -1,0 +1,17 @@
+type: recordset
+format: json
+
+fields:
+  - name: code
+    type: string
+    required: true
+    entity:
+      name: Country
+      field: alpha2
+
+  - name: name
+    type: string
+    required: true
+    entity:
+      name: Country
+      field: name
