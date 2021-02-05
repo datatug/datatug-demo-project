@@ -1,0 +1,7 @@
+{
+  "name": "title",
+  "code": "id",
+  "currencies": {
+    "alpha2": "currency"
+  }
+}

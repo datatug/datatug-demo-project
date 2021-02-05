@@ -1,0 +1,26 @@
+{
+  "title": "Countries",
+  "type": "recordset",
+  "format": "json",
+  "tags": ["geo", "country", "countries"],
+  "columns": [
+    {
+      "name": "code",
+      "type": "string",
+      "required": true,
+      "meta": {
+        "entity": "Country",
+        "field": "alpha2"
+      }
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": true,
+      "meta": {
+        "entity": "Country",
+        "field": "name"
+      }
+    }
+  ]
+}
