@@ -1,0 +1,13 @@
+{
+	"id": "chinook",
+	"environments": [
+		{
+			"id": "local",
+			"Databases": [
+				{
+					"id": "chinook"
+				}
+			]
+		}
+	]
+}

@@ -1,28 +1,25 @@
 {
-  "id": "datatug-demo-project",
-  "title": "DataTug Demo Project",
-  "created": {
-    "at": "2020-11-02T22:22:13.1313277Z"
-  },
-  "access": "public",
-  "dbModels": [
-  ],
-  "boards": [
-  ],
-  "entities": [
-    {
-      "id": "Country"
-    },
-    {
-      "id": "Person"
-    }
-  ],
-  "environments": [
-    {
-      "id": "local"
-    },
-    {
-      "id": "prod"
-    }
-  ]
+	"id": "datatug-demo-project",
+	"created": {
+		"at": "2020-11-02T22:22:13.1313277Z"
+	},
+	"access": "public",
+	"dbModels": [
+		{
+			"id": "chinook",
+			"numberOf": {
+				"schemas": 1,
+				"tables": 11,
+				"views": 0
+			}
+		}
+	],
+	"environments": [
+		{
+			"id": "prod"
+		},
+		{
+			"id": "local"
+		}
+	]
 }

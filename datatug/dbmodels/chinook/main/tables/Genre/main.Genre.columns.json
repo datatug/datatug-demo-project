@@ -1,0 +1,27 @@
+{
+	"columns": [
+		{
+			"name": "GenreId",
+			"ordinalPosition": 0,
+			"pkPosition": 1,
+			"isNullable": false,
+			"dbType": "INTEGER",
+			"byEnv": {
+				"local": {
+					"status": "exists"
+				}
+			}
+		},
+		{
+			"name": "Name",
+			"ordinalPosition": 0,
+			"isNullable": true,
+			"dbType": "NVARCHAR(120)",
+			"byEnv": {
+				"local": {
+					"status": "exists"
+				}
+			}
+		}
+	]
+}

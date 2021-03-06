@@ -1,0 +1,38 @@
+{
+	"columns": [
+		{
+			"name": "AlbumId",
+			"ordinalPosition": 0,
+			"pkPosition": 1,
+			"isNullable": false,
+			"dbType": "INTEGER",
+			"byEnv": {
+				"local": {
+					"status": "exists"
+				}
+			}
+		},
+		{
+			"name": "Title",
+			"ordinalPosition": 0,
+			"isNullable": false,
+			"dbType": "NVARCHAR(160)",
+			"byEnv": {
+				"local": {
+					"status": "exists"
+				}
+			}
+		},
+		{
+			"name": "ArtistId",
+			"ordinalPosition": 0,
+			"isNullable": false,
+			"dbType": "INTEGER",
+			"byEnv": {
+				"local": {
+					"status": "exists"
+				}
+			}
+		}
+	]
+}

@@ -1,0 +1,121 @@
+{
+	"dbType": "BASE TABLE",
+	"primaryKey": {
+		"name": "PK_Invoice",
+		"columns": [
+			"InvoiceId"
+		]
+	},
+	"foreignKeys": [
+		{
+			"name": "FK_Invoice2{Customer true}_CustomerId",
+			"columns": [
+				"CustomerId"
+			],
+			"refTable": {
+				"name": "Customer",
+				"schema": "main"
+			},
+			"matchOption": "NONE",
+			"updateRule": "NO ACTION",
+			"deleteRule": "NO ACTION"
+		}
+	],
+	"referencedBy": [
+		{
+			"name": "InvoiceLine",
+			"schema": "main",
+			"foreignKeys": [
+				{
+					"name": "FK_InvoiceLine2{Invoice true}_InvoiceId",
+					"columns": [
+						"InvoiceId"
+					],
+					"matchOption": "NONE",
+					"updateRule": "NO ACTION",
+					"deleteRule": "NO ACTION"
+				}
+			]
+		}
+	],
+	"columns": [
+		{
+			"name": "InvoiceId",
+			"ordinalPosition": 0,
+			"pkPosition": 1,
+			"isNullable": false,
+			"dbType": "INTEGER"
+		},
+		{
+			"name": "CustomerId",
+			"ordinalPosition": 0,
+			"isNullable": false,
+			"dbType": "INTEGER"
+		},
+		{
+			"name": "InvoiceDate",
+			"ordinalPosition": 0,
+			"isNullable": false,
+			"dbType": "DATETIME"
+		},
+		{
+			"name": "BillingAddress",
+			"ordinalPosition": 0,
+			"isNullable": true,
+			"dbType": "NVARCHAR(70)"
+		},
+		{
+			"name": "BillingCity",
+			"ordinalPosition": 0,
+			"isNullable": true,
+			"dbType": "NVARCHAR(40)"
+		},
+		{
+			"name": "BillingState",
+			"ordinalPosition": 0,
+			"isNullable": true,
+			"dbType": "NVARCHAR(40)"
+		},
+		{
+			"name": "BillingCountry",
+			"ordinalPosition": 0,
+			"isNullable": true,
+			"dbType": "NVARCHAR(40)"
+		},
+		{
+			"name": "BillingPostalCode",
+			"ordinalPosition": 0,
+			"isNullable": true,
+			"dbType": "NVARCHAR(10)"
+		},
+		{
+			"name": "Total",
+			"ordinalPosition": 0,
+			"isNullable": false,
+			"dbType": "NUMERIC(10,2)"
+		}
+	],
+	"indexes": [
+		{
+			"name": "IFK_InvoiceCustomerId",
+			"type": "",
+			"origin": "c",
+			"columns": [
+				{
+					"name": "CustomerId"
+				}
+			]
+		},
+		{
+			"name": "IPK_Invoice",
+			"type": "",
+			"origin": "c",
+			"columns": [
+				{
+					"name": "InvoiceId"
+				}
+			],
+			"unique": true
+		}
+	]
+}

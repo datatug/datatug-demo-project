@@ -1,0 +1,104 @@
+{
+	"columns": [
+		{
+			"name": "InvoiceId",
+			"ordinalPosition": 0,
+			"pkPosition": 1,
+			"isNullable": false,
+			"dbType": "INTEGER",
+			"byEnv": {
+				"local": {
+					"status": "exists"
+				}
+			}
+		},
+		{
+			"name": "CustomerId",
+			"ordinalPosition": 0,
+			"isNullable": false,
+			"dbType": "INTEGER",
+			"byEnv": {
+				"local": {
+					"status": "exists"
+				}
+			}
+		},
+		{
+			"name": "InvoiceDate",
+			"ordinalPosition": 0,
+			"isNullable": false,
+			"dbType": "DATETIME",
+			"byEnv": {
+				"local": {
+					"status": "exists"
+				}
+			}
+		},
+		{
+			"name": "BillingAddress",
+			"ordinalPosition": 0,
+			"isNullable": true,
+			"dbType": "NVARCHAR(70)",
+			"byEnv": {
+				"local": {
+					"status": "exists"
+				}
+			}
+		},
+		{
+			"name": "BillingCity",
+			"ordinalPosition": 0,
+			"isNullable": true,
+			"dbType": "NVARCHAR(40)",
+			"byEnv": {
+				"local": {
+					"status": "exists"
+				}
+			}
+		},
+		{
+			"name": "BillingState",
+			"ordinalPosition": 0,
+			"isNullable": true,
+			"dbType": "NVARCHAR(40)",
+			"byEnv": {
+				"local": {
+					"status": "exists"
+				}
+			}
+		},
+		{
+			"name": "BillingCountry",
+			"ordinalPosition": 0,
+			"isNullable": true,
+			"dbType": "NVARCHAR(40)",
+			"byEnv": {
+				"local": {
+					"status": "exists"
+				}
+			}
+		},
+		{
+			"name": "BillingPostalCode",
+			"ordinalPosition": 0,
+			"isNullable": true,
+			"dbType": "NVARCHAR(10)",
+			"byEnv": {
+				"local": {
+					"status": "exists"
+				}
+			}
+		},
+		{
+			"name": "Total",
+			"ordinalPosition": 0,
+			"isNullable": false,
+			"dbType": "NUMERIC(10,2)",
+			"byEnv": {
+				"local": {
+					"status": "exists"
+				}
+			}
+		}
+	]
+}

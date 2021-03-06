@@ -1,0 +1,28 @@
+{
+	"columns": [
+		{
+			"name": "PlaylistId",
+			"ordinalPosition": 0,
+			"pkPosition": 1,
+			"isNullable": false,
+			"dbType": "INTEGER",
+			"byEnv": {
+				"local": {
+					"status": "exists"
+				}
+			}
+		},
+		{
+			"name": "TrackId",
+			"ordinalPosition": 0,
+			"pkPosition": 2,
+			"isNullable": false,
+			"dbType": "INTEGER",
+			"byEnv": {
+				"local": {
+					"status": "exists"
+				}
+			}
+		}
+	]
+}

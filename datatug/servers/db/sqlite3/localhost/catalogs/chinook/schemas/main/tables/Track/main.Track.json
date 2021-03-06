@@ -1,0 +1,182 @@
+{
+	"dbType": "BASE TABLE",
+	"primaryKey": {
+		"name": "PK_Track",
+		"columns": [
+			"TrackId"
+		]
+	},
+	"foreignKeys": [
+		{
+			"name": "FK_Track2{MediaType true}_MediaTypeId",
+			"columns": [
+				"MediaTypeId"
+			],
+			"refTable": {
+				"name": "MediaType",
+				"schema": "main"
+			},
+			"matchOption": "NONE",
+			"updateRule": "NO ACTION",
+			"deleteRule": "NO ACTION"
+		},
+		{
+			"name": "FK_Track2{Genre true}_GenreId",
+			"columns": [
+				"GenreId"
+			],
+			"refTable": {
+				"name": "Genre",
+				"schema": "main"
+			},
+			"matchOption": "NONE",
+			"updateRule": "NO ACTION",
+			"deleteRule": "NO ACTION"
+		},
+		{
+			"name": "FK_Track2{Album true}_AlbumId",
+			"columns": [
+				"AlbumId"
+			],
+			"refTable": {
+				"name": "Album",
+				"schema": "main"
+			},
+			"matchOption": "NONE",
+			"updateRule": "NO ACTION",
+			"deleteRule": "NO ACTION"
+		}
+	],
+	"referencedBy": [
+		{
+			"name": "InvoiceLine",
+			"schema": "main",
+			"foreignKeys": [
+				{
+					"name": "FK_InvoiceLine2{Track true}_TrackId",
+					"columns": [
+						"TrackId"
+					],
+					"matchOption": "NONE",
+					"updateRule": "NO ACTION",
+					"deleteRule": "NO ACTION"
+				}
+			]
+		},
+		{
+			"name": "PlaylistTrack",
+			"schema": "main",
+			"foreignKeys": [
+				{
+					"name": "FK_PlaylistTrack2{Track true}_TrackId",
+					"columns": [
+						"TrackId"
+					],
+					"matchOption": "NONE",
+					"updateRule": "NO ACTION",
+					"deleteRule": "NO ACTION"
+				}
+			]
+		}
+	],
+	"columns": [
+		{
+			"name": "TrackId",
+			"ordinalPosition": 0,
+			"pkPosition": 1,
+			"isNullable": false,
+			"dbType": "INTEGER"
+		},
+		{
+			"name": "Name",
+			"ordinalPosition": 0,
+			"isNullable": false,
+			"dbType": "NVARCHAR(200)"
+		},
+		{
+			"name": "AlbumId",
+			"ordinalPosition": 0,
+			"isNullable": true,
+			"dbType": "INTEGER"
+		},
+		{
+			"name": "MediaTypeId",
+			"ordinalPosition": 0,
+			"isNullable": false,
+			"dbType": "INTEGER"
+		},
+		{
+			"name": "GenreId",
+			"ordinalPosition": 0,
+			"isNullable": true,
+			"dbType": "INTEGER"
+		},
+		{
+			"name": "Composer",
+			"ordinalPosition": 0,
+			"isNullable": true,
+			"dbType": "NVARCHAR(220)"
+		},
+		{
+			"name": "Milliseconds",
+			"ordinalPosition": 0,
+			"isNullable": false,
+			"dbType": "INTEGER"
+		},
+		{
+			"name": "Bytes",
+			"ordinalPosition": 0,
+			"isNullable": true,
+			"dbType": "INTEGER"
+		},
+		{
+			"name": "UnitPrice",
+			"ordinalPosition": 0,
+			"isNullable": false,
+			"dbType": "NUMERIC(10,2)"
+		}
+	],
+	"indexes": [
+		{
+			"name": "IFK_TrackMediaTypeId",
+			"type": "",
+			"origin": "c",
+			"columns": [
+				{
+					"name": "MediaTypeId"
+				}
+			]
+		},
+		{
+			"name": "IFK_TrackGenreId",
+			"type": "",
+			"origin": "c",
+			"columns": [
+				{
+					"name": "GenreId"
+				}
+			]
+		},
+		{
+			"name": "IFK_TrackAlbumId",
+			"type": "",
+			"origin": "c",
+			"columns": [
+				{
+					"name": "AlbumId"
+				}
+			]
+		},
+		{
+			"name": "IPK_Track",
+			"type": "",
+			"origin": "c",
+			"columns": [
+				{
+					"name": "TrackId"
+				}
+			],
+			"unique": true
+		}
+	]
+}

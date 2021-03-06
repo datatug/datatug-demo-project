@@ -1,0 +1,6 @@
+[
+	{
+		"driver": "sqlite3",
+		"host": "localhost"
+	}
+]

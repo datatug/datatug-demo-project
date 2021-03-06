@@ -1,0 +1,95 @@
+{
+	"dbType": "BASE TABLE",
+	"primaryKey": {
+		"name": "PK_PlaylistTrack",
+		"columns": [
+			"PlaylistId",
+			"TrackId"
+		]
+	},
+	"foreignKeys": [
+		{
+			"name": "FK_PlaylistTrack2{Track true}_TrackId",
+			"columns": [
+				"TrackId"
+			],
+			"refTable": {
+				"name": "Track",
+				"schema": "main"
+			},
+			"matchOption": "NONE",
+			"updateRule": "NO ACTION",
+			"deleteRule": "NO ACTION"
+		},
+		{
+			"name": "FK_PlaylistTrack2{Playlist true}_PlaylistId",
+			"columns": [
+				"PlaylistId"
+			],
+			"refTable": {
+				"name": "Playlist",
+				"schema": "main"
+			},
+			"matchOption": "NONE",
+			"updateRule": "NO ACTION",
+			"deleteRule": "NO ACTION"
+		}
+	],
+	"columns": [
+		{
+			"name": "PlaylistId",
+			"ordinalPosition": 0,
+			"pkPosition": 1,
+			"isNullable": false,
+			"dbType": "INTEGER"
+		},
+		{
+			"name": "TrackId",
+			"ordinalPosition": 0,
+			"pkPosition": 2,
+			"isNullable": false,
+			"dbType": "INTEGER"
+		}
+	],
+	"indexes": [
+		{
+			"name": "IFK_PlaylistTrackTrackId",
+			"type": "",
+			"origin": "c",
+			"columns": [
+				{
+					"name": "TrackId"
+				}
+			]
+		},
+		{
+			"name": "IPK_PlaylistTrack",
+			"type": "",
+			"origin": "c",
+			"columns": [
+				{
+					"name": "PlaylistId"
+				},
+				{
+					"name": "TrackId"
+				}
+			],
+			"unique": true
+		},
+		{
+			"name": "sqlite_autoindex_PlaylistTrack_1",
+			"type": "",
+			"origin": "pk",
+			"columns": [
+				{
+					"name": "PlaylistId"
+				},
+				{
+					"name": "TrackId"
+				}
+			],
+			"unique": true,
+			"primaryKey": true
+		}
+	]
+}

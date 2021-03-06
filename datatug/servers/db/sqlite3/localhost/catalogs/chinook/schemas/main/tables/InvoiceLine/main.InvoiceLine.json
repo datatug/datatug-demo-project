@@ -1,0 +1,103 @@
+{
+	"dbType": "BASE TABLE",
+	"primaryKey": {
+		"name": "PK_InvoiceLine",
+		"columns": [
+			"InvoiceLineId"
+		]
+	},
+	"foreignKeys": [
+		{
+			"name": "FK_InvoiceLine2{Track true}_TrackId",
+			"columns": [
+				"TrackId"
+			],
+			"refTable": {
+				"name": "Track",
+				"schema": "main"
+			},
+			"matchOption": "NONE",
+			"updateRule": "NO ACTION",
+			"deleteRule": "NO ACTION"
+		},
+		{
+			"name": "FK_InvoiceLine2{Invoice true}_InvoiceId",
+			"columns": [
+				"InvoiceId"
+			],
+			"refTable": {
+				"name": "Invoice",
+				"schema": "main"
+			},
+			"matchOption": "NONE",
+			"updateRule": "NO ACTION",
+			"deleteRule": "NO ACTION"
+		}
+	],
+	"columns": [
+		{
+			"name": "InvoiceLineId",
+			"ordinalPosition": 0,
+			"pkPosition": 1,
+			"isNullable": false,
+			"dbType": "INTEGER"
+		},
+		{
+			"name": "InvoiceId",
+			"ordinalPosition": 0,
+			"isNullable": false,
+			"dbType": "INTEGER"
+		},
+		{
+			"name": "TrackId",
+			"ordinalPosition": 0,
+			"isNullable": false,
+			"dbType": "INTEGER"
+		},
+		{
+			"name": "UnitPrice",
+			"ordinalPosition": 0,
+			"isNullable": false,
+			"dbType": "NUMERIC(10,2)"
+		},
+		{
+			"name": "Quantity",
+			"ordinalPosition": 0,
+			"isNullable": false,
+			"dbType": "INTEGER"
+		}
+	],
+	"indexes": [
+		{
+			"name": "IFK_InvoiceLineTrackId",
+			"type": "",
+			"origin": "c",
+			"columns": [
+				{
+					"name": "TrackId"
+				}
+			]
+		},
+		{
+			"name": "IFK_InvoiceLineInvoiceId",
+			"type": "",
+			"origin": "c",
+			"columns": [
+				{
+					"name": "InvoiceId"
+				}
+			]
+		},
+		{
+			"name": "IPK_InvoiceLine",
+			"type": "",
+			"origin": "c",
+			"columns": [
+				{
+					"name": "InvoiceLineId"
+				}
+			],
+			"unique": true
+		}
+	]
+}

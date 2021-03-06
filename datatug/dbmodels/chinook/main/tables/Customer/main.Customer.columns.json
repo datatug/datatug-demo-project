@@ -1,0 +1,148 @@
+{
+	"columns": [
+		{
+			"name": "CustomerId",
+			"ordinalPosition": 0,
+			"pkPosition": 1,
+			"isNullable": false,
+			"dbType": "INTEGER",
+			"byEnv": {
+				"local": {
+					"status": "exists"
+				}
+			}
+		},
+		{
+			"name": "FirstName",
+			"ordinalPosition": 0,
+			"isNullable": false,
+			"dbType": "NVARCHAR(40)",
+			"byEnv": {
+				"local": {
+					"status": "exists"
+				}
+			}
+		},
+		{
+			"name": "LastName",
+			"ordinalPosition": 0,
+			"isNullable": false,
+			"dbType": "NVARCHAR(20)",
+			"byEnv": {
+				"local": {
+					"status": "exists"
+				}
+			}
+		},
+		{
+			"name": "Company",
+			"ordinalPosition": 0,
+			"isNullable": true,
+			"dbType": "NVARCHAR(80)",
+			"byEnv": {
+				"local": {
+					"status": "exists"
+				}
+			}
+		},
+		{
+			"name": "Address",
+			"ordinalPosition": 0,
+			"isNullable": true,
+			"dbType": "NVARCHAR(70)",
+			"byEnv": {
+				"local": {
+					"status": "exists"
+				}
+			}
+		},
+		{
+			"name": "City",
+			"ordinalPosition": 0,
+			"isNullable": true,
+			"dbType": "NVARCHAR(40)",
+			"byEnv": {
+				"local": {
+					"status": "exists"
+				}
+			}
+		},
+		{
+			"name": "State",
+			"ordinalPosition": 0,
+			"isNullable": true,
+			"dbType": "NVARCHAR(40)",
+			"byEnv": {
+				"local": {
+					"status": "exists"
+				}
+			}
+		},
+		{
+			"name": "Country",
+			"ordinalPosition": 0,
+			"isNullable": true,
+			"dbType": "NVARCHAR(40)",
+			"byEnv": {
+				"local": {
+					"status": "exists"
+				}
+			}
+		},
+		{
+			"name": "PostalCode",
+			"ordinalPosition": 0,
+			"isNullable": true,
+			"dbType": "NVARCHAR(10)",
+			"byEnv": {
+				"local": {
+					"status": "exists"
+				}
+			}
+		},
+		{
+			"name": "Phone",
+			"ordinalPosition": 0,
+			"isNullable": true,
+			"dbType": "NVARCHAR(24)",
+			"byEnv": {
+				"local": {
+					"status": "exists"
+				}
+			}
+		},
+		{
+			"name": "Fax",
+			"ordinalPosition": 0,
+			"isNullable": true,
+			"dbType": "NVARCHAR(24)",
+			"byEnv": {
+				"local": {
+					"status": "exists"
+				}
+			}
+		},
+		{
+			"name": "Email",
+			"ordinalPosition": 0,
+			"isNullable": false,
+			"dbType": "NVARCHAR(60)",
+			"byEnv": {
+				"local": {
+					"status": "exists"
+				}
+			}
+		},
+		{
+			"name": "SupportRepId",
+			"ordinalPosition": 0,
+			"isNullable": true,
+			"dbType": "INTEGER",
+			"byEnv": {
+				"local": {
+					"status": "exists"
+				}
+			}
+		}
+	]
+}

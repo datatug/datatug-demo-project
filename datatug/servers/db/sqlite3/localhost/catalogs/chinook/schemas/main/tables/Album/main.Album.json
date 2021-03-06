@@ -1,0 +1,85 @@
+{
+	"dbType": "BASE TABLE",
+	"primaryKey": {
+		"name": "PK_Album",
+		"columns": [
+			"AlbumId"
+		]
+	},
+	"foreignKeys": [
+		{
+			"name": "FK_Album2{Artist true}_ArtistId",
+			"columns": [
+				"ArtistId"
+			],
+			"refTable": {
+				"name": "Artist",
+				"schema": "main"
+			},
+			"matchOption": "NONE",
+			"updateRule": "NO ACTION",
+			"deleteRule": "NO ACTION"
+		}
+	],
+	"referencedBy": [
+		{
+			"name": "Track",
+			"schema": "main",
+			"foreignKeys": [
+				{
+					"name": "FK_Track2{Album true}_AlbumId",
+					"columns": [
+						"AlbumId"
+					],
+					"matchOption": "NONE",
+					"updateRule": "NO ACTION",
+					"deleteRule": "NO ACTION"
+				}
+			]
+		}
+	],
+	"columns": [
+		{
+			"name": "AlbumId",
+			"ordinalPosition": 0,
+			"pkPosition": 1,
+			"isNullable": false,
+			"dbType": "INTEGER"
+		},
+		{
+			"name": "Title",
+			"ordinalPosition": 0,
+			"isNullable": false,
+			"dbType": "NVARCHAR(160)"
+		},
+		{
+			"name": "ArtistId",
+			"ordinalPosition": 0,
+			"isNullable": false,
+			"dbType": "INTEGER"
+		}
+	],
+	"indexes": [
+		{
+			"name": "IFK_AlbumArtistId",
+			"type": "",
+			"origin": "c",
+			"columns": [
+				{
+					"name": "ArtistId"
+				}
+			]
+		},
+		{
+			"name": "IPK_Album",
+			"type": "",
+			"origin": "c",
+			"columns": [
+				{
+					"name": "AlbumId"
+				}
+			],
+			"unique": true
+		}
+	]
+}

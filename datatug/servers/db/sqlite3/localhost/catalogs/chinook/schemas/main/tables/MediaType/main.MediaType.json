@@ -1,0 +1,54 @@
+{
+	"dbType": "BASE TABLE",
+	"primaryKey": {
+		"name": "PK_MediaType",
+		"columns": [
+			"MediaTypeId"
+		]
+	},
+	"referencedBy": [
+		{
+			"name": "Track",
+			"schema": "main",
+			"foreignKeys": [
+				{
+					"name": "FK_Track2{MediaType true}_MediaTypeId",
+					"columns": [
+						"MediaTypeId"
+					],
+					"matchOption": "NONE",
+					"updateRule": "NO ACTION",
+					"deleteRule": "NO ACTION"
+				}
+			]
+		}
+	],
+	"columns": [
+		{
+			"name": "MediaTypeId",
+			"ordinalPosition": 0,
+			"pkPosition": 1,
+			"isNullable": false,
+			"dbType": "INTEGER"
+		},
+		{
+			"name": "Name",
+			"ordinalPosition": 0,
+			"isNullable": true,
+			"dbType": "NVARCHAR(120)"
+		}
+	],
+	"indexes": [
+		{
+			"name": "IPK_MediaType",
+			"type": "",
+			"origin": "c",
+			"columns": [
+				{
+					"name": "MediaTypeId"
+				}
+			],
+			"unique": true
+		}
+	]
+}
