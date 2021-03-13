@@ -2,7 +2,12 @@
 	{
 		"type": "table",
 		"schema": "main",
-		"name": "Album"
+		"name": "Playlist"
+	},
+	{
+		"type": "table",
+		"schema": "main",
+		"name": "Track"
 	},
 	{
 		"type": "table",
@@ -12,12 +17,7 @@
 	{
 		"type": "table",
 		"schema": "main",
-		"name": "Customer"
-	},
-	{
-		"type": "table",
-		"schema": "main",
-		"name": "Employee"
+		"name": "PlaylistTrack"
 	},
 	{
 		"type": "table",
@@ -32,7 +32,7 @@
 	{
 		"type": "table",
 		"schema": "main",
-		"name": "InvoiceLine"
+		"name": "Employee"
 	},
 	{
 		"type": "table",
@@ -42,16 +42,16 @@
 	{
 		"type": "table",
 		"schema": "main",
-		"name": "Playlist"
+		"name": "InvoiceLine"
 	},
 	{
 		"type": "table",
 		"schema": "main",
-		"name": "PlaylistTrack"
+		"name": "Album"
 	},
 	{
 		"type": "table",
 		"schema": "main",
-		"name": "Track"
+		"name": "Customer"
 	}
 ]

@@ -3,9 +3,17 @@
 	"environments": [
 		{
 			"id": "local",
-			"Databases": [
+			"DbCatalogs": [
 				{
-					"id": "chinook"
+					"id": "chinook-local.sqlite"
+				}
+			]
+		},
+		{
+			"id": "prod",
+			"DbCatalogs": [
+				{
+					"id": "chinook-prod.sqlite"
 				}
 			]
 		}

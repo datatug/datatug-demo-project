@@ -2,6 +2,8 @@
 	"driver": "sqlite3",
 	"host": "localhost",
 	"Catalogs": [
-		"chinook"
+		"chinook",
+		"chinook-local.sqlite",
+		"chinook-prod.sqlite"
 	]
 }

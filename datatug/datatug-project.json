@@ -16,10 +16,10 @@
 	],
 	"environments": [
 		{
-			"id": "prod"
+			"id": "local"
 		},
 		{
-			"id": "local"
+			"id": "prod"
 		}
 	]
 }
