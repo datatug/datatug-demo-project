@@ -2,10 +2,5 @@
 
 ## Catalogs
 
-
-- [chinook](dbcatalogs/chinook)
-
-- [chinook-local.sqlite](dbcatalogs/chinook-local.sqlite)
-
-- [chinook-prod.sqlite](dbcatalogs/chinook-prod.sqlite)
-
+- [chinook-local.sqlite](catalogs/chinook-local.sqlite)
+- [chinook-prod.sqlite](catalogs/chinook-prod.sqlite)

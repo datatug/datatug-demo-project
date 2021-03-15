@@ -7,8 +7,8 @@ datatug-demo-project
 - [chinook](dbmodels/chinook)
 
 ## [Environments](environments)
-- [local](dbmodels/local)
-- [prod](dbmodels/prod)
+- [prod](environments/prod)
+- [local](environments/local)
 
 ## [Boards](boards)
 

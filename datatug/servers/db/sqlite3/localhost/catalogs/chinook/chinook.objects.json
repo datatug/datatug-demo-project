@@ -2,12 +2,7 @@
 	{
 		"type": "table",
 		"schema": "main",
-		"name": "Playlist"
-	},
-	{
-		"type": "table",
-		"schema": "main",
-		"name": "Track"
+		"name": "MediaType"
 	},
 	{
 		"type": "table",
@@ -17,32 +12,12 @@
 	{
 		"type": "table",
 		"schema": "main",
-		"name": "PlaylistTrack"
-	},
-	{
-		"type": "table",
-		"schema": "main",
-		"name": "Genre"
-	},
-	{
-		"type": "table",
-		"schema": "main",
 		"name": "Invoice"
 	},
 	{
 		"type": "table",
 		"schema": "main",
-		"name": "Employee"
-	},
-	{
-		"type": "table",
-		"schema": "main",
-		"name": "MediaType"
-	},
-	{
-		"type": "table",
-		"schema": "main",
-		"name": "InvoiceLine"
+		"name": "Customer"
 	},
 	{
 		"type": "table",
@@ -52,6 +27,31 @@
 	{
 		"type": "table",
 		"schema": "main",
-		"name": "Customer"
+		"name": "PlaylistTrack"
+	},
+	{
+		"type": "table",
+		"schema": "main",
+		"name": "InvoiceLine"
+	},
+	{
+		"type": "table",
+		"schema": "main",
+		"name": "Employee"
+	},
+	{
+		"type": "table",
+		"schema": "main",
+		"name": "Genre"
+	},
+	{
+		"type": "table",
+		"schema": "main",
+		"name": "Playlist"
+	},
+	{
+		"type": "table",
+		"schema": "main",
+		"name": "Track"
 	}
 ]
