@@ -1,0 +1,4 @@
+{
+  "title": "Albums by title",
+  "text": "SELECT * FROM Album ORDER BY Title"
+}
