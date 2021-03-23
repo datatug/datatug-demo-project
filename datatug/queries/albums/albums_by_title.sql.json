@@ -5,6 +5,33 @@
       "id": "ArtistId",
       "type": "integer",
       "isRequired": false
+    },
+    {
+      "id": "AlbumId",
+      "type": "integer",
+      "isRequired": false
+    }
+  ],
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "id": "ArtistId",
+          "hideIf": {
+            "parameters": [
+              "ArtistId"
+            ]
+          }
+        },
+        {
+          "id": "ArtistName",
+          "hideIf": {
+            "parameters": [
+              "ArtistId"
+            ]
+          }
+        }
+      ]
     }
   ]
 }

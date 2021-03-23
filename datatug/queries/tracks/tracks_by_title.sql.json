@@ -1,0 +1,74 @@
+{
+  "title": "Tracks by title",
+  "parameters": [
+    {
+      "id": "ArtistId",
+      "type": "integer",
+      "isRequired": false
+    },
+    {
+      "id": "AlbumId",
+      "type": "integer",
+      "isRequired": false
+    }
+  ],
+  "recordsets": [
+    {
+      "widgets": [
+        {
+          "id": "lookup",
+          "sql": "SELECT MediaTypeId, Name FROM MediaType",
+          "columns": {
+            "fk": [
+              "MediaTypeId"
+            ],
+            "pk": [
+              "MediaTypeId"
+            ],
+            "show": [
+              "Name"
+            ]
+          }
+        }
+      ],
+      "columns": [
+        {
+          "name": "ArtistId",
+          "type": "integer",
+          "hideIf": {
+            "parameters": [
+              "ArtistId"
+            ]
+          }
+        },
+        {
+          "name": "ArtistName",
+          "type": "string",
+          "hideIf": {
+            "parameters": [
+              "ArtistId"
+            ]
+          }
+        },
+        {
+          "name": "AlbumId",
+          "type": "integer",
+          "hideIf": {
+            "parameters": [
+              "AlbumId"
+            ]
+          }
+        },
+        {
+          "name": "AlbumTitle",
+          "type": "string",
+          "hideIf": {
+            "parameters": [
+              "AlbumId"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
