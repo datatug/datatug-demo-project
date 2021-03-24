@@ -1,0 +1,22 @@
+{
+  "id": "InvoiceLine",
+  "fields": [
+    {
+      "id": "ID",
+      "type": "integer"
+    },
+    {
+      "id": "UnitPrice",
+      "type": "number"
+    },
+    {
+      "id": "Quantity",
+      "type": "number"
+    }
+  ],
+  "tables": [
+    {
+      "name": "InvoiceLine"
+    }
+  ]
+}

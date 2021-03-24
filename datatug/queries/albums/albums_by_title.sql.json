@@ -2,14 +2,22 @@
   "title": "Albums by title",
   "parameters": [
     {
-      "id": "ArtistId",
-      "type": "integer",
-      "isRequired": false
-    },
-    {
       "id": "AlbumId",
       "type": "integer",
-      "isRequired": false
+      "isRequired": false,
+      "meta": {
+        "entity": "Album",
+        "field": "ID"
+      }
+    },
+    {
+      "id": "ArtistId",
+      "type": "integer",
+      "isRequired": false,
+      "meta": {
+        "entity": "Artist",
+        "field": "ID"
+      }
     }
   ],
   "recordsets": [

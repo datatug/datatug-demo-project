@@ -1,0 +1,24 @@
+{
+  "id": "Album",
+  "fields": [
+    {
+      "id": "ID",
+      "type": "integer",
+      "namePatterns": [
+        {
+          "type": "exact",
+          "value": "ArtistId"
+        }
+      ]
+    },
+    {
+      "id": "Title",
+      "type": "string"
+    }
+  ],
+  "tables": [
+    {
+      "name": "Album"
+    }
+  ]
+}

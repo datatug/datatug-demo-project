@@ -1,0 +1,18 @@
+{
+  "id": "Artist",
+  "fields": [
+    {
+      "id": "ID",
+      "type": "integer"
+    },
+    {
+      "id": "Name",
+      "type": "string"
+    }
+  ],
+  "tables": [
+    {
+      "name": "Album"
+    }
+  ]
+}

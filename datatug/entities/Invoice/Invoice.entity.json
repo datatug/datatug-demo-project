@@ -1,0 +1,18 @@
+{
+  "id": "Invoice",
+  "fields": [
+    {
+      "id": "ID",
+      "type": "integer"
+    },
+    {
+      "id": "Total",
+      "type": "number"
+    }
+  ],
+  "tables": [
+    {
+      "name": "Invoice"
+    }
+  ]
+}
