@@ -4,6 +4,12 @@
 		"at": "2020-11-02T22:22:13.1313277Z"
 	},
 	"access": "public",
+	"boards": [
+		{
+			"id": "board1",
+			"title": "1st board"
+		}
+	],
 	"dbModels": [
 		{
 			"id": "chinook",
