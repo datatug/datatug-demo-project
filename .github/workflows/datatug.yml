@@ -30,4 +30,4 @@ jobs:
 
       - run: go install github.com/datatug/datatug-project-validator@v0.0.3
 
-      - run: datatug-project-validator ./datatug
+      - run: datatug-project-validator .
