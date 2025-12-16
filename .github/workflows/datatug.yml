@@ -28,6 +28,6 @@ jobs:
         with:
           go-version: 1.25
 
-      - run: go install github.com/datatug/datatug@v0.5.6
+      - run: go install github.com/datatug/datatug-project-validator
 
-      - run: datatug validate
+      - run: datatug-project-validator
