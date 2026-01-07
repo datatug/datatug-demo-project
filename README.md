@@ -1,4 +1,4 @@
-# datatug-demo-project
+# datatug-demo-projects
 A demo project for [DataTug.app](https://datatug.app)
 
 It can be run at: https://datatug.app/pwa/agent/github/project/datatug-demo-project@datatug
