@@ -100,11 +100,28 @@ jobs:
       - name: Vendored copy matches geo-ingitdb
         run: scripts/sync-geo-data.sh --check geo-ingitdb
 
+      # The datatug organization only allows a fixed list of third-party actions,
+      # which excludes ingitdb/ingitdb-action, so the pinned ingitdb-cli release is
+      # installed here with its SHA-256 checked (the same release and checks that
+      # action performs).
+      - name: Install pinned ingitdb CLI
+        env:
+          INGITDB_VERSION: 0.68.2
+          INGITDB_SHA256: d00ba83a02b64025884a495b94245640c760dc94d1726f4db6f33d32ec9d4dce
+        run: |
+          set -euo pipefail
+          archive="ingitdb_${INGITDB_VERSION}_linux_amd64.tar.gz"
+          curl --fail --silent --show-error --location \
+            "https://github.com/ingitdb/ingitdb-cli/releases/download/v${INGITDB_VERSION}/${archive}" \
+            --output "${RUNNER_TEMP}/${archive}"
+          echo "${INGITDB_SHA256}  ${RUNNER_TEMP}/${archive}" | sha256sum --check --strict
+          tar --extract --gzip --file "${RUNNER_TEMP}/${archive}" --directory "${RUNNER_TEMP}" ingitdb
+          install -m 0755 "${RUNNER_TEMP}/ingitdb" "${RUNNER_TEMP}/bin-ingitdb"
+          mkdir -p "${RUNNER_TEMP}/bin" && mv "${RUNNER_TEMP}/bin-ingitdb" "${RUNNER_TEMP}/bin/ingitdb"
+          echo "${RUNNER_TEMP}/bin" >> "$GITHUB_PATH"
+
       - name: Validate the vendored inGitDB database
-        uses: ingitdb/ingitdb-action@ec621991c6ca57d45a252c7d140eea1624f42ab9
-        with:
-          cli-version: v0.68.2
-          database-root: demo-project-1/data/geo
+        run: ingitdb validate --path demo-project-1/data/geo
 
       - name: Shellcheck the scripts
         run: shellcheck scripts/*.sh
