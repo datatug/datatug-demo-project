@@ -1,0 +1,16 @@
+{
+  "area_km2": 301230,
+  "capital": "Rome",
+  "continent": "EU",
+  "currency_code": "EUR",
+  "currency_name": "Euro",
+  "geonameid": 3175395,
+  "iso2": "IT",
+  "iso3": "ITA",
+  "names": {
+    "en": "Italy"
+  },
+  "phone_prefix": "39",
+  "population": 60431283,
+  "tld": ".it"
+}

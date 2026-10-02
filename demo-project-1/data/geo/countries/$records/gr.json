@@ -1,0 +1,16 @@
+{
+  "area_km2": 131940,
+  "capital": "Athens",
+  "continent": "EU",
+  "currency_code": "EUR",
+  "currency_name": "Euro",
+  "geonameid": 390903,
+  "iso2": "GR",
+  "iso3": "GRC",
+  "names": {
+    "en": "Greece"
+  },
+  "phone_prefix": "30",
+  "population": 10727668,
+  "tld": ".gr"
+}

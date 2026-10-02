@@ -1,0 +1,16 @@
+{
+  "area_km2": 2345410,
+  "capital": "Kinshasa",
+  "continent": "AF",
+  "currency_code": "CDF",
+  "currency_name": "Franc",
+  "geonameid": 203312,
+  "iso2": "CD",
+  "iso3": "COD",
+  "names": {
+    "en": "Democratic Republic of the Congo"
+  },
+  "phone_prefix": "243",
+  "population": 84068091,
+  "tld": ".cd"
+}

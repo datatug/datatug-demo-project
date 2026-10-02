@@ -1,0 +1,16 @@
+{
+  "area_km2": 1219912,
+  "capital": "Pretoria",
+  "continent": "AF",
+  "currency_code": "ZAR",
+  "currency_name": "Rand",
+  "geonameid": 953987,
+  "iso2": "ZA",
+  "iso3": "ZAF",
+  "names": {
+    "en": "South Africa"
+  },
+  "phone_prefix": "27",
+  "population": 57779622,
+  "tld": ".za"
+}

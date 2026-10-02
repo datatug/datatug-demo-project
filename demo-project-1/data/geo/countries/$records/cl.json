@@ -1,0 +1,16 @@
+{
+  "area_km2": 756950,
+  "capital": "Santiago",
+  "continent": "SA",
+  "currency_code": "CLP",
+  "currency_name": "Peso",
+  "geonameid": 3895114,
+  "iso2": "CL",
+  "iso3": "CHL",
+  "names": {
+    "en": "Chile"
+  },
+  "phone_prefix": "56",
+  "population": 18729160,
+  "tld": ".cl"
+}

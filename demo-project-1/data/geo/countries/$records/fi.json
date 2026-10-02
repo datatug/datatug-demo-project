@@ -1,0 +1,16 @@
+{
+  "area_km2": 337030,
+  "capital": "Helsinki",
+  "continent": "EU",
+  "currency_code": "EUR",
+  "currency_name": "Euro",
+  "geonameid": 660013,
+  "iso2": "FI",
+  "iso3": "FIN",
+  "names": {
+    "en": "Finland"
+  },
+  "phone_prefix": "358",
+  "population": 5518050,
+  "tld": ".fi"
+}

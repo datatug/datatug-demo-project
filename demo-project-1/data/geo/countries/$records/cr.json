@@ -1,0 +1,16 @@
+{
+  "area_km2": 51100,
+  "capital": "San Jose",
+  "continent": "NA",
+  "currency_code": "CRC",
+  "currency_name": "Colon",
+  "geonameid": 3624060,
+  "iso2": "CR",
+  "iso3": "CRI",
+  "names": {
+    "en": "Costa Rica"
+  },
+  "phone_prefix": "506",
+  "population": 4999441,
+  "tld": ".cr"
+}

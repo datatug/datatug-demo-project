@@ -1,0 +1,16 @@
+{
+  "area_km2": 2586,
+  "capital": "Luxembourg",
+  "continent": "EU",
+  "currency_code": "EUR",
+  "currency_name": "Euro",
+  "geonameid": 2960313,
+  "iso2": "LU",
+  "iso3": "LUX",
+  "names": {
+    "en": "Luxembourg"
+  },
+  "phone_prefix": "352",
+  "population": 607728,
+  "tld": ".lu"
+}

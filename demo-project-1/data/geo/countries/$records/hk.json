@@ -1,0 +1,16 @@
+{
+  "area_km2": 1092,
+  "capital": "Hong Kong",
+  "continent": "AS",
+  "currency_code": "HKD",
+  "currency_name": "Dollar",
+  "geonameid": 1819730,
+  "iso2": "HK",
+  "iso3": "HKG",
+  "names": {
+    "en": "Hong Kong"
+  },
+  "phone_prefix": "852",
+  "population": 7396076,
+  "tld": ".hk"
+}

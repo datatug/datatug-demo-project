@@ -1,0 +1,16 @@
+{
+  "area_km2": 1972550,
+  "capital": "Mexico City",
+  "continent": "NA",
+  "currency_code": "MXN",
+  "currency_name": "Peso",
+  "geonameid": 3996063,
+  "iso2": "MX",
+  "iso3": "MEX",
+  "names": {
+    "en": "Mexico"
+  },
+  "phone_prefix": "52",
+  "population": 126190788,
+  "tld": ".mx"
+}

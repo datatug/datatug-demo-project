@@ -1,0 +1,16 @@
+{
+  "area_km2": 140800,
+  "capital": "Kathmandu",
+  "continent": "AS",
+  "currency_code": "NPR",
+  "currency_name": "Rupee",
+  "geonameid": 1282988,
+  "iso2": "NP",
+  "iso3": "NPL",
+  "names": {
+    "en": "Nepal"
+  },
+  "phone_prefix": "977",
+  "population": 28087871,
+  "tld": ".np"
+}

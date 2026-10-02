@@ -1,0 +1,16 @@
+{
+  "area_km2": 1285220,
+  "capital": "Lima",
+  "continent": "SA",
+  "currency_code": "PEN",
+  "currency_name": "Sol",
+  "geonameid": 3932488,
+  "iso2": "PE",
+  "iso3": "PER",
+  "names": {
+    "en": "Peru"
+  },
+  "phone_prefix": "51",
+  "population": 31989256,
+  "tld": ".pe"
+}

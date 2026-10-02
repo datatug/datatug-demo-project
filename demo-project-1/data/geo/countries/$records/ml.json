@@ -1,0 +1,16 @@
+{
+  "area_km2": 1240000,
+  "capital": "Bamako",
+  "continent": "AF",
+  "currency_code": "XOF",
+  "currency_name": "Franc",
+  "geonameid": 2453866,
+  "iso2": "ML",
+  "iso3": "MLI",
+  "names": {
+    "en": "Mali"
+  },
+  "phone_prefix": "223",
+  "population": 19077690,
+  "tld": ".ml"
+}

@@ -1,0 +1,16 @@
+{
+  "area_km2": 207600,
+  "capital": "Minsk",
+  "continent": "EU",
+  "currency_code": "BYN",
+  "currency_name": "Belarusian ruble",
+  "geonameid": 630336,
+  "iso2": "BY",
+  "iso3": "BLR",
+  "names": {
+    "en": "Belarus"
+  },
+  "phone_prefix": "375",
+  "population": 9485386,
+  "tld": ".by"
+}

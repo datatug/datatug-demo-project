@@ -1,0 +1,16 @@
+{
+  "area_km2": 45226,
+  "capital": "Tallinn",
+  "continent": "EU",
+  "currency_code": "EUR",
+  "currency_name": "Euro",
+  "geonameid": 453733,
+  "iso2": "EE",
+  "iso3": "EST",
+  "names": {
+    "en": "Estonia"
+  },
+  "phone_prefix": "372",
+  "population": 1320884,
+  "tld": ".ee"
+}

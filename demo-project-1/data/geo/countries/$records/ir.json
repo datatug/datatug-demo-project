@@ -1,0 +1,16 @@
+{
+  "area_km2": 1648000,
+  "capital": "Tehran",
+  "continent": "AS",
+  "currency_code": "IRR",
+  "currency_name": "Rial",
+  "geonameid": 130758,
+  "iso2": "IR",
+  "iso3": "IRN",
+  "names": {
+    "en": "Iran"
+  },
+  "phone_prefix": "98",
+  "population": 81800269,
+  "tld": ".ir"
+}

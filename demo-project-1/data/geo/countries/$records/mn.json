@@ -1,0 +1,16 @@
+{
+  "area_km2": 1565000,
+  "capital": "Ulaanbaatar",
+  "continent": "AS",
+  "currency_code": "MNT",
+  "currency_name": "Tugrik",
+  "geonameid": 2029969,
+  "iso2": "MN",
+  "iso3": "MNG",
+  "names": {
+    "en": "Mongolia"
+  },
+  "phone_prefix": "976",
+  "population": 3170208,
+  "tld": ".mn"
+}

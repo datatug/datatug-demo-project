@@ -1,0 +1,16 @@
+{
+  "area_km2": 357021,
+  "capital": "Berlin",
+  "continent": "EU",
+  "currency_code": "EUR",
+  "currency_name": "Euro",
+  "geonameid": 2921044,
+  "iso2": "DE",
+  "iso3": "DEU",
+  "names": {
+    "en": "Germany"
+  },
+  "phone_prefix": "49",
+  "population": 82927922,
+  "tld": ".de"
+}

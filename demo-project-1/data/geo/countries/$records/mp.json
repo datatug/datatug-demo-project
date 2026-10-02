@@ -1,0 +1,16 @@
+{
+  "area_km2": 477,
+  "capital": "Saipan",
+  "continent": "OC",
+  "currency_code": "USD",
+  "currency_name": "Dollar",
+  "geonameid": 4041468,
+  "iso2": "MP",
+  "iso3": "MNP",
+  "names": {
+    "en": "Northern Mariana Islands"
+  },
+  "phone_prefix": "+1-670",
+  "population": 56882,
+  "tld": ".mp"
+}

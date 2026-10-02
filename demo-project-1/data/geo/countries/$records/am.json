@@ -1,0 +1,16 @@
+{
+  "area_km2": 29800,
+  "capital": "Yerevan",
+  "continent": "AS",
+  "currency_code": "AMD",
+  "currency_name": "Dram",
+  "geonameid": 174982,
+  "iso2": "AM",
+  "iso3": "ARM",
+  "names": {
+    "en": "Armenia"
+  },
+  "phone_prefix": "374",
+  "population": 3090500,
+  "tld": ".am"
+}

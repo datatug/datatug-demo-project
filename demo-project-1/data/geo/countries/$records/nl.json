@@ -1,0 +1,16 @@
+{
+  "area_km2": 41526,
+  "capital": "Amsterdam",
+  "continent": "EU",
+  "currency_code": "EUR",
+  "currency_name": "Euro",
+  "geonameid": 2750405,
+  "iso2": "NL",
+  "iso3": "NLD",
+  "names": {
+    "en": "The Netherlands"
+  },
+  "phone_prefix": "31",
+  "population": 17231017,
+  "tld": ".nl"
+}

@@ -1,0 +1,10 @@
+{
+  "country": "aw",
+  "fetched_at": "2026-10-02T09:26:00Z",
+  "indicator": "SP.POP.TOTL",
+  "iso3": "ABW",
+  "population": 108785,
+  "source_updated": "2026-07-13",
+  "source_url": "https://api.worldbank.org/v2/country/ABW/indicator/SP.POP.TOTL?format=json&mrnev=1",
+  "year": 2025
+}

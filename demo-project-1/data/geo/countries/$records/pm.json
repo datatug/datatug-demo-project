@@ -1,0 +1,16 @@
+{
+  "area_km2": 242,
+  "capital": "Saint-Pierre",
+  "continent": "NA",
+  "currency_code": "EUR",
+  "currency_name": "Euro",
+  "geonameid": 3424932,
+  "iso2": "PM",
+  "iso3": "SPM",
+  "names": {
+    "en": "Saint Pierre and Miquelon"
+  },
+  "phone_prefix": "508",
+  "population": 7012,
+  "tld": ".pm"
+}

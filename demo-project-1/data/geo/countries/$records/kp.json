@@ -1,0 +1,16 @@
+{
+  "area_km2": 120540,
+  "capital": "Pyongyang",
+  "continent": "AS",
+  "currency_code": "KPW",
+  "currency_name": "Won",
+  "geonameid": 1873107,
+  "iso2": "KP",
+  "iso3": "PRK",
+  "names": {
+    "en": "North Korea"
+  },
+  "phone_prefix": "850",
+  "population": 25549819,
+  "tld": ".kp"
+}

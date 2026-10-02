@@ -1,0 +1,16 @@
+{
+  "area_km2": 324220,
+  "capital": "Oslo",
+  "continent": "EU",
+  "currency_code": "NOK",
+  "currency_name": "Krone",
+  "geonameid": 3144096,
+  "iso2": "NO",
+  "iso3": "NOR",
+  "names": {
+    "en": "Norway"
+  },
+  "phone_prefix": "47",
+  "population": 5314336,
+  "tld": ".no"
+}

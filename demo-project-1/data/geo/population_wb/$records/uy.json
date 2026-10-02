@@ -1,0 +1,10 @@
+{
+  "country": "uy",
+  "fetched_at": "2026-10-02T09:26:00Z",
+  "indicator": "SP.POP.TOTL",
+  "iso3": "URY",
+  "population": 3384688,
+  "source_updated": "2026-07-13",
+  "source_url": "https://api.worldbank.org/v2/country/URY/indicator/SP.POP.TOTL?format=json&mrnev=1",
+  "year": 2025
+}

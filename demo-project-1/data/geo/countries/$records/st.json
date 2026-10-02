@@ -1,0 +1,16 @@
+{
+  "area_km2": 1001,
+  "capital": "Sao Tome",
+  "continent": "AF",
+  "currency_code": "STN",
+  "currency_name": "Dobra",
+  "geonameid": 2410758,
+  "iso2": "ST",
+  "iso3": "STP",
+  "names": {
+    "en": "Sao Tome and Principe"
+  },
+  "phone_prefix": "239",
+  "population": 197700,
+  "tld": ".st"
+}

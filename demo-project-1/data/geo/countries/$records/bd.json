@@ -1,0 +1,16 @@
+{
+  "area_km2": 144000,
+  "capital": "Dhaka",
+  "continent": "AS",
+  "currency_code": "BDT",
+  "currency_name": "Taka",
+  "geonameid": 1210997,
+  "iso2": "BD",
+  "iso3": "BGD",
+  "names": {
+    "en": "Bangladesh"
+  },
+  "phone_prefix": "880",
+  "population": 161356039,
+  "tld": ".bd"
+}

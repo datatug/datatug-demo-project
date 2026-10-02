@@ -1,0 +1,10 @@
+{
+  "country": "ar",
+  "fetched_at": "2026-10-02T09:26:00Z",
+  "indicator": "SP.POP.TOTL",
+  "iso3": "ARG",
+  "population": 45851378,
+  "source_updated": "2026-07-13",
+  "source_url": "https://api.worldbank.org/v2/country/ARG/indicator/SP.POP.TOTL?format=json&mrnev=1",
+  "year": 2025
+}

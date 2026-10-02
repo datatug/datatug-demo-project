@@ -1,0 +1,16 @@
+{
+  "area_km2": 92300,
+  "capital": "Amman",
+  "continent": "AS",
+  "currency_code": "JOD",
+  "currency_name": "Dinar",
+  "geonameid": 248816,
+  "iso2": "JO",
+  "iso3": "JOR",
+  "names": {
+    "en": "Jordan"
+  },
+  "phone_prefix": "962",
+  "population": 9956011,
+  "tld": ".jo"
+}

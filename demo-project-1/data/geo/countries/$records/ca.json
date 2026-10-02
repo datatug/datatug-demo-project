@@ -1,0 +1,16 @@
+{
+  "area_km2": 9984670,
+  "capital": "Ottawa",
+  "continent": "NA",
+  "currency_code": "CAD",
+  "currency_name": "Dollar",
+  "geonameid": 6251999,
+  "iso2": "CA",
+  "iso3": "CAN",
+  "names": {
+    "en": "Canada"
+  },
+  "phone_prefix": "1",
+  "population": 37058856,
+  "tld": ".ca"
+}

@@ -1,0 +1,16 @@
+{
+  "area_km2": 10400,
+  "capital": "Beirut",
+  "continent": "AS",
+  "currency_code": "LBP",
+  "currency_name": "Pound",
+  "geonameid": 272103,
+  "iso2": "LB",
+  "iso3": "LBN",
+  "names": {
+    "en": "Lebanon"
+  },
+  "phone_prefix": "961",
+  "population": 6848925,
+  "tld": ".lb"
+}

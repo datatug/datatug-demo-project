@@ -1,0 +1,16 @@
+{
+  "area_km2": 300,
+  "capital": "Male",
+  "continent": "AS",
+  "currency_code": "MVR",
+  "currency_name": "Rufiyaa",
+  "geonameid": 1282028,
+  "iso2": "MV",
+  "iso3": "MDV",
+  "names": {
+    "en": "Maldives"
+  },
+  "phone_prefix": "960",
+  "population": 515696,
+  "tld": ".mv"
+}

@@ -1,0 +1,5 @@
+{
+  "alias": "France",
+  "country": "fr",
+  "source": "chinook-database Invoice.BillingCountry; exact match on countries.names.en"
+}

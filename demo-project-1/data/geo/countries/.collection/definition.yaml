@@ -1,0 +1,40 @@
+titles:
+  en: Countries
+# One record per file under $records/, keyed by lowercase ISO 3166-1 alpha-2.
+record_file:
+  name: "{key}.json"
+  type: "map[string]any"
+  format: json
+columns:
+  names:
+    type: "map[locale]string"
+    required: true
+  iso2:
+    type: string
+    required: true
+    length: 2
+  iso3:
+    type: string
+    length: 3
+  continent:
+    type: string
+    enum: [AF, AS, EU, NA, OC, SA, AN]
+  capital:
+    type: string
+  population:
+    type: int
+    min_value: 0
+  area_km2:
+    type: float
+    min_value: 0
+  currency_code:
+    type: string
+  currency_name:
+    type: string
+  phone_prefix:
+    type: string
+  tld:
+    type: string
+  geonameid:
+    type: int
+columns_order: [names, iso2, iso3, continent, capital, population, area_km2, currency_code, currency_name, phone_prefix, tld, geonameid]

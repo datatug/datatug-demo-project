@@ -1,0 +1,16 @@
+{
+  "area_km2": 0.44,
+  "capital": "Vatican City",
+  "continent": "EU",
+  "currency_code": "EUR",
+  "currency_name": "Euro",
+  "geonameid": 3164670,
+  "iso2": "VA",
+  "iso3": "VAT",
+  "names": {
+    "en": "Vatican"
+  },
+  "phone_prefix": "379",
+  "population": 921,
+  "tld": ".va"
+}

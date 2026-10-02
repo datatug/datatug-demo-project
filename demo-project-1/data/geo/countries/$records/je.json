@@ -1,0 +1,16 @@
+{
+  "area_km2": 116,
+  "capital": "Saint Helier",
+  "continent": "EU",
+  "currency_code": "GBP",
+  "currency_name": "Pound",
+  "geonameid": 3042142,
+  "iso2": "JE",
+  "iso3": "JEY",
+  "names": {
+    "en": "Jersey"
+  },
+  "phone_prefix": "+44-1534",
+  "population": 90812,
+  "tld": ".je"
+}

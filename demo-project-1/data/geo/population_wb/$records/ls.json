@@ -1,0 +1,10 @@
+{
+  "country": "ls",
+  "fetched_at": "2026-10-02T09:26:00Z",
+  "indicator": "SP.POP.TOTL",
+  "iso3": "LSO",
+  "population": 2363325,
+  "source_updated": "2026-07-13",
+  "source_url": "https://api.worldbank.org/v2/country/LSO/indicator/SP.POP.TOTL?format=json&mrnev=1",
+  "year": 2025
+}

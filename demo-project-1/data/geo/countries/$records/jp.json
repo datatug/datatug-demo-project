@@ -1,0 +1,16 @@
+{
+  "area_km2": 377835,
+  "capital": "Tokyo",
+  "continent": "AS",
+  "currency_code": "JPY",
+  "currency_name": "Yen",
+  "geonameid": 1861060,
+  "iso2": "JP",
+  "iso3": "JPN",
+  "names": {
+    "en": "Japan"
+  },
+  "phone_prefix": "81",
+  "population": 126529100,
+  "tld": ".jp"
+}

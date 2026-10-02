@@ -1,0 +1,16 @@
+{
+  "area_km2": 43094,
+  "capital": "Copenhagen",
+  "continent": "EU",
+  "currency_code": "DKK",
+  "currency_name": "Krone",
+  "geonameid": 2623032,
+  "iso2": "DK",
+  "iso3": "DNK",
+  "names": {
+    "en": "Denmark"
+  },
+  "phone_prefix": "45",
+  "population": 5797446,
+  "tld": ".dk"
+}

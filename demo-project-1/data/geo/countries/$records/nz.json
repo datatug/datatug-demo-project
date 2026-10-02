@@ -1,0 +1,16 @@
+{
+  "area_km2": 268680,
+  "capital": "Wellington",
+  "continent": "OC",
+  "currency_code": "NZD",
+  "currency_name": "Dollar",
+  "geonameid": 2186224,
+  "iso2": "NZ",
+  "iso3": "NZL",
+  "names": {
+    "en": "New Zealand"
+  },
+  "phone_prefix": "64",
+  "population": 4885500,
+  "tld": ".nz"
+}

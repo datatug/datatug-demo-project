@@ -1,0 +1,16 @@
+{
+  "area_km2": 65200,
+  "capital": "Vilnius",
+  "continent": "EU",
+  "currency_code": "EUR",
+  "currency_name": "Euro",
+  "geonameid": 597427,
+  "iso2": "LT",
+  "iso3": "LTU",
+  "names": {
+    "en": "Lithuania"
+  },
+  "phone_prefix": "370",
+  "population": 2789533,
+  "tld": ".lt"
+}

@@ -1,0 +1,16 @@
+{
+  "area_km2": 300000,
+  "capital": "Manila",
+  "continent": "AS",
+  "currency_code": "PHP",
+  "currency_name": "Peso",
+  "geonameid": 1694008,
+  "iso2": "PH",
+  "iso3": "PHL",
+  "names": {
+    "en": "Philippines"
+  },
+  "phone_prefix": "63",
+  "population": 106651922,
+  "tld": ".ph"
+}

@@ -1,0 +1,16 @@
+{
+  "area_km2": 62049,
+  "capital": "Longyearbyen",
+  "continent": "EU",
+  "currency_code": "NOK",
+  "currency_name": "Krone",
+  "geonameid": 607072,
+  "iso2": "SJ",
+  "iso3": "SJM",
+  "names": {
+    "en": "Svalbard and Jan Mayen"
+  },
+  "phone_prefix": "47",
+  "population": 2550,
+  "tld": ".sj"
+}

@@ -1,0 +1,16 @@
+{
+  "area_km2": 1127127,
+  "capital": "Addis Ababa",
+  "continent": "AF",
+  "currency_code": "ETB",
+  "currency_name": "Birr",
+  "geonameid": 337996,
+  "iso2": "ET",
+  "iso3": "ETH",
+  "names": {
+    "en": "Ethiopia"
+  },
+  "phone_prefix": "251",
+  "population": 109224559,
+  "tld": ".et"
+}

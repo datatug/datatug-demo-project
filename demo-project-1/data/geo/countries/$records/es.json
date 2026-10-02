@@ -1,0 +1,16 @@
+{
+  "area_km2": 504782,
+  "capital": "Madrid",
+  "continent": "EU",
+  "currency_code": "EUR",
+  "currency_name": "Euro",
+  "geonameid": 2510769,
+  "iso2": "ES",
+  "iso3": "ESP",
+  "names": {
+    "en": "Spain"
+  },
+  "phone_prefix": "34",
+  "population": 46723749,
+  "tld": ".es"
+}

@@ -1,0 +1,16 @@
+{
+  "area_km2": 912050,
+  "capital": "Caracas",
+  "continent": "SA",
+  "currency_code": "VES",
+  "currency_name": "Bolivar Soberano",
+  "geonameid": 3625428,
+  "iso2": "VE",
+  "iso3": "VEN",
+  "names": {
+    "en": "Venezuela"
+  },
+  "phone_prefix": "58",
+  "population": 28870195,
+  "tld": ".ve"
+}

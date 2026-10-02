@@ -1,0 +1,16 @@
+{
+  "area_km2": 603700,
+  "capital": "Kyiv",
+  "continent": "EU",
+  "currency_code": "UAH",
+  "currency_name": "Hryvnia",
+  "geonameid": 690791,
+  "iso2": "UA",
+  "iso3": "UKR",
+  "names": {
+    "en": "Ukraine"
+  },
+  "phone_prefix": "380",
+  "population": 40000000,
+  "tld": ".ua"
+}

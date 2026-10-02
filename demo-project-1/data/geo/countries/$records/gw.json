@@ -1,0 +1,16 @@
+{
+  "area_km2": 36120,
+  "capital": "Bissau",
+  "continent": "AF",
+  "currency_code": "XOF",
+  "currency_name": "Franc",
+  "geonameid": 2372248,
+  "iso2": "GW",
+  "iso3": "GNB",
+  "names": {
+    "en": "Guinea-Bissau"
+  },
+  "phone_prefix": "245",
+  "population": 1874309,
+  "tld": ".gw"
+}

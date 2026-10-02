@@ -1,0 +1,16 @@
+{
+  "area_km2": 236040,
+  "capital": "Kampala",
+  "continent": "AF",
+  "currency_code": "UGX",
+  "currency_name": "Shilling",
+  "geonameid": 226074,
+  "iso2": "UG",
+  "iso3": "UGA",
+  "names": {
+    "en": "Uganda"
+  },
+  "phone_prefix": "256",
+  "population": 42723139,
+  "tld": ".ug"
+}

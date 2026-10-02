@@ -1,0 +1,16 @@
+{
+  "area_km2": 78200,
+  "capital": "Panama City",
+  "continent": "NA",
+  "currency_code": "PAB",
+  "currency_name": "Balboa",
+  "geonameid": 3703430,
+  "iso2": "PA",
+  "iso3": "PAN",
+  "names": {
+    "en": "Panama"
+  },
+  "phone_prefix": "507",
+  "population": 4176873,
+  "tld": ".pa"
+}

@@ -1,0 +1,16 @@
+{
+  "area_km2": 244820,
+  "capital": "London",
+  "continent": "EU",
+  "currency_code": "GBP",
+  "currency_name": "Pound",
+  "geonameid": 2635167,
+  "iso2": "GB",
+  "iso3": "GBR",
+  "names": {
+    "en": "United Kingdom"
+  },
+  "phone_prefix": "44",
+  "population": 66488991,
+  "tld": ".uk"
+}

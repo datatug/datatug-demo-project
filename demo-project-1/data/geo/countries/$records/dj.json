@@ -1,0 +1,16 @@
+{
+  "area_km2": 23000,
+  "capital": "Djibouti",
+  "continent": "AF",
+  "currency_code": "DJF",
+  "currency_name": "Franc",
+  "geonameid": 223816,
+  "iso2": "DJ",
+  "iso3": "DJI",
+  "names": {
+    "en": "Djibouti"
+  },
+  "phone_prefix": "253",
+  "population": 958920,
+  "tld": ".dj"
+}

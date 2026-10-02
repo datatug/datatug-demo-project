@@ -1,0 +1,16 @@
+{
+  "area_km2": 70280,
+  "capital": "Dublin",
+  "continent": "EU",
+  "currency_code": "EUR",
+  "currency_name": "Euro",
+  "geonameid": 2963597,
+  "iso2": "IE",
+  "iso3": "IRL",
+  "names": {
+    "en": "Ireland"
+  },
+  "phone_prefix": "353",
+  "population": 4853506,
+  "tld": ".ie"
+}

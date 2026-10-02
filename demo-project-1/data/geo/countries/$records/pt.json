@@ -1,0 +1,16 @@
+{
+  "area_km2": 92391,
+  "capital": "Lisbon",
+  "continent": "EU",
+  "currency_code": "EUR",
+  "currency_name": "Euro",
+  "geonameid": 2264397,
+  "iso2": "PT",
+  "iso3": "PRT",
+  "names": {
+    "en": "Portugal"
+  },
+  "phone_prefix": "351",
+  "population": 10281762,
+  "tld": ".pt"
+}

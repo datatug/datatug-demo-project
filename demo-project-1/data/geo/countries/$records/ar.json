@@ -1,0 +1,16 @@
+{
+  "area_km2": 2766890,
+  "capital": "Buenos Aires",
+  "continent": "SA",
+  "currency_code": "ARS",
+  "currency_name": "Peso",
+  "geonameid": 3865483,
+  "iso2": "AR",
+  "iso3": "ARG",
+  "names": {
+    "en": "Argentina"
+  },
+  "phone_prefix": "54",
+  "population": 44494502,
+  "tld": ".ar"
+}

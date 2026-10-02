@@ -1,0 +1,16 @@
+{
+  "area_km2": 30510,
+  "capital": "Brussels",
+  "continent": "EU",
+  "currency_code": "EUR",
+  "currency_name": "Euro",
+  "geonameid": 2802361,
+  "iso2": "BE",
+  "iso3": "BEL",
+  "names": {
+    "en": "Belgium"
+  },
+  "phone_prefix": "32",
+  "population": 11422068,
+  "tld": ".be"
+}

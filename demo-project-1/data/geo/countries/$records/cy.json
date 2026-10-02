@@ -1,0 +1,16 @@
+{
+  "area_km2": 9250,
+  "capital": "Nicosia",
+  "continent": "EU",
+  "currency_code": "EUR",
+  "currency_name": "Euro",
+  "geonameid": 146669,
+  "iso2": "CY",
+  "iso3": "CYP",
+  "names": {
+    "en": "Cyprus"
+  },
+  "phone_prefix": "357",
+  "population": 1189265,
+  "tld": ".cy"
+}

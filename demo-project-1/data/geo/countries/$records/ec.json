@@ -1,0 +1,16 @@
+{
+  "area_km2": 283560,
+  "capital": "Quito",
+  "continent": "SA",
+  "currency_code": "USD",
+  "currency_name": "Dollar",
+  "geonameid": 3658394,
+  "iso2": "EC",
+  "iso3": "ECU",
+  "names": {
+    "en": "Ecuador"
+  },
+  "phone_prefix": "593",
+  "population": 17084357,
+  "tld": ".ec"
+}

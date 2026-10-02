@@ -1,0 +1,16 @@
+{
+  "area_km2": 12200,
+  "capital": "Port Vila",
+  "continent": "OC",
+  "currency_code": "VUV",
+  "currency_name": "Vatu",
+  "geonameid": 2134431,
+  "iso2": "VU",
+  "iso3": "VUT",
+  "names": {
+    "en": "Vanuatu"
+  },
+  "phone_prefix": "678",
+  "population": 292680,
+  "tld": ".vu"
+}
