@@ -5,9 +5,11 @@
 #        -> population_wb (World Bank SP.POP.TOTL, latest year)
 #
 # Three sources, one nested join, then grouped. No AI is involved: the same
-# document always returns the same rows. Totals are floating point (Chinook
-# stores Total as REAL); the exact `money` policy is not available for a
-# three-source join or an ordered result, so consumers should round for display.
+# document always returns the same rows. Totals are floating point: the exact
+# `money` policy is unavailable here for two separate reasons. It requires the
+# streaming plan (one flat join, no `orderBy`), and it rejects REAL inputs
+# (Chinook stores Total as REAL; money needs strings or whole minor units), so
+# a flat plan alone would not fix it. Consumers should round for display.
 from:
   database: chinook
   name: Invoice

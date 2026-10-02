@@ -8,7 +8,7 @@
     "tables": [
       {"name": "Invoice", "database": "chinook", "fields": ["BillingCountry", "Total"]},
       {"name": "country_aliases", "database": "geo", "fields": ["alias", "country"]},
-      {"name": "population_wb", "database": "geo", "fields": ["id", "year", "population"]}
+      {"name": "population_wb", "database": "geo", "fields": ["country", "year", "population"]}
     ]
   },
   "recordsets": [
@@ -17,7 +17,8 @@
         {"name": "country", "type": "string"},
         {"name": "totalSales", "type": "number"},
         {"name": "population", "type": "number"},
-        {"name": "populationYear", "type": "number"}
+        {"name": "populationYear", "type": "number"},
+        {"name": "salesPerMillion", "type": "number"}
       ]
     }
   ]
