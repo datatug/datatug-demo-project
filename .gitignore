@@ -1,3 +1,5 @@
 .idea/
 .vscode/
 demo-project-1/.demo-data/
+__pycache__/
+*.pyc
