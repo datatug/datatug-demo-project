@@ -8,6 +8,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"sort"
 	"testing"
 
 	"github.com/datatug/datatug-cli/pkg/secureread"
@@ -24,7 +25,9 @@ import (
 //
 // World Bank SP.POP.TOTL, latest year per country, fetched 2026-10-02
 // (source last updated 2026-07-13). Re-pin these values when data/geo is
-// refreshed with scripts/sync-geo-data.sh.
+// refreshed with scripts/sync-geo-data.sh. They only pin the snapshot itself
+// (TestGeoSnapshotPinned): every expectation about the query result is computed
+// from the committed snapshot, so a refresh cannot flip a hard-coded ranking.
 var pinnedPopulation = map[string]struct {
 	Key        string
 	Population int64
@@ -57,6 +60,58 @@ func number(t *testing.T, value any, field string) float64 {
 		t.Fatalf("%s has type %T", field, value)
 		return 0
 	}
+}
+
+// snapshotPopulation returns, for each Chinook billing-country spelling, the
+// committed World Bank population of the country its alias points to: the
+// expectation the saved query must reproduce, computed from data/geo itself.
+func snapshotPopulation(t *testing.T) map[string]int64 {
+	t.Helper()
+	executor := secureread.NewExecutor(secureread.Session{Unrestricted: true})
+	read := func(collection string) []map[string]any {
+		result, err := executor.RunDTQL(context.Background(), geoSourceURL(t), []byte("from: {name: "+collection+"}\n"), nil)
+		require.NoError(t, err)
+		rows := make([]map[string]any, 0, len(result.Rows))
+		for _, row := range result.Rows {
+			rows = append(rows, row.Data)
+		}
+		return rows
+	}
+	populationByCountry := map[string]int64{}
+	for _, row := range read("population_wb") {
+		populationByCountry[row["country"].(string)] = int64(number(t, row["population"], "population"))
+	}
+	byAlias := map[string]int64{}
+	for _, row := range read("country_aliases") {
+		population, ok := populationByCountry[row["country"].(string)]
+		require.True(t, ok, "alias %v has no population in the snapshot", row["alias"])
+		byAlias[row["alias"].(string)] = population
+	}
+	return byAlias
+}
+
+// expectedPerMillion is total / population * 1e6 for every country in totals,
+// with the population taken from the committed snapshot.
+func expectedPerMillion(t *testing.T, totals map[string]float64) map[string]float64 {
+	t.Helper()
+	population := snapshotPopulation(t)
+	out := make(map[string]float64, len(totals))
+	for country, total := range totals {
+		p, ok := population[country]
+		require.True(t, ok, "%s has no alias and population in the snapshot", country)
+		out[country] = total / float64(p) * 1e6
+	}
+	return out
+}
+
+// rankedDescending lists the countries by value, highest first.
+func rankedDescending(values map[string]float64) []string {
+	names := make([]string, 0, len(values))
+	for name := range values {
+		names = append(names, name)
+	}
+	sort.Slice(names, func(i, j int) bool { return values[names[i]] > values[names[j]] })
+	return names
 }
 
 // heroRows runs the project's saved hero query with the given Chinook SQLite
@@ -165,16 +220,13 @@ func TestHeroQuery_SyntheticInvoices(t *testing.T) {
 
 	assert.NotContains(t, rows, "Atlantis")
 	require.Len(t, order, 4)
-	want := map[string]float64{ // total / population * 1e6
-		"Ireland":        40.0 / 5484367 * 1e6,
-		"USA":            300.0 / 341784857 * 1e6,
-		"Canada":         60.0 / 41651653 * 1e6,
-		"Czech Republic": 5.0 / 10886878 * 1e6,
-	}
+	want := expectedPerMillion(t, map[string]float64{
+		"Ireland": 40, "USA": 300, "Canada": 60, "Czech Republic": 5,
+	})
 	for country, perMillion := range want {
 		assert.InDelta(t, perMillion, number(t, rows[country]["salesPerMillion"], "salesPerMillion"), 1e-9, country)
 	}
-	assert.Equal(t, "Ireland", order[0], "ordered by sales per million, descending")
+	assert.Equal(t, rankedDescending(want), order, "ordered by sales per million, descending")
 	for i := 1; i < len(order); i++ {
 		assert.GreaterOrEqual(t,
 			number(t, rows[order[i-1]]["salesPerMillion"], "salesPerMillion"),
@@ -184,14 +236,19 @@ func TestHeroQuery_SyntheticInvoices(t *testing.T) {
 
 // chinookForHeroQuery locates the pinned Chinook SQLite file and returns a copy
 // with the `id` column the DALgo SQLite adapter needs (what
-// scripts/prepare_chinook.py does). It skips when the file is not available.
+// scripts/prepare_chinook.py does). It skips when the file is not available,
+// unless DATATUG_REQUIRE_CHINOOK is set (CI sets it), when that is a failure.
 func chinookForHeroQuery(t *testing.T) string {
 	t.Helper()
 	src := os.Getenv("DATATUG_CHINOOK_DB")
 	if src == "" {
 		sibling := filepath.Join("..", "..", "chinook-database", "ChinookDatabase", "DataSources", "Chinook_Sqlite.sqlite")
 		if _, err := os.Stat(sibling); err != nil {
-			t.Skip("DATATUG_CHINOOK_DB (or a chinook-database checkout beside this repository) is required for the pinned Chinook check")
+			const need = "DATATUG_CHINOOK_DB (or a chinook-database checkout beside this repository) is required for the pinned Chinook check"
+			if os.Getenv("DATATUG_REQUIRE_CHINOOK") != "" {
+				t.Fatal(need + "; DATATUG_REQUIRE_CHINOOK is set, so a missing file is a failure")
+			}
+			t.Skip(need)
 		}
 		src = sibling
 	}
@@ -215,39 +272,49 @@ func chinookForHeroQuery(t *testing.T) string {
 }
 
 // TestHeroQuery_PinnedChinook is the real answer: the actual Chinook invoices
-// against the committed World Bank snapshot.
+// against the committed World Bank snapshot. The expected ranking and values are
+// computed from the snapshot and from the invoices (summed by SQL, independently
+// of the query engine), so a World Bank refresh moves them with the data.
 func TestHeroQuery_PinnedChinook(t *testing.T) {
-	order, rows := heroRows(t, chinookForHeroQuery(t))
-
+	chinook := chinookForHeroQuery(t)
+	order, rows := heroRows(t, chinook)
 	require.Len(t, order, 24, "every Chinook billing country has an alias and a population")
-	assert.Equal(t, "Ireland", order[0], "Ireland buys the most music per head")
-	assert.Equal(t, "Czech Republic", order[1])
 
-	// Chinook Invoice.Total sums (verified against SQLite) over the World Bank
-	// 2025 populations pinned above. Totals are REAL sums, hence the delta.
-	for _, c := range []struct {
-		country string
-		total   float64
-	}{
-		{"Ireland", 45.62},
-		{"USA", 523.06},
-		{"Canada", 303.96},
-	} {
-		row := rows[c.country]
-		require.NotNil(t, row, c.country)
-		pop := pinnedPopulation[c.country]
-		assert.InDelta(t, c.total, number(t, row["totalSales"], "totalSales"), 1e-6, c.country)
-		assert.Equal(t, pop.Population, int64(number(t, row["population"], "population")), c.country)
-		assert.Equal(t, pop.Year, int64(number(t, row["populationYear"], "populationYear")), c.country)
-		assert.InDelta(t, c.total/float64(pop.Population)*1e6, number(t, row["salesPerMillion"], "salesPerMillion"), 1e-9, c.country)
+	db, err := sql.Open("sqlite", chinook)
+	require.NoError(t, err)
+	defer func() { require.NoError(t, db.Close()) }()
+	sums, err := db.Query(`SELECT BillingCountry, SUM(Total) FROM Invoice GROUP BY BillingCountry`)
+	require.NoError(t, err)
+	totals := map[string]float64{}
+	for sums.Next() {
+		var country string
+		var total float64
+		require.NoError(t, sums.Scan(&country, &total))
+		totals[country] = total
 	}
-	assert.InDelta(t, 8.318, number(t, rows["Ireland"]["salesPerMillion"], "salesPerMillion"), 0.001)
-	assert.InDelta(t, 1.530, number(t, rows["USA"]["salesPerMillion"], "salesPerMillion"), 0.001)
-	assert.InDelta(t, 7.298, number(t, rows["Canada"]["salesPerMillion"], "salesPerMillion"), 0.001)
+	require.NoError(t, sums.Err())
+	require.NoError(t, sums.Close())
+	require.Len(t, totals, 24)
 
-	for i := 1; i < len(order); i++ {
-		assert.GreaterOrEqual(t,
-			number(t, rows[order[i-1]]["salesPerMillion"], "salesPerMillion"),
-			number(t, rows[order[i]]["salesPerMillion"], "salesPerMillion"), "row %d out of order", i)
+	// Chinook Invoice.Total sums are a property of the pinned file alone.
+	for country, total := range map[string]float64{"Ireland": 45.62, "USA": 523.06, "Canada": 303.96} {
+		assert.InDelta(t, total, totals[country], 1e-6, country)
+		assert.InDelta(t, total, number(t, rows[country]["totalSales"], "totalSales"), 1e-6, country)
 	}
+
+	// Everything that depends on the population is computed from the committed snapshot.
+	population := snapshotPopulation(t)
+	want := expectedPerMillion(t, totals)
+	for country, perMillion := range want {
+		row := rows[country]
+		require.NotNil(t, row, country)
+		assert.InDelta(t, totals[country], number(t, row["totalSales"], "totalSales"), 1e-6, country)
+		assert.Equal(t, population[country], int64(number(t, row["population"], "population")), country)
+		assert.InDelta(t, perMillion, number(t, row["salesPerMillion"], "salesPerMillion"), 1e-9, country)
+	}
+	for name, pinned := range pinnedPopulation {
+		assert.Equal(t, pinned.Population, int64(number(t, rows[name]["population"], "population")), name)
+		assert.Equal(t, pinned.Year, int64(number(t, rows[name]["populationYear"], "populationYear")), name)
+	}
+	assert.Equal(t, rankedDescending(want), order, "the query returns the countries ranked by sales per million, highest first")
 }
