@@ -1,0 +1,16 @@
+{
+  "area_km2": 316,
+  "capital": "Valletta",
+  "continent": "EU",
+  "currency_code": "EUR",
+  "currency_name": "Euro",
+  "geonameid": 2562770,
+  "iso2": "MT",
+  "iso3": "MLT",
+  "names": {
+    "en": "Malta"
+  },
+  "phone_prefix": "356",
+  "population": 483530,
+  "tld": ".mt"
+}

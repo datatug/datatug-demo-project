@@ -1,0 +1,16 @@
+{
+  "area_km2": 449964,
+  "capital": "Stockholm",
+  "continent": "EU",
+  "currency_code": "SEK",
+  "currency_name": "Krona",
+  "geonameid": 2661886,
+  "iso2": "SE",
+  "iso3": "SWE",
+  "names": {
+    "en": "Sweden"
+  },
+  "phone_prefix": "46",
+  "population": 10183175,
+  "tld": ".se"
+}

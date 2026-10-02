@@ -1,0 +1,16 @@
+{
+  "area_km2": 239460,
+  "capital": "Accra",
+  "continent": "AF",
+  "currency_code": "GHS",
+  "currency_name": "Cedi",
+  "geonameid": 2300660,
+  "iso2": "GH",
+  "iso3": "GHA",
+  "names": {
+    "en": "Ghana"
+  },
+  "phone_prefix": "233",
+  "population": 29767108,
+  "tld": ".gh"
+}

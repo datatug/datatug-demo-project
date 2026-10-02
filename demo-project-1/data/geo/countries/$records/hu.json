@@ -1,0 +1,16 @@
+{
+  "area_km2": 93030,
+  "capital": "Budapest",
+  "continent": "EU",
+  "currency_code": "HUF",
+  "currency_name": "Forint",
+  "geonameid": 719819,
+  "iso2": "HU",
+  "iso3": "HUN",
+  "names": {
+    "en": "Hungary"
+  },
+  "phone_prefix": "36",
+  "population": 9768785,
+  "tld": ".hu"
+}

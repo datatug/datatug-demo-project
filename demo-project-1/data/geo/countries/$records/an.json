@@ -1,0 +1,16 @@
+{
+  "area_km2": 960,
+  "capital": "Willemstad",
+  "continent": "NA",
+  "currency_code": "ANG",
+  "currency_name": "Guilder",
+  "geonameid": 8505032,
+  "iso2": "AN",
+  "iso3": "ANT",
+  "names": {
+    "en": "Netherlands Antilles"
+  },
+  "phone_prefix": "599",
+  "population": 300000,
+  "tld": ".an"
+}

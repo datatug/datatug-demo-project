@@ -1,0 +1,16 @@
+{
+  "area_km2": 9629091,
+  "capital": "Washington",
+  "continent": "NA",
+  "currency_code": "USD",
+  "currency_name": "Dollar",
+  "geonameid": 6252001,
+  "iso2": "US",
+  "iso3": "USA",
+  "names": {
+    "en": "United States"
+  },
+  "phone_prefix": "1",
+  "population": 327167434,
+  "tld": ".us"
+}

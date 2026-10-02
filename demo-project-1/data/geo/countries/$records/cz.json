@@ -1,0 +1,16 @@
+{
+  "area_km2": 78866,
+  "capital": "Prague",
+  "continent": "EU",
+  "currency_code": "CZK",
+  "currency_name": "Koruna",
+  "geonameid": 3077311,
+  "iso2": "CZ",
+  "iso3": "CZE",
+  "names": {
+    "en": "Czechia"
+  },
+  "phone_prefix": "420",
+  "population": 10625695,
+  "tld": ".cz"
+}

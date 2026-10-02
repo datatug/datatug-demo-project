@@ -1,0 +1,16 @@
+{
+  "area_km2": 112090,
+  "capital": "Tegucigalpa",
+  "continent": "NA",
+  "currency_code": "HNL",
+  "currency_name": "Lempira",
+  "geonameid": 3608932,
+  "iso2": "HN",
+  "iso3": "HND",
+  "names": {
+    "en": "Honduras"
+  },
+  "phone_prefix": "504",
+  "population": 9587522,
+  "tld": ".hn"
+}

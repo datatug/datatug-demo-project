@@ -1,0 +1,16 @@
+{
+  "area_km2": 780580,
+  "capital": "Ankara",
+  "continent": "AS",
+  "currency_code": "TRY",
+  "currency_name": "Lira",
+  "geonameid": 298795,
+  "iso2": "TR",
+  "iso3": "TUR",
+  "names": {
+    "en": "Turkey"
+  },
+  "phone_prefix": "90",
+  "population": 82319724,
+  "tld": ".tr"
+}

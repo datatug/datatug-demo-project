@@ -1,0 +1,16 @@
+{
+  "area_km2": 1.95,
+  "capital": "Monaco",
+  "continent": "EU",
+  "currency_code": "EUR",
+  "currency_name": "Euro",
+  "geonameid": 2993457,
+  "iso2": "MC",
+  "iso3": "MCO",
+  "names": {
+    "en": "Monaco"
+  },
+  "phone_prefix": "377",
+  "population": 38682,
+  "tld": ".mc"
+}

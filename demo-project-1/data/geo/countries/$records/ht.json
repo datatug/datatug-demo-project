@@ -1,0 +1,16 @@
+{
+  "area_km2": 27750,
+  "capital": "Port-au-Prince",
+  "continent": "NA",
+  "currency_code": "HTG",
+  "currency_name": "Gourde",
+  "geonameid": 3723988,
+  "iso2": "HT",
+  "iso3": "HTI",
+  "names": {
+    "en": "Haiti"
+  },
+  "phone_prefix": "509",
+  "population": 11123176,
+  "tld": ".ht"
+}

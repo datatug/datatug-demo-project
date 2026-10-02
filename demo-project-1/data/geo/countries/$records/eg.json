@@ -1,0 +1,16 @@
+{
+  "area_km2": 1001450,
+  "capital": "Cairo",
+  "continent": "AF",
+  "currency_code": "EGP",
+  "currency_name": "Pound",
+  "geonameid": 357994,
+  "iso2": "EG",
+  "iso3": "EGY",
+  "names": {
+    "en": "Egypt"
+  },
+  "phone_prefix": "20",
+  "population": 98423595,
+  "tld": ".eg"
+}

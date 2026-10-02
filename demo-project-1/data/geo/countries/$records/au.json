@@ -1,0 +1,16 @@
+{
+  "area_km2": 7686850,
+  "capital": "Canberra",
+  "continent": "OC",
+  "currency_code": "AUD",
+  "currency_name": "Dollar",
+  "geonameid": 2077456,
+  "iso2": "AU",
+  "iso3": "AUS",
+  "names": {
+    "en": "Australia"
+  },
+  "phone_prefix": "61",
+  "population": 24992369,
+  "tld": ".au"
+}

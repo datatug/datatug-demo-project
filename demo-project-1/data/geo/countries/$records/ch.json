@@ -1,0 +1,16 @@
+{
+  "area_km2": 41290,
+  "capital": "Bern",
+  "continent": "EU",
+  "currency_code": "CHF",
+  "currency_name": "Franc",
+  "geonameid": 2658434,
+  "iso2": "CH",
+  "iso3": "CHE",
+  "names": {
+    "en": "Switzerland"
+  },
+  "phone_prefix": "41",
+  "population": 8516543,
+  "tld": ".ch"
+}

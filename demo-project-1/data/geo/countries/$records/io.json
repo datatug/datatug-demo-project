@@ -1,0 +1,16 @@
+{
+  "area_km2": 60,
+  "capital": "Diego Garcia",
+  "continent": "AS",
+  "currency_code": "USD",
+  "currency_name": "Dollar",
+  "geonameid": 1282588,
+  "iso2": "IO",
+  "iso3": "IOT",
+  "names": {
+    "en": "British Indian Ocean Territory"
+  },
+  "phone_prefix": "246",
+  "population": 4000,
+  "tld": ".io"
+}

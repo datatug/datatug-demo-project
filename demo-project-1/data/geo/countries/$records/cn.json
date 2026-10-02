@@ -1,0 +1,16 @@
+{
+  "area_km2": 9596960,
+  "capital": "Beijing",
+  "continent": "AS",
+  "currency_code": "CNY",
+  "currency_name": "Yuan Renminbi",
+  "geonameid": 1814991,
+  "iso2": "CN",
+  "iso3": "CHN",
+  "names": {
+    "en": "China"
+  },
+  "phone_prefix": "86",
+  "population": 1411778724,
+  "tld": ".cn"
+}

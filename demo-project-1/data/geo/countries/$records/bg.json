@@ -1,0 +1,16 @@
+{
+  "area_km2": 110910,
+  "capital": "Sofia",
+  "continent": "EU",
+  "currency_code": "BGN",
+  "currency_name": "Lev",
+  "geonameid": 732800,
+  "iso2": "BG",
+  "iso3": "BGR",
+  "names": {
+    "en": "Bulgaria"
+  },
+  "phone_prefix": "359",
+  "population": 7000039,
+  "tld": ".bg"
+}

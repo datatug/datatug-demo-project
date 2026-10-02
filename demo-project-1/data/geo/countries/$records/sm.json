@@ -1,0 +1,16 @@
+{
+  "area_km2": 61.2,
+  "capital": "San Marino",
+  "continent": "EU",
+  "currency_code": "EUR",
+  "currency_name": "Euro",
+  "geonameid": 3168068,
+  "iso2": "SM",
+  "iso3": "SMR",
+  "names": {
+    "en": "San Marino"
+  },
+  "phone_prefix": "378",
+  "population": 33785,
+  "tld": ".sm"
+}

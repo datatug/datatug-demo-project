@@ -1,0 +1,16 @@
+{
+  "area_km2": 83858,
+  "capital": "Vienna",
+  "continent": "EU",
+  "currency_code": "EUR",
+  "currency_name": "Euro",
+  "geonameid": 2782113,
+  "iso2": "AT",
+  "iso3": "AUT",
+  "names": {
+    "en": "Austria"
+  },
+  "phone_prefix": "43",
+  "population": 8847037,
+  "tld": ".at"
+}

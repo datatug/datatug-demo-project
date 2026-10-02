@@ -1,0 +1,16 @@
+{
+  "area_km2": 34.6,
+  "capital": "Kingston",
+  "continent": "OC",
+  "currency_code": "AUD",
+  "currency_name": "Dollar",
+  "geonameid": 2155115,
+  "iso2": "NF",
+  "iso3": "NFK",
+  "names": {
+    "en": "Norfolk Island"
+  },
+  "phone_prefix": "672",
+  "population": 1828,
+  "tld": ".nf"
+}

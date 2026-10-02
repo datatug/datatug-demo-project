@@ -1,0 +1,16 @@
+{
+  "area_km2": 547030,
+  "capital": "Paris",
+  "continent": "EU",
+  "currency_code": "EUR",
+  "currency_name": "Euro",
+  "geonameid": 3017382,
+  "iso2": "FR",
+  "iso3": "FRA",
+  "names": {
+    "en": "France"
+  },
+  "phone_prefix": "33",
+  "population": 66987244,
+  "tld": ".fr"
+}

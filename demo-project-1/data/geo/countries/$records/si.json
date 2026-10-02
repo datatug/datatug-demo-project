@@ -1,0 +1,16 @@
+{
+  "area_km2": 20273,
+  "capital": "Ljubljana",
+  "continent": "EU",
+  "currency_code": "EUR",
+  "currency_name": "Euro",
+  "geonameid": 3190538,
+  "iso2": "SI",
+  "iso3": "SVN",
+  "names": {
+    "en": "Slovenia"
+  },
+  "phone_prefix": "386",
+  "population": 2067372,
+  "tld": ".si"
+}

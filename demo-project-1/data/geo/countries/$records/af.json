@@ -1,0 +1,16 @@
+{
+  "area_km2": 647500,
+  "capital": "Kabul",
+  "continent": "AS",
+  "currency_code": "AFN",
+  "currency_name": "Afghani",
+  "geonameid": 1149361,
+  "iso2": "AF",
+  "iso3": "AFG",
+  "names": {
+    "en": "Afghanistan"
+  },
+  "phone_prefix": "93",
+  "population": 37172386,
+  "tld": ".af"
+}

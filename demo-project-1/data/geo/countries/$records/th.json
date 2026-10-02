@@ -1,0 +1,16 @@
+{
+  "area_km2": 514000,
+  "capital": "Bangkok",
+  "continent": "AS",
+  "currency_code": "THB",
+  "currency_name": "Baht",
+  "geonameid": 1605651,
+  "iso2": "TH",
+  "iso3": "THA",
+  "names": {
+    "en": "Thailand"
+  },
+  "phone_prefix": "66",
+  "population": 69428524,
+  "tld": ".th"
+}

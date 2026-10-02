@@ -1,0 +1,5 @@
+{
+  "alias": "Czech Republic",
+  "country": "cz",
+  "source": "chinook-database Invoice.BillingCountry; manual match: Chinook uses the former short name; countries.names.en is 'Czechia'"
+}

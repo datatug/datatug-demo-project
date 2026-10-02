@@ -1,0 +1,16 @@
+{
+  "area_km2": 6.5,
+  "capital": "Gibraltar",
+  "continent": "EU",
+  "currency_code": "GIP",
+  "currency_name": "Pound",
+  "geonameid": 2411586,
+  "iso2": "GI",
+  "iso3": "GIB",
+  "names": {
+    "en": "Gibraltar"
+  },
+  "phone_prefix": "350",
+  "population": 33718,
+  "tld": ".gi"
+}

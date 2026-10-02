@@ -1,0 +1,16 @@
+{
+  "area_km2": 582650,
+  "capital": "Nairobi",
+  "continent": "AF",
+  "currency_code": "KES",
+  "currency_name": "Shilling",
+  "geonameid": 192950,
+  "iso2": "KE",
+  "iso3": "KEN",
+  "names": {
+    "en": "Kenya"
+  },
+  "phone_prefix": "254",
+  "population": 51393010,
+  "tld": ".ke"
+}

@@ -1,0 +1,16 @@
+{
+  "area_km2": 98480,
+  "capital": "Seoul",
+  "continent": "AS",
+  "currency_code": "KRW",
+  "currency_name": "Won",
+  "geonameid": 1835841,
+  "iso2": "KR",
+  "iso3": "KOR",
+  "names": {
+    "en": "South Korea"
+  },
+  "phone_prefix": "82",
+  "population": 51635256,
+  "tld": ".kr"
+}

@@ -1,0 +1,16 @@
+{
+  "area_km2": 803940,
+  "capital": "Islamabad",
+  "continent": "AS",
+  "currency_code": "PKR",
+  "currency_name": "Rupee",
+  "geonameid": 1168579,
+  "iso2": "PK",
+  "iso3": "PAK",
+  "names": {
+    "en": "Pakistan"
+  },
+  "phone_prefix": "92",
+  "population": 212215030,
+  "tld": ".pk"
+}

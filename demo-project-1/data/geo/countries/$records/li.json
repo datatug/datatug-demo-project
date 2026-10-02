@@ -1,0 +1,16 @@
+{
+  "area_km2": 160,
+  "capital": "Vaduz",
+  "continent": "EU",
+  "currency_code": "CHF",
+  "currency_name": "Franc",
+  "geonameid": 3042058,
+  "iso2": "LI",
+  "iso3": "LIE",
+  "names": {
+    "en": "Liechtenstein"
+  },
+  "phone_prefix": "423",
+  "population": 37910,
+  "tld": ".li"
+}

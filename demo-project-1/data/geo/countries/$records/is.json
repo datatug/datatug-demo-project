@@ -1,0 +1,16 @@
+{
+  "area_km2": 103000,
+  "capital": "Reykjavik",
+  "continent": "EU",
+  "currency_code": "ISK",
+  "currency_name": "Krona",
+  "geonameid": 2629691,
+  "iso2": "IS",
+  "iso3": "ISL",
+  "names": {
+    "en": "Iceland"
+  },
+  "phone_prefix": "354",
+  "population": 353574,
+  "tld": ".is"
+}

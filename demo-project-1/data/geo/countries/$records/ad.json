@@ -1,0 +1,16 @@
+{
+  "area_km2": 468,
+  "capital": "Andorra la Vella",
+  "continent": "EU",
+  "currency_code": "EUR",
+  "currency_name": "Euro",
+  "geonameid": 3041565,
+  "iso2": "AD",
+  "iso3": "AND",
+  "names": {
+    "en": "Andorra"
+  },
+  "phone_prefix": "376",
+  "population": 77006,
+  "tld": ".ad"
+}

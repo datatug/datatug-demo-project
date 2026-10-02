@@ -1,0 +1,10 @@
+{
+  "country": "it",
+  "fetched_at": "2026-10-02T09:26:00Z",
+  "indicator": "SP.POP.TOTL",
+  "iso3": "ITA",
+  "population": 58915656,
+  "source_updated": "2026-07-13",
+  "source_url": "https://api.worldbank.org/v2/country/ITA/indicator/SP.POP.TOTL?format=json&mrnev=1",
+  "year": 2025
+}

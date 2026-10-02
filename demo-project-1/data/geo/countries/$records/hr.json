@@ -1,0 +1,16 @@
+{
+  "area_km2": 56542,
+  "capital": "Zagreb",
+  "continent": "EU",
+  "currency_code": "EUR",
+  "currency_name": "Euro",
+  "geonameid": 3202326,
+  "iso2": "HR",
+  "iso3": "HRV",
+  "names": {
+    "en": "Croatia"
+  },
+  "phone_prefix": "385",
+  "population": 3871833,
+  "tld": ".hr"
+}

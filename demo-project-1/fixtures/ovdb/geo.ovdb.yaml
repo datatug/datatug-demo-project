@@ -1,0 +1,35 @@
+# The geo-ingitdb reference data the hero query needs, mounted by `ovdb serve`:
+# the vendored copy in ../../data/geo (refresh it with scripts/sync-geo-data.sh).
+database: {id: geo, schema_mode: strict}
+storage: {engine: ingitdb, path: ../../data/geo}
+schemas:
+  collections:
+    countries:
+      fields:
+        names: {type: object}
+        iso2: {type: string}
+        iso3: {type: string}
+        continent: {type: string}
+        capital: {type: string}
+        population: {type: integer}
+        area_km2: {type: number}
+        currency_code: {type: string}
+        currency_name: {type: string}
+        phone_prefix: {type: string}
+        tld: {type: string}
+        geonameid: {type: integer}
+    population_wb:
+      fields:
+        country: {type: string}
+        iso3: {type: string}
+        year: {type: integer}
+        population: {type: integer}
+        indicator: {type: string}
+        source_url: {type: string}
+        fetched_at: {type: string}
+        source_updated: {type: string}
+    country_aliases:
+      fields:
+        alias: {type: string}
+        country: {type: string}
+        source: {type: string}

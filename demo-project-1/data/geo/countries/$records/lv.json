@@ -1,0 +1,16 @@
+{
+  "area_km2": 64589,
+  "capital": "Riga",
+  "continent": "EU",
+  "currency_code": "EUR",
+  "currency_name": "Euro",
+  "geonameid": 458258,
+  "iso2": "LV",
+  "iso3": "LVA",
+  "names": {
+    "en": "Latvia"
+  },
+  "phone_prefix": "371",
+  "population": 1926542,
+  "tld": ".lv"
+}

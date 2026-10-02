@@ -1,0 +1,16 @@
+{
+  "area_km2": 20770,
+  "capital": "Jerusalem",
+  "continent": "AS",
+  "currency_code": "ILS",
+  "currency_name": "Shekel",
+  "geonameid": 294640,
+  "iso2": "IL",
+  "iso3": "ISR",
+  "names": {
+    "en": "Israel"
+  },
+  "phone_prefix": "972",
+  "population": 8883800,
+  "tld": ".il"
+}

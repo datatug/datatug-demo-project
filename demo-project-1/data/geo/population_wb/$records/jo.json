@@ -1,0 +1,10 @@
+{
+  "country": "jo",
+  "fetched_at": "2026-10-02T09:26:00Z",
+  "indicator": "SP.POP.TOTL",
+  "iso3": "JOR",
+  "population": 11520684,
+  "source_updated": "2026-07-13",
+  "source_url": "https://api.worldbank.org/v2/country/JOR/indicator/SP.POP.TOTL?format=json&mrnev=1",
+  "year": 2025
+}

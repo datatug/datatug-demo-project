@@ -1,0 +1,16 @@
+{
+  "area_km2": 237500,
+  "capital": "Bucharest",
+  "continent": "EU",
+  "currency_code": "RON",
+  "currency_name": "Leu",
+  "geonameid": 798549,
+  "iso2": "RO",
+  "iso3": "ROU",
+  "names": {
+    "en": "Romania"
+  },
+  "phone_prefix": "40",
+  "population": 19473936,
+  "tld": ".ro"
+}

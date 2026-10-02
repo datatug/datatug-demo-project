@@ -1,0 +1,16 @@
+{
+  "area_km2": 21040,
+  "capital": "San Salvador",
+  "continent": "NA",
+  "currency_code": "USD",
+  "currency_name": "Dollar",
+  "geonameid": 3585968,
+  "iso2": "SV",
+  "iso3": "SLV",
+  "names": {
+    "en": "El Salvador"
+  },
+  "phone_prefix": "503",
+  "population": 6420744,
+  "tld": ".sv"
+}

@@ -1,0 +1,132 @@
+name: Go
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+
+  # Vet, lint and test the demo project's Go tests (module in tests/) with the
+  # fleet's shared workflow. This is a demo-project repository, not a versioned
+  # library, so releases are not tagged from here.
+  ci:
+    permissions:
+      contents: write # declared by the reusable workflow's (disabled) tagging job
+    uses: strongo/cicd/.github/workflows/workflow.yml@v1.21.0
+    with:
+      working_directory: tests
+      disable-version-bumping: true
+    secrets:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # The hero query over the REAL pinned Chinook file. The ordinary test run above
+  # cannot see that file, so the pinned-Chinook tests skip there; this job checks
+  # out datatug/chinook-database at the revision pinned in
+  # phase1-acceptance.json, verifies the file's SHA-256 against the same pin, and
+  # runs the tests with DATATUG_REQUIRE_CHINOOK so a missing file fails instead
+  # of skipping. The headline numbers are therefore checked on every change.
+  hero_pinned_chinook:
+    name: Hero query over pinned Chinook
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # actions/checkout v6
+
+      - name: Read the Chinook pin
+        id: pin
+        run: |
+          set -euo pipefail
+          pin=demo-project-1/fixtures/chinook/phase1-acceptance.json
+          {
+            echo "repository=$(jq -r .database.repository "$pin" | sed 's#https://github.com/##')"
+            echo "revision=$(jq -r .database.revision "$pin")"
+            echo "path=$(jq -r .database.path "$pin")"
+            echo "sha256=$(jq -r .database.sha256 "$pin")"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Checkout pinned Chinook database
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # actions/checkout v6
+        with:
+          repository: ${{ steps.pin.outputs.repository }}
+          ref: ${{ steps.pin.outputs.revision }}
+          path: chinook-database
+          persist-credentials: false
+
+      - name: Verify the Chinook file against the pin
+        run: |
+          set -euo pipefail
+          echo "${{ steps.pin.outputs.sha256 }}  chinook-database/${{ steps.pin.outputs.path }}" | sha256sum --check --strict
+
+      - name: Install Go
+        uses: actions/setup-go@v7
+        with:
+          go-version-file: tests/go.mod
+
+      - name: Run the pinned-Chinook tests
+        env:
+          DATATUG_CHINOOK_DB: ${{ github.workspace }}/chinook-database/${{ steps.pin.outputs.path }}
+          DATATUG_REQUIRE_CHINOOK: "1"
+        run: go -C tests test . -run 'TestPinnedChinookDatabase|TestHeroQuery_PinnedChinook' -v -count=1
+
+  # The vendored geo data must be exactly geo-ingitdb at the commit recorded in
+  # data/geo/.vendored-from, and must itself be a valid inGitDB database. Scripts
+  # are shellchecked and the Python helper must at least compile.
+  vendored_data_and_scripts:
+    name: Vendored geo data and scripts
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # actions/checkout v6
+
+      - name: Read the vendored geo-ingitdb commit
+        id: vendored
+        run: |
+          set -euo pipefail
+          echo "commit=$(sed -n 's/^commit=//p' demo-project-1/data/geo/.vendored-from)" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout geo-ingitdb at that commit
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # actions/checkout v6
+        with:
+          repository: ingitdb/geo-ingitdb
+          ref: ${{ steps.vendored.outputs.commit }}
+          path: geo-ingitdb
+          persist-credentials: false
+
+      - name: Vendored copy matches geo-ingitdb
+        run: scripts/sync-geo-data.sh --check geo-ingitdb
+
+      # The datatug organization only allows a fixed list of third-party actions,
+      # which excludes ingitdb/ingitdb-action, so the pinned ingitdb-cli release is
+      # installed here with its SHA-256 checked (the same release and checks that
+      # action performs).
+      - name: Install pinned ingitdb CLI
+        env:
+          INGITDB_VERSION: 0.68.2
+          INGITDB_SHA256: d00ba83a02b64025884a495b94245640c760dc94d1726f4db6f33d32ec9d4dce
+        run: |
+          set -euo pipefail
+          archive="ingitdb_${INGITDB_VERSION}_linux_amd64.tar.gz"
+          curl --fail --silent --show-error --location \
+            "https://github.com/ingitdb/ingitdb-cli/releases/download/v${INGITDB_VERSION}/${archive}" \
+            --output "${RUNNER_TEMP}/${archive}"
+          echo "${INGITDB_SHA256}  ${RUNNER_TEMP}/${archive}" | sha256sum --check --strict
+          tar --extract --gzip --file "${RUNNER_TEMP}/${archive}" --directory "${RUNNER_TEMP}" ingitdb
+          install -m 0755 "${RUNNER_TEMP}/ingitdb" "${RUNNER_TEMP}/bin-ingitdb"
+          mkdir -p "${RUNNER_TEMP}/bin" && mv "${RUNNER_TEMP}/bin-ingitdb" "${RUNNER_TEMP}/bin/ingitdb"
+          echo "${RUNNER_TEMP}/bin" >> "$GITHUB_PATH"
+
+      - name: Validate the vendored inGitDB database
+        run: ingitdb validate --path demo-project-1/data/geo
+
+      - name: Shellcheck the scripts
+        run: shellcheck scripts/*.sh
+
+      - name: Compile the Python helper
+        run: python3 -m py_compile scripts/prepare_chinook.py
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"

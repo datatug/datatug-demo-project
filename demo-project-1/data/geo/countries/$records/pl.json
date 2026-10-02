@@ -1,0 +1,16 @@
+{
+  "area_km2": 312685,
+  "capital": "Warsaw",
+  "continent": "EU",
+  "currency_code": "PLN",
+  "currency_name": "Zloty",
+  "geonameid": 798544,
+  "iso2": "PL",
+  "iso3": "POL",
+  "names": {
+    "en": "Poland"
+  },
+  "phone_prefix": "48",
+  "population": 37978548,
+  "tld": ".pl"
+}

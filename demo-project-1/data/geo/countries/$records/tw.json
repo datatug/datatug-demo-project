@@ -1,0 +1,16 @@
+{
+  "area_km2": 35980,
+  "capital": "Taipei",
+  "continent": "AS",
+  "currency_code": "TWD",
+  "currency_name": "Dollar",
+  "geonameid": 1668284,
+  "iso2": "TW",
+  "iso3": "TWN",
+  "names": {
+    "en": "Taiwan"
+  },
+  "phone_prefix": "886",
+  "population": 23451837,
+  "tld": ".tw"
+}

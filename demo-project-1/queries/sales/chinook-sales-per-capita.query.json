@@ -1,0 +1,25 @@
+{
+  "id": "chinook-sales-per-capita",
+  "title": "Chinook sales per capita by country",
+  "type": "DTQL",
+  "purpose": "Which countries buy the most music relative to their population? Chinook invoices, country alias, World Bank population.",
+  "federation": {
+    "ovdbBaseUrl": "http://127.0.0.1:50501",
+    "tables": [
+      {"name": "Invoice", "database": "chinook", "fields": ["BillingCountry", "Total"]},
+      {"name": "country_aliases", "database": "geo", "fields": ["alias", "country"]},
+      {"name": "population_wb", "database": "geo", "fields": ["country", "year", "population"]}
+    ]
+  },
+  "recordsets": [
+    {
+      "columns": [
+        {"name": "country", "type": "string"},
+        {"name": "totalSales", "type": "number"},
+        {"name": "population", "type": "number"},
+        {"name": "populationYear", "type": "number"},
+        {"name": "salesPerMillion", "type": "number"}
+      ]
+    }
+  ]
+}

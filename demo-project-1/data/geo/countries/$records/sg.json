@@ -1,0 +1,16 @@
+{
+  "area_km2": 692.7,
+  "capital": "Singapore",
+  "continent": "AS",
+  "currency_code": "SGD",
+  "currency_name": "Dollar",
+  "geonameid": 1880251,
+  "iso2": "SG",
+  "iso3": "SGP",
+  "names": {
+    "en": "Singapore"
+  },
+  "phone_prefix": "65",
+  "population": 5638676,
+  "tld": ".sg"
+}

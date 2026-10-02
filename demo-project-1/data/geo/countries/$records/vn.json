@@ -1,0 +1,16 @@
+{
+  "area_km2": 329560,
+  "capital": "Hanoi",
+  "continent": "AS",
+  "currency_code": "VND",
+  "currency_name": "Dong",
+  "geonameid": 1562822,
+  "iso2": "VN",
+  "iso3": "VNM",
+  "names": {
+    "en": "Vietnam"
+  },
+  "phone_prefix": "84",
+  "population": 95540395,
+  "tld": ".vn"
+}
