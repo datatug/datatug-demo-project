@@ -5,25 +5,34 @@ DALgo's SQLite adapter addresses records by an `id` column, which the upstream
 Chinook tables do not have. This copies the source file, adds a stable text
 `id` derived from each table's primary key (every original column is kept) and
 can emit the strict OpenVaultDB manifest for the result. The logic mirrors
-openvaultdb/cloud/server/prepare_fixture.py, but accepts the demo project's pin
-(fixtures/chinook/phase1-acceptance.json) as well as that service's pin; both
-files hold identical rows.
+openvaultdb/cloud/server/prepare_fixture.py.
+
+The one pin is demo-project-1/fixtures/chinook/phase1-acceptance.json (repository,
+revision, path and SHA-256 of the database file); the source must match its
+SHA-256. Requires Python 3.10 or newer.
 
 usage: prepare_chinook.py SOURCE.sqlite OUTPUT.sqlite [--manifest MANIFEST.yaml]
+       prepare_chinook.py --pin repository|revision|path|sha256
 """
 
+from __future__ import annotations
+
+import sys
+
+if sys.version_info < (3, 10):
+    raise SystemExit(f"prepare_chinook.py needs Python 3.10 or newer (found {sys.version.split()[0]})")
+
 import hashlib
+import json
 import shutil
 import sqlite3
-import sys
 from pathlib import Path
 
-ACCEPTED_SHA256 = {
-    # datatug/chinook-database ChinookDatabase/DataSources/Chinook_Sqlite.sqlite
-    "f82efedb6c5c40734609e168bc5be5616a2eca6b90ed0048451a8674625e03a3",
-    # openvaultdb/cloud/server/fixture/Chinook_Sqlite.sqlite
-    "7651ba378ac2fcd0dfc3c66fb101f7a7eed3ba39a612ec642b96e20702061f15",
-}
+PIN_FILE = Path(__file__).resolve().parent.parent / "demo-project-1" / "fixtures" / "chinook" / "phase1-acceptance.json"
+
+
+def pinned_database() -> dict:
+    return json.loads(PIN_FILE.read_text())["database"]
 
 
 def field_type(sql_type: str) -> str:
@@ -37,8 +46,9 @@ def field_type(sql_type: str) -> str:
 
 def main(source: Path, output: Path, manifest_path: Path | None) -> None:
     digest = hashlib.sha256(source.read_bytes()).hexdigest()
-    if digest not in ACCEPTED_SHA256:
-        raise SystemExit(f"{source}: SHA-256 {digest} is not a pinned Chinook fixture")
+    pinned = pinned_database()["sha256"]
+    if digest != pinned:
+        raise SystemExit(f"{source}: SHA-256 {digest} is not the pinned Chinook file ({pinned}, see {PIN_FILE.name})")
     output.parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(source, output)
     connection = sqlite3.connect(output)
@@ -81,6 +91,11 @@ def main(source: Path, output: Path, manifest_path: Path | None) -> None:
 
 if __name__ == "__main__":
     args = sys.argv[1:]
+    if len(args) == 2 and args[0] == "--pin":
+        if args[1] not in ("repository", "revision", "path", "sha256"):
+            raise SystemExit(__doc__)
+        print(pinned_database()[args[1]])
+        raise SystemExit(0)
     manifest = None
     if len(args) == 4 and args[2] == "--manifest":
         manifest = Path(args[3])
