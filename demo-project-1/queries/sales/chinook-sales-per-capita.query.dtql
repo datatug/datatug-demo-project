@@ -1,0 +1,33 @@
+# Which countries buy the most music relative to their population?
+#
+#   Invoice (Chinook, BillingCountry is a name such as "USA")
+#     -> country_aliases (alias -> ISO country key)
+#        -> population_wb (World Bank SP.POP.TOTL, latest year)
+#
+# Three sources, one nested join, then grouped. No AI is involved: the same
+# document always returns the same rows. Totals are floating point (Chinook
+# stores Total as REAL); the exact `money` policy is not available for a
+# three-source join or an ordered result, so consumers should round for display.
+from:
+  database: chinook
+  name: Invoice
+  alias: i
+  joins:
+    - from:
+        database: geo
+        name: country_aliases
+        alias: a
+        joins:
+          - from: {database: geo, name: population_wb, alias: p}
+            on: [{left: {field: country, source: a}, op: '==', right: {field: country, source: p}}]
+      on: [{left: {field: BillingCountry, source: i}, op: '==', right: {field: alias, source: a}}]
+groupBy: [{field: alias, source: a}, {field: year, source: p}, {field: population, source: p}]
+columns:
+  - {field: alias, source: a, as: country}
+  - {aggregate: {function: sum, args: [{field: Total, source: i}]}, as: totalSales}
+  - {field: population, source: p, as: population}
+  - {field: year, source: p, as: populationYear}
+  - {binary: {op: '*', left: {binary: {op: '/', left: {aggregate: {function: sum, args: [{field: Total, source: i}]}}, right: {field: population, source: p}}}, right: {value: 1000000}}, as: salesPerMillion}
+orderBy:
+  - binary: {op: '*', left: {binary: {op: '/', left: {aggregate: {function: sum, args: [{field: Total, source: i}]}}, right: {field: population, source: p}}}, right: {value: 1000000}}
+    desc: true

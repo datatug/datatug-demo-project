@@ -24,12 +24,61 @@
           "source": "support-notes",
           "collection": "support-notes",
           "column": "Country"
+        },
+        {
+          "source": "chinook",
+          "collection": "Invoice",
+          "column": "BillingCountry"
+        },
+        {
+          "source": "geo",
+          "collection": "country_aliases",
+          "column": "alias"
         }
       ]
     },
     {
       "id": "Currency",
       "type": "string"
+    },
+    {
+      "id": "alpha2",
+      "type": "string",
+      "namePatterns": [
+        {
+          "type": "exact",
+          "value": "iso2"
+        }
+      ],
+      "mappings": [
+        {
+          "source": "geo",
+          "collection": "countries",
+          "column": "iso2"
+        }
+      ]
+    },
+    {
+      "id": "alpha3",
+      "type": "string",
+      "namePatterns": [
+        {
+          "type": "exact",
+          "value": "iso3"
+        }
+      ],
+      "mappings": [
+        {
+          "source": "geo",
+          "collection": "countries",
+          "column": "iso3"
+        },
+        {
+          "source": "geo",
+          "collection": "population_wb",
+          "column": "iso3"
+        }
+      ]
     }
   ]
 }
