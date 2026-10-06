@@ -130,3 +130,6 @@ jobs:
         run: python3 -m py_compile scripts/prepare_chinook.py
         env:
           PYTHONDONTWRITEBYTECODE: "1"
+
+      - name: Check the shared DemoDB connection catalogue
+        run: node --test scripts/test-demodb-connections.mjs

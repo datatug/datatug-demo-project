@@ -113,7 +113,13 @@ func TestDemoProject1_Environments(t *testing.T) {
 
 	for _, env := range envs {
 		t.Run(env.ID, func(t *testing.T) {
-			require.NotEmpty(t, env.DbServers, "environment %s has no dbServers", env.ID)
+			if env.ID == "QA" || env.ID == "UAT" {
+				// Their PostgreSQL editions are visible in the connection catalogue,
+				// but no public query endpoint is configured yet.
+				assert.Empty(t, env.DbServers)
+			} else {
+				require.NotEmpty(t, env.DbServers, "environment %s has no dbServers", env.ID)
+			}
 			for i, server := range env.DbServers {
 				assert.NoError(t, server.ServerRef.Validate(), "dbServers[%d].ServerRef in environment %s", i, env.ID)
 			}
