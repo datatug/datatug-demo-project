@@ -18,7 +18,7 @@ const directory = JSON.parse(directoryBytes.toString('utf8'));
 if (registry.version !== 1 || !Array.isArray(registry.databases) || !registry.databases.length) {
   throw new Error('invalid DemoDB registry');
 }
-const sourceRevision = '3ddf3567e1f22c239c52d8841e4a59c5d6bdee4d';
+const sourceRevision = '8db734caddc1ead40c1237a9d124b74bf0228efb';
 const directoryRevision = '253e419214da22a1bcc2b5e78577bb2d46323074';
 // SHA-256 of each provider's pinned source.sqlite, from its manifest.json at
 // registry.databases[].commit. A browser copy must reject a different build.

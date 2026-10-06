@@ -1,8 +1,8 @@
 {
   "format": "datatug-demo-connections/v1",
   "source": {
-    "registry": "https://github.com/demo-db/websites/blob/3ddf3567e1f22c239c52d8841e4a59c5d6bdee4d/config/databases.json",
-    "registrySha256": "6f515d75c879f5ce9863bd330887921245f0fa2e3c2564ccc6c406dd248546c1",
+    "registry": "https://github.com/demo-db/websites/blob/8db734caddc1ead40c1237a9d124b74bf0228efb/config/databases.json",
+    "registrySha256": "0f28643212a7b9b7d3187ebf9a6148d893e0b45390f3504399b1ac1f512bf65c",
     "discovery": "https://demodb.dev/.well-known/openvaultdb",
     "directory": "https://github.com/openvaultdb/directory/blob/253e419214da22a1bcc2b5e78577bb2d46323074/index.json",
     "directorySha256": "0f677a6bdec44c3974e3d3142fecbbcda21acd21c34c44dae9a9794f29e896e2"
@@ -55,8 +55,8 @@
         "dev"
       ],
       "readiness": "hosted-repository",
-      "source": "https://github.com/demo-db/chinook/tree/732375a3af3d8750ea8cc908d7347678eb41c3fc/ingitdb",
-      "manifest": "https://github.com/demo-db/chinook/blob/732375a3af3d8750ea8cc908d7347678eb41c3fc/ingitdb/export-manifest.json",
+      "source": "https://github.com/demo-db/chinook/tree/411cb7aead96a0b4314f3068c0a0455f869dfdee/ingitdb",
+      "manifest": "https://github.com/demo-db/chinook/blob/411cb7aead96a0b4314f3068c0a0455f869dfdee/ingitdb/export-manifest.json",
       "query": "local-checkout-required",
       "copy": "unavailable"
     },
@@ -107,8 +107,8 @@
         "dev"
       ],
       "readiness": "hosted-repository",
-      "source": "https://github.com/demo-db/northwind/tree/5cedb821482cebb2618f7f741a40c9b2c815a28c/ingitdb",
-      "manifest": "https://github.com/demo-db/northwind/blob/5cedb821482cebb2618f7f741a40c9b2c815a28c/ingitdb/export-manifest.json",
+      "source": "https://github.com/demo-db/northwind/tree/adb71d17af9aa457d19326d0d275f7b924267659/ingitdb",
+      "manifest": "https://github.com/demo-db/northwind/blob/adb71d17af9aa457d19326d0d275f7b924267659/ingitdb/export-manifest.json",
       "query": "local-checkout-required",
       "copy": "unavailable"
     },
@@ -159,8 +159,8 @@
         "dev"
       ],
       "readiness": "hosted-repository",
-      "source": "https://github.com/demo-db/pubs/tree/e34b2c06400ab08ab72adabb5129e67e50f9ff22/ingitdb",
-      "manifest": "https://github.com/demo-db/pubs/blob/e34b2c06400ab08ab72adabb5129e67e50f9ff22/ingitdb/export-manifest.json",
+      "source": "https://github.com/demo-db/pubs/tree/3e37e01e28f610f1d65c9e809a79ab6522928ad2/ingitdb",
+      "manifest": "https://github.com/demo-db/pubs/blob/3e37e01e28f610f1d65c9e809a79ab6522928ad2/ingitdb/export-manifest.json",
       "query": "local-checkout-required",
       "copy": "unavailable"
     },
@@ -211,8 +211,8 @@
         "dev"
       ],
       "readiness": "hosted-repository",
-      "source": "https://github.com/demo-db/sakila/tree/48b5c3583510d1c773830a00d5f0a2d31dd67764/ingitdb",
-      "manifest": "https://github.com/demo-db/sakila/blob/48b5c3583510d1c773830a00d5f0a2d31dd67764/ingitdb/export-manifest.json",
+      "source": "https://github.com/demo-db/sakila/tree/7e7de96d904dedc130165691e59a8268ce5fb6d2/ingitdb",
+      "manifest": "https://github.com/demo-db/sakila/blob/7e7de96d904dedc130165691e59a8268ce5fb6d2/ingitdb/export-manifest.json",
       "query": "local-checkout-required",
       "copy": "unavailable"
     },
@@ -263,8 +263,8 @@
         "dev"
       ],
       "readiness": "hosted-repository",
-      "source": "https://github.com/demo-db/adventureworks/tree/0a83ff3161b7ae2247ccf9496c62320afbe80044/ingitdb",
-      "manifest": "https://github.com/demo-db/adventureworks/blob/0a83ff3161b7ae2247ccf9496c62320afbe80044/ingitdb/export-manifest.json",
+      "source": "https://github.com/demo-db/adventureworks/tree/b4f6a9909c0de58767663dce9006c7ac522ce6a7/ingitdb",
+      "manifest": "https://github.com/demo-db/adventureworks/blob/b4f6a9909c0de58767663dce9006c7ac522ce6a7/ingitdb/export-manifest.json",
       "query": "local-checkout-required",
       "copy": "unavailable"
     },
@@ -315,8 +315,8 @@
         "dev"
       ],
       "readiness": "hosted-repository",
-      "source": "https://github.com/demo-db/employees/tree/5609538571e19a4fba2445362410e9f341af29f5/ingitdb",
-      "manifest": "https://github.com/demo-db/employees/blob/5609538571e19a4fba2445362410e9f341af29f5/ingitdb/export-manifest.json",
+      "source": "https://github.com/demo-db/employees/tree/397f3e32cb970e55bc4a528bb255c41272f6103f/ingitdb",
+      "manifest": "https://github.com/demo-db/employees/blob/397f3e32cb970e55bc4a528bb255c41272f6103f/ingitdb/export-manifest.json",
       "query": "local-checkout-required",
       "copy": "unavailable"
     }
