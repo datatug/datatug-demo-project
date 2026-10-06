@@ -1,6 +1,6 @@
 {
   "id": "datatug-demo-project",
-  "title": "DataTug Demo Project 1",
+  "title": "DataTug Demo: DemoDB datasets",
   "created": {
     "at": "2020-11-02T22:22:13.1313277Z"
   },
@@ -30,6 +30,13 @@
     },
     {
       "id": "prod"
+    },
+    {
+      "id": "QA"
+    },
+    {
+      "id": "UAT"
     }
-  ]
+  ],
+  "connectionCatalog": "connections/demo-db.json"
 }

@@ -1,7 +1,33 @@
-# DataTug project: 
+# DataTug demo project
 
 ## Project ID
 datatug-demo-project
+
+This is the single shared DataTug demo project. Its
+[connection catalogue](connections/demo-db.json) lists the six public DemoDB
+datasets in SQLite, PostgreSQL, and inGitDB editions (18 connections). Each
+connection carries dataset and storage tags. The Dev environment lists the
+public SQLite APIs and repository-hosted inGitDB editions; QA and UAT refer to
+the same six PostgreSQL edition identities. PostgreSQL API access is pending,
+so those connections are visible but cannot yet execute a query. The inGitDB
+edition links to a pinned repository snapshot and needs a local checkout for
+native queries. The SQLite APIs are read-only and can be copied into the
+browser's persistent IndexedDB Dev connection only by an explicit user action.
+The browser copy retains the public OVDB descriptor's table, column, key, and
+relationship projection; it does not enforce SQL foreign-key actions or claim
+an atomic snapshot across tables.
+
+The catalogue also links two [OVDB Directory](https://github.com/openvaultdb/directory)
+BigQuery discoveries as plans. A future live connection will use each user's
+Google account and their selected execution project. These entries do not
+perform a query or copy data today.
+
+Regenerate the catalogue from the pinned DemoDB website registry and OVDB
+Directory inventory with `node scripts/build-demodb-connections.mjs
+/path/to/websites/config/databases.json /path/to/directory/index.json`. Then
+run `node --test scripts/test-demodb-connections.mjs`. Update the registry and
+directory revision pins in the generator only after verifying their source
+commits, the provider fixture digests, and the public server catalogue.
 
 ## [Database models](dbmodels)
 - [chinook](dbmodels/chinook)
