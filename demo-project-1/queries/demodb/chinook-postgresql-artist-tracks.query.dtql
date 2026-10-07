@@ -1,0 +1,25 @@
+from:
+  database: chinook-postgresql
+  schema: chinook
+  name: Artist
+  alias: artist
+  joins:
+    - from:
+        database: chinook-postgresql
+        schema: chinook
+        name: Album
+        alias: album
+        joins:
+          - from: {database: chinook-postgresql, schema: chinook, name: Track, alias: track}
+            on: [{left: {field: AlbumId, source: album}, op: '==', right: {field: AlbumId, source: track}}]
+      on: [{left: {field: ArtistId, source: artist}, op: '==', right: {field: ArtistId, source: album}}]
+groupBy: [{field: ArtistId, source: artist}, {field: Name, source: artist}]
+columns:
+  - {field: ArtistId, source: artist}
+  - {field: Name, source: artist, as: Artist}
+  - {aggregate: {function: count, args: [{field: TrackId, source: track}]}, as: TrackCount}
+  - {aggregate: {function: sum, args: [{field: Milliseconds, source: track}]}, as: TotalMilliseconds}
+orderBy:
+  - {aggregate: {function: count, args: [{field: TrackId, source: track}]}, desc: true}
+  - {field: ArtistId, source: artist}
+limit: 10

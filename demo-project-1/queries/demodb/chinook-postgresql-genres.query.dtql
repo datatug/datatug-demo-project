@@ -1,0 +1,18 @@
+from:
+  database: chinook-postgresql
+  schema: chinook
+  name: Genre
+  alias: pg
+  scan: {orderBy: [{field: GenreId}], limit: 25}
+  joins:
+    - from:
+        database: chinook
+        name: Genre
+        alias: sq
+        scan: {orderBy: [{field: GenreId}], limit: 25}
+      on: [{left: {field: GenreId, source: pg}, op: '==', right: {field: GenreId, source: sq}}]
+columns:
+  - {field: GenreId, source: pg}
+  - {field: Name, source: pg, as: PostgreSQLName}
+  - {field: Name, source: sq, as: SQLiteName}
+limit: 25
