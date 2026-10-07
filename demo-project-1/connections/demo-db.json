@@ -7,7 +7,7 @@
     "directory": "https://github.com/openvaultdb/directory/blob/253e419214da22a1bcc2b5e78577bb2d46323074/index.json",
     "directorySha256": "0f677a6bdec44c3974e3d3142fecbbcda21acd21c34c44dae9a9794f29e896e2",
     "bigQueryHosting": "https://github.com/demo-db/websites/blob/main/config/bigquery-hosting.json",
-    "bigQueryHostingSha256": "97326710af1cb8f8fdb412f36196743d10c20102523240b97130ba9f66a865a9",
+    "bigQueryHostingSha256": "61306dacac6fdc0ae079fc68632a980c70c6a0793f0602d428b3d89f6303c4fa",
     "bigQueryImportTool": {
       "name": "DataTug CLI",
       "version": "v0.62.0",
@@ -358,7 +358,7 @@
       "schemaNotes": {
         "primaryKeys": "Unverified primary-key metadata was omitted from BigQuery declarations; BigQuery does not enforce declared keys.",
         "foreignKeys": "Unverified foreign-key metadata was omitted from BigQuery declarations; BigQuery does not enforce declared keys.",
-        "secondaryIndexes": "Not represented; BigQuery has no secondary indexes."
+        "secondaryIndexes": "Source relational indexes were not migrated; no BigQuery search or vector indexes were created."
       },
       "verification": "https://github.com/demo-db/websites/blob/main/config/bigquery-hosting.json"
     },
@@ -390,7 +390,7 @@
       "schemaNotes": {
         "primaryKeys": "Unverified primary-key metadata was omitted from BigQuery declarations; BigQuery does not enforce declared keys.",
         "foreignKeys": "Unverified foreign-key metadata was omitted from BigQuery declarations; BigQuery does not enforce declared keys.",
-        "secondaryIndexes": "Not represented; BigQuery has no secondary indexes."
+        "secondaryIndexes": "Source relational indexes were not migrated; no BigQuery search or vector indexes were created."
       },
       "verification": "https://github.com/demo-db/websites/blob/main/config/bigquery-hosting.json"
     },
@@ -422,7 +422,7 @@
       "schemaNotes": {
         "primaryKeys": "Unverified primary-key metadata was omitted from BigQuery declarations; BigQuery does not enforce declared keys.",
         "foreignKeys": "Unverified foreign-key metadata was omitted from BigQuery declarations; BigQuery does not enforce declared keys.",
-        "secondaryIndexes": "Not represented; BigQuery has no secondary indexes."
+        "secondaryIndexes": "Source relational indexes were not migrated; no BigQuery search or vector indexes were created."
       },
       "verification": "https://github.com/demo-db/websites/blob/main/config/bigquery-hosting.json"
     },
@@ -454,7 +454,7 @@
       "schemaNotes": {
         "primaryKeys": "Unverified primary-key metadata was omitted from BigQuery declarations; BigQuery does not enforce declared keys.",
         "foreignKeys": "Unverified foreign-key metadata was omitted from BigQuery declarations; BigQuery does not enforce declared keys.",
-        "secondaryIndexes": "Not represented; BigQuery has no secondary indexes."
+        "secondaryIndexes": "Source relational indexes were not migrated; no BigQuery search or vector indexes were created."
       },
       "verification": "https://github.com/demo-db/websites/blob/main/config/bigquery-hosting.json"
     },
@@ -486,7 +486,7 @@
       "schemaNotes": {
         "primaryKeys": "Unverified primary-key metadata was omitted from BigQuery declarations; BigQuery does not enforce declared keys.",
         "foreignKeys": "Unverified foreign-key metadata was omitted from BigQuery declarations; BigQuery does not enforce declared keys.",
-        "secondaryIndexes": "Not represented; BigQuery has no secondary indexes."
+        "secondaryIndexes": "Source relational indexes were not migrated; no BigQuery search or vector indexes were created."
       },
       "verification": "https://github.com/demo-db/websites/blob/main/config/bigquery-hosting.json"
     },
@@ -518,7 +518,7 @@
       "schemaNotes": {
         "primaryKeys": "Unverified primary-key metadata was omitted from BigQuery declarations; BigQuery does not enforce declared keys.",
         "foreignKeys": "Unverified foreign-key metadata was omitted from BigQuery declarations; BigQuery does not enforce declared keys.",
-        "secondaryIndexes": "Not represented; BigQuery has no secondary indexes."
+        "secondaryIndexes": "Source relational indexes were not migrated; no BigQuery search or vector indexes were created."
       },
       "verification": "https://github.com/demo-db/websites/blob/main/config/bigquery-hosting.json"
     }

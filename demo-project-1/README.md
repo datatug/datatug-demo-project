@@ -23,10 +23,10 @@ Google-authenticated accounts have BigQuery `READER` access to the datasets;
 queries must use an execution project selected by the user, which may incur
 charges there. DataTug browser query execution and copy are not enabled. The
 catalogue links the verified [hosting manifest](https://github.com/demo-db/websites/blob/main/config/bigquery-hosting.json),
-which records source fixture hashes, counts, and schema differences. BigQuery
-does not represent source secondary indexes, and unverified key metadata is
-omitted. The BigQuery Console link is informational; choose your own execution
-project before running a query.
+which records source fixture hashes, counts, and schema differences. Source
+relational indexes were not migrated, and no BigQuery search or vector indexes
+were created. Unverified key metadata is omitted. The BigQuery Console link is
+informational; choose your own execution project before running a query.
 
 The catalogue also links two [OVDB Directory](https://github.com/openvaultdb/directory)
 BigQuery discoveries as separate plans. These external entries remain blocked
