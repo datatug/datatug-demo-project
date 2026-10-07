@@ -1,0 +1,24 @@
+{
+  "id": "chinook-postgresql-artist-tracks",
+  "title": "Chinook PostgreSQL artists by track count",
+  "type": "DTQL",
+  "purpose": "Join the hosted PostgreSQL Artist, Album, and Track tables, then rank artists by track count and total playtime.",
+  "federation": {
+    "ovdbBaseUrl": "https://cloud.openvaultdb.com",
+    "tables": [
+      {"database": "chinook-postgresql", "schema": "chinook", "name": "Artist", "fields": ["ArtistId", "Name"]},
+      {"database": "chinook-postgresql", "schema": "chinook", "name": "Album", "fields": ["AlbumId", "ArtistId"]},
+      {"database": "chinook-postgresql", "schema": "chinook", "name": "Track", "fields": ["TrackId", "AlbumId", "Milliseconds"]}
+    ]
+  },
+  "recordsets": [
+    {
+      "columns": [
+        {"name": "ArtistId", "type": "integer"},
+        {"name": "Artist", "type": "string"},
+        {"name": "TrackCount", "type": "integer"},
+        {"name": "TotalMilliseconds", "type": "integer"}
+      ]
+    }
+  ]
+}

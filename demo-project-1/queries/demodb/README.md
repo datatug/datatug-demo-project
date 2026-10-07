@@ -36,11 +36,17 @@ The verifier opens inputs read-only, checks their catalogue SHA-256 values, and
 compares every returned row with the checked-in result snapshot. It needs only
 Python's standard library. No database files are copied into this project.
 
-The saved [Chinook PostgreSQL and SQLite genre query](chinook-postgresql-genres.query.dtql)
-is a separate, bounded DTQL example for DataTug's browser federation runner.
-It matches the first 25 genre IDs across the two hosted OVDB editions and
-shows each edition's name. Its PostgreSQL endpoint is still pending public
-deployment, so the shared connection catalogue does not yet offer a Run link.
+The saved [Chinook PostgreSQL artist-track query](chinook-postgresql-artist-tracks.query.dtql)
+joins the hosted PostgreSQL `Artist`, `Album`, and `Track` tables, counts tracks
+and sums playtime per artist, and shows the ten artists with the most tracks.
+It scans all rows of each source before aggregating (the pinned fixture has
+275 artists, 347 albums, and 3,503 tracks); DataTug's joined-query executor
+rejects an aggregate scan above its 10,000-row input bound instead of showing
+partial totals. A separate [PostgreSQL and SQLite genre query](chinook-postgresql-genres.query.dtql)
+shows names from both editions side by side. These are DTQL examples for the
+browser federation runner, distinct from the standalone SQLite SQL examples
+below. The PostgreSQL endpoint is still pending public deployment, so the
+shared connection catalogue does not yet offer a Run link.
 
 ## Chinook
 
