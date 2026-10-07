@@ -7,14 +7,17 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const output = resolve(root, 'demo-project-1/connections/demo-db.json');
 const registryPath = process.argv[2];
 const directoryPath = process.argv[3];
-const check = process.argv[4] === '--check';
-if (!registryPath || !directoryPath || (process.argv.length !== 4 && !(process.argv.length === 5 && check))) {
-  throw new Error('usage: node scripts/build-demodb-connections.mjs /path/to/websites/config/databases.json /path/to/directory/index.json [--check]');
+const hostingPath = process.argv[4];
+const check = process.argv[5] === '--check';
+if (!registryPath || !directoryPath || !hostingPath || (process.argv.length !== 5 && !(process.argv.length === 6 && check))) {
+  throw new Error('usage: node scripts/build-demodb-connections.mjs /path/to/websites/config/databases.json /path/to/directory/index.json /path/to/websites/config/bigquery-hosting.json [--check]');
 }
 const registryBytes = await readFile(registryPath);
 const directoryBytes = await readFile(directoryPath);
+const hostingBytes = await readFile(hostingPath);
 const registry = JSON.parse(registryBytes.toString('utf8'));
 const directory = JSON.parse(directoryBytes.toString('utf8'));
+const hosting = JSON.parse(hostingBytes.toString('utf8'));
 if (registry.version !== 1 || !Array.isArray(registry.databases) || !registry.databases.length) {
   throw new Error('invalid DemoDB registry');
 }
@@ -64,6 +67,38 @@ for (const database of registry.databases) {
   });
 }
 if (Object.keys(registry.ingitdbRevisions).length !== seen.size) throw new Error('inGitDB pin set differs from datasets');
+if (hosting.format !== 'demodb-bigquery-hosting/v1' || hosting.projectId !== 'demodb-dev'
+  || hosting.location !== 'US' || hosting.queryAccess?.permissionPrincipal !== 'allAuthenticatedUsers'
+  || hosting.queryAccess?.permissionRole !== 'READER' || hosting.queryAccess?.googleAuthenticationRequired !== true
+  || hosting.queryAccess?.executionProject !== 'user-selected' || hosting.queryAccess?.browserQueryInDataTug !== 'not-enabled'
+  || !Array.isArray(hosting.datasets) || hosting.datasets.length !== seen.size) {
+  throw new Error('invalid verified DemoDB BigQuery hosting manifest');
+}
+const hostedById = new Map(hosting.datasets.map((edition) => [edition.id, edition]));
+if (hostedById.size !== seen.size || [...seen].some((id) => {
+  const edition = hostedById.get(id);
+  const source = registry.databases.find((database) => database.id === id);
+  return !edition || !source || edition.datasetId !== id || edition.verified !== true
+    || edition.sourceSqliteSha256 !== fixtureSha256[id]
+    || edition.sourceRepository !== source.repository || edition.sourceRevision !== source.commit
+    || !Number.isSafeInteger(edition.tableCount) || !Number.isSafeInteger(edition.rowCount);
+})) throw new Error('BigQuery hosting manifest does not match the pinned DemoDB fixtures');
+const bigQueryEditions = [...seen].map((id) => {
+  const edition = hostedById.get(id);
+  return {
+    id: `${id}-bigquery`, dataset: id, storage: 'bigquery', tags: [id, 'bigquery'],
+    sourceProjectId: hosting.projectId, datasetId: edition.datasetId, location: hosting.location,
+    authentication: 'google-account-required', executionProjectId: 'user-selected',
+    publicReadRole: 'READER', publicReadPrincipal: 'allAuthenticatedUsers',
+    readiness: 'public-read-user-project-required', query: 'not-enabled-in-browser', copy: 'not-enabled',
+    tableCount: edition.tableCount, rowCount: edition.rowCount,
+    sourceRepository: edition.sourceRepository, sourceRevision: edition.sourceRevision,
+    sourceSqliteSha256: edition.sourceSqliteSha256,
+    importToolVersion: hosting.sourceTool.version, importToolCommit: hosting.sourceTool.sourceCommit,
+    schemaNotes: hosting.schemaNotes,
+    verification: 'https://github.com/demo-db/websites/blob/main/config/bigquery-hosting.json',
+  };
+});
 const plans = ['bigquery-world-bank-wdi', 'bigquery-new-york-citibike'].map((id) => {
   const entry = directory.sources?.find((source) => source.id === id);
   if (!entry || entry.access_mode !== 'bigquery-native' || entry.query_activation !== 'blocked' || entry.status !== 'inactive') {
@@ -81,8 +116,12 @@ const result = {
     discovery: 'https://demodb.dev/.well-known/openvaultdb',
     directory: `https://github.com/openvaultdb/directory/blob/${directoryRevision}/index.json`,
     directorySha256: sha256(directoryBytes),
+    bigQueryHosting: 'https://github.com/demo-db/websites/blob/main/config/bigquery-hosting.json',
+    bigQueryHostingSha256: sha256(hostingBytes),
+    bigQueryImportTool: hosting.sourceTool,
   },
   connections: entries,
+  bigQueryEditions,
   bigQueryPlans: plans,
 };
 const rendered = `${JSON.stringify(result, null, 2)}\n`;

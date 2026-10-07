@@ -5,7 +5,8 @@ datatug-demo-project
 
 This is the single shared DataTug demo project. Its
 [connection catalogue](connections/demo-db.json) lists the six public DemoDB
-datasets in SQLite, PostgreSQL, and inGitDB editions (18 connections). Each
+datasets in SQLite, PostgreSQL, and inGitDB editions (18 connections), plus six
+hosted BigQuery editions. Each
 connection carries dataset and storage tags. The Dev environment lists the
 public SQLite APIs and repository-hosted inGitDB editions; QA and UAT refer to
 the same six PostgreSQL edition identities. PostgreSQL API access is pending,
@@ -17,18 +18,28 @@ The browser copy retains the public OVDB descriptor's table, column, key, and
 relationship projection; it does not enforce SQL foreign-key actions or claim
 an atomic snapshot across tables.
 
+The six BigQuery datasets are hosted in project `demodb-dev`, location `US`.
+Google-authenticated accounts have BigQuery `READER` access to the datasets;
+queries must use an execution project selected by the user, which may incur
+charges there. DataTug browser query execution and copy are not enabled. The
+catalogue links the verified [hosting manifest](https://github.com/demo-db/websites/blob/main/config/bigquery-hosting.json),
+which records source fixture hashes, counts, and schema differences. Source
+relational indexes were not migrated, and no BigQuery search or vector indexes
+were created. Unverified key metadata is omitted. The BigQuery Console link is
+informational; choose your own execution project before running a query.
+
 The catalogue also links two [OVDB Directory](https://github.com/openvaultdb/directory)
-BigQuery discoveries as plans. A future live connection will use each user's
-Google account and their selected execution project. These entries do not
-perform a query or copy data today.
+BigQuery discoveries as separate plans. These external entries remain blocked
+and cannot run or copy data.
 
 The [guided DemoDB investigations](queries/demodb/README.md) provide three
 fixture-verified standalone SQL examples for each of the six SQLite datasets.
 They become browser-executable when dataset-specific Dev SQL connections are available.
 
-Regenerate the catalogue from the pinned DemoDB website registry and OVDB
-Directory inventory with `node scripts/build-demodb-connections.mjs
-/path/to/websites/config/databases.json /path/to/directory/index.json`. Then
+Regenerate the catalogue from the pinned DemoDB website registry, OVDB
+Directory inventory, and BigQuery hosting manifest with `node
+scripts/build-demodb-connections.mjs /path/to/websites/config/databases.json
+/path/to/directory/index.json /path/to/websites/config/bigquery-hosting.json`. Then
 run `node --test scripts/test-demodb-connections.mjs`. Update the registry and
 directory revision pins in the generator only after verifying their source
 commits, the provider fixture digests, and the public server catalogue.

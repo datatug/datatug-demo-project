@@ -74,3 +74,31 @@ test('BigQuery plans link to blocked Directory discoveries and cannot run or cop
     assert.match(plan.directory, /\/openvaultdb\/directory\/blob\/[a-f0-9]{40}\/index\.json$/);
   }
 });
+
+test('hosted BigQuery editions are verified and require a user-owned execution project', () => {
+  assert.equal(catalog.bigQueryEditions.length, datasets.length);
+  assert.equal(catalog.source.bigQueryImportTool.version, 'v0.62.0');
+  assert.match(catalog.source.bigQueryHosting, /^https:\/\/github\.com\/demo-db\/websites\/blob\/main\/config\/bigquery-hosting\.json$/);
+  assert.match(catalog.source.bigQueryHostingSha256, /^[a-f0-9]{64}$/);
+  const expected = new Map([
+    ['chinook', [11, 15607]], ['northwind', [13, 3310]], ['pubs', [11, 255]],
+    ['sakila', [16, 47268]], ['adventureworks', [71, 759240]], ['employees', [6, 13584]],
+  ]);
+  for (const edition of catalog.bigQueryEditions) {
+    assert.equal(edition.storage, 'bigquery');
+    assert.equal(edition.sourceProjectId, 'demodb-dev');
+    assert.equal(edition.datasetId, edition.dataset);
+    assert.equal(edition.location, 'US');
+    assert.equal(edition.authentication, 'google-account-required');
+    assert.equal(edition.publicReadRole, 'READER');
+    assert.equal(edition.publicReadPrincipal, 'allAuthenticatedUsers');
+    assert.equal(edition.executionProjectId, 'user-selected');
+    assert.equal(edition.query, 'not-enabled-in-browser');
+    assert.equal(edition.copy, 'not-enabled');
+    assert.deepEqual([edition.tableCount, edition.rowCount], expected.get(edition.dataset));
+    assert.match(edition.sourceSqliteSha256, /^[a-f0-9]{64}$/);
+    assert.match(edition.sourceRevision, /^[a-f0-9]{40}$/);
+  }
+  assert.equal(catalog.connections.length, 18);
+  assert.equal(catalog.bigQueryPlans.length, 2);
+});

@@ -5,7 +5,15 @@
     "registrySha256": "0f28643212a7b9b7d3187ebf9a6148d893e0b45390f3504399b1ac1f512bf65c",
     "discovery": "https://demodb.dev/.well-known/openvaultdb",
     "directory": "https://github.com/openvaultdb/directory/blob/253e419214da22a1bcc2b5e78577bb2d46323074/index.json",
-    "directorySha256": "0f677a6bdec44c3974e3d3142fecbbcda21acd21c34c44dae9a9794f29e896e2"
+    "directorySha256": "0f677a6bdec44c3974e3d3142fecbbcda21acd21c34c44dae9a9794f29e896e2",
+    "bigQueryHosting": "https://github.com/demo-db/websites/blob/main/config/bigquery-hosting.json",
+    "bigQueryHostingSha256": "61306dacac6fdc0ae079fc68632a980c70c6a0793f0602d428b3d89f6303c4fa",
+    "bigQueryImportTool": {
+      "name": "DataTug CLI",
+      "version": "v0.62.0",
+      "sourceRepository": "https://github.com/datatug/datatug-cli",
+      "sourceCommit": "c6b98734cb4ac33892453b6112c5d8c004e84426"
+    }
   },
   "connections": [
     {
@@ -319,6 +327,200 @@
       "manifest": "https://github.com/demo-db/employees/blob/397f3e32cb970e55bc4a528bb255c41272f6103f/ingitdb/export-manifest.json",
       "query": "local-checkout-required",
       "copy": "unavailable"
+    }
+  ],
+  "bigQueryEditions": [
+    {
+      "id": "chinook-bigquery",
+      "dataset": "chinook",
+      "storage": "bigquery",
+      "tags": [
+        "chinook",
+        "bigquery"
+      ],
+      "sourceProjectId": "demodb-dev",
+      "datasetId": "chinook",
+      "location": "US",
+      "authentication": "google-account-required",
+      "executionProjectId": "user-selected",
+      "publicReadRole": "READER",
+      "publicReadPrincipal": "allAuthenticatedUsers",
+      "readiness": "public-read-user-project-required",
+      "query": "not-enabled-in-browser",
+      "copy": "not-enabled",
+      "tableCount": 11,
+      "rowCount": 15607,
+      "sourceRepository": "https://github.com/demo-db/chinook",
+      "sourceRevision": "26e852cca00101f53a84ef8ee1f1ae389067f5cf",
+      "sourceSqliteSha256": "7651ba378ac2fcd0dfc3c66fb101f7a7eed3ba39a612ec642b96e20702061f15",
+      "importToolVersion": "v0.62.0",
+      "importToolCommit": "c6b98734cb4ac33892453b6112c5d8c004e84426",
+      "schemaNotes": {
+        "primaryKeys": "Unverified primary-key metadata was omitted from BigQuery declarations; BigQuery does not enforce declared keys.",
+        "foreignKeys": "Unverified foreign-key metadata was omitted from BigQuery declarations; BigQuery does not enforce declared keys.",
+        "secondaryIndexes": "Source relational indexes were not migrated; no BigQuery search or vector indexes were created."
+      },
+      "verification": "https://github.com/demo-db/websites/blob/main/config/bigquery-hosting.json"
+    },
+    {
+      "id": "northwind-bigquery",
+      "dataset": "northwind",
+      "storage": "bigquery",
+      "tags": [
+        "northwind",
+        "bigquery"
+      ],
+      "sourceProjectId": "demodb-dev",
+      "datasetId": "northwind",
+      "location": "US",
+      "authentication": "google-account-required",
+      "executionProjectId": "user-selected",
+      "publicReadRole": "READER",
+      "publicReadPrincipal": "allAuthenticatedUsers",
+      "readiness": "public-read-user-project-required",
+      "query": "not-enabled-in-browser",
+      "copy": "not-enabled",
+      "tableCount": 13,
+      "rowCount": 3310,
+      "sourceRepository": "https://github.com/demo-db/northwind",
+      "sourceRevision": "e74726515c3833620b54b7a50d1d273276dd23c1",
+      "sourceSqliteSha256": "279b34136771aee75d802094b3329515a2b01da65d2a20a4a9e3b58c29b4fd20",
+      "importToolVersion": "v0.62.0",
+      "importToolCommit": "c6b98734cb4ac33892453b6112c5d8c004e84426",
+      "schemaNotes": {
+        "primaryKeys": "Unverified primary-key metadata was omitted from BigQuery declarations; BigQuery does not enforce declared keys.",
+        "foreignKeys": "Unverified foreign-key metadata was omitted from BigQuery declarations; BigQuery does not enforce declared keys.",
+        "secondaryIndexes": "Source relational indexes were not migrated; no BigQuery search or vector indexes were created."
+      },
+      "verification": "https://github.com/demo-db/websites/blob/main/config/bigquery-hosting.json"
+    },
+    {
+      "id": "pubs-bigquery",
+      "dataset": "pubs",
+      "storage": "bigquery",
+      "tags": [
+        "pubs",
+        "bigquery"
+      ],
+      "sourceProjectId": "demodb-dev",
+      "datasetId": "pubs",
+      "location": "US",
+      "authentication": "google-account-required",
+      "executionProjectId": "user-selected",
+      "publicReadRole": "READER",
+      "publicReadPrincipal": "allAuthenticatedUsers",
+      "readiness": "public-read-user-project-required",
+      "query": "not-enabled-in-browser",
+      "copy": "not-enabled",
+      "tableCount": 11,
+      "rowCount": 255,
+      "sourceRepository": "https://github.com/demo-db/pubs",
+      "sourceRevision": "6c06c5c7395b03ff1a02c2b1a21485add3e1b65b",
+      "sourceSqliteSha256": "b45b08b7c06441cc0b138b031ea5bd32bd5866aebf874c89d2ebf7fc6abb3691",
+      "importToolVersion": "v0.62.0",
+      "importToolCommit": "c6b98734cb4ac33892453b6112c5d8c004e84426",
+      "schemaNotes": {
+        "primaryKeys": "Unverified primary-key metadata was omitted from BigQuery declarations; BigQuery does not enforce declared keys.",
+        "foreignKeys": "Unverified foreign-key metadata was omitted from BigQuery declarations; BigQuery does not enforce declared keys.",
+        "secondaryIndexes": "Source relational indexes were not migrated; no BigQuery search or vector indexes were created."
+      },
+      "verification": "https://github.com/demo-db/websites/blob/main/config/bigquery-hosting.json"
+    },
+    {
+      "id": "sakila-bigquery",
+      "dataset": "sakila",
+      "storage": "bigquery",
+      "tags": [
+        "sakila",
+        "bigquery"
+      ],
+      "sourceProjectId": "demodb-dev",
+      "datasetId": "sakila",
+      "location": "US",
+      "authentication": "google-account-required",
+      "executionProjectId": "user-selected",
+      "publicReadRole": "READER",
+      "publicReadPrincipal": "allAuthenticatedUsers",
+      "readiness": "public-read-user-project-required",
+      "query": "not-enabled-in-browser",
+      "copy": "not-enabled",
+      "tableCount": 16,
+      "rowCount": 47268,
+      "sourceRepository": "https://github.com/demo-db/sakila",
+      "sourceRevision": "cb9a81a8cbedcd8831737f281f888d5d584fae85",
+      "sourceSqliteSha256": "9bebeee50fecb1fee115c206a4f380f2f6d1f009e7796b18b8a8cfba7c810454",
+      "importToolVersion": "v0.62.0",
+      "importToolCommit": "c6b98734cb4ac33892453b6112c5d8c004e84426",
+      "schemaNotes": {
+        "primaryKeys": "Unverified primary-key metadata was omitted from BigQuery declarations; BigQuery does not enforce declared keys.",
+        "foreignKeys": "Unverified foreign-key metadata was omitted from BigQuery declarations; BigQuery does not enforce declared keys.",
+        "secondaryIndexes": "Source relational indexes were not migrated; no BigQuery search or vector indexes were created."
+      },
+      "verification": "https://github.com/demo-db/websites/blob/main/config/bigquery-hosting.json"
+    },
+    {
+      "id": "adventureworks-bigquery",
+      "dataset": "adventureworks",
+      "storage": "bigquery",
+      "tags": [
+        "adventureworks",
+        "bigquery"
+      ],
+      "sourceProjectId": "demodb-dev",
+      "datasetId": "adventureworks",
+      "location": "US",
+      "authentication": "google-account-required",
+      "executionProjectId": "user-selected",
+      "publicReadRole": "READER",
+      "publicReadPrincipal": "allAuthenticatedUsers",
+      "readiness": "public-read-user-project-required",
+      "query": "not-enabled-in-browser",
+      "copy": "not-enabled",
+      "tableCount": 71,
+      "rowCount": 759240,
+      "sourceRepository": "https://github.com/demo-db/adventureworks",
+      "sourceRevision": "5028a27189b487d6fd8025fafc1307aada707fd2",
+      "sourceSqliteSha256": "6a105e1982becfe003fc7a307d7cad9d738390cedd79d166c2167fd817168109",
+      "importToolVersion": "v0.62.0",
+      "importToolCommit": "c6b98734cb4ac33892453b6112c5d8c004e84426",
+      "schemaNotes": {
+        "primaryKeys": "Unverified primary-key metadata was omitted from BigQuery declarations; BigQuery does not enforce declared keys.",
+        "foreignKeys": "Unverified foreign-key metadata was omitted from BigQuery declarations; BigQuery does not enforce declared keys.",
+        "secondaryIndexes": "Source relational indexes were not migrated; no BigQuery search or vector indexes were created."
+      },
+      "verification": "https://github.com/demo-db/websites/blob/main/config/bigquery-hosting.json"
+    },
+    {
+      "id": "employees-bigquery",
+      "dataset": "employees",
+      "storage": "bigquery",
+      "tags": [
+        "employees",
+        "bigquery"
+      ],
+      "sourceProjectId": "demodb-dev",
+      "datasetId": "employees",
+      "location": "US",
+      "authentication": "google-account-required",
+      "executionProjectId": "user-selected",
+      "publicReadRole": "READER",
+      "publicReadPrincipal": "allAuthenticatedUsers",
+      "readiness": "public-read-user-project-required",
+      "query": "not-enabled-in-browser",
+      "copy": "not-enabled",
+      "tableCount": 6,
+      "rowCount": 13584,
+      "sourceRepository": "https://github.com/demo-db/employees",
+      "sourceRevision": "2069e26e8fdb60bdb16507f75569a579cf3da7cf",
+      "sourceSqliteSha256": "46b49dd0e141cd8db66d57680a10febfccc15e6f54dc7b8f3c2316b55e11c5f0",
+      "importToolVersion": "v0.62.0",
+      "importToolCommit": "c6b98734cb4ac33892453b6112c5d8c004e84426",
+      "schemaNotes": {
+        "primaryKeys": "Unverified primary-key metadata was omitted from BigQuery declarations; BigQuery does not enforce declared keys.",
+        "foreignKeys": "Unverified foreign-key metadata was omitted from BigQuery declarations; BigQuery does not enforce declared keys.",
+        "secondaryIndexes": "Source relational indexes were not migrated; no BigQuery search or vector indexes were created."
+      },
+      "verification": "https://github.com/demo-db/websites/blob/main/config/bigquery-hosting.json"
     }
   ],
   "bigQueryPlans": [
