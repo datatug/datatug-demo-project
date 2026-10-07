@@ -1,0 +1,28 @@
+{
+  "id": "northwind-top-customer-orders",
+  "title": "Top Customer Orders",
+  "type": "SQL",
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "CustomerID",
+          "type": "string"
+        },
+        {
+          "name": "CompanyName",
+          "type": "string"
+        },
+        {
+          "name": "OrderCount",
+          "type": "integer"
+        },
+        {
+          "name": "SalesCents",
+          "type": "integer"
+        }
+      ]
+    }
+  ],
+  "purpose": "Standalone read-only SQLite example for the pinned Northwind fixture. The current DataTug Dev environment has no dataset-specific SQL connection; run against a local SQLite fixture or use the documented verifier."
+}

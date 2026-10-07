@@ -1,0 +1,40 @@
+{
+  "id": "northwind-reorder-watchlist",
+  "title": "Reorder Watchlist",
+  "type": "SQL",
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "ProductID",
+          "type": "integer"
+        },
+        {
+          "name": "ProductName",
+          "type": "string"
+        },
+        {
+          "name": "CategoryName",
+          "type": "string"
+        },
+        {
+          "name": "Supplier",
+          "type": "string"
+        },
+        {
+          "name": "UnitsInStock",
+          "type": "integer"
+        },
+        {
+          "name": "ReorderLevel",
+          "type": "integer"
+        },
+        {
+          "name": "UnitPriceCents",
+          "type": "integer"
+        }
+      ]
+    }
+  ],
+  "purpose": "Standalone read-only SQLite example for the pinned Northwind fixture. The current DataTug Dev environment has no dataset-specific SQL connection; run against a local SQLite fixture or use the documented verifier."
+}

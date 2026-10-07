@@ -1,0 +1,32 @@
+{
+  "id": "chinook-top-customer-spend",
+  "title": "Top Customer Spend",
+  "type": "SQL",
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "CustomerId",
+          "type": "integer"
+        },
+        {
+          "name": "CustomerName",
+          "type": "string"
+        },
+        {
+          "name": "Country",
+          "type": "string"
+        },
+        {
+          "name": "InvoiceCount",
+          "type": "integer"
+        },
+        {
+          "name": "TotalCents",
+          "type": "integer"
+        }
+      ]
+    }
+  ],
+  "purpose": "Standalone read-only SQLite example for the pinned Chinook fixture. The current DataTug Dev environment has no dataset-specific SQL connection; run against a local SQLite fixture or use the documented verifier."
+}

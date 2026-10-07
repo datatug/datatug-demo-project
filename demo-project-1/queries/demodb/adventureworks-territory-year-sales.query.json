@@ -1,0 +1,32 @@
+{
+  "id": "adventureworks-territory-year-sales",
+  "title": "Territory Year Sales",
+  "type": "SQL",
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "TerritoryID",
+          "type": "integer"
+        },
+        {
+          "name": "Territory",
+          "type": "string"
+        },
+        {
+          "name": "SalesYear",
+          "type": "string"
+        },
+        {
+          "name": "OrderCount",
+          "type": "integer"
+        },
+        {
+          "name": "LineTotalMicros",
+          "type": "integer"
+        }
+      ]
+    }
+  ],
+  "purpose": "Standalone read-only SQLite example for the pinned Adventureworks fixture. The current DataTug Dev environment has no dataset-specific SQL connection; run against a local SQLite fixture or use the documented verifier."
+}

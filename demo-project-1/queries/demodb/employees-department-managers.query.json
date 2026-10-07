@@ -1,0 +1,36 @@
+{
+  "id": "employees-department-managers",
+  "title": "Department Managers",
+  "type": "SQL",
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "dept_no",
+          "type": "string"
+        },
+        {
+          "name": "dept_name",
+          "type": "string"
+        },
+        {
+          "name": "emp_no",
+          "type": "integer"
+        },
+        {
+          "name": "first_name",
+          "type": "string"
+        },
+        {
+          "name": "last_name",
+          "type": "string"
+        },
+        {
+          "name": "manager_since",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "purpose": "Standalone read-only SQLite example for the pinned Employees fixture. The current DataTug Dev environment has no dataset-specific SQL connection; run against a local SQLite fixture or use the documented verifier."
+}

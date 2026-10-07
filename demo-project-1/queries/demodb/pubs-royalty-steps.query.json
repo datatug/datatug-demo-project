@@ -1,0 +1,32 @@
+{
+  "id": "pubs-royalty-steps",
+  "title": "Royalty Steps",
+  "type": "SQL",
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "title_id",
+          "type": "string"
+        },
+        {
+          "name": "title",
+          "type": "string"
+        },
+        {
+          "name": "lorange",
+          "type": "integer"
+        },
+        {
+          "name": "hirange",
+          "type": "integer"
+        },
+        {
+          "name": "royalty",
+          "type": "integer"
+        }
+      ]
+    }
+  ],
+  "purpose": "Standalone read-only SQLite example for the pinned Pubs fixture. The current DataTug Dev environment has no dataset-specific SQL connection; run against a local SQLite fixture or use the documented verifier."
+}

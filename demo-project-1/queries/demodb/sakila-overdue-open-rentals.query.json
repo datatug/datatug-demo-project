@@ -1,0 +1,36 @@
+{
+  "id": "sakila-overdue-open-rentals",
+  "title": "Overdue Open Rentals",
+  "type": "SQL",
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "rental_id",
+          "type": "integer"
+        },
+        {
+          "name": "customer_id",
+          "type": "integer"
+        },
+        {
+          "name": "Customer",
+          "type": "string"
+        },
+        {
+          "name": "Film",
+          "type": "string"
+        },
+        {
+          "name": "rental_date",
+          "type": "string"
+        },
+        {
+          "name": "DueDate",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "purpose": "Standalone read-only SQLite example for the pinned Sakila fixture. The current DataTug Dev environment has no dataset-specific SQL connection; run against a local SQLite fixture or use the documented verifier."
+}

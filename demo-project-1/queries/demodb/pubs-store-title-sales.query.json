@@ -1,0 +1,36 @@
+{
+  "id": "pubs-store-title-sales",
+  "title": "Store Title Sales",
+  "type": "SQL",
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "stor_id",
+          "type": "string"
+        },
+        {
+          "name": "stor_name",
+          "type": "string"
+        },
+        {
+          "name": "title_id",
+          "type": "string"
+        },
+        {
+          "name": "title",
+          "type": "string"
+        },
+        {
+          "name": "OrderCount",
+          "type": "integer"
+        },
+        {
+          "name": "UnitsSold",
+          "type": "integer"
+        }
+      ]
+    }
+  ],
+  "purpose": "Standalone read-only SQLite example for the pinned Pubs fixture. The current DataTug Dev environment has no dataset-specific SQL connection; run against a local SQLite fixture or use the documented verifier."
+}

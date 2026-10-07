@@ -1,0 +1,36 @@
+{
+  "id": "adventureworks-top-product-categories",
+  "title": "Top Product Categories",
+  "type": "SQL",
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "ProductCategoryID",
+          "type": "integer"
+        },
+        {
+          "name": "Category",
+          "type": "string"
+        },
+        {
+          "name": "ProductID",
+          "type": "integer"
+        },
+        {
+          "name": "Product",
+          "type": "string"
+        },
+        {
+          "name": "UnitsSold",
+          "type": "integer"
+        },
+        {
+          "name": "LineTotalMicros",
+          "type": "integer"
+        }
+      ]
+    }
+  ],
+  "purpose": "Standalone read-only SQLite example for the pinned Adventureworks fixture. The current DataTug Dev environment has no dataset-specific SQL connection; run against a local SQLite fixture or use the documented verifier."
+}

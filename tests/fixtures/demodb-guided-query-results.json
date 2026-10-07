@@ -1,0 +1,359 @@
+{
+  "format": "demodb-guided-query-results/v1",
+  "queries": {
+    "chinook/top-customer-spend": {
+      "rowCount": 10,
+      "sha256": "78e42a09ea594f7c886a620d34c5814a01754e2e2d6439db7a5bb90ecbe52a71",
+      "sampleRows": [
+        {
+          "CustomerId": 6,
+          "CustomerName": "Helena Holý",
+          "Country": "Czech Republic",
+          "InvoiceCount": 7,
+          "TotalCents": 4962
+        },
+        {
+          "CustomerId": 26,
+          "CustomerName": "Richard Cunningham",
+          "Country": "USA",
+          "InvoiceCount": 7,
+          "TotalCents": 4762
+        }
+      ]
+    },
+    "chinook/customer-genre-mix": {
+      "rowCount": 8,
+      "sha256": "ed10b5a5f8331ffc395f01e9460310471b5215b043133c80ad0fbcc7f731ca3b",
+      "sampleRows": [
+        {
+          "GenreId": 1,
+          "Genre": "Rock",
+          "InvoiceCount": 4,
+          "TotalCents": 1485
+        },
+        {
+          "GenreId": 3,
+          "Genre": "Metal",
+          "InvoiceCount": 2,
+          "TotalCents": 594
+        }
+      ]
+    },
+    "chinook/playlist-composition": {
+      "rowCount": 10,
+      "sha256": "4ebd85cfd330873738e600fbef68bb3de80d214cb7bb8bb2f858aaec6495eeaa",
+      "sampleRows": [
+        {
+          "PlaylistId": 1,
+          "Playlist": "Music",
+          "TrackCount": 3290,
+          "AlbumCount": 335
+        },
+        {
+          "PlaylistId": 8,
+          "Playlist": "Music",
+          "TrackCount": 3290,
+          "AlbumCount": 335
+        }
+      ]
+    },
+    "northwind/top-customer-orders": {
+      "rowCount": 10,
+      "sha256": "7b2c7fda61bbc934f78aa3940e4fb8df57e9ae831dfd4ab109b937462d772bf9",
+      "sampleRows": [
+        {
+          "CustomerID": "QUICK",
+          "CompanyName": "QUICK-Stop",
+          "OrderCount": 28,
+          "SalesCents": 11027732
+        },
+        {
+          "CustomerID": "ERNSH",
+          "CompanyName": "Ernst Handel",
+          "OrderCount": 30,
+          "SalesCents": 10487500
+        }
+      ]
+    },
+    "northwind/territory-coverage": {
+      "rowCount": 10,
+      "sha256": "29b9cd2531e08654ed09a1ab8cdcf0c2eecea8a6a4a13bec21b4d13851803c25",
+      "sampleRows": [
+        {
+          "RegionID": 1,
+          "RegionDescription": "Eastern",
+          "TerritoryID": "01581",
+          "TerritoryDescription": "Westboro",
+          "EmployeeCount": 1
+        },
+        {
+          "RegionID": 1,
+          "RegionDescription": "Eastern",
+          "TerritoryID": "01730",
+          "TerritoryDescription": "Bedford",
+          "EmployeeCount": 1
+        }
+      ]
+    },
+    "northwind/reorder-watchlist": {
+      "rowCount": 10,
+      "sha256": "b7b7f0148dbe1b639c9359cc90f266ae4eb5df0d4cd47bbb4e4e7b3daf2edc0a",
+      "sampleRows": [
+        {
+          "ProductID": 31,
+          "ProductName": "Gorgonzola Telino",
+          "CategoryName": "Dairy Products",
+          "Supplier": "Formaggi Fortini s.r.l.",
+          "UnitsInStock": 0,
+          "ReorderLevel": 20,
+          "UnitPriceCents": 1250
+        },
+        {
+          "ProductID": 32,
+          "ProductName": "Mascarpone Fabioli",
+          "CategoryName": "Dairy Products",
+          "Supplier": "Formaggi Fortini s.r.l.",
+          "UnitsInStock": 9,
+          "ReorderLevel": 25,
+          "UnitPriceCents": 3200
+        }
+      ]
+    },
+    "pubs/author-catalog": {
+      "rowCount": 10,
+      "sha256": "3ee70338d3d799da594ac63f38c4a1369762dc327a15c4f7df68c5fc6ada95bb",
+      "sampleRows": [
+        {
+          "au_id": "724-80-9391",
+          "Author": "Stearns MacFeather",
+          "TitleCount": 2,
+          "LinkedListPriceCents": 3354
+        },
+        {
+          "au_id": "267-41-2394",
+          "Author": "Michael O'Leary",
+          "TitleCount": 2,
+          "LinkedListPriceCents": 2694
+        }
+      ]
+    },
+    "pubs/store-title-sales": {
+      "rowCount": 10,
+      "sha256": "19cb2a5d5b4a20936a2e0ae9e0f473528dc80c9237a86ca36b5ff054fd201c6a",
+      "sampleRows": [
+        {
+          "stor_id": "7066",
+          "stor_name": "Barnum's",
+          "title_id": "PS2091",
+          "title": "Is Anger the Enemy?",
+          "OrderCount": 1,
+          "UnitsSold": 75
+        },
+        {
+          "stor_id": "7066",
+          "stor_name": "Barnum's",
+          "title_id": "PC8888",
+          "title": "Secrets of Silicon Valley",
+          "OrderCount": 1,
+          "UnitsSold": 50
+        }
+      ]
+    },
+    "pubs/royalty-steps": {
+      "rowCount": 10,
+      "sha256": "03a8f6bf77911c219f1dcc6043656d7f019fd07676c84cbc0ba657d4479923cc",
+      "sampleRows": [
+        {
+          "title_id": "BU1032",
+          "title": "The Busy Executive's Database Guide",
+          "lorange": 0,
+          "hirange": 5000,
+          "royalty": 10
+        },
+        {
+          "title_id": "BU1032",
+          "title": "The Busy Executive's Database Guide",
+          "lorange": 5001,
+          "hirange": 50000,
+          "royalty": 12
+        }
+      ]
+    },
+    "sakila/category-revenue": {
+      "rowCount": 10,
+      "sha256": "75741cccfdf22e842bbe991fa44bd6e8bb07e316dd67e0f78042ee0275d9ee1f",
+      "sampleRows": [
+        {
+          "category_id": 15,
+          "Category": "Sports",
+          "Rentals": 1179,
+          "RevenueCents": 531421
+        },
+        {
+          "category_id": 14,
+          "Category": "Sci-Fi",
+          "Rentals": 1101,
+          "RevenueCents": 475698
+        }
+      ]
+    },
+    "sakila/actor-filmographies": {
+      "rowCount": 10,
+      "sha256": "623c3d5c365e059da42e0c46c1eb03585574aa269111f590bdc5ef2676c62be1",
+      "sampleRows": [
+        {
+          "actor_id": 107,
+          "Actor": "GINA DEGENERES",
+          "FilmCount": 42,
+          "FirstReleaseYear": "2006",
+          "LastReleaseYear": "2006"
+        },
+        {
+          "actor_id": 102,
+          "Actor": "WALTER TORN",
+          "FilmCount": 41,
+          "FirstReleaseYear": "2006",
+          "LastReleaseYear": "2006"
+        }
+      ]
+    },
+    "sakila/overdue-open-rentals": {
+      "rowCount": 1,
+      "sha256": "a9cccb37f7ef03467a86c7a98644bb0d3e6be22202d509b03611334a1547d50d",
+      "sampleRows": [
+        {
+          "rental_id": 14098,
+          "customer_id": 554,
+          "Customer": "DWAYNE OLVERA",
+          "Film": "ACADEMY DINOSAUR",
+          "rental_date": "2005-08-21 00:30:32",
+          "DueDate": "2005-08-27"
+        }
+      ]
+    },
+    "adventureworks/territory-year-sales": {
+      "rowCount": 10,
+      "sha256": "580758cace72d95d11e49417e5ca7d3e9bb2de88acc73f479931fa051c03579d",
+      "sampleRows": [
+        {
+          "TerritoryID": 4,
+          "Territory": "Southwest",
+          "SalesYear": "2025",
+          "OrderCount": 2375,
+          "LineTotalMicros": 3966506678222
+        },
+        {
+          "TerritoryID": 1,
+          "Territory": "Northwest",
+          "SalesYear": "2025",
+          "OrderCount": 1799,
+          "LineTotalMicros": 2994492871181
+        }
+      ]
+    },
+    "adventureworks/top-product-categories": {
+      "rowCount": 10,
+      "sha256": "79b9681b42ad51c5152f3e3894528447580125f0df89f820c04772d79d2bb3e0",
+      "sampleRows": [
+        {
+          "ProductCategoryID": 1,
+          "Category": "Bikes",
+          "ProductID": 782,
+          "Product": "Mountain-200 Black, 38",
+          "UnitsSold": 2977,
+          "LineTotalMicros": 4400592800400
+        },
+        {
+          "ProductCategoryID": 1,
+          "Category": "Bikes",
+          "ProductID": 783,
+          "Product": "Mountain-200 Black, 42",
+          "UnitsSold": 2664,
+          "LineTotalMicros": 4009494761841
+        }
+      ]
+    },
+    "adventureworks/current-department-roster": {
+      "rowCount": 10,
+      "sha256": "8343504767f110faa644fe1ae2942d5b2658a5ca6e63cdad0eb6bd7f935af4cf",
+      "sampleRows": [
+        {
+          "BusinessEntityID": 217,
+          "FirstName": "Zainal",
+          "LastName": "Arifin",
+          "JobTitle": "Document Control Manager",
+          "DepartmentID": 12,
+          "Department": "Document Control",
+          "StartDate": "2009-01-04"
+        },
+        {
+          "BusinessEntityID": 220,
+          "FirstName": "Karen",
+          "LastName": "Berge",
+          "JobTitle": "Document Control Assistant",
+          "DepartmentID": 12,
+          "Department": "Document Control",
+          "StartDate": "2009-02-09"
+        }
+      ]
+    },
+    "employees/top-current-salaries": {
+      "rowCount": 10,
+      "sha256": "78ce8c7c06f1059061c71d5aac0f8cf3b8d5d11ad950474de2916c0562160aec",
+      "sampleRows": [
+        {
+          "emp_no": 10897,
+          "first_name": "Arno",
+          "last_name": "Kumaresan",
+          "salary": 136004,
+          "salary_since": "2002-04-04"
+        },
+        {
+          "emp_no": 10539,
+          "first_name": "Yucel",
+          "last_name": "Reinhard",
+          "salary": 126614,
+          "salary_since": "2002-06-02"
+        }
+      ]
+    },
+    "employees/department-headcount": {
+      "rowCount": 9,
+      "sha256": "60096fa216139d69ec292f42d5e6b38a95863129c7fd16290c2f6898bda898be",
+      "sampleRows": [
+        {
+          "dept_no": "d005",
+          "dept_name": "Development",
+          "CurrentEmployees": 205
+        },
+        {
+          "dept_no": "d004",
+          "dept_name": "Production",
+          "CurrentEmployees": 190
+        }
+      ]
+    },
+    "employees/department-managers": {
+      "rowCount": 9,
+      "sha256": "cf666af83ffa324f490debb71abff8feb6da10bb57f5bc5edd72b7adf592e3c2",
+      "sampleRows": [
+        {
+          "dept_no": "d001",
+          "dept_name": "Marketing",
+          "emp_no": 110039,
+          "first_name": "Vishwani",
+          "last_name": "Minakawa",
+          "manager_since": "1991-10-01"
+        },
+        {
+          "dept_no": "d002",
+          "dept_name": "Finance",
+          "emp_no": 110114,
+          "first_name": "Isamu",
+          "last_name": "Legleitner",
+          "manager_since": "1989-12-17"
+        }
+      ]
+    }
+  }
+}

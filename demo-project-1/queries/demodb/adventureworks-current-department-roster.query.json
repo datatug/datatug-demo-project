@@ -1,0 +1,40 @@
+{
+  "id": "adventureworks-current-department-roster",
+  "title": "Current Department Roster",
+  "type": "SQL",
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "BusinessEntityID",
+          "type": "integer"
+        },
+        {
+          "name": "FirstName",
+          "type": "string"
+        },
+        {
+          "name": "LastName",
+          "type": "string"
+        },
+        {
+          "name": "JobTitle",
+          "type": "string"
+        },
+        {
+          "name": "DepartmentID",
+          "type": "integer"
+        },
+        {
+          "name": "Department",
+          "type": "string"
+        },
+        {
+          "name": "StartDate",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "purpose": "Standalone read-only SQLite example for the pinned Adventureworks fixture. The current DataTug Dev environment has no dataset-specific SQL connection; run against a local SQLite fixture or use the documented verifier."
+}
