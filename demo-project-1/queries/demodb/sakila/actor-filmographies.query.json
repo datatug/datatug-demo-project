@@ -1,0 +1,36 @@
+{
+  "id": "actor-filmographies",
+  "title": "Actor Filmographies",
+  "type": "SQL",
+  "targets": [
+    {
+      "catalog": "sakila-sqlite"
+    }
+  ],
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "actor_id",
+          "type": "integer"
+        },
+        {
+          "name": "Actor",
+          "type": "string"
+        },
+        {
+          "name": "FilmCount",
+          "type": "integer"
+        },
+        {
+          "name": "FirstReleaseYear",
+          "type": "string"
+        },
+        {
+          "name": "LastReleaseYear",
+          "type": "string"
+        }
+      ]
+    }
+  ]
+}

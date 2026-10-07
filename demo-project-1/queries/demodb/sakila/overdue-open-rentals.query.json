@@ -1,0 +1,40 @@
+{
+  "id": "overdue-open-rentals",
+  "title": "Overdue Open Rentals",
+  "type": "SQL",
+  "targets": [
+    {
+      "catalog": "sakila-sqlite"
+    }
+  ],
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "rental_id",
+          "type": "integer"
+        },
+        {
+          "name": "customer_id",
+          "type": "integer"
+        },
+        {
+          "name": "Customer",
+          "type": "string"
+        },
+        {
+          "name": "Film",
+          "type": "string"
+        },
+        {
+          "name": "rental_date",
+          "type": "string"
+        },
+        {
+          "name": "DueDate",
+          "type": "string"
+        }
+      ]
+    }
+  ]
+}

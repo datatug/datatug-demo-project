@@ -1,0 +1,32 @@
+{
+  "id": "top-customer-orders",
+  "title": "Top Customer Orders",
+  "type": "SQL",
+  "targets": [
+    {
+      "catalog": "northwind-sqlite"
+    }
+  ],
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "CustomerID",
+          "type": "string"
+        },
+        {
+          "name": "CompanyName",
+          "type": "string"
+        },
+        {
+          "name": "OrderCount",
+          "type": "integer"
+        },
+        {
+          "name": "SalesCents",
+          "type": "integer"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "id": "department-headcount",
+  "title": "Department Headcount",
+  "type": "SQL",
+  "targets": [
+    {
+      "catalog": "employees-sqlite"
+    }
+  ],
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "dept_no",
+          "type": "string"
+        },
+        {
+          "name": "dept_name",
+          "type": "string"
+        },
+        {
+          "name": "CurrentEmployees",
+          "type": "integer"
+        }
+      ]
+    }
+  ]
+}

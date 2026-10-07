@@ -1,0 +1,40 @@
+{
+  "id": "store-title-sales",
+  "title": "Store Title Sales",
+  "type": "SQL",
+  "targets": [
+    {
+      "catalog": "pubs-sqlite"
+    }
+  ],
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "stor_id",
+          "type": "string"
+        },
+        {
+          "name": "stor_name",
+          "type": "string"
+        },
+        {
+          "name": "title_id",
+          "type": "string"
+        },
+        {
+          "name": "title",
+          "type": "string"
+        },
+        {
+          "name": "OrderCount",
+          "type": "integer"
+        },
+        {
+          "name": "UnitsSold",
+          "type": "integer"
+        }
+      ]
+    }
+  ]
+}

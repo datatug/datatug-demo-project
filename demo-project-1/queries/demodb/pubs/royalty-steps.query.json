@@ -1,0 +1,36 @@
+{
+  "id": "royalty-steps",
+  "title": "Royalty Steps",
+  "type": "SQL",
+  "targets": [
+    {
+      "catalog": "pubs-sqlite"
+    }
+  ],
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "title_id",
+          "type": "string"
+        },
+        {
+          "name": "title",
+          "type": "string"
+        },
+        {
+          "name": "lorange",
+          "type": "integer"
+        },
+        {
+          "name": "hirange",
+          "type": "integer"
+        },
+        {
+          "name": "royalty",
+          "type": "integer"
+        }
+      ]
+    }
+  ]
+}

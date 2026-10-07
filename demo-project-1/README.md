@@ -22,6 +22,9 @@ BigQuery discoveries as plans. A future live connection will use each user's
 Google account and their selected execution project. These entries do not
 perform a query or copy data today.
 
+The [guided DemoDB investigations](queries/demodb/README.md) provide three
+verified, editable SQL examples for each of the six SQLite datasets.
+
 Regenerate the catalogue from the pinned DemoDB website registry and OVDB
 Directory inventory with `node scripts/build-demodb-connections.mjs
 /path/to/websites/config/databases.json /path/to/directory/index.json`. Then

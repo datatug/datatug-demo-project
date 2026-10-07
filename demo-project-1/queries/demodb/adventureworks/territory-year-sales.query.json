@@ -1,0 +1,36 @@
+{
+  "id": "territory-year-sales",
+  "title": "Territory Year Sales",
+  "type": "SQL",
+  "targets": [
+    {
+      "catalog": "adventureworks-sqlite"
+    }
+  ],
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "TerritoryID",
+          "type": "integer"
+        },
+        {
+          "name": "Territory",
+          "type": "string"
+        },
+        {
+          "name": "SalesYear",
+          "type": "string"
+        },
+        {
+          "name": "OrderCount",
+          "type": "integer"
+        },
+        {
+          "name": "LineTotalMicros",
+          "type": "integer"
+        }
+      ]
+    }
+  ]
+}

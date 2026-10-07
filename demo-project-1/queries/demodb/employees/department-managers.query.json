@@ -1,0 +1,40 @@
+{
+  "id": "department-managers",
+  "title": "Department Managers",
+  "type": "SQL",
+  "targets": [
+    {
+      "catalog": "employees-sqlite"
+    }
+  ],
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "dept_no",
+          "type": "string"
+        },
+        {
+          "name": "dept_name",
+          "type": "string"
+        },
+        {
+          "name": "emp_no",
+          "type": "integer"
+        },
+        {
+          "name": "first_name",
+          "type": "string"
+        },
+        {
+          "name": "last_name",
+          "type": "string"
+        },
+        {
+          "name": "manager_since",
+          "type": "string"
+        }
+      ]
+    }
+  ]
+}

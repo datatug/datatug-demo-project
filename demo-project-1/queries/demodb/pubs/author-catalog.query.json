@@ -1,0 +1,32 @@
+{
+  "id": "author-catalog",
+  "title": "Author Catalog",
+  "type": "SQL",
+  "targets": [
+    {
+      "catalog": "pubs-sqlite"
+    }
+  ],
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "au_id",
+          "type": "string"
+        },
+        {
+          "name": "Author",
+          "type": "string"
+        },
+        {
+          "name": "TitleCount",
+          "type": "integer"
+        },
+        {
+          "name": "LinkedListPriceCents",
+          "type": "integer"
+        }
+      ]
+    }
+  ]
+}

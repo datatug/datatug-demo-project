@@ -1,0 +1,32 @@
+{
+  "id": "category-revenue",
+  "title": "Category Revenue",
+  "type": "SQL",
+  "targets": [
+    {
+      "catalog": "sakila-sqlite"
+    }
+  ],
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "category_id",
+          "type": "integer"
+        },
+        {
+          "name": "Category",
+          "type": "string"
+        },
+        {
+          "name": "Rentals",
+          "type": "integer"
+        },
+        {
+          "name": "RevenueCents",
+          "type": "integer"
+        }
+      ]
+    }
+  ]
+}

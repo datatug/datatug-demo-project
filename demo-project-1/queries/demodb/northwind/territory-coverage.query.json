@@ -1,0 +1,36 @@
+{
+  "id": "territory-coverage",
+  "title": "Territory Coverage",
+  "type": "SQL",
+  "targets": [
+    {
+      "catalog": "northwind-sqlite"
+    }
+  ],
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "RegionID",
+          "type": "integer"
+        },
+        {
+          "name": "RegionDescription",
+          "type": "string"
+        },
+        {
+          "name": "TerritoryID",
+          "type": "string"
+        },
+        {
+          "name": "TerritoryDescription",
+          "type": "string"
+        },
+        {
+          "name": "EmployeeCount",
+          "type": "integer"
+        }
+      ]
+    }
+  ]
+}

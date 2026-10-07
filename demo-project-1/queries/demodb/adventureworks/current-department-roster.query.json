@@ -1,0 +1,44 @@
+{
+  "id": "current-department-roster",
+  "title": "Current Department Roster",
+  "type": "SQL",
+  "targets": [
+    {
+      "catalog": "adventureworks-sqlite"
+    }
+  ],
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "BusinessEntityID",
+          "type": "integer"
+        },
+        {
+          "name": "FirstName",
+          "type": "string"
+        },
+        {
+          "name": "LastName",
+          "type": "string"
+        },
+        {
+          "name": "JobTitle",
+          "type": "string"
+        },
+        {
+          "name": "DepartmentID",
+          "type": "integer"
+        },
+        {
+          "name": "Department",
+          "type": "string"
+        },
+        {
+          "name": "StartDate",
+          "type": "string"
+        }
+      ]
+    }
+  ]
+}

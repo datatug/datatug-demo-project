@@ -1,0 +1,32 @@
+{
+  "id": "playlist-composition",
+  "title": "Playlist Composition",
+  "type": "SQL",
+  "targets": [
+    {
+      "catalog": "chinook-sqlite"
+    }
+  ],
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "PlaylistId",
+          "type": "integer"
+        },
+        {
+          "name": "Playlist",
+          "type": "string"
+        },
+        {
+          "name": "TrackCount",
+          "type": "integer"
+        },
+        {
+          "name": "AlbumCount",
+          "type": "integer"
+        }
+      ]
+    }
+  ]
+}

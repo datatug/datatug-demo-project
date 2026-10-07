@@ -1,0 +1,40 @@
+{
+  "id": "top-product-categories",
+  "title": "Top Product Categories",
+  "type": "SQL",
+  "targets": [
+    {
+      "catalog": "adventureworks-sqlite"
+    }
+  ],
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "ProductCategoryID",
+          "type": "integer"
+        },
+        {
+          "name": "Category",
+          "type": "string"
+        },
+        {
+          "name": "ProductID",
+          "type": "integer"
+        },
+        {
+          "name": "Product",
+          "type": "string"
+        },
+        {
+          "name": "UnitsSold",
+          "type": "integer"
+        },
+        {
+          "name": "LineTotalMicros",
+          "type": "integer"
+        }
+      ]
+    }
+  ]
+}

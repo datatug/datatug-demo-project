@@ -1,0 +1,44 @@
+{
+  "id": "reorder-watchlist",
+  "title": "Reorder Watchlist",
+  "type": "SQL",
+  "targets": [
+    {
+      "catalog": "northwind-sqlite"
+    }
+  ],
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "ProductID",
+          "type": "integer"
+        },
+        {
+          "name": "ProductName",
+          "type": "string"
+        },
+        {
+          "name": "CategoryName",
+          "type": "string"
+        },
+        {
+          "name": "Supplier",
+          "type": "string"
+        },
+        {
+          "name": "UnitsInStock",
+          "type": "integer"
+        },
+        {
+          "name": "ReorderLevel",
+          "type": "integer"
+        },
+        {
+          "name": "UnitPriceCents",
+          "type": "integer"
+        }
+      ]
+    }
+  ]
+}

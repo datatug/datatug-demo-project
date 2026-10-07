@@ -1,0 +1,36 @@
+{
+  "id": "top-current-salaries",
+  "title": "Top Current Salaries",
+  "type": "SQL",
+  "targets": [
+    {
+      "catalog": "employees-sqlite"
+    }
+  ],
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "emp_no",
+          "type": "integer"
+        },
+        {
+          "name": "first_name",
+          "type": "string"
+        },
+        {
+          "name": "last_name",
+          "type": "string"
+        },
+        {
+          "name": "salary",
+          "type": "integer"
+        },
+        {
+          "name": "salary_since",
+          "type": "string"
+        }
+      ]
+    }
+  ]
+}

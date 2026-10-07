@@ -1,0 +1,36 @@
+{
+  "id": "top-customer-spend",
+  "title": "Top Customer Spend",
+  "type": "SQL",
+  "targets": [
+    {
+      "catalog": "chinook-sqlite"
+    }
+  ],
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "CustomerId",
+          "type": "integer"
+        },
+        {
+          "name": "CustomerName",
+          "type": "string"
+        },
+        {
+          "name": "Country",
+          "type": "string"
+        },
+        {
+          "name": "InvoiceCount",
+          "type": "integer"
+        },
+        {
+          "name": "TotalCents",
+          "type": "integer"
+        }
+      ]
+    }
+  ]
+}

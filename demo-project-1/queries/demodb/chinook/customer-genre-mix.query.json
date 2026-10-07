@@ -1,0 +1,32 @@
+{
+  "id": "customer-genre-mix",
+  "title": "Customer Genre Mix",
+  "type": "SQL",
+  "targets": [
+    {
+      "catalog": "chinook-sqlite"
+    }
+  ],
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "GenreId",
+          "type": "integer"
+        },
+        {
+          "name": "Genre",
+          "type": "string"
+        },
+        {
+          "name": "InvoiceCount",
+          "type": "integer"
+        },
+        {
+          "name": "TotalCents",
+          "type": "integer"
+        }
+      ]
+    }
+  ]
+}
