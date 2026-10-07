@@ -2,7 +2,7 @@
   "id": "chinook-postgresql-artist-tracks",
   "title": "Chinook PostgreSQL artists by track count",
   "type": "DTQL",
-  "purpose": "Join the hosted PostgreSQL Artist, Album, and Track tables, then rank artists by track count and total playtime.",
+  "purpose": "Join the hosted PostgreSQL Artist, Album, and Track tables, then rank artists by track count and show total playtime.",
   "federation": {
     "ovdbBaseUrl": "https://cloud.openvaultdb.com",
     "tables": [
