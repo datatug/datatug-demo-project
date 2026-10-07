@@ -1,0 +1,22 @@
+{
+  "id": "chinook-postgresql-genres",
+  "title": "Compare Chinook genres in PostgreSQL and SQLite",
+  "type": "DTQL",
+  "purpose": "Read the hosted PostgreSQL Chinook Genre table beside the public SQLite edition, matching GenreId and showing both names.",
+  "federation": {
+    "ovdbBaseUrl": "https://cloud.openvaultdb.com",
+    "tables": [
+      {"database": "chinook-postgresql", "schema": "chinook", "name": "Genre", "fields": ["GenreId", "Name"]},
+      {"database": "chinook", "name": "Genre", "fields": ["GenreId", "Name"]}
+    ]
+  },
+  "recordsets": [
+    {
+      "columns": [
+        {"name": "GenreId", "type": "integer"},
+        {"name": "PostgreSQLName", "type": "string"},
+        {"name": "SQLiteName", "type": "string"}
+      ]
+    }
+  ]
+}
