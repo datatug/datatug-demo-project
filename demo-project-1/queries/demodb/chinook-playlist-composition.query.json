@@ -1,12 +1,7 @@
 {
-  "id": "playlist-composition",
+  "id": "chinook-playlist-composition",
   "title": "Playlist Composition",
   "type": "SQL",
-  "targets": [
-    {
-      "catalog": "chinook-sqlite"
-    }
-  ],
   "recordsets": [
     {
       "columns": [
@@ -28,5 +23,6 @@
         }
       ]
     }
-  ]
+  ],
+  "purpose": "Standalone read-only SQLite example for the pinned Chinook fixture. The current DataTug Dev environment has no dataset-specific SQL connection; run against a local SQLite fixture or use the documented verifier."
 }

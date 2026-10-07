@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify guided DemoDB SQL and expected rows against pinned SQLite editions.
+"""Verify standalone guided DemoDB SQL and expected rows against pinned SQLite editions.
 
 The fixture directory must contain <dataset>.sqlite files whose SHA-256 values
 match demo-project-1/connections/demo-db.json. Inputs are opened read-only.
@@ -49,18 +49,23 @@ def main() -> int:
         if source_sha != connection.get("fixtureSha256"):
             raise SystemExit(f"{dataset}: fixture SHA-256 {source_sha} does not match catalogue pin")
 
-        query_dir = PROJECT / "queries/demodb" / dataset
+        query_dir = PROJECT / "queries/demodb"
         with sqlite3.connect(f"file:{db_path.resolve()}?mode=ro", uri=True) as db:
             db.execute("PRAGMA query_only = ON")
-            for sql_path in sorted(query_dir.glob("*.query.sql")):
-                query_key = f"{dataset}/{sql_path.name.removesuffix('.query.sql')}"
+            for sql_path in sorted(query_dir.glob(f"{dataset}-*.query.sql")):
+                slug = sql_path.name.removesuffix(".query.sql").removeprefix(f"{dataset}-")
+                query_key = f"{dataset}/{slug}"
                 discovered.add(query_key)
                 query_def_path = sql_path.with_name(sql_path.name.removesuffix(".sql") + ".json")
                 if not query_def_path.is_file():
                     raise SystemExit(f"{query_key}: missing query metadata {query_def_path}")
                 definition = json.loads(query_def_path.read_text(encoding="utf-8"))
-                if definition.get("type") != "SQL" or definition.get("targets") != [{"catalog": connection["id"]}]:
-                    raise SystemExit(f"{query_key}: query type or SQLite target does not match the catalogue")
+                if definition.get("type") != "SQL" or definition.get("id") != f"{dataset}-{slug}":
+                    raise SystemExit(f"{query_key}: SQL metadata ID does not match the flat query path")
+                if definition.get("targets"):
+                    raise SystemExit(f"{query_key}: standalone example must not claim an unavailable browser SQL target")
+                if "standalone" not in definition.get("purpose", "").lower():
+                    raise SystemExit(f"{query_key}: metadata must identify this as a standalone example")
                 sql = sql_path.read_text(encoding="utf-8").strip()
                 if not sql.upper().startswith(("SELECT", "WITH")):
                     raise SystemExit(f"{query_key}: only read-only SELECT queries are allowed")

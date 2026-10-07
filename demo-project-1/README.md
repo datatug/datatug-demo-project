@@ -23,7 +23,8 @@ Google account and their selected execution project. These entries do not
 perform a query or copy data today.
 
 The [guided DemoDB investigations](queries/demodb/README.md) provide three
-verified, editable SQL examples for each of the six SQLite datasets.
+fixture-verified standalone SQL examples for each of the six SQLite datasets.
+They become browser-executable when dataset-specific Dev SQL connections are available.
 
 Regenerate the catalogue from the pinned DemoDB website registry and OVDB
 Directory inventory with `node scripts/build-demodb-connections.mjs

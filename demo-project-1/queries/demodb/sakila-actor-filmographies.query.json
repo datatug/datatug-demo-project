@@ -1,12 +1,7 @@
 {
-  "id": "actor-filmographies",
+  "id": "sakila-actor-filmographies",
   "title": "Actor Filmographies",
   "type": "SQL",
-  "targets": [
-    {
-      "catalog": "sakila-sqlite"
-    }
-  ],
   "recordsets": [
     {
       "columns": [
@@ -32,5 +27,6 @@
         }
       ]
     }
-  ]
+  ],
+  "purpose": "Standalone read-only SQLite example for the pinned Sakila fixture. The current DataTug Dev environment has no dataset-specific SQL connection; run against a local SQLite fixture or use the documented verifier."
 }

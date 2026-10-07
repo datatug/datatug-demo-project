@@ -1,12 +1,7 @@
 {
-  "id": "top-customer-spend",
+  "id": "chinook-top-customer-spend",
   "title": "Top Customer Spend",
   "type": "SQL",
-  "targets": [
-    {
-      "catalog": "chinook-sqlite"
-    }
-  ],
   "recordsets": [
     {
       "columns": [
@@ -32,5 +27,6 @@
         }
       ]
     }
-  ]
+  ],
+  "purpose": "Standalone read-only SQLite example for the pinned Chinook fixture. The current DataTug Dev environment has no dataset-specific SQL connection; run against a local SQLite fixture or use the documented verifier."
 }

@@ -1,12 +1,7 @@
 {
-  "id": "reorder-watchlist",
+  "id": "northwind-reorder-watchlist",
   "title": "Reorder Watchlist",
   "type": "SQL",
-  "targets": [
-    {
-      "catalog": "northwind-sqlite"
-    }
-  ],
   "recordsets": [
     {
       "columns": [
@@ -40,5 +35,6 @@
         }
       ]
     }
-  ]
+  ],
+  "purpose": "Standalone read-only SQLite example for the pinned Northwind fixture. The current DataTug Dev environment has no dataset-specific SQL connection; run against a local SQLite fixture or use the documented verifier."
 }

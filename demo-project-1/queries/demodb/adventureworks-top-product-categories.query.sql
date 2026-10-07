@@ -4,7 +4,7 @@ SELECT
     p.ProductID,
     p.Name AS Product,
     SUM(d.OrderQty) AS UnitsSold,
-    SUM(CAST(ROUND(CAST(d.LineTotal AS REAL) * 1000000) AS INTEGER)) AS LineTotalMicros
+    SUM(CAST(REPLACE(d.LineTotal, '.', '') AS INTEGER)) AS LineTotalMicros
 FROM "Sales.SalesOrderDetail" d
 JOIN "Production.Product" p
     ON p.ProductID = d.ProductID
