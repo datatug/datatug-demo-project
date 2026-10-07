@@ -1,0 +1,10 @@
+from:
+  database: chinook
+  name: Customer
+  alias: c
+columns:
+  - {field: CustomerId, source: c}
+  - {field: FirstName, source: c}
+  - {field: LastName, source: c}
+  - {field: Country, source: c}
+limit: 20

@@ -1,0 +1,26 @@
+{
+  "id": "chinook-customer-preview",
+  "title": "Hosted Chinook customers",
+  "type": "DTQL",
+  "purpose": "Preview hosted Chinook customer names and countries in the browser.",
+  "federation": {
+    "ovdbBaseUrl": "https://demodb.dev/ovdb",
+    "tables": [
+      {
+        "database": "chinook",
+        "name": "Customer",
+        "fields": ["CustomerId", "FirstName", "LastName", "Country"]
+      }
+    ]
+  },
+  "recordsets": [
+    {
+      "columns": [
+        {"name": "CustomerId", "type": "integer"},
+        {"name": "FirstName", "type": "string"},
+        {"name": "LastName", "type": "string"},
+        {"name": "Country", "type": "string"}
+      ]
+    }
+  ]
+}

@@ -215,6 +215,27 @@ func TestDemoProject1_QueriesLoad(t *testing.T) {
 	assert.NoError(t, project.Validate())
 }
 
+// TestDemoProject1_HostedCustomerPreview pins the browser-federated starter
+// query's source, projected columns, and bounded result count. It loads both
+// files through the same filestore used for saved project queries.
+func TestDemoProject1_HostedCustomerPreview(t *testing.T) {
+	query, err := newStore(t).LoadQuery(context.Background(), "hosted/chinook-customer-preview")
+	require.NoError(t, err)
+	require.Equal(t, datatug.QueryTypeDTQL, query.Type)
+	require.NotNil(t, query.Federation)
+	assert.Equal(t, "https://demodb.dev/ovdb", query.Federation.OVDBBaseURL)
+	require.Len(t, query.Federation.Tables, 1)
+	assert.Equal(t, datatug.QueryFederationTable{
+		Database: "chinook",
+		Name:     "Customer",
+		Fields:   []string{"CustomerId", "FirstName", "LastName", "Country"},
+	}, query.Federation.Tables[0])
+	assert.Contains(t, query.Text, "limit: 20")
+	for _, field := range []string{"CustomerId", "FirstName", "LastName", "Country"} {
+		assert.Contains(t, query.Text, field)
+	}
+}
+
 // TestDemoProject1_DeclaredMappings asserts the mappings needed by the demo
 // are present, exactly as declared.
 func TestDemoProject1_DeclaredMappings(t *testing.T) {
