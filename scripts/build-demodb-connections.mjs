@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
+import { demoPostgresqlConnection } from './demodb-postgresql-connection.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const output = resolve(root, 'demo-project-1/connections/demo-db.json');
@@ -33,6 +34,9 @@ const fixtureSha256 = {
   adventureworks: '6a105e1982becfe003fc7a307d7cad9d738390cedd79d166c2167fd817168109',
   employees: '46b49dd0e141cd8db66d57680a10febfccc15e6f54dc7b8f3c2316b55e11c5f0',
 };
+// Activate only after the public HTTP and browser query proofs cover all six
+// PostgreSQL editions. The pending output remains the published truth today.
+const postgresqlPublicApiVerified = false;
 const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex');
 const entries = [];
 const seen = new Set();
@@ -53,11 +57,7 @@ for (const database of registry.databases) {
     fixtureSha256: fixtureSha256[id],
     query: 'ovdb-read', copy: 'explicit-browser-import',
   });
-  entries.push({
-    id: `${id}-postgresql`, dataset: id, storage: 'postgresql', tags: [id, 'postgresql'],
-    environments: ['QA', 'UAT'], readiness: 'hosted-api-pending',
-    source: `https://demodb.dev/${id}/`, query: 'setup-required', copy: 'unavailable',
-  });
+  entries.push(demoPostgresqlConnection(id, postgresqlPublicApiVerified));
   entries.push({
     id: `${id}-ingitdb`, dataset: id, storage: 'ingitdb', tags: [id, 'ingitdb'],
     environments: ['dev'], readiness: 'hosted-repository',
