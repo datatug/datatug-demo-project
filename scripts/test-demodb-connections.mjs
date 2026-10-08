@@ -31,6 +31,10 @@ test('one canonical project exposes every DemoDB storage edition with truthful r
         assert.equal(entry.query, 'ovdb-read');
         assert.equal(entry.copy, 'explicit-browser-import');
         assert.deepEqual(entry.environments, ['dev']);
+        if (dataset === 'chinook') assert.deepEqual(entry.browserFixture, {
+          url: 'https://chinook.demodb.dev/data/chinook.sqlite', bytes: 1007616,
+        });
+        else assert.equal(entry.browserFixture, undefined);
       } else if (storage === 'postgresql') {
         assert.equal(entry.readiness, 'hosted-api-pending');
         assert.equal(entry.query, 'setup-required');
