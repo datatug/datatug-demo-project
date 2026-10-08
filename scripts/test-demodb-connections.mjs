@@ -15,10 +15,11 @@ test('PostgreSQL activation preserves six edition identities and QA/UAT membersh
   for (const dataset of datasets) {
     const pending = demoPostgresqlConnection(dataset);
     const publicApi = demoPostgresqlConnection(dataset, true);
-    assert.deepEqual(catalog.connections.find((entry) => entry.id === pending.id), pending);
+    assert.equal(pending.id, publicApi.id);
     assert.equal(pending.readiness, 'hosted-api-pending');
     assert.equal(pending.query, 'setup-required');
     assert.equal(pending.source, `https://demodb.dev/${dataset}/`);
+    assert.deepEqual(catalog.connections.find((entry) => entry.id === publicApi.id), publicApi);
     assert.equal(publicApi.readiness, 'public-api');
     assert.equal(publicApi.query, 'ovdb-read');
     assert.equal(publicApi.source, `https://cloud.openvaultdb.com/v1/databases/${dataset}-postgresql`);
@@ -50,8 +51,8 @@ test('one canonical project exposes every DemoDB storage edition with truthful r
         assert.equal(entry.copy, 'explicit-browser-import');
         assert.deepEqual(entry.environments, ['dev']);
       } else if (storage === 'postgresql') {
-        assert.equal(entry.readiness, 'hosted-api-pending');
-        assert.equal(entry.query, 'setup-required');
+        assert.equal(entry.readiness, 'public-api');
+        assert.equal(entry.query, 'ovdb-read');
         assert.equal(entry.copy, 'unavailable');
         assert.deepEqual(entry.environments, ['QA', 'UAT']);
       } else {
@@ -64,7 +65,7 @@ test('one canonical project exposes every DemoDB storage edition with truthful r
   }
 });
 
-test('environment memberships point to exact catalogue entries without activating pending SQL sources', () => {
+test('environment memberships point to exact active catalogue entries', () => {
   const ids = new Set(catalog.connections.map((connection) => connection.id));
   for (const env of ['dev', 'QA', 'UAT']) {
     const file = read(`environments/${env}/${env}.env.json`);

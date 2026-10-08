@@ -34,9 +34,9 @@ const fixtureSha256 = {
   adventureworks: '6a105e1982becfe003fc7a307d7cad9d738390cedd79d166c2167fd817168109',
   employees: '46b49dd0e141cd8db66d57680a10febfccc15e6f54dc7b8f3c2316b55e11c5f0',
 };
-// Activate only after the public HTTP and browser query proofs cover all six
-// PostgreSQL editions. The pending output remains the published truth today.
-const postgresqlPublicApiVerified = false;
+// Keep this flag aligned with the verified all-six public HTTP and browser
+// query proof before regenerating the published connection catalogue.
+const postgresqlPublicApiVerified = true;
 const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex');
 const entries = [];
 const seen = new Set();

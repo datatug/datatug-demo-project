@@ -49,8 +49,9 @@ source pin. A separate
 [PostgreSQL and SQLite genre query](chinook-postgresql-genres.query.dtql)
 shows names from both editions side by side. These are DTQL examples for the
 browser federation runner, distinct from the standalone SQLite SQL examples
-below. The PostgreSQL endpoint is still pending public deployment, so the
-shared connection catalogue does not yet offer a Run link.
+below. The public PostgreSQL endpoint is available through the QA and UAT
+connections in the shared catalogue; its read-only DataTug browser query path
+has been verified against the hosted edition.
 
 ## Chinook
 
