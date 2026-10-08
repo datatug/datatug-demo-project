@@ -3,10 +3,11 @@
 These 18 standalone, read-only SQLite examples give each public DemoDB dataset
 three concrete ways to investigate its data. Each `.query.sql` has matching
 `.query.json` metadata and a stable flat query ID. The current DataTug Dev
-environment exposes only `chinook-local`; it has no dataset-specific SQL
-connections for these six public SQLite editions, so the examples are not
-executable in the browser yet. Open a linked SQL file in a SQLite client and
-edit a filter or `LIMIT` to continue the investigation.
+environment exposes only `chinook-local`. The saved [Customer Genre Mix](chinook-customer-genre-mix.query.sql)
+query binds `chinook-sqlite` and runs in the browser against the pinned public
+Chinook fixture. The other examples have no browser SQL binding yet. Open a
+linked SQL file in a SQLite client and edit a filter or `LIMIT` to continue
+those investigations.
 
 ## Verified inputs
 

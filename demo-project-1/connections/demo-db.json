@@ -31,6 +31,10 @@
       "source": "https://demodb.dev/ovdb/v1/databases/chinook",
       "descriptor": "https://demodb.dev/ovdb/db/chinook/ovdb-database.json",
       "fixtureSha256": "7651ba378ac2fcd0dfc3c66fb101f7a7eed3ba39a612ec642b96e20702061f15",
+      "browserFixture": {
+        "url": "https://chinook.demodb.dev/data/chinook.sqlite",
+        "bytes": 1007616
+      },
       "query": "ovdb-read",
       "copy": "explicit-browser-import"
     },
