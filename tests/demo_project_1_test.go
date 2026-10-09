@@ -8,6 +8,10 @@ package tests
 
 import (
 	"context"
+	"encoding/json"
+	"os"
+	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/datatug/datatug-core/pkg/datatug"
@@ -50,6 +54,25 @@ func loadQueries(t *testing.T, store datatug.ProjectStore, ids ...string) datatu
 		queries[i] = q
 	}
 	return queries
+}
+
+type queryMetadata struct {
+	ID           string `json:"id"`
+	Type         string `json:"type"`
+	ConnectionID string `json:"connectionId"`
+	Purpose      string `json:"purpose"`
+	Parameters   []any  `json:"parameters"`
+	Targets      []any  `json:"targets"`
+}
+
+func readQueryMetadata(t *testing.T, relativePath string) queryMetadata {
+	t.Helper()
+	path := filepath.Join(projectDir, "queries", relativePath+".query.json")
+	data, err := os.ReadFile(path)
+	require.NoError(t, err, "failed to read query metadata %s", path)
+	var metadata queryMetadata
+	require.NoError(t, json.Unmarshal(data, &metadata), "failed to parse query metadata %s", path)
+	return metadata
 }
 
 // TestDemoProject1_Validate loads demo-project-1 through the real
@@ -233,6 +256,51 @@ func TestDemoProject1_HostedCustomerPreview(t *testing.T) {
 	assert.Contains(t, query.Text, "limit: 20")
 	for _, field := range []string{"CustomerId", "FirstName", "LastName", "Country"} {
 		assert.Contains(t, query.Text, field)
+	}
+}
+
+// TestDemoProject1_StandaloneChinookBrowserBindings keeps the browser-ready
+// SQL allowlist limited to the three standalone Chinook SQLite examples. The
+// other DemoDB datasets, PostgreSQL federation example, and parameterized
+// library queries remain outside that saved-connection path.
+func TestDemoProject1_StandaloneChinookBrowserBindings(t *testing.T) {
+	allowed := map[string]string{
+		"demodb/chinook-customer-genre-mix":   "chinook-sqlite",
+		"demodb/chinook-playlist-composition": "chinook-sqlite",
+		"demodb/chinook-top-customer-spend":   "chinook-sqlite",
+	}
+	for queryPath, connectionID := range allowed {
+		metadata := readQueryMetadata(t, queryPath)
+		assert.Equal(t, strings.TrimPrefix(queryPath, "demodb/"), metadata.ID, queryPath)
+		assert.Equal(t, connectionID, metadata.ConnectionID, queryPath)
+		assert.Equal(t, "SQL", metadata.Type, queryPath)
+		assert.Contains(t, strings.ToLower(metadata.Purpose), "standalone", queryPath)
+		assert.Contains(t, strings.ToLower(metadata.Purpose), "browser", queryPath)
+		assert.Empty(t, metadata.Parameters, queryPath)
+		assert.Empty(t, metadata.Targets, queryPath)
+	}
+
+	// Any future standalone DemoDB example stays unbound unless it is added to
+	// the allowlist above.
+	queryFiles, err := filepath.Glob(filepath.Join(projectDir, "queries", "demodb", "*.query.json"))
+	require.NoError(t, err)
+	for _, path := range queryFiles {
+		data, err := os.ReadFile(path)
+		require.NoError(t, err)
+		var metadata queryMetadata
+		require.NoError(t, json.Unmarshal(data, &metadata), path)
+		if metadata.ConnectionID != "" {
+			assert.Equal(t, allowed["demodb/"+strings.TrimSuffix(filepath.Base(path), ".query.json")], metadata.ConnectionID, path)
+		}
+	}
+
+	for _, queryPath := range []string{
+		"demodb/chinook-postgresql-artist-tracks",
+		"demodb/northwind-top-customer-orders",
+		"customers/customer-purchases-by-genre",
+		"invoices/invoice-lines",
+	} {
+		assert.Empty(t, readQueryMetadata(t, queryPath).ConnectionID, queryPath)
 	}
 }
 

@@ -34,9 +34,10 @@ and cannot run or copy data.
 
 The [guided DemoDB investigations](queries/demodb/README.md) provide three
 fixture-verified standalone SQL examples for each of the six SQLite datasets.
-The saved Customer Genre Mix query has an explicit `chinook-sqlite` binding
-and runs against the pinned public Chinook fixture in the browser. The other
-standalone examples await source bindings.
+The saved Customer Genre Mix, Playlist Composition, and Top Customer Spend
+queries have explicit `chinook-sqlite` bindings and run against the pinned
+public Chinook fixture in the browser. The other standalone examples await
+source bindings.
 
 Regenerate the catalogue from the pinned DemoDB website registry, OVDB
 Directory inventory, and BigQuery hosting manifest with `node
