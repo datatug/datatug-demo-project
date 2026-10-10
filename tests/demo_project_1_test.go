@@ -290,6 +290,11 @@ func TestDemoProject1_StandaloneChinookBrowserBindings(t *testing.T) {
 		var metadata queryMetadata
 		require.NoError(t, json.Unmarshal(data, &metadata), path)
 		if metadata.ConnectionID != "" {
+			if metadata.ID == "chinook-invoice-author" {
+				assert.Equal(t, "chinook-sqlite", metadata.ConnectionID, path)
+				assert.Equal(t, "DTQL", metadata.Type, path)
+				continue
+			}
 			assert.Equal(t, allowed["demodb/"+strings.TrimSuffix(filepath.Base(path), ".query.json")], metadata.ConnectionID, path)
 		}
 	}
@@ -302,6 +307,22 @@ func TestDemoProject1_StandaloneChinookBrowserBindings(t *testing.T) {
 	} {
 		assert.Empty(t, readQueryMetadata(t, queryPath).ConnectionID, queryPath)
 	}
+}
+
+func TestDemoProject1_ChinookInvoiceAuthorStarter(t *testing.T) {
+	metadata := readQueryMetadata(t, "demodb/chinook-invoice-author")
+	assert.Equal(t, "chinook-invoice-author", metadata.ID)
+	assert.Equal(t, "DTQL", metadata.Type)
+	assert.Equal(t, "chinook-sqlite", metadata.ConnectionID)
+	assert.Empty(t, metadata.Parameters, "TugQL declares its visible typed parameter in the source")
+
+	source, err := os.ReadFile(filepath.Join(projectDir, "queries", "demodb", "chinook-invoice-author.query.dtql"))
+	require.NoError(t, err)
+	assert.Contains(t, string(source), "@CustomerId integer required")
+	assert.Contains(t, string(source), "where i.CustomerId = @CustomerId")
+	assert.Contains(t, string(source), "select i.InvoiceId, i.InvoiceDate")
+	assert.Contains(t, string(source), "limit 100")
+	assert.NotContains(t, string(source), "Total", "SQLite NUMERIC money values are outside this exactness profile")
 }
 
 // TestDemoProject1_DeclaredMappings asserts the mappings needed by the demo

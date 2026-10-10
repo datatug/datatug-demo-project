@@ -1,0 +1,15 @@
+{
+  "id": "chinook-invoice-author",
+  "title": "Chinook Invoice Author",
+  "type": "DTQL",
+  "connectionId": "chinook-sqlite",
+  "recordsets": [
+    {
+      "columns": [
+        { "name": "InvoiceId", "type": "integer" },
+        { "name": "InvoiceDate", "type": "datetime" }
+      ]
+    }
+  ],
+  "purpose": "Bounded first Author journey for the browser-pinned Chinook SQLite fixture. Compose or edit TugQL, enter a CustomerId, inspect the compiled SQLite preview, then explicitly run the query."
+}
