@@ -4,21 +4,14 @@
   "type": "DTQL",
   "connectionId": "chinook-sqlite",
   "purpose": "Bounded nonrecursive CTE TugQL example for the pinned Chinook SQLite fixture. The CTE counts Invoice rows for one required CustomerId, keeps groups with at least seven invoices, exports the key for an explicit Customer join, and applies inner and outer row limits.",
-  "parameters": [
-    {
-      "id": "CustomerId",
-      "type": "integer",
-      "isRequired": true
-    }
-  ],
   "recordsets": [
     {
       "columns": [
-        { "name": "CustomerId", "type": "integer", "meta": { "entity": "Invoice", "field": "CustomerId" } },
+        { "name": "CustomerId", "type": "integer" },
         { "name": "InvoiceCount", "type": "integer" },
-        { "name": "FirstName", "type": "string", "meta": { "entity": "Customer", "field": "FirstName" } },
-        { "name": "LastName", "type": "string", "meta": { "entity": "Customer", "field": "LastName" } },
-        { "name": "Email", "type": "string", "meta": { "entity": "Customer", "field": "Email" } }
+        { "name": "FirstName", "type": "string" },
+        { "name": "LastName", "type": "string" },
+        { "name": "Email", "type": "string" }
       ]
     }
   ]
