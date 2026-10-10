@@ -1,0 +1,22 @@
+{
+	"version": 1,
+	"foreignKeys": [
+		{
+			"name": "FK_Invoice_Customer_CustomerId",
+			"table": {
+				"schema": "main",
+				"name": "Invoice"
+			},
+			"columns": [
+				"CustomerId"
+			],
+			"refTable": {
+				"schema": "main",
+				"name": "Customer"
+			},
+			"refColumns": [
+				"CustomerId"
+			]
+		}
+	]
+}
