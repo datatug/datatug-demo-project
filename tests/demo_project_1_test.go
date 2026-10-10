@@ -57,12 +57,30 @@ func loadQueries(t *testing.T, store datatug.ProjectStore, ids ...string) datatu
 }
 
 type queryMetadata struct {
-	ID           string `json:"id"`
-	Type         string `json:"type"`
-	ConnectionID string `json:"connectionId"`
-	Purpose      string `json:"purpose"`
-	Parameters   []any  `json:"parameters"`
-	Targets      []any  `json:"targets"`
+	ID                   string                      `json:"id"`
+	Type                 string                      `json:"type"`
+	ConnectionID         string                      `json:"connectionId"`
+	Purpose              string                      `json:"purpose"`
+	Parameters           []any                       `json:"parameters"`
+	Targets              []any                       `json:"targets"`
+	RelationshipBindings []queryRelationshipMetadata `json:"relationshipBindings"`
+}
+
+type queryRelationshipMetadata struct {
+	ID      string `json:"id"`
+	Version string `json:"version"`
+	From    struct {
+		Schema string `json:"schema"`
+		Table  string `json:"table"`
+	} `json:"from"`
+	To struct {
+		Schema string `json:"schema"`
+		Table  string `json:"table"`
+	} `json:"to"`
+	Pairs []struct {
+		FromField string `json:"fromField"`
+		ToField   string `json:"toField"`
+	} `json:"pairs"`
 }
 
 func readQueryMetadata(t *testing.T, relativePath string) queryMetadata {
@@ -269,6 +287,11 @@ func TestDemoProject1_StandaloneChinookBrowserBindings(t *testing.T) {
 		"demodb/chinook-playlist-composition": "chinook-sqlite",
 		"demodb/chinook-top-customer-spend":   "chinook-sqlite",
 	}
+	allowedTugQL := map[string]string{
+		"demodb/chinook-invoice-author":         "chinook-sqlite",
+		"demodb/chinook-customer-invoice-count": "chinook-sqlite",
+		"demodb/chinook-customer-invoice-join":  "chinook-sqlite",
+	}
 	for queryPath, connectionID := range allowed {
 		metadata := readQueryMetadata(t, queryPath)
 		assert.Equal(t, strings.TrimPrefix(queryPath, "demodb/"), metadata.ID, queryPath)
@@ -290,8 +313,10 @@ func TestDemoProject1_StandaloneChinookBrowserBindings(t *testing.T) {
 		var metadata queryMetadata
 		require.NoError(t, json.Unmarshal(data, &metadata), path)
 		if metadata.ConnectionID != "" {
-			if metadata.ID == "chinook-invoice-author" || metadata.ID == "chinook-customer-invoice-count" {
-				assert.Equal(t, "chinook-sqlite", metadata.ConnectionID, path)
+			queryPath := filepath.ToSlash(filepath.Join("demodb", strings.TrimSuffix(filepath.Base(path), ".query.json")))
+			if expectedConnection, ok := allowedTugQL[queryPath]; ok {
+				assert.Equal(t, strings.TrimPrefix(queryPath, "demodb/"), metadata.ID, path)
+				assert.Equal(t, expectedConnection, metadata.ConnectionID, path)
 				assert.Equal(t, "DTQL", metadata.Type, path)
 				continue
 			}
@@ -306,6 +331,94 @@ func TestDemoProject1_StandaloneChinookBrowserBindings(t *testing.T) {
 		"invoices/invoice-lines",
 	} {
 		assert.Empty(t, readQueryMetadata(t, queryPath).ConnectionID, queryPath)
+	}
+}
+
+func TestDemoProject1_ChinookCustomerInvoiceJoinStarter(t *testing.T) {
+	metadata := readQueryMetadata(t, "demodb/chinook-customer-invoice-join")
+	assert.Equal(t, "chinook-customer-invoice-join", metadata.ID)
+	assert.Equal(t, "DTQL", metadata.Type)
+	assert.Equal(t, "chinook-sqlite", metadata.ConnectionID)
+	assert.Contains(t, strings.ToLower(metadata.Purpose), "browser")
+	require.Len(t, metadata.RelationshipBindings, 1)
+	assert.Equal(t, "FK_Invoice_Customer_CustomerId", metadata.RelationshipBindings[0].ID)
+	assert.Equal(t,
+		"7651ba378ac2fcd0dfc3c66fb101f7a7eed3ba39a612ec642b96e20702061f15:main.Invoice.CustomerId:INTEGER->main.Customer.CustomerId:INTEGER:PRIMARY_KEY:v1",
+		metadata.RelationshipBindings[0].Version,
+	)
+	assert.Equal(t, "main", metadata.RelationshipBindings[0].From.Schema)
+	assert.Equal(t, "Invoice", metadata.RelationshipBindings[0].From.Table)
+	assert.Equal(t, "main", metadata.RelationshipBindings[0].To.Schema)
+	assert.Equal(t, "Customer", metadata.RelationshipBindings[0].To.Table)
+	require.Len(t, metadata.RelationshipBindings[0].Pairs, 1)
+	assert.Equal(t, "CustomerId", metadata.RelationshipBindings[0].Pairs[0].FromField)
+	assert.Equal(t, "CustomerId", metadata.RelationshipBindings[0].Pairs[0].ToField)
+
+	source, err := os.ReadFile(filepath.Join(projectDir, "queries", "demodb", "chinook-customer-invoice-join.query.dtql"))
+	require.NoError(t, err)
+	text := string(source)
+	for _, expected := range []string{
+		"@CustomerId integer required",
+		"from Invoice as i",
+		"join Customer as c",
+		"on i.CustomerId = c.CustomerId",
+		"where i.CustomerId = @CustomerId",
+		"order by i.InvoiceId",
+		"limit 100",
+		"select i.InvoiceId as InvoiceId, i.CustomerId as CustomerId, c.FirstName as FirstName, c.LastName as LastName, c.Email as Email",
+	} {
+		assert.Contains(t, text, expected)
+	}
+	assert.NotContains(t, text, "InvoiceDate")
+	assert.NotContains(t, text, "Total")
+
+	data, err := os.ReadFile(filepath.Join(projectDir, "queries", "demodb", "chinook-customer-invoice-join.query.json"))
+	require.NoError(t, err)
+	var definition struct {
+		Parameters []struct {
+			ID         string `json:"id"`
+			Type       string `json:"type"`
+			IsRequired bool   `json:"isRequired"`
+			Meta       struct {
+				Entity string `json:"entity"`
+				Field  string `json:"field"`
+			} `json:"meta"`
+		} `json:"parameters"`
+		Recordsets []struct {
+			Columns []struct {
+				Name string `json:"name"`
+				Type string `json:"type"`
+				Meta struct {
+					Entity string `json:"entity"`
+					Field  string `json:"field"`
+				} `json:"meta"`
+			} `json:"columns"`
+		} `json:"recordsets"`
+	}
+	require.NoError(t, json.Unmarshal(data, &definition))
+	require.Len(t, definition.Parameters, 1)
+	assert.Equal(t, "CustomerId", definition.Parameters[0].ID)
+	assert.Equal(t, "integer", definition.Parameters[0].Type)
+	assert.True(t, definition.Parameters[0].IsRequired)
+	assert.Equal(t, "Customer", definition.Parameters[0].Meta.Entity)
+	assert.Equal(t, "ID", definition.Parameters[0].Meta.Field)
+	require.Len(t, definition.Recordsets, 1)
+	require.Len(t, definition.Recordsets[0].Columns, 5)
+	wantColumns := []struct {
+		name, typ, entity, field string
+	}{
+		{"InvoiceId", "integer", "Invoice", "ID"},
+		{"CustomerId", "integer", "Customer", "ID"},
+		{"FirstName", "string", "Customer", "FirstName"},
+		{"LastName", "string", "Customer", "LastName"},
+		{"Email", "string", "Customer", "Email"},
+	}
+	for i, want := range wantColumns {
+		got := definition.Recordsets[0].Columns[i]
+		assert.Equal(t, want.name, got.Name)
+		assert.Equal(t, want.typ, got.Type)
+		assert.Equal(t, want.entity, got.Meta.Entity)
+		assert.Equal(t, want.field, got.Meta.Field)
 	}
 }
 

@@ -1,0 +1,35 @@
+{
+  "id": "chinook-customer-invoice-join",
+  "title": "Chinook Customer Invoices",
+  "type": "DTQL",
+  "connectionId": "chinook-sqlite",
+  "relationshipBindings": [
+    {
+      "id": "FK_Invoice_Customer_CustomerId",
+      "version": "7651ba378ac2fcd0dfc3c66fb101f7a7eed3ba39a612ec642b96e20702061f15:main.Invoice.CustomerId:INTEGER->main.Customer.CustomerId:INTEGER:PRIMARY_KEY:v1",
+      "from": { "schema": "main", "table": "Invoice" },
+      "to": { "schema": "main", "table": "Customer" },
+      "pairs": [{ "fromField": "CustomerId", "toField": "CustomerId" }]
+    }
+  ],
+  "purpose": "Bounded joined TugQL example for the browser-pinned Chinook SQLite fixture. It uses the declared Invoice-to-Customer relationship and returns stable, InvoiceId-ordered rows for one required CustomerId.",
+  "parameters": [
+    {
+      "id": "CustomerId",
+      "type": "integer",
+      "isRequired": true,
+      "meta": { "entity": "Customer", "field": "ID" }
+    }
+  ],
+  "recordsets": [
+    {
+      "columns": [
+        { "name": "InvoiceId", "type": "integer", "meta": { "entity": "Invoice", "field": "ID" } },
+        { "name": "CustomerId", "type": "integer", "meta": { "entity": "Customer", "field": "ID" } },
+        { "name": "FirstName", "type": "string", "meta": { "entity": "Customer", "field": "FirstName" } },
+        { "name": "LastName", "type": "string", "meta": { "entity": "Customer", "field": "LastName" } },
+        { "name": "Email", "type": "string", "meta": { "entity": "Customer", "field": "Email" } }
+      ]
+    }
+  ]
+}
