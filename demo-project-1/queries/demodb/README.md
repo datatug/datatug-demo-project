@@ -11,6 +11,11 @@ fixture. The remaining examples have no browser SQL binding yet. Open a
 linked SQL file in a SQLite client and edit a filter or `LIMIT` to continue
 those investigations.
 
+The saved [Invoice Author](chinook-invoice-author.query.dtql) and
+[Customer Invoice Count](chinook-customer-invoice-count.query.dtql) queries are
+TugQL examples for the same pinned fixture. They bind a required customer ID;
+the grouped count example also uses a bounded integer `HAVING` threshold.
+
 ## Verified inputs
 
 The input files match the `fixtureSha256` pins in the project's

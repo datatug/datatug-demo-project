@@ -1,0 +1,9 @@
+parameters (
+  @CustomerId integer required
+)
+from Invoice as i
+where i.CustomerId = @CustomerId
+group by i.CustomerId
+having count(*) >= 7
+limit 100
+select i.CustomerId, count(*) as InvoiceCount

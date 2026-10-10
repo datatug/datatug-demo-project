@@ -1,0 +1,7 @@
+parameters (
+  @CustomerId integer required
+)
+from Invoice as i
+where i.CustomerId = @CustomerId
+limit 100
+select i.InvoiceId, i.InvoiceDate
