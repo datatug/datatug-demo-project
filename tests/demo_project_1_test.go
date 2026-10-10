@@ -288,9 +288,9 @@ func TestDemoProject1_StandaloneChinookBrowserBindings(t *testing.T) {
 		"demodb/chinook-top-customer-spend":   "chinook-sqlite",
 	}
 	allowedTugQL := map[string]string{
-		"chinook-invoice-author":         "chinook-sqlite",
-		"chinook-customer-invoice-count": "chinook-sqlite",
-		"chinook-customer-invoice-join":  "chinook-sqlite",
+		"demodb/chinook-invoice-author":         "chinook-sqlite",
+		"demodb/chinook-customer-invoice-count": "chinook-sqlite",
+		"demodb/chinook-customer-invoice-join":  "chinook-sqlite",
 	}
 	for queryPath, connectionID := range allowed {
 		metadata := readQueryMetadata(t, queryPath)
@@ -313,7 +313,9 @@ func TestDemoProject1_StandaloneChinookBrowserBindings(t *testing.T) {
 		var metadata queryMetadata
 		require.NoError(t, json.Unmarshal(data, &metadata), path)
 		if metadata.ConnectionID != "" {
-			if expectedConnection, ok := allowedTugQL[metadata.ID]; ok {
+			queryPath := filepath.ToSlash(filepath.Join("demodb", strings.TrimSuffix(filepath.Base(path), ".query.json")))
+			if expectedConnection, ok := allowedTugQL[queryPath]; ok {
+				assert.Equal(t, strings.TrimPrefix(queryPath, "demodb/"), metadata.ID, path)
 				assert.Equal(t, expectedConnection, metadata.ConnectionID, path)
 				assert.Equal(t, "DTQL", metadata.Type, path)
 				continue
