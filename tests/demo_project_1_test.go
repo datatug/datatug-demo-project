@@ -58,6 +58,7 @@ func loadQueries(t *testing.T, store datatug.ProjectStore, ids ...string) datatu
 
 type queryMetadata struct {
 	ID                   string                      `json:"id"`
+	Title                string                      `json:"title"`
 	Type                 string                      `json:"type"`
 	ConnectionID         string                      `json:"connectionId"`
 	Purpose              string                      `json:"purpose"`
@@ -290,6 +291,7 @@ func TestDemoProject1_StandaloneChinookBrowserBindings(t *testing.T) {
 	allowedTugQL := map[string]string{
 		"demodb/chinook-invoice-author":         "chinook-sqlite",
 		"demodb/chinook-customer-invoice-count": "chinook-sqlite",
+		"demodb/chinook-customer-count-cte":     "chinook-sqlite",
 		"demodb/chinook-customer-invoice-join":  "chinook-sqlite",
 	}
 	for queryPath, connectionID := range allowed {
@@ -455,6 +457,74 @@ func TestDemoProject1_ChinookCustomerInvoiceCountStarter(t *testing.T) {
 	assert.Contains(t, text, "select i.CustomerId, count(*) as InvoiceCount")
 	assert.Contains(t, text, "limit 100")
 	assert.NotContains(t, text, "Total", "SQLite NUMERIC money values are outside this exactness profile")
+}
+
+func TestDemoProject1_ChinookCustomerCountsCTE(t *testing.T) {
+	const queryID = "chinook-customer-count-cte"
+	metadata := readQueryMetadata(t, "demodb/"+queryID)
+	assert.Equal(t, queryID, metadata.ID)
+	assert.Equal(t, "Chinook Customer Counts CTE", metadata.Title)
+	assert.Equal(t, "DTQL", metadata.Type)
+	assert.Equal(t, "chinook-sqlite", metadata.ConnectionID)
+	assert.Empty(t, metadata.Parameters, "TugQL declares the visible typed parameter in the source")
+	assert.Empty(t, metadata.RelationshipBindings, "the explicit join from a CTE export has no physical relationship binding")
+
+	connectionData, err := os.ReadFile(filepath.Join(projectDir, "connections", "demo-db.json"))
+	require.NoError(t, err)
+	var catalogue struct {
+		Connections []struct {
+			ID             string `json:"id"`
+			FixtureSHA256  string `json:"fixtureSha256"`
+			BrowserFixture struct {
+				URL string `json:"url"`
+			} `json:"browserFixture"`
+		} `json:"connections"`
+	}
+	require.NoError(t, json.Unmarshal(connectionData, &catalogue))
+	connectionFound := false
+	for i := range catalogue.Connections {
+		if catalogue.Connections[i].ID == metadata.ConnectionID {
+			connectionFound = true
+			assert.Equal(t, "7651ba378ac2fcd0dfc3c66fb101f7a7eed3ba39a612ec642b96e20702061f15", catalogue.Connections[i].FixtureSHA256)
+			assert.Equal(t, "https://chinook.demodb.dev/data/chinook.sqlite", catalogue.Connections[i].BrowserFixture.URL)
+			break
+		}
+	}
+	require.True(t, connectionFound, "saved connection must exist in the catalogue")
+
+	store := newStore(t)
+	query, err := store.LoadQuery(context.Background(), "demodb/"+queryID)
+	require.NoError(t, err)
+	assert.Equal(t, datatug.QueryTypeDTQL, query.Type)
+
+	var definition struct {
+		Recordsets []struct {
+			Columns []struct {
+				Name string          `json:"name"`
+				Type string          `json:"type"`
+				Meta json.RawMessage `json:"meta"`
+			} `json:"columns"`
+		} `json:"recordsets"`
+	}
+	data, err := os.ReadFile(filepath.Join(projectDir, "queries", "demodb", queryID+".query.json"))
+	require.NoError(t, err)
+	require.NoError(t, json.Unmarshal(data, &definition))
+	require.Len(t, definition.Recordsets, 1)
+	require.Len(t, definition.Recordsets[0].Columns, 5)
+	wantColumns := []struct{ name, typ string }{
+		{"CustomerId", "integer"},
+		{"InvoiceCount", "integer"},
+		{"FirstName", "string"},
+		{"LastName", "string"},
+		{"Email", "string"},
+	}
+	for i, want := range wantColumns {
+		column := definition.Recordsets[0].Columns[i]
+		assert.Equal(t, want.name, column.Name)
+		assert.Equal(t, want.typ, column.Type)
+		assert.Empty(t, column.Meta, "lineage is supplied by compiler and worker execution metadata")
+	}
+
 }
 
 // TestDemoProject1_DeclaredMappings asserts the mappings needed by the demo
