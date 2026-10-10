@@ -19,12 +19,26 @@ The [Customer Counts CTE](chinook-customer-count-cte.query.dtql) keeps that
 grouped count inside a nonrecursive CTE, joins its exported customer key to
 `Customer` with an explicit `ON`, and bounds the CTE's output groups and final
 rows. Its inner `LIMIT` follows `GROUP BY` and `HAVING`, so it does not cap the
-input invoice rows. Availability in the browser, placeholder preview, and
-worker execution are pending adapter and cold-browser verification. Expected
-from the pinned fixture after those checks: CustomerId `1` returns
-`(1, 7, Luís, Gonçalves, luisg@embraer.com.br)` for the starter `>= 7` threshold;
-a fresh run at `>= 8` returns no rows. These are expected results, not a worker
-receipt.
+input invoice rows. Production verification used DataTug App build
+`0.1.0+429` at merge `f1516057c13952aadc2ec53056ca3a3095c14f12`; the deployed
+build hash matched that merge ([Cloudflare deployment run
+38086445939](https://github.com/datatug/datatug-apps/actions/runs/38086445939)).
+A cold open selected Code without executing.
+With `@CustomerId` unset, the parameterized SQL preview appeared and Run stayed
+disabled. Running with CustomerId `1` and the starter `>= 7` threshold returned
+`(1, 7, Luís, Gonçalves, luisg@embraer.com.br)`; the worker-issued SQL matched
+the preview (receipt `38b334ba-8771-4af3-80bb-40a0dc401dcf`, observed
+2026-10-10T21:12:18.736Z; pinned fixture SHA-256
+`7651ba378ac2fcd0dfc3c66fb101f7a7eed3ba39a612ec642b96e20702061f15`). Editing the threshold to `>= 8` invalidated the preview, disabled Run, and
+retained the previous result; after fresh preview the subsequent run returned
+no rows (receipt
+`1ac6e326-cf8c-4445-823c-6767f2a19b01`, observed 2026-10-10T21:13:39.943Z).
+An unsupported qualified outer source remained visible and was rejected before
+preview or Run. Restoring the maintained query returned the expected row again
+(receipt `21b80606-4177-4b02-8a5b-5559269a5ce6`, observed
+2026-10-10T21:14:18.178Z). Exact-target Apps main CI run
+[38086445571](https://github.com/datatug/datatug-apps/actions/runs/38086445571)
+passed all required checks at the exact merge head.
 
 ## Verified inputs
 
