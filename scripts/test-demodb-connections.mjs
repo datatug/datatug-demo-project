@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import test from 'node:test';
+import { demoPostgresqlConnection } from './demodb-postgresql-connection.mjs';
 
 const root = resolve(import.meta.dirname, '..');
 const project = resolve(root, 'demo-project-1');
@@ -9,6 +10,24 @@ const read = (path) => JSON.parse(readFileSync(resolve(project, path), 'utf8'));
 const catalog = read('connections/demo-db.json');
 const projectFile = read('datatug-project.json');
 const datasets = ['chinook', 'northwind', 'pubs', 'sakila', 'adventureworks', 'employees'];
+
+test('PostgreSQL activation preserves six edition identities and QA/UAT memberships', () => {
+  for (const dataset of datasets) {
+    const pending = demoPostgresqlConnection(dataset);
+    const publicApi = demoPostgresqlConnection(dataset, true);
+    assert.equal(pending.id, publicApi.id);
+    assert.equal(pending.readiness, 'hosted-api-pending');
+    assert.equal(pending.query, 'setup-required');
+    assert.equal(pending.source, `https://demodb.dev/${dataset}/`);
+    assert.deepEqual(catalog.connections.find((entry) => entry.id === publicApi.id), publicApi);
+    assert.equal(publicApi.readiness, 'public-api');
+    assert.equal(publicApi.query, 'ovdb-read');
+    assert.equal(publicApi.source, `https://cloud.openvaultdb.com/v1/databases/${dataset}-postgresql`);
+    assert.deepEqual(publicApi.environments, ['QA', 'UAT']);
+    assert.deepEqual(publicApi.tags, [dataset, 'postgresql']);
+    assert.equal(publicApi.copy, 'unavailable');
+  }
+});
 
 test('one canonical project exposes every DemoDB storage edition with truthful readiness', () => {
   assert.equal(projectFile.id, 'datatug-demo-project');
@@ -36,8 +55,8 @@ test('one canonical project exposes every DemoDB storage edition with truthful r
         });
         else assert.equal(entry.browserFixture, undefined);
       } else if (storage === 'postgresql') {
-        assert.equal(entry.readiness, 'hosted-api-pending');
-        assert.equal(entry.query, 'setup-required');
+        assert.equal(entry.readiness, 'public-api');
+        assert.equal(entry.query, 'ovdb-read');
         assert.equal(entry.copy, 'unavailable');
         assert.deepEqual(entry.environments, ['QA', 'UAT']);
       } else {
@@ -50,7 +69,7 @@ test('one canonical project exposes every DemoDB storage edition with truthful r
   }
 });
 
-test('environment memberships point to exact catalogue entries without activating pending SQL sources', () => {
+test('environment memberships point to exact active catalogue entries', () => {
   const ids = new Set(catalog.connections.map((connection) => connection.id));
   for (const env of ['dev', 'QA', 'UAT']) {
     const file = read(`environments/${env}/${env}.env.json`);
