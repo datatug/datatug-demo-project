@@ -15,6 +15,12 @@ The saved [Invoice Author](chinook-invoice-author.query.dtql) and
 [Customer Invoice Count](chinook-customer-invoice-count.query.dtql) queries are
 TugQL examples for the same pinned fixture. They bind a required customer ID;
 the grouped count example also uses a bounded integer `HAVING` threshold.
+The [Customer Counts CTE](chinook-customer-count-cte.query.dtql) keeps that
+grouped count inside a nonrecursive CTE, joins its exported customer key to
+`Customer` with an explicit `ON`, and bounds both the CTE input and final rows.
+Preview with no CustomerId shows placeholders and does not call the worker. An
+explicit run with CustomerId `1` returns one row: `(1, 7, Luís, Gonçalves, luisg@embraer.com.br)`;
+a threshold above seven returns no rows.
 
 ## Verified inputs
 

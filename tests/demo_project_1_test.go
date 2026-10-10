@@ -58,6 +58,7 @@ func loadQueries(t *testing.T, store datatug.ProjectStore, ids ...string) datatu
 
 type queryMetadata struct {
 	ID                   string                      `json:"id"`
+	Title                string                      `json:"title"`
 	Type                 string                      `json:"type"`
 	ConnectionID         string                      `json:"connectionId"`
 	Purpose              string                      `json:"purpose"`
@@ -290,6 +291,7 @@ func TestDemoProject1_StandaloneChinookBrowserBindings(t *testing.T) {
 	allowedTugQL := map[string]string{
 		"demodb/chinook-invoice-author":         "chinook-sqlite",
 		"demodb/chinook-customer-invoice-count": "chinook-sqlite",
+		"demodb/chinook-customer-count-cte":     "chinook-sqlite",
 		"demodb/chinook-customer-invoice-join":  "chinook-sqlite",
 	}
 	for queryPath, connectionID := range allowed {
@@ -455,6 +457,101 @@ func TestDemoProject1_ChinookCustomerInvoiceCountStarter(t *testing.T) {
 	assert.Contains(t, text, "select i.CustomerId, count(*) as InvoiceCount")
 	assert.Contains(t, text, "limit 100")
 	assert.NotContains(t, text, "Total", "SQLite NUMERIC money values are outside this exactness profile")
+}
+
+func TestDemoProject1_ChinookCustomerCountsCTE(t *testing.T) {
+	const queryID = "chinook-customer-count-cte"
+	metadata := readQueryMetadata(t, "demodb/"+queryID)
+	assert.Equal(t, queryID, metadata.ID)
+	assert.Equal(t, "Chinook Customer Counts CTE", metadata.Title)
+	assert.Equal(t, "DTQL", metadata.Type)
+	assert.Equal(t, "chinook-sqlite", metadata.ConnectionID)
+	assert.Empty(t, metadata.RelationshipBindings, "the explicit join from a CTE export has no physical relationship binding")
+
+	connectionData, err := os.ReadFile(filepath.Join(projectDir, "connections", "demo-db.json"))
+	require.NoError(t, err)
+	var catalogue struct {
+		Connections []struct {
+			ID             string `json:"id"`
+			FixtureSHA256  string `json:"fixtureSha256"`
+			BrowserFixture struct {
+				URL string `json:"url"`
+			} `json:"browserFixture"`
+		} `json:"connections"`
+	}
+	require.NoError(t, json.Unmarshal(connectionData, &catalogue))
+	var chinookConnection *struct {
+		ID             string `json:"id"`
+		FixtureSHA256  string `json:"fixtureSha256"`
+		BrowserFixture struct {
+			URL string `json:"url"`
+		} `json:"browserFixture"`
+	}
+	for i := range catalogue.Connections {
+		if catalogue.Connections[i].ID == metadata.ConnectionID {
+			chinookConnection = &catalogue.Connections[i]
+			break
+		}
+	}
+	require.NotNil(t, chinookConnection, "saved connection must exist in the catalogue")
+	assert.Equal(t, "7651ba378ac2fcd0dfc3c66fb101f7a7eed3ba39a612ec642b96e20702061f15", chinookConnection.FixtureSHA256)
+	assert.Equal(t, "https://chinook.demodb.dev/data/chinook.sqlite", chinookConnection.BrowserFixture.URL)
+
+	store := newStore(t)
+	query, err := store.LoadQuery(context.Background(), "demodb/"+queryID)
+	require.NoError(t, err)
+	assert.Equal(t, datatug.QueryTypeDTQL, query.Type)
+
+	var definition struct {
+		Parameters []struct {
+			ID         string `json:"id"`
+			Type       string `json:"type"`
+			IsRequired bool   `json:"isRequired"`
+		} `json:"parameters"`
+		Recordsets []struct {
+			Columns []struct {
+				Name string `json:"name"`
+				Type string `json:"type"`
+				Meta *struct {
+					Entity string `json:"entity"`
+					Field  string `json:"field"`
+				} `json:"meta"`
+			} `json:"columns"`
+		} `json:"recordsets"`
+	}
+	data, err := os.ReadFile(filepath.Join(projectDir, "queries", "demodb", queryID+".query.json"))
+	require.NoError(t, err)
+	require.NoError(t, json.Unmarshal(data, &definition))
+	require.Len(t, definition.Parameters, 1)
+	assert.Equal(t, "CustomerId", definition.Parameters[0].ID)
+	assert.Equal(t, "integer", definition.Parameters[0].Type)
+	assert.True(t, definition.Parameters[0].IsRequired)
+	require.Len(t, definition.Recordsets, 1)
+	require.Len(t, definition.Recordsets[0].Columns, 5)
+	wantColumns := []struct{ name, typ string }{
+		{"CustomerId", "integer"},
+		{"InvoiceCount", "integer"},
+		{"FirstName", "string"},
+		{"LastName", "string"},
+		{"Email", "string"},
+	}
+	for i, want := range wantColumns {
+		column := definition.Recordsets[0].Columns[i]
+		assert.Equal(t, want.name, column.Name)
+		assert.Equal(t, want.typ, column.Type)
+		if i == 0 {
+			require.NotNil(t, column.Meta)
+			assert.Equal(t, "Invoice", column.Meta.Entity, "the exported key retains its leaf source lineage")
+			assert.Equal(t, "CustomerId", column.Meta.Field)
+		} else if i == 1 {
+			assert.Nil(t, column.Meta, "an aggregate count has no single source-field lineage")
+		} else {
+			require.NotNil(t, column.Meta)
+			assert.Equal(t, "Customer", column.Meta.Entity)
+			assert.Equal(t, want.name, column.Meta.Field)
+		}
+	}
+
 }
 
 // TestDemoProject1_DeclaredMappings asserts the mappings needed by the demo
