@@ -64,8 +64,7 @@ zero rows with matching SQL (receipt
 Restoring the starter returned one row displayed as
 `(7, Luís, Gonçalves, luisg@embraer.com.br)` with matching SQL (receipt
 `8f4df003-74be-4552-93aa-2828b31afb4f`, observed
-`2026-10-11T06:23:13.966Z`). Exact Apps main-CI evidence remains pending from
-the landing owner.
+`2026-10-11T06:23:13.966Z`). Exact-target Apps main-CI [run 38117457824](https://github.com/datatug/datatug-apps/actions/runs/38117457824) passed all four required checks on observed target head `8910b8fc47b8d2c26519d1d2ab20fa33e8509e9f`, with two stable terminal observations at `2026-10-11T06:31:53.496946Z`.
 
 Source-level validation is recorded in Demo project [#31](https://github.com/datatug/datatug-demo-project/pull/31), merged at
 `eb51c8fc525638f98922fe4509255c3048ce7c0f`. Its
