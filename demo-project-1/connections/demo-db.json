@@ -333,6 +333,42 @@
       "copy": "unavailable"
     }
   ],
+  "comparisonFixtures": [
+    {
+      "id": "chinook-baseline",
+      "role": "baseline",
+      "displayLabel": "Pinned upstream baseline",
+      "environmentLabel": "Public baseline endpoint",
+      "url": "https://chinook.demodb.dev/data/chinook.sqlite",
+      "sha256": "7651ba378ac2fcd0dfc3c66fb101f7a7eed3ba39a612ec642b96e20702061f15",
+      "bytes": 1007616,
+      "schemaSha256": "8392c76c7fd8da3bce20d1cec2c60223692a08915787f5c7393cec1c0b6acb94",
+      "provenance": {
+        "providerRepository": "https://github.com/demo-db/chinook",
+        "providerCommit": "95d14a11256f8db512d5ecd7ea5be56e01d51781",
+        "manifestPath": "fixtures/compare/manifest.json",
+        "manifestSha256": "aa80280419d5e0e8bd99ae97574b5d91cbf4df6e560e536f8699f42ec175c887",
+        "hostMergeCommit": "44d9f354ed5b7bf8aaf496dfde15e81d4307730c"
+      }
+    },
+    {
+      "id": "chinook-candidate",
+      "role": "candidate",
+      "displayLabel": "Synthetic comparison fixture (not production data)",
+      "environmentLabel": "Publicly hosted comparison fixture",
+      "url": "https://chinook.demodb.dev/data/compare/3369d25729dea9e21facc7226aee3d5247fa0f3d8d4be4678aa9247fd064845f.sqlite",
+      "sha256": "3369d25729dea9e21facc7226aee3d5247fa0f3d8d4be4678aa9247fd064845f",
+      "bytes": 1007616,
+      "schemaSha256": "8392c76c7fd8da3bce20d1cec2c60223692a08915787f5c7393cec1c0b6acb94",
+      "provenance": {
+        "providerRepository": "https://github.com/demo-db/chinook",
+        "providerCommit": "95d14a11256f8db512d5ecd7ea5be56e01d51781",
+        "manifestPath": "fixtures/compare/manifest.json",
+        "manifestSha256": "aa80280419d5e0e8bd99ae97574b5d91cbf4df6e560e536f8699f42ec175c887",
+        "hostMergeCommit": "44d9f354ed5b7bf8aaf496dfde15e81d4307730c"
+      }
+    }
+  ],
   "bigQueryEditions": [
     {
       "id": "chinook-bigquery",
