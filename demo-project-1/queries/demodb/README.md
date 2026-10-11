@@ -87,7 +87,7 @@ query-author Playwright tests, including the graph one-row/stale/zero-row path.
 Both app and main Nx lint targets passed; exact PR-head CI
 [run 38116475416](https://github.com/datatug/datatug-apps/actions/runs/38116475416)
 completed successfully. These are local/PR checks, distinct from the production
-receipts above and the still-pending exact main-CI receipt.
+receipts above.
 
 ## Verified inputs
 
