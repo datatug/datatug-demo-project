@@ -14,6 +14,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/dal-go/dalgo/dtql"
 	"github.com/datatug/datatug-core/pkg/datatug"
 	"github.com/datatug/datatug-core/pkg/semantic"
 	"github.com/datatug/datatug-core/pkg/storage/filestore"
@@ -292,6 +293,7 @@ func TestDemoProject1_StandaloneChinookBrowserBindings(t *testing.T) {
 		"demodb/chinook-invoice-author":         "chinook-sqlite",
 		"demodb/chinook-customer-invoice-count": "chinook-sqlite",
 		"demodb/chinook-customer-count-cte":     "chinook-sqlite",
+		"demodb/chinook-customer-count-graph":   "chinook-sqlite",
 		"demodb/chinook-customer-invoice-join":  "chinook-sqlite",
 	}
 	for queryPath, connectionID := range allowed {
@@ -525,6 +527,87 @@ func TestDemoProject1_ChinookCustomerCountsCTE(t *testing.T) {
 		assert.Empty(t, column.Meta, "lineage is supplied by compiler and worker execution metadata")
 	}
 
+}
+
+func TestDemoProject1_ChinookCustomerCountsGraphResolves(t *testing.T) {
+	const queryID = "chinook-customer-count-graph"
+	metadata := readQueryMetadata(t, "demodb/"+queryID)
+	assert.Equal(t, queryID, metadata.ID)
+	assert.Equal(t, "Chinook Customer Counts Graph", metadata.Title)
+	assert.Equal(t, "DTQL", metadata.Type)
+	assert.Equal(t, "chinook-sqlite", metadata.ConnectionID)
+	assert.Empty(t, metadata.Parameters, "TugQL declares the visible typed parameter in the source")
+	assert.Empty(t, metadata.RelationshipBindings, "the CTE-to-CTE join has no physical relationship binding")
+
+	queries := loadQueries(t, newStore(t), "demodb/"+queryID)
+	require.Len(t, queries, 1)
+	query := queries[0]
+	require.Equal(t, datatug.QueryTypeDTQL, query.Type)
+	document, parseDiagnostics := dtql.ParseTugQL(query.Text)
+	require.Empty(t, parseDiagnostics, "maintained graph TugQL must parse")
+	require.NotNil(t, document.Tree)
+
+	const fixtureSchemaVersion = "7651ba378ac2fcd0dfc3c66fb101f7a7eed3ba39a612ec642b96e20702061f15"
+	resolved, resolveDiagnostics := dtql.ResolveTugQL(document, dtql.TugQLResolveContext{
+		AuthorizedSchemas: []dtql.TugQLAuthorizedSchema{{
+			Database: "chinook",
+			Schema:   "main",
+			Version:  fixtureSchemaVersion,
+			Tables: []dtql.TugQLTable{
+				{Name: "Invoice", Fields: []dtql.TugQLField{
+					{Name: "CustomerId", Type: "integer", Authorized: true},
+				}},
+				{Name: "Customer", Fields: []dtql.TugQLField{
+					{Name: "CustomerId", Type: "integer", Authorized: true},
+					{Name: "FirstName", Type: "string", Authorized: true},
+					{Name: "LastName", Type: "string", Authorized: true},
+					{Name: "Email", Type: "string", Authorized: true},
+				}},
+			},
+		}},
+		Bindings: []dtql.TugQLBinding{{Name: "CustomerId", Set: true, Value: int64(1)}},
+	})
+	require.Empty(t, resolveDiagnostics, "maintained graph must resolve against the admitted Chinook physical schema")
+	assert.Equal(t, fixtureSchemaVersion, resolved.SchemaVersion)
+	assert.Empty(t, resolved.Relationships, "the explicit join between derived CTE sources must not fabricate physical relationship evidence")
+	require.Len(t, resolved.Columns, 5)
+	wantColumns := []struct {
+		name, typ string
+		lineage   []dtql.TugQLOutputLineage
+	}{
+		{"CustomerId", "integer", []dtql.TugQLOutputLineage{{Source: "i", Field: "CustomerId"}}},
+		{"InvoiceCount", "integer", nil},
+		{"FirstName", "string", []dtql.TugQLOutputLineage{{Source: "c", Field: "FirstName"}}},
+		{"LastName", "string", []dtql.TugQLOutputLineage{{Source: "c", Field: "LastName"}}},
+		{"Email", "string", []dtql.TugQLOutputLineage{{Source: "c", Field: "Email"}}},
+	}
+	for i, want := range wantColumns {
+		got := resolved.Columns[i]
+		assert.Equal(t, want.name, got.Name)
+		assert.Equal(t, want.typ, got.Type)
+		assert.Equal(t, want.lineage, got.Lineage)
+	}
+
+	data, err := os.ReadFile(filepath.Join(projectDir, "queries", "demodb", queryID+".query.json"))
+	require.NoError(t, err)
+	var definition struct {
+		Recordsets []struct {
+			Columns []struct {
+				Name string          `json:"name"`
+				Type string          `json:"type"`
+				Meta json.RawMessage `json:"meta"`
+			} `json:"columns"`
+		} `json:"recordsets"`
+	}
+	require.NoError(t, json.Unmarshal(data, &definition))
+	require.Len(t, definition.Recordsets, 1)
+	require.Len(t, definition.Recordsets[0].Columns, len(wantColumns))
+	for i, want := range wantColumns {
+		column := definition.Recordsets[0].Columns[i]
+		assert.Equal(t, want.name, column.Name)
+		assert.Equal(t, want.typ, column.Type)
+		assert.Empty(t, column.Meta, "derived lineage belongs to compiler/worker execution metadata")
+	}
 }
 
 // TestDemoProject1_DeclaredMappings asserts the mappings needed by the demo
