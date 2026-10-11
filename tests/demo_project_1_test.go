@@ -292,6 +292,7 @@ func TestDemoProject1_StandaloneChinookBrowserBindings(t *testing.T) {
 		"demodb/chinook-invoice-author":         "chinook-sqlite",
 		"demodb/chinook-customer-invoice-count": "chinook-sqlite",
 		"demodb/chinook-customer-count-cte":     "chinook-sqlite",
+		"demodb/chinook-customer-count-graph":   "chinook-sqlite",
 		"demodb/chinook-customer-invoice-join":  "chinook-sqlite",
 	}
 	for queryPath, connectionID := range allowed {

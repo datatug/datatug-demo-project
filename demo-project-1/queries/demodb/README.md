@@ -40,6 +40,19 @@ preview or Run. Restoring the maintained query returned the expected row again
 [38086445571](https://github.com/datatug/datatug-apps/actions/runs/38086445571)
 passed all required checks at the exact merge head.
 
+The maintained [Customer Counts Graph](chinook-customer-count-graph.query.dtql)
+uses three nonrecursive CTEs: an Invoice count, a grouped-count filter, and an
+independent bounded Customer projection. Its root joins the two derived integer
+keys and returns the same five typed columns. [Open the query in Code](https://datatug.app/project/github.com/datatug/datatug-demo-project/tree/HEAD/demo-project-1/-/query/chinook-customer-count-graph?id=chinook-customer-count-graph&editor=text&env=local)
+and review the authored source before previewing; opening it does not execute
+the query.
+Expected, pending a fresh browser preview and explicit Run by the landing
+owner: CustomerId `1` with both thresholds at `>= 7` returns
+`(1, 7, Luís, Gonçalves, luisg@embraer.com.br)`. Editing the EligibleCounts
+threshold to `>= 8` must stale the preview and retain the prior result; after a
+fresh preview and explicit Run the expected result is zero rows. No browser
+execution receipt has been recorded for this maintained query yet.
+
 ## Verified inputs
 
 The input files match the `fixtureSha256` pins in the project's
