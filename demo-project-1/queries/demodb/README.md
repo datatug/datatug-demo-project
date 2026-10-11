@@ -46,12 +46,48 @@ independent bounded Customer projection. Its root joins the two derived integer
 keys and returns the same five typed columns. [Open the query in Code](https://datatug.app/project/github.com/datatug/datatug-demo-project/tree/HEAD/demo-project-1/-/query/chinook-customer-count-graph?id=chinook-customer-count-graph&editor=text&env=local)
 and review the authored source before previewing; opening it does not execute
 the query.
-Expected, pending a fresh browser preview and explicit Run by the landing
-owner: CustomerId `1` with both thresholds at `>= 7` returns
-`(1, 7, Luís, Gonçalves, luisg@embraer.com.br)`. Editing the EligibleCounts
-threshold to `>= 8` must stale the preview and retain the prior result; after a
-fresh preview and explicit Run the expected result is zero rows. No browser
-execution receipt has been recorded for this maintained query yet.
+Production browser evidence is recorded on DataTug App build `0.1.0+433`,
+whose deployed git hash `8910b8fc47b8d2c26519d1d2ab20fa33e8509e9f` matches the
+Apps merge; Cloudflare deployment run
+[38117458093](https://github.com/datatug/datatug-apps/actions/runs/38117458093)
+succeeded. The pinned Chinook fixture SHA-256 is
+`7651ba378ac2fcd0dfc3c66fb101f7a7eed3ba39a612ec642b96e20702061f15`. Cold Code open did
+not execute the query, and unset CustomerId showed a placeholder preview with
+Run disabled. CustomerId `1` at both `>= 7` thresholds produced one row, and
+the executed SQL matched preview (worker receipt
+`4c921c2f-b558-4ece-aea3-550ac8745d39`, observed
+`2026-10-11T06:18:41.862Z`). Editing EligibleCounts to `>= 8` retained the
+previous receipt and disabled Run; after fresh preview, explicit Run returned
+zero rows with matching SQL (receipt
+`e93e2390-4ab0-40b5-9930-ca4e198f9043`, observed
+`2026-10-11T06:22:59.214Z`). A qualified CTE source was rejected before Run.
+Restoring the starter returned one row displayed as
+`(7, Luís, Gonçalves, luisg@embraer.com.br)` with matching SQL (receipt
+`8f4df003-74be-4552-93aa-2828b31afb4f`, observed
+`2026-10-11T06:23:13.966Z`). Exact-target Apps main-CI [run 38117457824](https://github.com/datatug/datatug-apps/actions/runs/38117457824) passed all four required checks on observed target head `8910b8fc47b8d2c26519d1d2ab20fa33e8509e9f`, with two stable terminal observations at `2026-10-11T06:31:53.496946Z`.
+
+Source-level validation is recorded in Demo project [#31](https://github.com/datatug/datatug-demo-project/pull/31), merged at
+`eb51c8fc525638f98922fe4509255c3048ce7c0f`. Its
+`TestDemoProject1_ChinookCustomerCountsGraphResolves` loads the maintained
+saved query, parses TugQL, and resolves it against the admitted Chinook
+physical schema and pinned fixture version. It checks the five ordered output
+names and types, `Invoice.CustomerId` leaf lineage for the projected key,
+empty single-field lineage for `InvoiceCount`, and the absence of fabricated
+relationship receipts and authored lineage metadata. This proves the sample
+source resolves against the admitted schema; it does not prove native Apps
+worker execution. The resolver fix is in DALgo-JS [#28](https://github.com/dal-go/dalgo-js/pull/28), merged at
+`72ffcc97031d52f21e51aed570d9ef70fc1564d1`, and its published compatible
+package is `@dalgo/core@0.7.4` from gitHead
+`c15d6849c3e8ee6055cebabd7cae0921bf959e23`
+([release workflow](https://github.com/dal-go/dalgo-js/actions/runs/38115251232)).
+Apps [#253](https://github.com/datatug/datatug-apps/pull/253) at exact PR head
+`ff2c2754213ee73ef0ae0adafc34e78e1a35356e` has an independent review with no
+blockers or majors, 192 focused Vitest passes and 2 skips, and 8/8 local
+query-author Playwright tests, including the graph one-row/stale/zero-row path.
+Both app and main Nx lint targets passed; exact PR-head CI
+[run 38116475416](https://github.com/datatug/datatug-apps/actions/runs/38116475416)
+completed successfully. These are local/PR checks, distinct from the production
+receipts above.
 
 ## Verified inputs
 
