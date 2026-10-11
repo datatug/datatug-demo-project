@@ -51,7 +51,7 @@ whose deployed git hash `8910b8fc47b8d2c26519d1d2ab20fa33e8509e9f` matches the
 Apps merge; Cloudflare deployment run
 [38117458093](https://github.com/datatug/datatug-apps/actions/runs/38117458093)
 succeeded. The pinned Chinook fixture SHA-256 is
-`7651ba378ac2fcd0dfc3c66fb101f7a7eed3ba39a612ec642b96e`. Cold Code open did
+`7651ba378ac2fcd0dfc3c66fb101f7a7eed3ba39a612ec642b96e20702061f15`. Cold Code open did
 not execute the query, and unset CustomerId showed a placeholder preview with
 Run disabled. CustomerId `1` at both `>= 7` thresholds produced one row, and
 the executed SQL matched preview (worker receipt
