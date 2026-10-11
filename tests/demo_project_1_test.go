@@ -295,6 +295,7 @@ func TestDemoProject1_StandaloneChinookBrowserBindings(t *testing.T) {
 		"demodb/chinook-customer-count-cte":     "chinook-sqlite",
 		"demodb/chinook-customer-count-graph":   "chinook-sqlite",
 		"demodb/chinook-customer-invoice-join":  "chinook-sqlite",
+		"demodb/chinook-invoice-compare":        "chinook-sqlite",
 	}
 	for queryPath, connectionID := range allowed {
 		metadata := readQueryMetadata(t, queryPath)
@@ -424,6 +425,95 @@ func TestDemoProject1_ChinookCustomerInvoiceJoinStarter(t *testing.T) {
 		assert.Equal(t, want.entity, got.Meta.Entity)
 		assert.Equal(t, want.field, got.Meta.Field)
 	}
+}
+
+func TestDemoProject1_ChinookInvoiceCompareStarterResolves(t *testing.T) {
+	const queryID = "chinook-invoice-compare"
+	const fixtureSchemaVersion = "7651ba378ac2fcd0dfc3c66fb101f7a7eed3ba39a612ec642b96e20702061f15"
+	metadata := readQueryMetadata(t, "demodb/"+queryID)
+	assert.Equal(t, queryID, metadata.ID)
+	assert.Equal(t, "Chinook Invoice Comparison", metadata.Title)
+	assert.Equal(t, "DTQL", metadata.Type)
+	assert.Equal(t, "chinook-sqlite", metadata.ConnectionID)
+	assert.Contains(t, strings.ToLower(metadata.Purpose), "synthetic candidate")
+	assert.Contains(t, strings.ToLower(metadata.Purpose), "page-memory")
+	require.Len(t, metadata.RelationshipBindings, 1)
+	relationship := metadata.RelationshipBindings[0]
+	assert.Equal(t, "FK_Invoice_Customer_CustomerId", relationship.ID)
+	assert.Equal(t, fixtureSchemaVersion+":main.Invoice.CustomerId:INTEGER->main.Customer.CustomerId:INTEGER:PRIMARY_KEY:v1", relationship.Version)
+	assert.Equal(t, "main", relationship.From.Schema)
+	assert.Equal(t, "Invoice", relationship.From.Table)
+	assert.Equal(t, "main", relationship.To.Schema)
+	assert.Equal(t, "Customer", relationship.To.Table)
+	require.Len(t, relationship.Pairs, 1)
+	assert.Equal(t, "CustomerId", relationship.Pairs[0].FromField)
+	assert.Equal(t, "CustomerId", relationship.Pairs[0].ToField)
+
+	queries := loadQueries(t, newStore(t), "demodb/"+queryID)
+	require.Len(t, queries, 1)
+	query := queries[0]
+	assert.Equal(t, datatug.QueryTypeDTQL, query.Type)
+	assert.Contains(t, query.Text, "@CustomerId integer required")
+	assert.NotContains(t, strings.ToLower(query.Text), " default ", "CustomerId has no default")
+	document, parseDiagnostics := dtql.ParseTugQL(query.Text)
+	require.Empty(t, parseDiagnostics, "comparison starter TugQL must parse")
+	require.NotNil(t, document.Tree)
+
+	resolved, resolveDiagnostics := dtql.ResolveTugQL(document, dtql.TugQLResolveContext{
+		AuthorizedSchemas: []dtql.TugQLAuthorizedSchema{{
+			Database: "chinook",
+			Schema:   "main",
+			Version:  fixtureSchemaVersion,
+			Tables: []dtql.TugQLTable{
+				{Name: "Invoice", Fields: []dtql.TugQLField{
+					{Name: "InvoiceId", Type: "integer", Authorized: true},
+					{Name: "CustomerId", Type: "integer", Authorized: true},
+					{Name: "InvoiceDate", Type: "datetime", Authorized: true},
+				}},
+				{Name: "Customer", Fields: []dtql.TugQLField{
+					{Name: "CustomerId", Type: "integer", Authorized: true},
+					{Name: "FirstName", Type: "string", Authorized: true},
+				}},
+			},
+		}},
+		Bindings: []dtql.TugQLBinding{{Name: "CustomerId", Set: true, Value: int64(1)}},
+	})
+	require.Empty(t, resolveDiagnostics, "comparison starter must resolve using the declared Invoice-Customer schema")
+	assert.Equal(t, fixtureSchemaVersion, resolved.SchemaVersion)
+	require.Len(t, resolved.Columns, 2)
+	assert.Equal(t, "InvoiceId", resolved.Columns[0].Name)
+	assert.Equal(t, "integer", resolved.Columns[0].Type)
+	assert.Equal(t, []dtql.TugQLOutputLineage{{Source: "i", Field: "InvoiceId"}}, resolved.Columns[0].Lineage)
+	assert.Equal(t, "InvoiceDate", resolved.Columns[1].Name)
+	assert.Equal(t, "datetime", resolved.Columns[1].Type)
+	assert.Equal(t, []dtql.TugQLOutputLineage{{Source: "i", Field: "InvoiceDate"}}, resolved.Columns[1].Lineage)
+
+	data, err := os.ReadFile(filepath.Join(projectDir, "queries", "demodb", queryID+".query.json"))
+	require.NoError(t, err)
+	var definition struct {
+		Parameters []struct {
+			ID         string `json:"id"`
+			Type       string `json:"type"`
+			IsRequired bool   `json:"isRequired"`
+		} `json:"parameters"`
+		Recordsets []struct {
+			Columns []struct {
+				Name string `json:"name"`
+				Type string `json:"type"`
+			} `json:"columns"`
+		} `json:"recordsets"`
+	}
+	require.NoError(t, json.Unmarshal(data, &definition))
+	require.Len(t, definition.Parameters, 1)
+	assert.Equal(t, "CustomerId", definition.Parameters[0].ID)
+	assert.Equal(t, "integer", definition.Parameters[0].Type)
+	assert.True(t, definition.Parameters[0].IsRequired)
+	require.Len(t, definition.Recordsets, 1)
+	require.Len(t, definition.Recordsets[0].Columns, 2)
+	assert.Equal(t, "InvoiceId", definition.Recordsets[0].Columns[0].Name)
+	assert.Equal(t, "integer", definition.Recordsets[0].Columns[0].Type)
+	assert.Equal(t, "InvoiceDate", definition.Recordsets[0].Columns[1].Name)
+	assert.Equal(t, "datetime", definition.Recordsets[0].Columns[1].Type)
 }
 
 func TestDemoProject1_ChinookInvoiceAuthorStarter(t *testing.T) {

@@ -15,6 +15,11 @@ The saved [Invoice Author](chinook-invoice-author.query.dtql) and
 [Customer Invoice Count](chinook-customer-invoice-count.query.dtql) queries are
 TugQL examples for the same pinned fixture. They bind a required customer ID;
 the grouped count example also uses a bounded integer `HAVING` threshold.
+The [Chinook Invoice Comparison](chinook-invoice-compare.query.dtql) query is
+a bounded Invoice-to-Customer starter for comparing the same CustomerId against
+the pinned baseline and a synthetic candidate in Compare. It projects only
+InvoiceId and the authored InvoiceDate text; comparison evidence is held in the
+page session and is not persisted as a durable result.
 The [Customer Counts CTE](chinook-customer-count-cte.query.dtql) keeps that
 grouped count inside a nonrecursive CTE, joins its exported customer key to
 `Customer` with an explicit `ON`, and bounds the CTE's output groups and final
