@@ -13,7 +13,7 @@ jobs:
   ci:
     permissions:
       contents: write # declared by the reusable workflow's (disabled) tagging job
-    uses: strongo/cicd/.github/workflows/workflow.yml@v1.21.2
+    uses: strongo/cicd/.github/workflows/workflow.yml@v1.21.3
     with:
       working_directory: tests
       disable-version-bumping: true
