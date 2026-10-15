@@ -51,8 +51,15 @@ commits, the provider fixture digests, and the public server catalogue.
 - [chinook](dbmodels/chinook)
 
 ## [Environments](environments)
-- [prod](environments/prod)
 - [local](environments/local)
+- [dev](environments/dev)
+- [QA](environments/QA)
+- [UAT](environments/UAT)
+- [prod](environments/prod)
+
+Each environment file includes optional presentation metadata for its display
+label, icon, and caution tone. Folder IDs remain the stable route and lookup
+keys; the metadata does not change connection assignments or query support.
 
 ## [Boards](boards)
 
