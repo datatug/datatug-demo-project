@@ -1,0 +1,7 @@
+{
+  "id": "chinook-customer-inventory",
+  "title": "Chinook Customer Inventory",
+  "type": "SQL",
+  "connectionId": "chinook-sqlite",
+  "purpose": "Standalone browser SQL customer inventory for the public row-count Checks. Runs against the pinned read-only Chinook SQLite snapshot."
+}

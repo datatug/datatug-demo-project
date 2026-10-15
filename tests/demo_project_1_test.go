@@ -316,11 +316,12 @@ func TestDemoProject1_HostedCustomerPreview(t *testing.T) {
 }
 
 // TestDemoProject1_StandaloneChinookBrowserBindings keeps the browser-ready
-// SQL allowlist limited to the three standalone Chinook SQLite examples. The
+// SQL allowlist limited to the standalone Chinook SQLite examples. The
 // other DemoDB datasets, PostgreSQL federation example, and parameterized
 // library queries remain outside that saved-connection path.
 func TestDemoProject1_StandaloneChinookBrowserBindings(t *testing.T) {
 	allowed := map[string]string{
+		"demodb/chinook-customer-inventory":   "chinook-sqlite",
 		"demodb/chinook-customer-genre-mix":   "chinook-sqlite",
 		"demodb/chinook-playlist-composition": "chinook-sqlite",
 		"demodb/chinook-top-customer-spend":   "chinook-sqlite",
