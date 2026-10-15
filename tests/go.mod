@@ -5,7 +5,7 @@ go 1.27.0
 require (
 	github.com/dal-go/dalgo v0.93.4
 	github.com/datatug/datatug-cli v0.51.8
-	github.com/datatug/datatug-core v0.41.2
+	github.com/datatug/datatug-core v0.53.0
 	github.com/stretchr/testify v1.12.1
 	modernc.org/sqlite v1.59.0
 )
@@ -16,7 +16,7 @@ require (
 	github.com/dal-go/dalgo2http v0.2.1 // indirect
 	github.com/dal-go/dalgo2sql v0.19.3 // indirect
 	github.com/dal-go/dalgo2sqlite v0.2.2 // indirect
-	github.com/dal-go/record v0.1.4 // indirect
+	github.com/dal-go/record v0.1.5 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/georgysavva/scany/v2 v2.1.4 // indirect
 	github.com/gofrs/flock v0.13.1 // indirect
@@ -32,7 +32,7 @@ require (
 	github.com/qri-io/jsonschema v0.2.1 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
 	github.com/strongo/random v0.0.3 // indirect
-	github.com/strongo/slice v0.3.10 // indirect
+	github.com/strongo/slice v0.3.12 // indirect
 	github.com/strongo/validation v0.0.15 // indirect
 	github.com/xo/dburl v0.24.2 // indirect
 	go.starlark.net v0.0.0-20260708150628-5395d018f003 // indirect
