@@ -8,7 +8,11 @@
   "boards": [
     {
       "id": "board1",
-      "title": "1st board"
+      "title": "Chinook customer insights"
+    },
+    {
+      "id": "northwind",
+      "title": "Northwind operations · browse queries"
     }
   ],
   "dbModels": [
