@@ -67,6 +67,23 @@ test('environment memberships point to exact catalogue entries without activatin
   }
 });
 
+test('environment presentation uses distinct labels and supported icons and tones', () => {
+  const icons = new Set(['globe-outline', 'desktop-outline', 'flask-outline', 'cloud-outline', 'shield-checkmark-outline', 'warning-outline']);
+  const tones = new Set(['neutral', 'primary', 'success', 'warning', 'danger']);
+  const ids = projectFile.environments.map(({ id }) => id);
+  const labels = new Set();
+  for (const id of ids) {
+    const file = read(`environments/${id}/${id}.env.json`);
+    assert.equal(file.id, id);
+    assert.ok(file.presentation?.label?.trim(), `${id} needs a display label`);
+    assert.ok(icons.has(file.presentation.icon), `${id} uses an unsupported icon`);
+    assert.ok(tones.has(file.presentation.tone), `${id} uses an unsupported tone`);
+    assert.ok(!labels.has(file.presentation.label), `${id} repeats a display label`);
+    labels.add(file.presentation.label);
+  }
+  assert.equal(read('environments/prod/prod.env.json').presentation.tone, 'danger');
+});
+
 test('comparison fixtures are separate, pinned Chinook artifacts with source provenance', () => {
   assert.equal(catalog.connections.length, 18);
   assert.deepEqual(catalog.comparisonFixtures.map(({ id, role }) => [id, role]), [
