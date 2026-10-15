@@ -36,12 +36,12 @@ github.com/dal-go/dalgo2sql v0.19.3 h1:7qb83rnHDCruVrWAONm/LYL7sJTW9IX4/hxUf6KxI
 github.com/dal-go/dalgo2sql v0.19.3/go.mod h1:/WI/pEeJx+nUS8Yo+UugLN/1QXz2IfUiTYyn7fhoCv0=
 github.com/dal-go/dalgo2sqlite v0.2.2 h1:CeM1s+WgtSn7oyeVffMRu5e1xu4G8BsFZHrAGujc/3g=
 github.com/dal-go/dalgo2sqlite v0.2.2/go.mod h1:P9k6p7FcAUVKfrrCs7y8YQRead/B5zTe8q9nFoXQPZ0=
-github.com/dal-go/record v0.1.4 h1:21IJNlUASNw9TytcB5V5a2jHQKa1pycr//dGvj8zNH8=
-github.com/dal-go/record v0.1.4/go.mod h1:PuoOCH74/Vf+pIVWSdrMg7OdUmlSlPgj68yJ+gM42To=
+github.com/dal-go/record v0.1.5 h1:lkPxiJA7S2oE5tA0WUayezd+lmaiEekrEcGz/HRhzLg=
+github.com/dal-go/record v0.1.5/go.mod h1:PuoOCH74/Vf+pIVWSdrMg7OdUmlSlPgj68yJ+gM42To=
 github.com/datatug/datatug-cli v0.51.8 h1:5r7Yg9V1yvrrvF/hwA+WGr/nbrOMYbVquYHVAJgw6lw=
 github.com/datatug/datatug-cli v0.51.8/go.mod h1:LcSBKu+7orjtLUEUBTB7NGiEFO16DdF6j68Ux2VxDTI=
-github.com/datatug/datatug-core v0.41.2 h1:52wfnvkHkJNNf5TYpSWJohX3jA7vT6onD1amjM3iaVc=
-github.com/datatug/datatug-core v0.41.2/go.mod h1:AXcYKGLeLREqXcp3eF4xWM7sBWdijloWDNPKG1Jksbg=
+github.com/datatug/datatug-core v0.53.0 h1:jggril/qDxly0+YMbK0hC68NzUcMo+p+/YJwEkalXnU=
+github.com/datatug/datatug-core v0.53.0/go.mod h1:gn4oHcoeZ3A04Uu+Q7Hw4rLs30I7kUZVJ8BZO2lTNHA=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/dustin/go-humanize v1.0.1 h1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkpeCY=
 github.com/dustin/go-humanize v1.0.1/go.mod h1:Mu1zIs6XwVuF/gI1OepvI0qD18qycQx+mFykh5fBlto=
@@ -139,8 +139,8 @@ github.com/stretchr/testify v1.12.1 h1:EuwCh5fleGS7H32xRwO3wRGT7DxrDhLAT6FF8MpWD
 github.com/stretchr/testify v1.12.1/go.mod h1:MDEgiDPPsNp5cuIrHPPCyornHKgEVbtFUmoNlxoYthg=
 github.com/strongo/random v0.0.3 h1:R4XNjyBvlqL5Mln0meQO9d/Wy1SSN8CpCJ8sKSkIifw=
 github.com/strongo/random v0.0.3/go.mod h1:V/TldevwaA3XYhJApc5kQUmpAVUZhoEcsdl5m1+emx4=
-github.com/strongo/slice v0.3.10 h1:FeODEVCsR+1WHbw44eshB4++HhY1fNR9zJyJ6zns6zo=
-github.com/strongo/slice v0.3.10/go.mod h1:XkxT6IjPgsI0LnuvFCQL6wPLZarQ8dzrGiuuehUtt1A=
+github.com/strongo/slice v0.3.12 h1:rFppYOAbOTITkkXYNKsjPxW2L7baqwNdjZsFRTdCLss=
+github.com/strongo/slice v0.3.12/go.mod h1:XkxT6IjPgsI0LnuvFCQL6wPLZarQ8dzrGiuuehUtt1A=
 github.com/strongo/validation v0.0.15 h1:k5rM/DmRlEXYAlH/n9vlUYku1k7qQWVdg2PRAXSg9Ww=
 github.com/strongo/validation v0.0.15/go.mod h1:EY+//fgQhn6rr0rOvWRJuUCTSk5BIETZL2bL9CIDhbs=
 github.com/xo/dburl v0.24.2 h1:aK6ASamrFjKl76h/UCBecc0BPBi97+IVmw4YWxx0rno=

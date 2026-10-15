@@ -1,0 +1,19 @@
+{
+  "id": "chinook-customer-coverage-walkthrough",
+  "title": "Investigate Chinook customer coverage",
+  "description": "A manual guide: inspect the complete Chinook customer inventory, then run the saved coverage Check against the pinned browser SQLite snapshot. This Scenario does not create or update a Case.",
+  "version": 1,
+  "inputs": [],
+  "steps": [
+    {
+      "id": "inspect-customers",
+      "kind": "query",
+      "ref": "demodb/chinook-customer-inventory"
+    },
+    {
+      "id": "verify-coverage",
+      "kind": "check",
+      "ref": "chinook-customer-coverage"
+    }
+  ]
+}
