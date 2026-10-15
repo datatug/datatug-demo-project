@@ -102,7 +102,7 @@ func readQueryMetadata(t *testing.T, relativePath string) queryMetadata {
 // environment's own "<id>.env.json" and fixes #307 so a file-based sqlite3
 // ServerRef with an empty host validates, and Project.Validate() has
 // covered declared mappings since v0.17.0/#302) and asserts: every entity
-// loads, the demo's board1 board and chinook DB model load with their real
+// loads, both demo boards and the chinook DB model load with their real
 // content, every environment loads with a validating sqlite3 ServerRef, and
 // - once its three library queries are attached, the one thing LoadProject
 // still doesn't populate - Project.Validate() passes.
@@ -114,9 +114,14 @@ func TestDemoProject1_Validate(t *testing.T) {
 	wantEntityIDs := []string{"Album", "Artist", "Country", "Customer", "Invoice", "InvoiceLine", "Person", "Track"}
 	assert.ElementsMatch(t, wantEntityIDs, project.Entities.IDs())
 
-	if assert.Len(t, project.Boards, 1) {
-		assert.Equal(t, "board1", project.Boards[0].ID)
-		assert.Equal(t, "1st board", project.Boards[0].Title)
+	if assert.Len(t, project.Boards, 2) {
+		boardIDs := make([]string, 0, len(project.Boards))
+		for _, board := range project.Boards {
+			boardIDs = append(boardIDs, board.ID)
+			require.NotEmpty(t, board.Rows, "board %s has no useful content", board.ID)
+			assert.NoError(t, board.Validate(), "board %s is invalid", board.ID)
+		}
+		assert.ElementsMatch(t, []string{"board1", "northwind"}, boardIDs)
 	}
 
 	if assert.Len(t, project.DbModels, 1) {
@@ -131,6 +136,37 @@ func TestDemoProject1_Validate(t *testing.T) {
 	}
 
 	assert.NoError(t, project.Validate())
+}
+
+func TestDemoBoardsReferencePublishedQueries(t *testing.T) {
+	store := newStore(t)
+	project, err := store.LoadProject(context.Background())
+	require.NoError(t, err)
+
+	for _, board := range project.Boards {
+		for _, row := range board.Rows {
+			for _, card := range row.Cards {
+				require.NotNil(t, card.Widget, "board %s card %s", board.ID, card.ID)
+				require.Equal(t, "SQL", card.Widget.Name, "board %s card %s", board.ID, card.ID)
+				data, err := json.Marshal(card.Widget.Data)
+				require.NoError(t, err)
+				var widget struct {
+					SQL struct {
+						QueryID string `json:"queryId"`
+					} `json:"sql"`
+				}
+				require.NoError(t, json.Unmarshal(data, &widget))
+				require.NotEmpty(t, widget.SQL.QueryID, "board %s card %s", board.ID, card.ID)
+				query := readQueryMetadata(t, widget.SQL.QueryID)
+				require.Equal(t, strings.TrimPrefix(widget.SQL.QueryID, "demodb/"), query.ID)
+				if board.ID == "board1" {
+					assert.Equal(t, "chinook-sqlite", query.ConnectionID, "Chinook board must link to runnable browser SQL")
+				} else {
+					assert.Empty(t, query.ConnectionID, "Northwind board must not promise browser execution")
+				}
+			}
+		}
+	}
 }
 
 // TestDemoProject1_Environments loads every demo-project-1 environment

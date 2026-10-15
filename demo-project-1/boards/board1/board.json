@@ -1,3 +1,35 @@
 {
-    "title": "1st board"
+  "id": "board1",
+  "title": "Chinook customer insights",
+  "access": "public",
+  "rows": [
+    {
+      "cards": [
+        {
+          "id": "top-customer-spend",
+          "title": "Top customer spend",
+          "cols": 6,
+          "widget": {
+            "name": "SQL",
+            "data": {
+              "title": "Open this saved Chinook SQLite query and run it in your browser.",
+              "sql": { "queryId": "demodb/chinook-top-customer-spend" }
+            }
+          }
+        },
+        {
+          "id": "playlist-composition",
+          "title": "Playlist composition",
+          "cols": 6,
+          "widget": {
+            "name": "SQL",
+            "data": {
+              "title": "Explore a second saved Chinook SQLite query with browser execution.",
+              "sql": { "queryId": "demodb/chinook-playlist-composition" }
+            }
+          }
+        }
+      ]
+    }
+  ]
 }
