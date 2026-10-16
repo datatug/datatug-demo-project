@@ -27,7 +27,11 @@ jobs:
             https://api.github.com/repos/datatug/datatug/releases/latest \
             --output "$release_json"
 
-          tag="$(jq -er '.tag_name | select(startswith("v"))' "$release_json")"
+          tag="$(jq -er '. | select(.draft == false and .prerelease == false) | .tag_name' "$release_json")"
+          if [[ ! "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Latest stable release has an unexpected tag: ${tag}" >&2
+            exit 1
+          fi
           version="${tag#v}"
           case "${RUNNER_ARCH}" in
             X64) arch=amd64 ;;
@@ -92,6 +96,7 @@ jobs:
       - name: Install the verified CLI
         env:
           ARCHIVE: ${{ steps.release.outputs.archive }}
+          CLI_VERSION: ${{ steps.release.outputs.version }}
         run: |
           set -euo pipefail
           install_dir="${RUNNER_TEMP}/datatug-cli/bin"
@@ -99,8 +104,14 @@ jobs:
           tar --extract --gzip --file "${RUNNER_TEMP}/datatug-cli/${ARCHIVE}" --directory "$install_dir" datatug
           chmod 0755 "${install_dir}/datatug"
           echo "$install_dir" >> "$GITHUB_PATH"
-          datatug version --json
-          datatug validate -d=.
+          version_json="$("${install_dir}/datatug" version --json)"
+          printf '%s\n' "$version_json"
+          reported_version="$(jq -er '.version' <<< "$version_json")"
+          if [[ "$reported_version" != "$CLI_VERSION" ]]; then
+            echo "Installed CLI reports ${reported_version}; expected ${CLI_VERSION}" >&2
+            exit 1
+          fi
+          "${install_dir}/datatug" validate -d=.
 
   # Vet, lint and test the demo project's Go tests (module in tests/) with the
   # fleet's shared workflow. This is a demo-project repository, not a versioned
