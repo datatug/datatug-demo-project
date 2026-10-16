@@ -13,6 +13,10 @@
     {
       "id": "northwind",
       "title": "Northwind operations · browse queries"
+    },
+    {
+      "id": "showcase",
+      "title": "Orders in motion · DataTug visual showcase"
     }
   ],
   "dbModels": [
