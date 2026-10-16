@@ -135,8 +135,9 @@ source pin. A separate
 [PostgreSQL and SQLite genre query](chinook-postgresql-genres.query.dtql)
 shows names from both editions side by side. These are DTQL examples for the
 browser federation runner, distinct from the standalone SQLite SQL examples
-below. The PostgreSQL endpoint is still pending public deployment, so the
-shared connection catalogue does not yet offer a Run link.
+below. The PostgreSQL editions are served read-only by the public OpenVaultDB
+server (`cloud.openvaultdb.com`), so the shared connection catalogue offers the
+Chinook PostgreSQL Run link.
 
 ## Chinook
 

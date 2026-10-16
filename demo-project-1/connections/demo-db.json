@@ -50,9 +50,9 @@
         "QA",
         "UAT"
       ],
-      "readiness": "hosted-api-pending",
-      "source": "https://demodb.dev/chinook/",
-      "query": "setup-required",
+      "readiness": "public-api",
+      "source": "https://cloud.openvaultdb.com/v1/databases/chinook-postgresql",
+      "query": "ovdb-read",
       "copy": "unavailable"
     },
     {
@@ -102,9 +102,9 @@
         "QA",
         "UAT"
       ],
-      "readiness": "hosted-api-pending",
-      "source": "https://demodb.dev/northwind/",
-      "query": "setup-required",
+      "readiness": "public-api",
+      "source": "https://cloud.openvaultdb.com/v1/databases/northwind-postgresql",
+      "query": "ovdb-read",
       "copy": "unavailable"
     },
     {
@@ -154,9 +154,9 @@
         "QA",
         "UAT"
       ],
-      "readiness": "hosted-api-pending",
-      "source": "https://demodb.dev/pubs/",
-      "query": "setup-required",
+      "readiness": "public-api",
+      "source": "https://cloud.openvaultdb.com/v1/databases/pubs-postgresql",
+      "query": "ovdb-read",
       "copy": "unavailable"
     },
     {
@@ -206,9 +206,9 @@
         "QA",
         "UAT"
       ],
-      "readiness": "hosted-api-pending",
-      "source": "https://demodb.dev/sakila/",
-      "query": "setup-required",
+      "readiness": "public-api",
+      "source": "https://cloud.openvaultdb.com/v1/databases/sakila-postgresql",
+      "query": "ovdb-read",
       "copy": "unavailable"
     },
     {
@@ -258,9 +258,9 @@
         "QA",
         "UAT"
       ],
-      "readiness": "hosted-api-pending",
-      "source": "https://demodb.dev/adventureworks/",
-      "query": "setup-required",
+      "readiness": "public-api",
+      "source": "https://cloud.openvaultdb.com/v1/databases/adventureworks-postgresql",
+      "query": "ovdb-read",
       "copy": "unavailable"
     },
     {
@@ -310,9 +310,9 @@
         "QA",
         "UAT"
       ],
-      "readiness": "hosted-api-pending",
-      "source": "https://demodb.dev/employees/",
-      "query": "setup-required",
+      "readiness": "public-api",
+      "source": "https://cloud.openvaultdb.com/v1/databases/employees-postgresql",
+      "query": "ovdb-read",
       "copy": "unavailable"
     },
     {

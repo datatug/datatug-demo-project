@@ -59,8 +59,10 @@ for (const database of registry.databases) {
   });
   entries.push({
     id: `${id}-postgresql`, dataset: id, storage: 'postgresql', tags: [id, 'postgresql'],
-    environments: ['QA', 'UAT'], readiness: 'hosted-api-pending',
-    source: `https://demodb.dev/${id}/`, query: 'setup-required', copy: 'unavailable',
+    environments: ['QA', 'UAT'], readiness: 'public-api',
+    // Hosted on Neon, served read-only by the public OpenVaultDB server (demo-db/websites config/postgresql-api.json,
+    // publicApiVerified). DataTug opens it at /demo/ovdb/<id>-postgresql through this endpoint, never Neon directly.
+    source: `https://cloud.openvaultdb.com/v1/databases/${id}-postgresql`, query: 'ovdb-read', copy: 'unavailable',
   });
   entries.push({
     id: `${id}-ingitdb`, dataset: id, storage: 'ingitdb', tags: [id, 'ingitdb'],

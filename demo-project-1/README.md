@@ -9,8 +9,10 @@ datasets in SQLite, PostgreSQL, and inGitDB editions (18 connections), plus six
 hosted BigQuery editions. Each
 connection carries dataset and storage tags. The Dev environment lists the
 public SQLite APIs and repository-hosted inGitDB editions; QA and UAT refer to
-the same six PostgreSQL edition identities. PostgreSQL API access is pending,
-so those connections are visible but cannot yet execute a query. The inGitDB
+the same six PostgreSQL edition identities. Those are hosted on Neon and served
+read-only by the public OpenVaultDB server (`cloud.openvaultdb.com`); DataTug
+opens them at `/demo/ovdb/<dataset>-postgresql` through that server only (never
+Neon directly, with no credentials in the browser) and offers no editing. The inGitDB
 edition links to a pinned repository snapshot and needs a local checkout for
 native queries. The SQLite APIs are read-only and can be copied into the
 browser's persistent IndexedDB Dev connection only by an explicit user action.
