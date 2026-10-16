@@ -70,7 +70,7 @@
         },
         {
           "id": "source-inspector",
-          "title": "Inspect three independent sources",
+          "title": "Inspect three saved query results",
           "cols": 6,
           "widget": {
             "name": "tabs",
