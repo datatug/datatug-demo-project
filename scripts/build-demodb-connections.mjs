@@ -33,6 +33,14 @@ const fixtureSha256 = {
   adventureworks: '6a105e1982becfe003fc7a307d7cad9d738390cedd79d166c2167fd817168109',
   employees: '46b49dd0e141cd8db66d57680a10febfccc15e6f54dc7b8f3c2316b55e11c5f0',
 };
+// Source-rights manifests are copied into the showcase app and pinned here so
+// the Demo Project catalogue cannot silently drift from the reviewed payloads.
+const sourceRights = {
+  chinook: { url: '/assets/showcase/chinook-source-rights.json', bytes: 1348,
+    sha256: '41cc624d2cfc9396dbaad7eef3f7d0d187de8e1949e17e25830abe7072a46ea0' },
+  northwind: { url: '/assets/showcase/northwind-source-rights.json', bytes: 1405,
+    sha256: '523f610b513473d166f4afe0c5c0c77e10e291f1baebcc3cadf556b5a8ac7a82' },
+};
 const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex');
 const entries = [];
 const seen = new Set();
@@ -54,6 +62,7 @@ for (const database of registry.databases) {
     ...(['chinook', 'northwind'].includes(id) ? { browserFixture: {
       url: `/assets/showcase/${id}.sqlite`,
       bytes: id === 'chinook' ? 1007616 : 602112,
+      sourceRights: sourceRights[id],
     } } : {}),
     query: 'ovdb-read', copy: 'explicit-browser-import',
   });

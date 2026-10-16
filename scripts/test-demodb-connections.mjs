@@ -10,6 +10,12 @@ const read = (path) => JSON.parse(readFileSync(resolve(project, path), 'utf8'));
 const catalog = read('connections/demo-db.json');
 const projectFile = read('datatug-project.json');
 const datasets = ['chinook', 'northwind', 'pubs', 'sakila', 'adventureworks', 'employees'];
+const sourceRightsPins = {
+  chinook: { url: '/assets/showcase/chinook-source-rights.json', bytes: 1348,
+    sha256: '41cc624d2cfc9396dbaad7eef3f7d0d187de8e1949e17e25830abe7072a46ea0' },
+  northwind: { url: '/assets/showcase/northwind-source-rights.json', bytes: 1405,
+    sha256: '523f610b513473d166f4afe0c5c0c77e10e291f1baebcc3cadf556b5a8ac7a82' },
+};
 
 test('one canonical project exposes every DemoDB storage edition with truthful readiness', () => {
   assert.equal(projectFile.id, 'datatug-demo-project');
@@ -32,10 +38,13 @@ test('one canonical project exposes every DemoDB storage edition with truthful r
         assert.equal(entry.query, 'ovdb-read');
         assert.equal(entry.copy, 'explicit-browser-import');
         assert.deepEqual(entry.environments, ['dev']);
-        if (dataset === 'chinook') assert.deepEqual(entry.browserFixture, {
-          url: '/assets/showcase/chinook.sqlite', bytes: 1007616,
-        });
-        else if (dataset === 'northwind') assert.deepEqual(entry.browserFixture, { url: '/assets/showcase/northwind.sqlite', bytes: 602112 });
+        if (['chinook', 'northwind'].includes(dataset)) {
+          assert.deepEqual(entry.browserFixture, {
+            url: `/assets/showcase/${dataset}.sqlite`,
+            bytes: dataset === 'chinook' ? 1007616 : 602112,
+            sourceRights: sourceRightsPins[dataset],
+          });
+        }
         else assert.equal(entry.browserFixture, undefined);
       } else if (storage === 'postgresql') {
         // Hosted on Neon, served read-only by the public OpenVaultDB server; DataTug opens it through OVDB only.
@@ -124,9 +133,6 @@ test('comparison fixtures are separate, pinned Chinook artifacts with source pro
     bytes: 1007616,
     schemaSha256: '8392c76c7fd8da3bce20d1cec2c60223692a08915787f5c7393cec1c0b6acb94',
     provenance,
-  });
-  assert.deepEqual(catalog.connections.find((connection) => connection.id === 'chinook-sqlite').browserFixture, {
-    url: '/assets/showcase/chinook.sqlite', bytes: 1007616,
   });
   for (const entry of catalog.connections.filter((connection) => connection.storage === 'postgresql')) {
     assert.deepEqual(entry.environments, entry.dataset === 'northwind' ? ['dev', 'QA', 'UAT'] : ['QA', 'UAT']);

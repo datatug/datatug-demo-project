@@ -33,7 +33,12 @@
       "fixtureSha256": "7651ba378ac2fcd0dfc3c66fb101f7a7eed3ba39a612ec642b96e20702061f15",
       "browserFixture": {
         "url": "/assets/showcase/chinook.sqlite",
-        "bytes": 1007616
+        "bytes": 1007616,
+        "sourceRights": {
+          "url": "/assets/showcase/chinook-source-rights.json",
+          "bytes": 1348,
+          "sha256": "41cc624d2cfc9396dbaad7eef3f7d0d187de8e1949e17e25830abe7072a46ea0"
+        }
       },
       "query": "ovdb-read",
       "copy": "explicit-browser-import"
@@ -89,7 +94,12 @@
       "fixtureSha256": "279b34136771aee75d802094b3329515a2b01da65d2a20a4a9e3b58c29b4fd20",
       "browserFixture": {
         "url": "/assets/showcase/northwind.sqlite",
-        "bytes": 602112
+        "bytes": 602112,
+        "sourceRights": {
+          "url": "/assets/showcase/northwind-source-rights.json",
+          "bytes": 1405,
+          "sha256": "523f610b513473d166f4afe0c5c0c77e10e291f1baebcc3cadf556b5a8ac7a82"
+        }
       },
       "query": "ovdb-read",
       "copy": "explicit-browser-import"
