@@ -95,17 +95,9 @@ func readQueryMetadata(t *testing.T, relativePath string) queryMetadata {
 	return metadata
 }
 
-// TestDemoProject1_Validate loads demo-project-1 through the real
-// filestore.LoadProject (datatug-core v0.20.0/#305 fixed entities loading
-// from demo-project-1's per-entity directories; v0.21.0/#306 fixed the same
-// bug class for boards and DB models, v0.22.0 makes LoadProject load each
-// environment's own "<id>.env.json" and fixes #307 so a file-based sqlite3
-// ServerRef with an empty host validates, and Project.Validate() has
-// covered declared mappings since v0.17.0/#302) and asserts: every entity
-// loads, both demo boards and the chinook DB model load with their real
-// content, every environment loads with a validating sqlite3 ServerRef, and
-// - once its three library queries are attached, the one thing LoadProject
-// still doesn't populate - Project.Validate() passes.
+// TestDemoProject1_Validate checks the project as the real filestore loads it:
+// entities, all saved boards (including nested chart/query widgets), the
+// Chinook model, environments and saved queries must validate together.
 func TestDemoProject1_Validate(t *testing.T) {
 	store := newStore(t)
 	project, err := store.LoadProject(context.Background())
@@ -114,14 +106,14 @@ func TestDemoProject1_Validate(t *testing.T) {
 	wantEntityIDs := []string{"Album", "Artist", "Country", "Customer", "Invoice", "InvoiceLine", "Person", "Track"}
 	assert.ElementsMatch(t, wantEntityIDs, project.Entities.IDs())
 
-	if assert.Len(t, project.Boards, 2) {
+	if assert.Len(t, project.Boards, 3) {
 		boardIDs := make([]string, 0, len(project.Boards))
 		for _, board := range project.Boards {
 			boardIDs = append(boardIDs, board.ID)
 			require.NotEmpty(t, board.Rows, "board %s has no useful content", board.ID)
 			assert.NoError(t, board.Validate(), "board %s is invalid", board.ID)
 		}
-		assert.ElementsMatch(t, []string{"board1", "northwind"}, boardIDs)
+		assert.ElementsMatch(t, []string{"board1", "northwind", "showcase"}, boardIDs)
 	}
 
 	if assert.Len(t, project.DbModels, 1) {
@@ -131,10 +123,7 @@ func TestDemoProject1_Validate(t *testing.T) {
 	wantEnvIDs := []string{"dev", "local", "prod", "QA", "UAT"}
 	assert.ElementsMatch(t, wantEnvIDs, project.Environments.IDs())
 
-	project.Queries = &datatug.QueriesFolder{
-		Items: loadQueries(t, store, "customers/customer-invoices", "customers/customer-purchases-by-genre", "invoices/invoice-lines"),
-	}
-
+	require.NotNil(t, project.Queries)
 	assert.NoError(t, project.Validate())
 }
 
@@ -147,25 +136,60 @@ func TestDemoBoardsReferencePublishedQueries(t *testing.T) {
 		for _, row := range board.Rows {
 			for _, card := range row.Cards {
 				require.NotNil(t, card.Widget, "board %s card %s", board.ID, card.ID)
-				require.Equal(t, "SQL", card.Widget.Name, "board %s card %s", board.ID, card.ID)
-				data, err := json.Marshal(card.Widget.Data)
-				require.NoError(t, err)
-				var widget struct {
-					SQL struct {
-						QueryID string `json:"queryId"`
-					} `json:"sql"`
-				}
-				require.NoError(t, json.Unmarshal(data, &widget))
-				require.NotEmpty(t, widget.SQL.QueryID, "board %s card %s", board.ID, card.ID)
-				query := readQueryMetadata(t, widget.SQL.QueryID)
-				require.Equal(t, strings.TrimPrefix(widget.SQL.QueryID, "demodb/"), query.ID)
-				if board.ID == "board1" {
-					assert.Equal(t, "chinook-sqlite", query.ConnectionID, "Chinook board must link to runnable browser SQL")
-				} else {
-					assert.Empty(t, query.ConnectionID, "Northwind board must not promise browser execution")
-				}
+				assertBoardWidgetQueryReferences(t, store, board.ID, card.ID, card.Widget)
 			}
 		}
+	}
+}
+
+// Check every saved query through the real project loader, including chart
+// sources and SQL children of tabs. A valid widget shape alone cannot catch a
+// renamed or deleted query file, nor an empty saved query body.
+func assertBoardWidgetQueryReferences(t *testing.T, store datatug.ProjectStore, boardID, cardID string, widget *datatug.BoardWidget) {
+	t.Helper()
+	data, err := json.Marshal(widget.Data)
+	require.NoError(t, err)
+	checkQuery := func(queryID string) {
+		t.Helper()
+		require.NotEmpty(t, queryID, "board %s card %s", boardID, cardID)
+		metadata := readQueryMetadata(t, queryID)
+		assert.Equal(t, filepath.Base(queryID), metadata.ID)
+		query, err := store.LoadQuery(context.Background(), queryID)
+		require.NoError(t, err, "board %s card %s query %s", boardID, cardID, queryID)
+		require.NoError(t, query.Validate())
+		require.NotEmpty(t, query.Text, "board %s card %s query %s has no saved body", boardID, cardID, queryID)
+		assert.Equal(t, metadata.ConnectionID, query.ConnectionID)
+	}
+	switch widget.Name {
+	case "SQL":
+		var def datatug.SQLWidgetDef
+		require.NoError(t, json.Unmarshal(data, &def))
+		checkQuery(def.SQL.QueryID)
+		if boardID == "board1" {
+			assert.Equal(t, "chinook-sqlite", readQueryMetadata(t, def.SQL.QueryID).ConnectionID)
+		}
+	case "chart":
+		var def datatug.ChartWidgetDef
+		require.NoError(t, json.Unmarshal(data, &def))
+		require.NotEmpty(t, def.Sources)
+		for _, source := range def.Sources {
+			checkQuery(source.QueryID)
+		}
+	case "tabs":
+		var def datatug.TabsWidgetDef
+		require.NoError(t, json.Unmarshal(data, &def))
+		require.NotEmpty(t, def.Tabs)
+		for _, tab := range def.Tabs {
+			if tab.Widget.Name == "" {
+				continue // older boards may contain title-only placeholder tabs
+			}
+			if boardID == "showcase" {
+				require.NotEmpty(t, tab.ID, "new showcase tabs need stable IDs")
+			}
+			assertBoardWidgetQueryReferences(t, store, boardID, cardID+"/"+tab.Title, &tab.Widget)
+		}
+	default:
+		t.Fatalf("board %s card %s has untested widget type %q", boardID, cardID, widget.Name)
 	}
 }
 
@@ -245,17 +269,8 @@ func TestDemoProject1_Environments(t *testing.T) {
 	assert.Equal(t, "chinook", chinookProd.DbModel)
 }
 
-// TestDemoProject1_QueriesLoad proves LoadProject itself (datatug-core
-// v0.23.0/#309) now populates Project.Queries directly - no manual
-// loadQueries patch-up needed, unlike TestDemoProject1_Validate above (still
-// kept as-is; not in scope for this bump) - with all 5 real demo queries
-// (DTQL customer-invoices, SQL customer-purchases-by-genre/invoice-lines,
-// HTTP country-facts/currency-rate), each with its non-empty Text body, and
-// that Project.Validate() passes on the project exactly as LoadProject
-// returned it, with no query-loading workaround at all. None of the 5 real
-// queries currently declare Targets (confirmed by direct inspection of
-// demo-project-1/queries/**/*.query.json) - the empty-credential path is
-// exercised separately, by construction, in datatug-core's own fixture test.
+// TestDemoProject1_QueriesLoad checks representative query types and saved
+// bodies after LoadProject populates Project.Queries directly.
 func TestDemoProject1_QueriesLoad(t *testing.T) {
 	store := newStore(t)
 	project, err := store.LoadProject(context.Background())
@@ -336,6 +351,7 @@ func TestDemoProject1_StandaloneChinookBrowserBindings(t *testing.T) {
 		"demodb/northwind-shipping-country-count-sqlite":     "northwind-sqlite",
 		"demodb/northwind-shipping-country-count-postgresql": "northwind-postgresql",
 		"demodb/northwind-shipping-country-race":             "northwind-postgresql",
+		"demodb/northwind-orders-full-sqlite":                "northwind-sqlite",
 	}
 	for queryPath, connectionID := range allowed {
 		metadata := readQueryMetadata(t, queryPath)
@@ -386,6 +402,7 @@ func TestDemoProject1_NorthwindShowcaseQueriesLoadAndDeserialize(t *testing.T) {
 		{"northwind-shipping-country-count-sqlite", "northwind-sqlite"},
 		{"northwind-shipping-country-count-postgresql", "northwind-postgresql"},
 		{"northwind-shipping-country-race", "northwind-postgresql"},
+		{"northwind-orders-full-sqlite", "northwind-sqlite"},
 	} {
 		t.Run(tc.id, func(t *testing.T) {
 			metadata := readQueryMetadata(t, "demodb/"+tc.id)
