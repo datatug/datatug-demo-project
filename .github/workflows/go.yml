@@ -7,6 +7,101 @@ on:
 
 jobs:
 
+  datatug_cli_validation:
+    name: Validate the demo with the published DataTug CLI
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # actions/checkout v6
+
+      - name: Resolve the latest stable CLI release and checksum
+        id: release
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          release_json="${RUNNER_TEMP}/datatug-release.json"
+          curl --fail --silent --show-error --location \
+            https://api.github.com/repos/datatug/datatug/releases/latest \
+            --output "$release_json"
+
+          tag="$(jq -er '.tag_name | select(startswith("v"))' "$release_json")"
+          version="${tag#v}"
+          case "${RUNNER_ARCH}" in
+            X64) arch=amd64 ;;
+            ARM64) arch=arm64 ;;
+            *) echo "Unsupported runner architecture: ${RUNNER_ARCH}" >&2; exit 1 ;;
+          esac
+
+          archive="datatug_${version}_linux_${arch}.tar.gz"
+          checksums="datatug_${version}_checksums.txt"
+          release_url="https://github.com/datatug/datatug/releases/download/${tag}"
+          curl --fail --silent --show-error --location \
+            "${release_url}/${checksums}" \
+            --output "${RUNNER_TEMP}/${checksums}"
+
+          expected_sha="$(awk -v name="$archive" '$2 == name || substr($2, 2) == name { print $1; exit }' "${RUNNER_TEMP}/${checksums}")"
+          if [[ ! "$expected_sha" =~ ^[[:xdigit:]]{64}$ ]]; then
+            echo "No valid SHA-256 found for ${archive} in ${checksums}" >&2
+            exit 1
+          fi
+
+          {
+            echo "tag=${tag}"
+            echo "version=${version}"
+            echo "archive=${archive}"
+            echo "sha256=${expected_sha}"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Restore the published CLI archive
+        id: cli-cache
+        uses: actions/cache/restore@v6
+        with:
+          path: ${{ runner.temp }}/datatug-cli/${{ steps.release.outputs.archive }}
+          key: datatug-cli-${{ steps.release.outputs.tag }}-${{ runner.os }}-${{ runner.arch }}-${{ steps.release.outputs.sha256 }}
+
+      - name: Download the CLI archive on a cache miss
+        if: steps.cli-cache.outputs.cache-hit != 'true'
+        env:
+          ARCHIVE: ${{ steps.release.outputs.archive }}
+          TAG: ${{ steps.release.outputs.tag }}
+        run: |
+          set -euo pipefail
+          mkdir -p "${RUNNER_TEMP}/datatug-cli"
+          curl --fail --silent --show-error --location \
+            "https://github.com/datatug/datatug/releases/download/${TAG}/${ARCHIVE}" \
+            --output "${RUNNER_TEMP}/datatug-cli/${ARCHIVE}"
+
+      - name: Verify the CLI archive checksum
+        env:
+          ARCHIVE: ${{ steps.release.outputs.archive }}
+          EXPECTED_SHA: ${{ steps.release.outputs.sha256 }}
+        run: |
+          set -euo pipefail
+          echo "${EXPECTED_SHA}  ${RUNNER_TEMP}/datatug-cli/${ARCHIVE}" | sha256sum --check --strict
+
+      - name: Save the verified CLI archive
+        if: steps.cli-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: ${{ runner.temp }}/datatug-cli/${{ steps.release.outputs.archive }}
+          key: datatug-cli-${{ steps.release.outputs.tag }}-${{ runner.os }}-${{ runner.arch }}-${{ steps.release.outputs.sha256 }}
+
+      - name: Install the verified CLI
+        env:
+          ARCHIVE: ${{ steps.release.outputs.archive }}
+        run: |
+          set -euo pipefail
+          install_dir="${RUNNER_TEMP}/datatug-cli/bin"
+          mkdir -p "$install_dir"
+          tar --extract --gzip --file "${RUNNER_TEMP}/datatug-cli/${ARCHIVE}" --directory "$install_dir" datatug
+          chmod 0755 "${install_dir}/datatug"
+          echo "$install_dir" >> "$GITHUB_PATH"
+          datatug version --json
+          datatug validate -d=.
+
   # Vet, lint and test the demo project's Go tests (module in tests/) with the
   # fleet's shared workflow. This is a demo-project repository, not a versioned
   # library, so releases are not tagged from here.
