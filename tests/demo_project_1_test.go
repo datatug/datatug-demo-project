@@ -316,9 +316,9 @@ func TestDemoProject1_HostedCustomerPreview(t *testing.T) {
 }
 
 // TestDemoProject1_StandaloneChinookBrowserBindings keeps the browser-ready
-// SQL allowlist limited to the standalone Chinook SQLite examples. The
-// other DemoDB datasets, PostgreSQL federation example, and parameterized
-// library queries remain outside that saved-connection path.
+// SQL allowlist limited to standalone Chinook SQLite examples. The separate
+// Northwind DTQL bindings name public OVDB sources; they do not claim that
+// the DataTug app can execute or compose them yet.
 func TestDemoProject1_StandaloneChinookBrowserBindings(t *testing.T) {
 	allowed := map[string]string{
 		"demodb/chinook-customer-inventory":   "chinook-sqlite",
@@ -327,12 +327,15 @@ func TestDemoProject1_StandaloneChinookBrowserBindings(t *testing.T) {
 		"demodb/chinook-top-customer-spend":   "chinook-sqlite",
 	}
 	allowedTugQL := map[string]string{
-		"demodb/chinook-invoice-author":         "chinook-sqlite",
-		"demodb/chinook-customer-invoice-count": "chinook-sqlite",
-		"demodb/chinook-customer-count-cte":     "chinook-sqlite",
-		"demodb/chinook-customer-count-graph":   "chinook-sqlite",
-		"demodb/chinook-customer-invoice-join":  "chinook-sqlite",
-		"demodb/chinook-invoice-compare":        "chinook-sqlite",
+		"demodb/chinook-invoice-author":                      "chinook-sqlite",
+		"demodb/chinook-customer-invoice-count":              "chinook-sqlite",
+		"demodb/chinook-customer-count-cte":                  "chinook-sqlite",
+		"demodb/chinook-customer-count-graph":                "chinook-sqlite",
+		"demodb/chinook-customer-invoice-join":               "chinook-sqlite",
+		"demodb/chinook-invoice-compare":                     "chinook-sqlite",
+		"demodb/northwind-shipping-country-count-sqlite":     "northwind-sqlite",
+		"demodb/northwind-shipping-country-count-postgresql": "northwind-postgresql",
+		"demodb/northwind-shipping-country-race":             "northwind-postgresql",
 	}
 	for queryPath, connectionID := range allowed {
 		metadata := readQueryMetadata(t, queryPath)
@@ -373,6 +376,26 @@ func TestDemoProject1_StandaloneChinookBrowserBindings(t *testing.T) {
 		"invoices/invoice-lines",
 	} {
 		assert.Empty(t, readQueryMetadata(t, queryPath).ConnectionID, queryPath)
+	}
+}
+
+func TestDemoProject1_NorthwindShowcaseQueriesLoadAndDeserialize(t *testing.T) {
+	for _, tc := range []struct {
+		id, connectionID string
+	}{
+		{"northwind-shipping-country-count-sqlite", "northwind-sqlite"},
+		{"northwind-shipping-country-count-postgresql", "northwind-postgresql"},
+		{"northwind-shipping-country-race", "northwind-postgresql"},
+	} {
+		t.Run(tc.id, func(t *testing.T) {
+			metadata := readQueryMetadata(t, "demodb/"+tc.id)
+			assert.Equal(t, tc.id, metadata.ID)
+			assert.Equal(t, tc.connectionID, metadata.ConnectionID)
+			query := loadQueries(t, newStore(t), "demodb/"+tc.id)[0]
+			require.Equal(t, datatug.QueryTypeDTQL, query.Type)
+			_, err := dtql.Deserialize([]byte(query.Text))
+			require.NoError(t, err, "saved structured DTQL must deserialize")
+		})
 	}
 }
 

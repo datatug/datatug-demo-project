@@ -1,0 +1,15 @@
+{
+  "id": "northwind-shipping-country-count-sqlite",
+  "title": "Northwind SQLite orders by shipping country",
+  "type": "DTQL",
+  "connectionId": "northwind-sqlite",
+  "purpose": "Count Northwind orders by shipping country on the public SQLite-backed DemoDB endpoint. This independently executed result can be composed beside the PostgreSQL edition; it is not a federated query.",
+  "recordsets": [
+    {
+      "columns": [
+        { "name": "ShipCountry", "type": "string" },
+        { "name": "orders", "type": "integer" }
+      ]
+    }
+  ]
+}

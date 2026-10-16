@@ -1,0 +1,45 @@
+{
+  "observedAtUtc": "2026-10-16T12:07:34Z",
+  "command": "python3 scripts/verify-visual-showcase-sources.py",
+  "request": "POST application/json containing the exact saved DTQL body as query; Accept application/json",
+  "parity": true,
+  "ordersTotal": 830,
+  "sources": {
+    "sqlite": {
+      "database": "northwind",
+      "collection": "Orders",
+      "complete": true,
+      "rows": 21,
+      "rawResponseSha256": "c0eb758895e547871c3f6d50e6a771ca4588add8b2b4f97940e51ce4afb6e037",
+      "mappedRowsSha256": "10180147a7752d4006c28d438d7deed96461336b865156036c2c017f5c82b235",
+      "endpoint": "https://demodb.dev/ovdb/v1/databases/northwind/dtql",
+      "querySha256": "2e320d487d7bbe7dbfc53abc55c08d12eb80a2e79b34cfe15a2148fa362acc9a"
+    },
+    "postgresql": {
+      "database": "northwind-postgresql",
+      "collection": "pg1_AAAACW5vcnRod2luZAAAAAZPcmRlcnM",
+      "complete": true,
+      "rows": 21,
+      "rawResponseSha256": "0abb6e3bf033751c24028eceae36823a84257c0bdb05e0a5bdeee3a1ff5593aa",
+      "mappedRowsSha256": "10180147a7752d4006c28d438d7deed96461336b865156036c2c017f5c82b235",
+      "endpoint": "https://cloud.openvaultdb.com/v1/databases/northwind-postgresql/dtql",
+      "querySha256": "df5a020a273bfde0f7771c5a405ca1985500b791d48e5d84598226e4dc3bf214"
+    }
+  },
+  "race": {
+    "database": "northwind-postgresql",
+    "collection": "pg1_AAAACW5vcnRod2luZAAAAAZPcmRlcnM",
+    "complete": true,
+    "rows": 830,
+    "firstDate": "2016-07-04",
+    "lastDate": "2018-05-06",
+    "countries": 21,
+    "months": 23,
+    "rankChanges": 22,
+    "leaderChanges": 16,
+    "rawResponseSha256": "c7c33de56a14307586136990095ac97ecfc674d39b8f092fe83edbc24ec5c4da",
+    "mappedRowsSha256": "5b910e1bb424a10a4bcd3940e219edbaf20c5cc6df7e7083bb856fcf0e952113",
+    "endpoint": "https://cloud.openvaultdb.com/v1/databases/northwind-postgresql/dtql",
+    "querySha256": "9b54fa0ab06dff842ea0bc60bbf5bb91893dca4b8214d417bb9104a066b1146a"
+  }
+}

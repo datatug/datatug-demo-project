@@ -1,5 +1,11 @@
 # DemoDB guided investigations
 
+The [visual showcase data evidence](visual-showcase-data-evidence.md) records
+the six-dataset comparison, the independently executed Northwind SQLite and
+PostgreSQL order-count queries, and the bounded raw input for a monthly
+shipping-country race. The saved queries are source definitions; DataTug app
+execution and cross-source dashboard composition still require runtime work.
+
 These 18 standalone, read-only SQLite examples give each public DemoDB dataset
 three concrete ways to investigate its data. Each `.query.sql` has matching
 `.query.json` metadata and a stable flat query ID. The current DataTug Dev
