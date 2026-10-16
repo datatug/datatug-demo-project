@@ -658,7 +658,7 @@ func TestDemoProject1_ChinookCustomerCountsCTE(t *testing.T) {
 		if catalogue.Connections[i].ID == metadata.ConnectionID {
 			connectionFound = true
 			assert.Equal(t, "7651ba378ac2fcd0dfc3c66fb101f7a7eed3ba39a612ec642b96e20702061f15", catalogue.Connections[i].FixtureSHA256)
-			assert.Equal(t, "https://chinook.demodb.dev/data/chinook.sqlite", catalogue.Connections[i].BrowserFixture.URL)
+			assert.Equal(t, "/assets/showcase/chinook.sqlite", catalogue.Connections[i].BrowserFixture.URL)
 			break
 		}
 	}

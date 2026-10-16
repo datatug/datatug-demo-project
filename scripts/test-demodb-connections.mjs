@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import test from 'node:test';
@@ -176,4 +177,40 @@ test('hosted BigQuery editions are verified and require a user-owned execution p
   }
   assert.equal(catalog.connections.length, 18);
   assert.equal(catalog.bigQueryPlans.length, 2);
+});
+
+
+test('showcase charts and inspector bind the three admitted browser SQL definitions', () => {
+  const board = read('boards/showcase/board.json');
+  const race = board.rows[0].cards[0].widget;
+  const bars = board.rows[1].cards[0].widget;
+  const tabs = board.rows[1].cards[1].widget.data.tabs;
+  assert.equal(race.data.sources[0].queryId, 'demodb/northwind-orders-browser-sqlite');
+  assert.equal(bars.data.sources[0].queryId, 'demodb/northwind-country-counts-browser-sqlite');
+  assert.deepEqual(tabs.map((tab) => tab.widget.data.sql.queryId), [
+    'demodb/northwind-orders-browser-sqlite',
+    'demodb/northwind-country-counts-browser-sqlite',
+    'demodb/chinook-billing-browser-sqlite',
+  ]);
+  assert.deepEqual(tabs.map((tab) => tab.title), [
+    'Northwind · SQLite orders', 'Northwind · SQLite countries', 'Chinook · customer billing',
+  ]);
+  const definitions = [
+    ['northwind-orders-browser-sqlite', 'northwind-sqlite', 14, 'a1b3d75996c5ffa611ee2f7e9c49234a142cdd1595e7249056621b010d1daab5'],
+    ['northwind-country-counts-browser-sqlite', 'northwind-sqlite', 2, '4ad98f415bb0f2a87efc481703418c93ae5bebff4903e6dc83c631f8edf28d26'],
+    ['chinook-billing-browser-sqlite', 'chinook-sqlite', 5, 'fdf80f3949f4a1c31e2e317e5356455ce97e769484a197b5736eb0463baf93a1'],
+  ];
+  for (const [id, connectionId, columns, sha256] of definitions) {
+    const query = read(`queries/demodb/${id}.query.json`);
+    assert.equal(query.id, id);
+    assert.equal(query.type, 'SQL');
+    assert.equal(query.connectionId, connectionId);
+    assert.equal(query.recordsets[0].columns.length, columns);
+    const sql = readFileSync(resolve(project, `queries/demodb/${id}.query.sql`));
+    assert.equal(createHash('sha256').update(sql).digest('hex'), sha256);
+    assert.match(sql.toString(), /^SELECT\b/);
+    const connection = catalog.connections.find((entry) => entry.id === connectionId);
+    assert.match(connection.fixtureSha256, /^[a-f0-9]{64}$/);
+    assert.equal(connection.browserFixture.url, `/assets/showcase/${connection.dataset}.sqlite`);
+  }
 });

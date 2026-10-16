@@ -87,12 +87,12 @@
       "source": "https://demodb.dev/ovdb/v1/databases/northwind",
       "descriptor": "https://demodb.dev/ovdb/db/northwind/ovdb-database.json",
       "fixtureSha256": "279b34136771aee75d802094b3329515a2b01da65d2a20a4a9e3b58c29b4fd20",
-      "query": "ovdb-read",
-      "copy": "explicit-browser-import",
       "browserFixture": {
         "url": "/assets/showcase/northwind.sqlite",
         "bytes": 602112
-      }
+      },
+      "query": "ovdb-read",
+      "copy": "explicit-browser-import"
     },
     {
       "id": "northwind-postgresql",
