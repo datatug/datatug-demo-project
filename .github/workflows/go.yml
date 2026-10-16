@@ -13,8 +13,8 @@ jobs:
   ci:
     # The Go tests import private Core and CLI modules. Fork pull requests do
     # not receive the scoped App key, so keep this job to trusted pushes and
-    # same-repository pull requests. The public validation jobs below still
-    # run for forks.
+    # same-repository pull requests. Fork PRs still receive public CLI
+    # validation through the DataTug workflow.
     if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}
     permissions:
       contents: write # declared by the reusable workflow's (disabled) tagging job
