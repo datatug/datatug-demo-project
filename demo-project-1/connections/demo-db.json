@@ -32,7 +32,7 @@
       "descriptor": "https://demodb.dev/ovdb/db/chinook/ovdb-database.json",
       "fixtureSha256": "7651ba378ac2fcd0dfc3c66fb101f7a7eed3ba39a612ec642b96e20702061f15",
       "browserFixture": {
-        "url": "https://chinook.demodb.dev/data/chinook.sqlite",
+        "url": "/assets/showcase/chinook.sqlite",
         "bytes": 1007616
       },
       "query": "ovdb-read",
@@ -88,7 +88,11 @@
       "descriptor": "https://demodb.dev/ovdb/db/northwind/ovdb-database.json",
       "fixtureSha256": "279b34136771aee75d802094b3329515a2b01da65d2a20a4a9e3b58c29b4fd20",
       "query": "ovdb-read",
-      "copy": "explicit-browser-import"
+      "copy": "explicit-browser-import",
+      "browserFixture": {
+        "url": "/assets/showcase/northwind.sqlite",
+        "bytes": 602112
+      }
     },
     {
       "id": "northwind-postgresql",

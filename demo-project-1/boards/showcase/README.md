@@ -1,50 +1,42 @@
 # Orders in motion
 
-`board.json` defines the canonical end state for the shareable showcase. The
-Apps runtime and tutorial overlay are being integrated separately. The planned
-`?mode=tutorial` route derives a sparse browser-session copy from this board and
-reveals canonical card IDs in order: `orders-by-month-country`,
-`northwind-shipping-countries`, then `source-inspector`. Tutorial actions must
-not edit this file or the saved project.
+`board.json` is the shareable showcase. `?mode=tutorial` derives a browser session
+copy and reveals the cards in order: `orders-by-month-country`,
+`northwind-shipping-countries`, then `source-inspector`. Tutorial actions do not
+edit the saved project.
 
-The race card binds `demodb/northwind-orders-full-sqlite`, a saved DTQL query
-for all 14 Orders fields, then derives monthly shipping-country order counts from
-the admitted 830 records. It is an **order-count** race, not revenue. The
-country bar binds an independent SQLite aggregate. The current chart wire's
-`orders-monthly-country-count` transform supports the race only; admitting the
-bar's separate 21-row aggregate requires its own verified runtime result and
-publisher rights for the underlying Orders source. Chart presentation should
-change without changing either source query.
+The race binds `demodb/northwind-orders-browser-sqlite`: read-only SQL selecting
+all 830 Orders and all 14 fields. The browser derives monthly shipping-country
+order counts from these records. The country bar binds
+`demodb/northwind-country-counts-browser-sqlite`, independently executing SQL
+for all 21 countries and 830 total orders. These charts count orders.
 
-The inspector defines three independent saved-query tabs: the raw SQLite Orders
-projection, the PostgreSQL country-count aggregate, and a Chinook customer
-billing SQL query. They are not a federated query or a combined chart. Chinook
-`TotalCents` is invoice billing in cents; the Northwind cards count orders by
-shipping destination. Those measures cannot be compared on one numeric scale.
+The inspector has three independent saved SQL tabs: the complete Northwind
+Orders projection, the Northwind country counts, and Chinook customer billing.
+Chinook `TotalCents` sums invoice billing in integer cents per customer. It is a
+separate dataset and measure.
 
-## Runtime evidence and gates
+## Browser execution
 
-- The full Orders query body matches the provider's pinned public projection
-  in `demo-db/northwind/artifacts/hosting-imports/public-orders-evidence-2026-10-16.json`.
-  Its local SQLite and observed public API results contained 830 rows with
-  14 fields and canonical row digest
-  `69e054b6e952a3c1df7b549fdf7b474a353f18edd9f968560ad1d4bfb6894f0a`.
-  The app must verify current complete response, schema, row count and digest
-  at runtime before admitting it to the race. The digest is evidence, not saved
-  chart data.
-- The SQLite country-count and PostgreSQL country-count queries each returned
-  21 distinct countries and 830 total orders in the
-  [saved source receipt](../../queries/demodb/visual-showcase-source-receipt.json).
-  These are separate public API executions. The bar may render only after the
-  current aggregate response is independently admitted and its source rights
-  verified. PostgreSQL is inspect-only until its hosting provider supplies
-  suitable chart rights evidence.
-- The Chinook SQL tab targets the existing `chinook-sqlite` pinned browser
-  fixture and has a saved standalone query. It remains a grid/inspection tab;
-  this board does not infer Chinook chart rights from Northwind's publisher.
-- The saved board contains only query IDs and chart settings. Results,
-  execution receipts, rights, and tutorial action history are resolved or kept
-  in the viewer session. An unavailable, incomplete, or unauthorized source
-  must show a visible limited/error state instead of a fabricated chart.
-- Rendering nested saved-query tabs and automatically executing them is an Apps
-  integration gate. This board definition does not prove that browser path.
+The DataTug app bundles immutable SQLite snapshots and runs these queries in its
+existing sql.js WASM worker. The connection catalog declares each relative asset
+URL, size and SHA-256. The runtime admits only the shipped asset paths with their
+exact pins, checks the download size and hash, validates each saved query's SQL
+identity and complete result shape, then creates snapshot execution evidence.
+The browser runtime has a 1,000-row cap; the complete Orders result is 830 rows.
+No Cloudflare Worker query endpoint is required for these three tabs or charts.
+
+- Northwind: 602112 bytes, SHA-256
+  `279b34136771aee75d802094b3329515a2b01da65d2a20a4a9e3b58c29b4fd20`,
+  from `demo-db/northwind` revision
+  `76fe0a1ccc82b6c0c5a035d76c9df7522713d618`, `artifacts/northwind.sqlite`.
+- Chinook: 1007616 bytes, SHA-256
+  `7651ba378ac2fcd0dfc3c66fb101f7a7eed3ba39a612ec642b96e20702061f15`,
+  from `demo-db/chinook` revision
+  `85ad3b4d4014dd5a6ee506410beee99771801811`, `artifacts/data/chinook.sqlite`.
+
+Both datasets retain their upstream MIT notices beside the app assets. Source
+usage details show the original repository, pin, attribution and transformations.
+Results and receipts stay in the viewer session. Unavailable or changed sources
+show an error. The older public DTQL queries and their historical live API
+receipt remain separate assets; browser SQLite does not inherit that receipt.

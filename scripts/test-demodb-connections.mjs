@@ -32,8 +32,9 @@ test('one canonical project exposes every DemoDB storage edition with truthful r
         assert.equal(entry.copy, 'explicit-browser-import');
         assert.deepEqual(entry.environments, ['dev']);
         if (dataset === 'chinook') assert.deepEqual(entry.browserFixture, {
-          url: 'https://chinook.demodb.dev/data/chinook.sqlite', bytes: 1007616,
+          url: '/assets/showcase/chinook.sqlite', bytes: 1007616,
         });
+        else if (dataset === 'northwind') assert.deepEqual(entry.browserFixture, { url: '/assets/showcase/northwind.sqlite', bytes: 602112 });
         else assert.equal(entry.browserFixture, undefined);
       } else if (storage === 'postgresql') {
         // Hosted on Neon, served read-only by the public OpenVaultDB server; DataTug opens it through OVDB only.
@@ -124,7 +125,7 @@ test('comparison fixtures are separate, pinned Chinook artifacts with source pro
     provenance,
   });
   assert.deepEqual(catalog.connections.find((connection) => connection.id === 'chinook-sqlite').browserFixture, {
-    url: 'https://chinook.demodb.dev/data/chinook.sqlite', bytes: 1007616,
+    url: '/assets/showcase/chinook.sqlite', bytes: 1007616,
   });
   for (const entry of catalog.connections.filter((connection) => connection.storage === 'postgresql')) {
     assert.deepEqual(entry.environments, entry.dataset === 'northwind' ? ['dev', 'QA', 'UAT'] : ['QA', 'UAT']);

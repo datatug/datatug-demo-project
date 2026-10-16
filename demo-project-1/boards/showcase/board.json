@@ -1,22 +1,22 @@
 {
   "id": "showcase",
-  "title": "Orders in motion · DataTug visual showcase",
+  "title": "Orders in motion \u00b7 DataTug visual showcase",
   "access": "public",
   "rows": [
     {
       "cards": [
         {
           "id": "orders-by-month-country",
-          "title": "Where Northwind orders shipped · month by month",
+          "title": "Where Northwind orders shipped \u00b7 month by month",
           "cols": 12,
           "widget": {
             "name": "chart",
             "data": {
-              "title": "830 orders · July 2016–May 2018 · shipping country",
+              "title": "830 orders \u00b7 July 2016\u2013May 2018 \u00b7 shipping country",
               "sources": [
                 {
                   "id": "northwind-orders",
-                  "queryId": "demodb/northwind-orders-full-sqlite",
+                  "queryId": "demodb/northwind-orders-browser-sqlite",
                   "transform": {
                     "name": "orders-monthly-country-count",
                     "orderIdColumn": "OrderID",
@@ -51,11 +51,11 @@
           "widget": {
             "name": "chart",
             "data": {
-              "title": "Order count by destination · Northwind SQLite",
+              "title": "Order count by destination \u00b7 Northwind SQLite",
               "sources": [
                 {
                   "id": "northwind-country-counts",
-                  "queryId": "demodb/northwind-shipping-country-count-sqlite"
+                  "queryId": "demodb/northwind-country-counts-browser-sqlite"
                 }
               ],
               "chart": {
@@ -78,34 +78,40 @@
               "tabs": [
                 {
                   "id": "sqlite-orders",
-                  "title": "Northwind · SQLite orders",
+                  "title": "Northwind \u00b7 SQLite orders",
                   "widget": {
                     "name": "SQL",
                     "data": {
                       "title": "Inspect the complete 14-field Orders projection used by the race.",
-                      "sql": { "queryId": "demodb/northwind-orders-full-sqlite" }
+                      "sql": {
+                        "queryId": "demodb/northwind-orders-browser-sqlite"
+                      }
                     }
                   }
                 },
                 {
-                  "id": "postgresql-countries",
-                  "title": "Northwind · PostgreSQL countries",
+                  "id": "sqlite-countries",
+                  "title": "Northwind \u00b7 SQLite countries",
                   "widget": {
                     "name": "SQL",
                     "data": {
-                      "title": "A separate PostgreSQL country-count query; inspect its own source receipt.",
-                      "sql": { "queryId": "demodb/northwind-shipping-country-count-postgresql" }
+                      "title": "Inspect all 21 shipping-country counts from the same pinned Northwind SQLite snapshot.",
+                      "sql": {
+                        "queryId": "demodb/northwind-country-counts-browser-sqlite"
+                      }
                     }
                   }
                 },
                 {
                   "id": "chinook-customers",
-                  "title": "Chinook · customer billing",
+                  "title": "Chinook \u00b7 customer billing",
                   "widget": {
                     "name": "SQL",
                     "data": {
                       "title": "Chinook invoice totals in cents from its own pinned SQLite dataset.",
-                      "sql": { "queryId": "demodb/chinook-top-customer-spend" }
+                      "sql": {
+                        "queryId": "demodb/chinook-billing-browser-sqlite"
+                      }
                     }
                   }
                 }
