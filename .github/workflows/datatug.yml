@@ -4,11 +4,15 @@ on:
   push:
     branches: ['*']
     tags: ['*']
+  pull_request:
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   ingitdb_validation:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: datatug/datatug-action@main
+      - uses: datatug/datatug-action@06e8462c8c2534d91badbcce548869c06f752cd5 # immutable published action revision
