@@ -331,15 +331,18 @@ func TestDemoProject1_HostedCustomerPreview(t *testing.T) {
 }
 
 // TestDemoProject1_StandaloneChinookBrowserBindings keeps the browser-ready
-// SQL allowlist limited to standalone Chinook SQLite examples. The separate
+// SQL allowlist limited to reviewed standalone SQLite examples. The separate
 // Northwind DTQL bindings name public OVDB sources; they do not claim that
 // the DataTug app can execute or compose them yet.
 func TestDemoProject1_StandaloneChinookBrowserBindings(t *testing.T) {
 	allowed := map[string]string{
-		"demodb/chinook-customer-inventory":   "chinook-sqlite",
-		"demodb/chinook-customer-genre-mix":   "chinook-sqlite",
-		"demodb/chinook-playlist-composition": "chinook-sqlite",
-		"demodb/chinook-top-customer-spend":   "chinook-sqlite",
+		"demodb/northwind-orders-browser-sqlite":         "northwind-sqlite",
+		"demodb/northwind-country-counts-browser-sqlite": "northwind-sqlite",
+		"demodb/chinook-billing-browser-sqlite":          "chinook-sqlite",
+		"demodb/chinook-customer-inventory":              "chinook-sqlite",
+		"demodb/chinook-customer-genre-mix":              "chinook-sqlite",
+		"demodb/chinook-playlist-composition":            "chinook-sqlite",
+		"demodb/chinook-top-customer-spend":              "chinook-sqlite",
 	}
 	allowedTugQL := map[string]string{
 		"demodb/chinook-invoice-author":                      "chinook-sqlite",
@@ -655,7 +658,7 @@ func TestDemoProject1_ChinookCustomerCountsCTE(t *testing.T) {
 		if catalogue.Connections[i].ID == metadata.ConnectionID {
 			connectionFound = true
 			assert.Equal(t, "7651ba378ac2fcd0dfc3c66fb101f7a7eed3ba39a612ec642b96e20702061f15", catalogue.Connections[i].FixtureSHA256)
-			assert.Equal(t, "https://chinook.demodb.dev/data/chinook.sqlite", catalogue.Connections[i].BrowserFixture.URL)
+			assert.Equal(t, "/assets/showcase/chinook.sqlite", catalogue.Connections[i].BrowserFixture.URL)
 			break
 		}
 	}

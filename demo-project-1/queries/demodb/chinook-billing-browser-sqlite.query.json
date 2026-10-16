@@ -1,0 +1,33 @@
+{
+  "id": "chinook-billing-browser-sqlite",
+  "title": "Top Customer Spend",
+  "type": "SQL",
+  "connectionId": "chinook-sqlite",
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "CustomerId",
+          "type": "integer"
+        },
+        {
+          "name": "CustomerName",
+          "type": "string"
+        },
+        {
+          "name": "Country",
+          "type": "string"
+        },
+        {
+          "name": "InvoiceCount",
+          "type": "integer"
+        },
+        {
+          "name": "TotalCents",
+          "type": "integer"
+        }
+      ]
+    }
+  ],
+  "purpose": "Standalone read-only SQL example: execute SQL in the browser against the bundled, SHA-256 and size pinned SQLite snapshot; no hosted query endpoint is required."
+}

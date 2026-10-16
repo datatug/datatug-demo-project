@@ -51,9 +51,9 @@ for (const database of registry.databases) {
     source: `https://demodb.dev/ovdb/v1/databases/${id}`,
     descriptor: `https://demodb.dev/ovdb/db/${id}/ovdb-database.json`,
     fixtureSha256: fixtureSha256[id],
-    ...(id === 'chinook' ? { browserFixture: {
-      url: 'https://chinook.demodb.dev/data/chinook.sqlite',
-      bytes: 1007616,
+    ...(['chinook', 'northwind'].includes(id) ? { browserFixture: {
+      url: `/assets/showcase/${id}.sqlite`,
+      bytes: id === 'chinook' ? 1007616 : 602112,
     } } : {}),
     query: 'ovdb-read', copy: 'explicit-browser-import',
   });
