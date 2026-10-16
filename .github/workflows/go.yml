@@ -117,14 +117,24 @@ jobs:
   # fleet's shared workflow. This is a demo-project repository, not a versioned
   # library, so releases are not tagged from here.
   ci:
+    # The Go tests import private Core and CLI modules. Fork pull requests do
+    # not receive the scoped App key, so keep this job to trusted pushes and
+    # same-repository pull requests. The public validation jobs below still
+    # run for forks.
+    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}
     permissions:
       contents: write # declared by the reusable workflow's (disabled) tagging job
     uses: strongo/cicd/.github/workflows/workflow.yml@v1.21.3
     with:
       working_directory: tests
       disable-version-bumping: true
+      GOPRIVATE: github.com/datatug/datatug-core,github.com/datatug/datatug-cli
+      goprivate_github_app_client_id: Iv23li26w131Kv6u3IdM
+      goprivate_github_app_owner: datatug
+      goprivate_github_app_repositories: datatug-core,datatug-cli
     secrets:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GOPRIVATE_GITHUB_APP_PRIVATE_KEY: ${{ secrets.SNEAT_RELEASER_PRIVATE_KEY }}
 
   # The hero query over the REAL pinned Chinook file. The ordinary test run above
   # cannot see that file, so the pinned-Chinook tests skip there; this job checks
@@ -134,9 +144,14 @@ jobs:
   # of skipping. The headline numbers are therefore checked on every change.
   hero_pinned_chinook:
     name: Hero query over pinned Chinook
+    # This job also imports private Core and CLI modules. Keep private access
+    # away from fork pull requests while public checks continue to run.
+    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    env:
+      GOPRIVATE: github.com/datatug/datatug-core,github.com/datatug/datatug-cli
     steps:
       - name: Checkout code
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # actions/checkout v6
@@ -161,6 +176,65 @@ jobs:
           path: chinook-database
           persist-credentials: false
 
+      - name: Mint read-only token for private Go modules
+        id: private-modules
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # actions/create-github-app-token v3.2.0
+        with:
+          client-id: Iv23li26w131Kv6u3IdM
+          private-key: ${{ secrets.SNEAT_RELEASER_PRIVATE_KEY }}
+          owner: datatug
+          repositories: datatug-core,datatug-cli
+          permission-contents: read
+
+      - name: Configure private Go module access
+        env:
+          PRIVATE_MODULES_TOKEN: ${{ steps.private-modules.outputs.token }}
+        run: |
+          set -euo pipefail
+          git_config_global="${RUNNER_TEMP}/goprivate-${GITHUB_JOB}.gitconfig"
+          credential_file="${RUNNER_TEMP}/goprivate-${GITHUB_JOB}.credentials"
+          umask 077
+          touch "$git_config_global"
+          : > "$credential_file"
+          export GIT_CONFIG_GLOBAL="$git_config_global"
+          echo "GIT_CONFIG_GLOBAL=$git_config_global" >> "$GITHUB_ENV"
+          for repository in datatug-core datatug-cli; do
+            for repository_path in "datatug/$repository" "datatug/$repository.git"; do
+              printf 'protocol=https\nhost=github.com\npath=%s\nusername=x-access-token\npassword=%s\n\n' \
+                "$repository_path" "$PRIVATE_MODULES_TOKEN" | \
+                git credential-store --file "$credential_file" store
+            done
+          done
+          git config --global credential.https://github.com.useHttpPath true
+          git config --global --add credential.helper "store --file=$credential_file"
+
+      - name: Verify the installation token is scoped to exactly Core and CLI
+        env:
+          GH_TOKEN: ${{ steps.private-modules.outputs.token }}
+        run: |
+          set -euo pipefail
+          actual_repositories="$(gh api /installation/repositories --paginate --jq '.repositories[].full_name' | sort)"
+          expected_repositories="$(printf '%s\n' datatug/datatug-cli datatug/datatug-core | sort)"
+          if [[ "$actual_repositories" != "$expected_repositories" ]]; then
+            echo "The private-module token does not have the exact expected repository scope" >&2
+            exit 1
+          fi
+
+      - name: Verify authenticated Git access to both modules
+        env:
+          PRIVATE_MODULES_TOKEN: ${{ steps.private-modules.outputs.token }}
+        run: |
+          set -euo pipefail
+          basic_auth="$(printf 'x-access-token:%s' "$PRIVATE_MODULES_TOKEN" | base64 | tr -d '\n')"
+          echo "::add-mask::${basic_auth}"
+          for repository in datatug-core datatug-cli; do
+            GIT_CONFIG_COUNT=1 \
+              GIT_CONFIG_KEY_0=http.extraHeader \
+              GIT_CONFIG_VALUE_0="AUTHORIZATION: basic ${basic_auth}" \
+              GIT_TERMINAL_PROMPT=0 \
+              git ls-remote "https://github.com/datatug/${repository}.git" HEAD >/dev/null
+          done
+
       - name: Verify the Chinook file against the pin
         run: |
           set -euo pipefail
@@ -176,6 +250,10 @@ jobs:
           DATATUG_CHINOOK_DB: ${{ github.workspace }}/chinook-database/${{ steps.pin.outputs.path }}
           DATATUG_REQUIRE_CHINOOK: "1"
         run: go -C tests test . -run 'TestPinnedChinookDatabase|TestHeroQuery_PinnedChinook' -v -count=1
+
+      - name: Remove temporary private-module credentials
+        if: always()
+        run: rm -f "${RUNNER_TEMP}/goprivate-${GITHUB_JOB}.credentials" "${RUNNER_TEMP}/goprivate-${GITHUB_JOB}.gitconfig"
 
   # The vendored geo data must be exactly geo-ingitdb at the commit recorded in
   # data/geo/.vendored-from, and must itself be a valid inGitDB database. Scripts
