@@ -36,9 +36,12 @@ test('one canonical project exposes every DemoDB storage edition with truthful r
         });
         else assert.equal(entry.browserFixture, undefined);
       } else if (storage === 'postgresql') {
-        assert.equal(entry.readiness, 'hosted-api-pending');
-        assert.equal(entry.query, 'setup-required');
+        // Hosted on Neon, served read-only by the public OpenVaultDB server; DataTug opens it through OVDB only.
+        assert.equal(entry.readiness, 'public-api');
+        assert.equal(entry.query, 'ovdb-read');
         assert.equal(entry.copy, 'unavailable');
+        assert.equal(entry.source, `https://cloud.openvaultdb.com/v1/databases/${dataset}-postgresql`);
+        assert.doesNotMatch(JSON.stringify(entry), /neon|postgres(ql)?:\/\//i);
         assert.deepEqual(entry.environments, ['QA', 'UAT']);
       } else {
         assert.equal(entry.readiness, 'hosted-repository');
@@ -50,7 +53,7 @@ test('one canonical project exposes every DemoDB storage edition with truthful r
   }
 });
 
-test('environment memberships point to exact catalogue entries without activating pending SQL sources', () => {
+test('environment memberships point to exact catalogue entries without adding database servers', () => {
   const ids = new Set(catalog.connections.map((connection) => connection.id));
   for (const env of ['dev', 'QA', 'UAT']) {
     const file = read(`environments/${env}/${env}.env.json`);
@@ -120,8 +123,8 @@ test('comparison fixtures are separate, pinned Chinook artifacts with source pro
   });
   for (const entry of catalog.connections.filter((connection) => connection.storage === 'postgresql')) {
     assert.deepEqual(entry.environments, ['QA', 'UAT']);
-    assert.equal(entry.readiness, 'hosted-api-pending');
-    assert.equal(entry.query, 'setup-required');
+    assert.equal(entry.readiness, 'public-api');
+    assert.equal(entry.query, 'ovdb-read');
   }
   assert.equal(catalog.bigQueryEditions.length, datasets.length);
   assert.equal(catalog.bigQueryPlans.length, 2);
