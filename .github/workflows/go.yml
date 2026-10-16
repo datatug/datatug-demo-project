@@ -15,17 +15,19 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # actions/checkout v6
+        with:
+          persist-credentials: false
 
       - name: Resolve the latest stable CLI release and checksum
         id: release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
         run: |
           set -euo pipefail
 
           release_json="${RUNNER_TEMP}/datatug-release.json"
-          curl --fail --silent --show-error --location \
-            https://api.github.com/repos/datatug/datatug/releases/latest \
-            --output "$release_json"
+          gh api repos/datatug/datatug/releases/latest > "$release_json"
 
           tag="$(jq -er '. | select(.draft == false and .prerelease == false) | .tag_name' "$release_json")"
           if [[ ! "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
@@ -155,6 +157,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # actions/checkout v6
+        with:
+          persist-credentials: false
 
       - name: Read the Chinook pin
         id: pin
@@ -219,6 +223,9 @@ jobs:
             echo "The private-module token does not have the exact expected repository scope" >&2
             exit 1
           fi
+          for repository in datatug-core datatug-cli; do
+            gh api "repos/datatug/${repository}/contents/go.mod" --jq '.name' >/dev/null
+          done
 
       - name: Verify authenticated Git access to both modules
         env:
@@ -232,7 +239,7 @@ jobs:
               GIT_CONFIG_KEY_0=http.extraHeader \
               GIT_CONFIG_VALUE_0="AUTHORIZATION: basic ${basic_auth}" \
               GIT_TERMINAL_PROMPT=0 \
-              git ls-remote "https://github.com/datatug/${repository}.git" HEAD >/dev/null
+              git -C "$RUNNER_TEMP" ls-remote "https://github.com/datatug/${repository}.git" HEAD >/dev/null
           done
 
       - name: Verify the Chinook file against the pin
