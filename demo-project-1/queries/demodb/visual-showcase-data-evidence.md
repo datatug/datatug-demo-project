@@ -152,12 +152,13 @@ failure path before using that full series.
 
 ## DataTug runtime gates
 
-The connection catalogue admits `northwind-sqlite` to `dev` and
-`northwind-postgresql` to `QA`/`UAT`. **No existing project environment
-admits both.** Before an Add Source step promises both cards in one dashboard,
-the app and project configuration must agree on a single authorized execution
-context or explicit per-tab environment binding. The current saved QueryDefs
-alone cannot establish that behavior.
+The `dev` environment now lists both `northwind-sqlite` and
+`northwind-postgresql`, and both connection declarations list `dev` among
+their environments. This authorizes the two saved query definitions within one
+project environment; it does not open either source or grant browser runtime
+authority. PostgreSQL remains listed in `QA`/`UAT`. The DataTug app still
+needs independently admitted runtime bindings for each source before the Add
+Source step can promise executable cards in one dashboard.
 
 The browser must execute these source-bound DTQL definitions, preserve source
 identity and `orders` units on each result, and expose errors/incomplete

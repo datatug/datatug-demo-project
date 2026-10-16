@@ -99,6 +99,7 @@
         "postgresql"
       ],
       "environments": [
+        "dev",
         "QA",
         "UAT"
       ],

@@ -42,7 +42,7 @@ test('one canonical project exposes every DemoDB storage edition with truthful r
         assert.equal(entry.copy, 'unavailable');
         assert.equal(entry.source, `https://cloud.openvaultdb.com/v1/databases/${dataset}-postgresql`);
         assert.doesNotMatch(JSON.stringify(entry), /neon|postgres(ql)?:\/\//i);
-        assert.deepEqual(entry.environments, ['QA', 'UAT']);
+        assert.deepEqual(entry.environments, dataset === 'northwind' ? ['dev', 'QA', 'UAT'] : ['QA', 'UAT']);
       } else {
         assert.equal(entry.readiness, 'hosted-repository');
         assert.equal(entry.query, 'local-checkout-required');
@@ -66,7 +66,12 @@ test('environment memberships point to exact catalogue entries without adding da
     if (env === 'QA' || env === 'UAT') {
       assert.equal(file.dbServers.length, 0);
       assert.equal(file.editionConnections.length, 6);
-    } else assert.equal(file.editionConnections.length, 12);
+    } else assert.equal(file.editionConnections.length, 13);
+  }
+  const dev = read('environments/dev/dev.env.json');
+  for (const id of ['northwind-sqlite', 'northwind-postgresql']) {
+    assert.ok(dev.editionConnections.includes(id), `dev must admit ${id}`);
+    assert.ok(catalog.connections.find((connection) => connection.id === id).environments.includes('dev'));
   }
 });
 
@@ -122,7 +127,7 @@ test('comparison fixtures are separate, pinned Chinook artifacts with source pro
     url: 'https://chinook.demodb.dev/data/chinook.sqlite', bytes: 1007616,
   });
   for (const entry of catalog.connections.filter((connection) => connection.storage === 'postgresql')) {
-    assert.deepEqual(entry.environments, ['QA', 'UAT']);
+    assert.deepEqual(entry.environments, entry.dataset === 'northwind' ? ['dev', 'QA', 'UAT'] : ['QA', 'UAT']);
     assert.equal(entry.readiness, 'public-api');
     assert.equal(entry.query, 'ovdb-read');
   }
