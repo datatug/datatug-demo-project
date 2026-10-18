@@ -35,5 +35,5 @@ runtime; context changes invalidate reuse. Chart/grid switches do not execute
 queries. The chart's publisher-admitted Orders query and the inspector's
 relational Orders query have different text and identities, so opening both
 executes two Orders requests. The same applies to the two country queries.
-The current public server omits structured source-rights evidence. Generic
+The current public server publishes an empty server identity and omits structured source-rights evidence. The inspector uses the existing legacy mode, binding HTTPS requests to the selected base URL and database without asserting a server identity. Generic
 inspector results preserve that absence and do not claim publisher admission.
