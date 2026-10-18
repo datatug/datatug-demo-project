@@ -67,10 +67,6 @@
   ],
   "federation": {
     "ovdbBaseUrl": "https://ovdb.demodb.dev",
-    "expectedServerIdentity": {
-      "baseUrl": "https://ovdb.demodb.dev",
-      "serverId": "https://ovdb.demodb.dev"
-    },
     "tables": [
       {
         "database": "northwind",
