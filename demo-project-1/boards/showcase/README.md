@@ -5,38 +5,35 @@ copy and reveals the cards in order: `orders-by-month-country`,
 `northwind-shipping-countries`, then `source-inspector`. Tutorial actions do not
 edit the saved project.
 
-The race binds `demodb/northwind-orders-browser-sqlite`: read-only SQL selecting
-all 830 Orders and all 14 fields. The browser derives monthly shipping-country
-order counts from these records. The country bar binds
-`demodb/northwind-country-counts-browser-sqlite`, independently executing SQL
-for all 21 countries and 830 total orders. These charts count orders.
+The normal board and tutorial execute read-only DTQL on `ovdb.demodb.dev`.
+They do not download SQLite fixtures. The existing browser SQL examples remain
+available as explicit saved queries; `/demo/sqlite` provides the editable local
+clone journey.
 
-The inspector has three independent saved SQL tabs: the complete Northwind
-Orders projection, the Northwind country counts, and Chinook customer billing.
-Chinook `TotalCents` sums invoice billing in integer cents per customer. It is a
-separate dataset and measure.
+The race binds `demodb/northwind-orders-full-sqlite`, the exact published
+14-field DTQL projection of all 830 Northwind Orders. Despite the historical
+query ID, execution happens on the server. The browser derives 23 monthly
+shipping-country frames from the complete result. The country bar binds
+`demodb/northwind-shipping-country-count-sqlite`, the exact published aggregate
+of 21 countries and 830 total orders.
 
-## Browser execution
+These two chart queries use the existing publisher admission: the app fetches
+a small pinned rights publication, checks the exact saved query text and full
+result, and preserves attribution. They do not inherit rights from the generic
+server runtime. Changed or incomplete results fail closed.
 
-The DataTug app bundles immutable SQLite snapshots and runs these queries in its
-existing sql.js WASM worker. The connection catalog declares each relative asset
-URL, size and SHA-256. The runtime admits only the shipped asset paths with their
-exact pins, checks the download size and hash, validates each saved query's SQL
-identity and complete result shape, then creates snapshot execution evidence.
-The browser runtime has a 1,000-row cap; the complete Orders result is 830 rows.
-No Cloudflare Worker query endpoint is required for these three tabs or charts.
+The inspector uses `demodb/northwind-orders-server`,
+`demodb/northwind-country-counts-server`, and `demodb/chinook-billing-server`.
+Their relational server responses include columns, execution sources and
+completion. The board reads all retained result pages up to 1,000 rows before
+disposing the worker session. Chinook joins Customer and Invoice, groups by
+customer, and shows the top ten with `InvoiceCount` and `Total` in currency
+units. It is a separate dataset and measure.
 
-- Northwind: 602112 bytes, SHA-256
-  `279b34136771aee75d802094b3329515a2b01da65d2a20a4a9e3b58c29b4fd20`,
-  from `demo-db/northwind` revision
-  `76fe0a1ccc82b6c0c5a035d76c9df7522713d618`, `artifacts/northwind.sqlite`.
-- Chinook: 1007616 bytes, SHA-256
-  `7651ba378ac2fcd0dfc3c66fb101f7a7eed3ba39a612ec642b96e20702061f15`,
-  from `demo-db/chinook` revision
-  `85ad3b4d4014dd5a6ee506410beee99771801811`, `artifacts/data/chinook.sqlite`.
-
-Both datasets retain their upstream MIT notices beside the app assets. Source
-usage details show the original repository, pin, attribution and transformations.
-Results and receipts stay in the viewer session. Unavailable or changed sources
-show an error. The older public DTQL queries and their historical live API
-receipt remain separate assets; browser SQLite does not inherit that receipt.
+Held results are shared within the board for an exact query definition and
+runtime; context changes invalidate reuse. Chart/grid switches do not execute
+queries. The chart's publisher-admitted Orders query and the inspector's
+relational Orders query have different text and identities, so opening both
+executes two Orders requests. The same applies to the two country queries.
+The current public server omits structured source-rights evidence. Generic
+inspector results preserve that absence and do not claim publisher admission.
