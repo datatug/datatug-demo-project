@@ -1,0 +1,60 @@
+{
+  "id": "chinook-billing-server",
+  "title": "Chinook customer billing · read-only server",
+  "type": "DTQL",
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "CustomerId",
+          "type": "integer"
+        },
+        {
+          "name": "FirstName",
+          "type": "string"
+        },
+        {
+          "name": "LastName",
+          "type": "string"
+        },
+        {
+          "name": "Country",
+          "type": "string"
+        },
+        {
+          "name": "InvoiceCount",
+          "type": "integer"
+        },
+        {
+          "name": "Total",
+          "type": "number"
+        }
+      ]
+    }
+  ],
+  "purpose": "Read-only DTQL executed by ovdb.demodb.dev. The browser displays the bounded server result without downloading a SQLite fixture.",
+  "federation": {
+    "ovdbBaseUrl": "https://ovdb.demodb.dev",
+    "tables": [
+      {
+        "database": "chinook",
+        "name": "Customer",
+        "fields": [
+          "CustomerId",
+          "FirstName",
+          "LastName",
+          "Country"
+        ]
+      },
+      {
+        "database": "chinook",
+        "name": "Invoice",
+        "fields": [
+          "InvoiceId",
+          "CustomerId",
+          "Total"
+        ]
+      }
+    ]
+  }
+}

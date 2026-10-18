@@ -1,0 +1,33 @@
+{
+  "id": "northwind-country-counts-server",
+  "title": "Northwind orders by shipping country · read-only server",
+  "type": "DTQL",
+  "purpose": "Read-only DTQL executed by ovdb.demodb.dev. The browser displays the bounded server result without downloading a SQLite fixture.",
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "ShipCountry",
+          "type": "string"
+        },
+        {
+          "name": "orders",
+          "type": "integer"
+        }
+      ]
+    }
+  ],
+  "federation": {
+    "ovdbBaseUrl": "https://ovdb.demodb.dev",
+    "tables": [
+      {
+        "database": "northwind",
+        "name": "Orders",
+        "fields": [
+          "OrderID",
+          "ShipCountry"
+        ]
+      }
+    ]
+  }
+}

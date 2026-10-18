@@ -186,21 +186,51 @@ test('hosted BigQuery editions are verified and require a user-owned execution p
 });
 
 
-test('showcase charts and inspector bind the three admitted browser SQL definitions', () => {
+test('showcase charts use exact admitted server DTQL and inspector uses explicit server definitions', () => {
   const board = read('boards/showcase/board.json');
   const race = board.rows[0].cards[0].widget;
   const bars = board.rows[1].cards[0].widget;
   const tabs = board.rows[1].cards[1].widget.data.tabs;
-  assert.equal(race.data.sources[0].queryId, 'demodb/northwind-orders-browser-sqlite');
-  assert.equal(bars.data.sources[0].queryId, 'demodb/northwind-country-counts-browser-sqlite');
+  assert.equal(race.data.sources[0].queryId, 'demodb/northwind-orders-full-sqlite');
+  assert.equal(bars.data.sources[0].queryId, 'demodb/northwind-shipping-country-count-sqlite');
   assert.deepEqual(tabs.map((tab) => tab.widget.data.sql.queryId), [
-    'demodb/northwind-orders-browser-sqlite',
-    'demodb/northwind-country-counts-browser-sqlite',
-    'demodb/chinook-billing-browser-sqlite',
+    'demodb/northwind-orders-server', 'demodb/northwind-country-counts-server', 'demodb/chinook-billing-server',
   ]);
   assert.deepEqual(tabs.map((tab) => tab.title), [
-    'Northwind · SQLite orders', 'Northwind · SQLite countries', 'Chinook · customer billing',
+    'Northwind · server orders', 'Northwind · server countries', 'Chinook · customer billing',
   ]);
+  for (const [id, columns, sha256] of [
+    ['northwind-orders-full-sqlite', 14, 'ba8e43a239489bfb17761990658909b969c9d4939dd8aa008615c867671b2c52'],
+    ['northwind-shipping-country-count-sqlite', 2, '2e320d487d7bbe7dbfc53abc55c08d12eb80a2e79b34cfe15a2148fa362acc9a'],
+  ]) {
+    const query = read(`queries/demodb/${id}.query.json`);
+    assert.equal(query.id, id);
+    assert.equal(query.type, 'DTQL');
+    assert.equal(query.recordsets[0].columns.length, columns);
+    assert.equal(createHash('sha256').update(readFileSync(resolve(project, `queries/demodb/${id}.query.dtql`))).digest('hex'), sha256);
+  }
+  for (const [id, database, tables, columns] of [
+    ['northwind-orders-server', 'northwind', ['Orders'], 14],
+    ['northwind-country-counts-server', 'northwind', ['Orders'], 2],
+    ['chinook-billing-server', 'chinook', ['Customer', 'Invoice'], 6],
+  ]) {
+    const query = read(`queries/demodb/${id}.query.json`);
+    assert.equal(query.id, id);
+    assert.equal(query.type, 'DTQL');
+    assert.equal(query.connectionId, undefined, 'server queries cannot fall back to a browser fixture connection');
+    assert.equal(query.federation.ovdbBaseUrl, 'https://ovdb.demodb.dev');
+    assert.equal(query.federation.expectedServerIdentity, undefined, 'legacy server publishes no meaningful identity');
+    assert.deepEqual(query.federation.tables.map((table) => table.database), tables.map(() => database));
+    assert.deepEqual(query.federation.tables.map((table) => table.name), tables);
+    assert.equal(query.recordsets[0].columns.length, columns);
+    const dtql = readFileSync(resolve(project, `queries/demodb/${id}.query.dtql`), 'utf8');
+    assert.match(dtql, new RegExp(`database: ${database}`));
+    assert.match(dtql, /alias:/);
+    assert.doesNotMatch(dtql, /\b(?:INSERT|UPDATE|DELETE|ATTACH|PRAGMA)\b/i);
+  }
+});
+
+test('explicit optional browser SQL definitions retain their pinned fixtures', () => {
   const definitions = [
     ['northwind-orders-browser-sqlite', 'northwind-sqlite', 14, 'a1b3d75996c5ffa611ee2f7e9c49234a142cdd1595e7249056621b010d1daab5'],
     ['northwind-country-counts-browser-sqlite', 'northwind-sqlite', 2, '4ad98f415bb0f2a87efc481703418c93ae5bebff4903e6dc83c631f8edf28d26'],

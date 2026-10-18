@@ -1,0 +1,9 @@
+from: {database: northwind, name: Orders, alias: orders}
+groupBy: [{field: ShipCountry}]
+columns:
+  - {field: ShipCountry}
+  - {aggregate: {function: count, args: [{field: OrderID}]}, as: orders}
+orderBy:
+  - {aggregate: {function: count, args: [{field: OrderID}]}, desc: true}
+  - {field: ShipCountry}
+limit: 1000
