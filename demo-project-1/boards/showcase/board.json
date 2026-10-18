@@ -95,7 +95,7 @@
                   "widget": {
                     "name": "SQL",
                     "data": {
-                      "title": "Inspect all 21 shipping-country counts from the same pinned Northwind server snapshot.",
+                      "title": "Inspect all 21 shipping-country counts from an independent live Northwind server query.",
                       "sql": {
                         "queryId": "demodb/northwind-country-counts-server"
                       }
