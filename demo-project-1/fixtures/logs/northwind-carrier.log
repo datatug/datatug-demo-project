@@ -1,0 +1,5 @@
+2018-04-21T09:13:04Z INFO carrier-gateway order_id=11039 correlation_id=nw-11039-f1 Sending label request to United Package
+2018-04-21T09:13:05Z ERROR carrier-gateway order_id=11039 correlation_id=nw-11039-f1 Carrier returned HTTP 503
+  at CarrierClient.createLabel(CarrierClient.java:91)
+  at ShippingWorker.process(ShippingWorker.java:44)
+2018-04-21T09:13:08Z DEBUG carrier-gateway order_id=11038 correlation_id=nw-11038-f1 Health check complete
