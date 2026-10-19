@@ -37,3 +37,5 @@ relational Orders query have different text and identities, so opening both
 executes two Orders requests. The same applies to the two country queries.
 The current public server publishes an empty server identity and omits structured source-rights evidence. The inspector uses the existing legacy mode, binding HTTPS requests to the selected base URL and database without asserting a server identity. Generic
 inspector results preserve that absence and do not claim publisher admission.
+
+The saved-query inspector occupies its own full-width row; the shipping-country chart keeps its six-column slot for future chart space. Tabs retain their stable IDs and saved query references; layout changes do not rerun held results.
