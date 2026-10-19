@@ -1,7 +1,10 @@
 # datatug-demo-projects
 A demo project for [DataTug.app](https://datatug.app)
 
-[Explore the visual showcase](docs/explore-showcase.md): compare country counts, inspect Orders and understand the copy/export choices.
+[Explore the visual showcase](docs/explore-showcase.md): compare customer-record
+counts, inspect all 830 Orders and their monthly pattern, and understand the
+project-copy and edited-database export choices. The guide marks the upcoming
+controls and acceptance still in progress.
 
 The [Northwind direct log investigation](docs/logs/guide.md)
 shows a real order record alongside synthetic JSONL and multiline log evidence
