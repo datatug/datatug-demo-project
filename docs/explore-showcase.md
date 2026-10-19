@@ -3,9 +3,6 @@
 [Open the dashboard](https://datatug.app/project/github.com/datatug/datatug-demo-project/tree/HEAD/demo-project-1/-/board/showcase).
 You can inspect the public results without copying a project or database.
 
-Sorting and Monthly trend below describe the next exploration update. They
-are not a claim that those controls are already deployed.
-
 ## Compare customer records
 
 **Customer records by shared country** compares Northwind and Chinook counts
