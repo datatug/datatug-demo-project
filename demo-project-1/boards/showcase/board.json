@@ -75,7 +75,7 @@
           "widget": {
             "name": "chart",
             "data": {
-              "title": "Northwind + Chinook · distinct customer records, not shared people. Exact country labels; UK variants and nulls excluded.",
+              "title": "Northwind + Chinook · customer records, not shared people · exact labels; UK/nulls excluded.",
               "sources": [
                 {
                   "id": "shared-country-counts",
@@ -122,7 +122,7 @@
                   "widget": {
                     "name": "SQL",
                     "data": {
-                      "title": "Complete verified Orders · select a customer-country label above to explore orders shipped there. This is not a customer-to-order join.",
+                      "title": "Verified Orders · country selection filters shipping destinations, not customer-to-order matches.",
                       "sql": {
                         "queryId": "demodb/northwind-orders-full-sqlite",
                         "presentationFilter": {
