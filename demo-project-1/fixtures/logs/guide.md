@@ -23,15 +23,26 @@ For a private Google Cloud Logging source, configure a fixed project and set
 `OVDB_LOGS_OWNER_TOKEN` before starting; enter that token only in the local
 DataTug page. Do not publish this single-owner server for multiple users.
 
-In another terminal:
+In another terminal, install DataTug's dependencies and build the demo UI.
+The `--excludeTaskDependencies` flag bypasses the app's unrelated
+RecordsetCompare release-asset preparation, which currently returns HTTP 404
+on this local path. The order and log investigation does not use that feature.
+The build itself still compiles DataTug and copies its browser assets:
 
 ```sh
 cd /path/to/datatug-apps
 pnpm install --frozen-lockfile
-NX_DAEMON=false pnpm nx serve datatug-app --port=4200
+NX_DAEMON=false NX_ISOLATE_PLUGINS=false node_modules/.bin/nx run datatug-app:stamp-build-info
+NX_DAEMON=false NX_ISOLATE_PLUGINS=false node_modules/.bin/nx run datatug-app:stamp-ag-grid-license
+NX_DAEMON=false NX_ISOLATE_PLUGINS=false node_modules/.bin/nx build datatug-app \
+  --configuration=development --excludeTaskDependencies --skip-nx-cache
+python3 /path/to/datatug-demo-project/scripts/serve-built-datatug.py \
+  dist/apps/datatug-app/browser
 ```
 
-Open `http://localhost:4200/demo/sqlite/northwind/table/Orders?record=11039`.
+The helper serves only on `127.0.0.1:4200`; stop it with Ctrl-C. It requires
+Python 3.9 or newer and does not fetch or prepare the RecordsetCompare package.
+Open `http://127.0.0.1:4200/demo/sqlite/northwind/table/Orders?record=11039`.
 The first use downloads the public pinned Northwind SQLite fixture to the
 browser and creates an editable local copy after the page's confirmation.
 Select order 11039 and follow **Related log evidence**. The link uses the
