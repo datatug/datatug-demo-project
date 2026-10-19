@@ -2,12 +2,12 @@
 
 ## Direct log evidence investigation
 
-The [Northwind order 11039 walkthrough](fixtures/logs/guide.md) starts with a
+The [Northwind order 11039 walkthrough](https://github.com/datatug/datatug-demo-project/blob/main/docs/logs/guide.md) starts with a
 real Northwind SQLite record and follows a synthetic fulfillment failure
 through directly queried JSONL and multiline text files. It uses the ordinary
 OpenVaultDB query route and DataTug's mapped log view. The
-[standalone interactive HTML](fixtures/logs/walkthrough.html) and
-[working-product screenshots](fixtures/logs/README.md) show the same evidence.
+[standalone interactive HTML](https://github.com/datatug/datatug-demo-project/blob/main/docs/logs/walkthrough.html) and
+[working-product screenshots](https://github.com/datatug/datatug-demo-project/blob/main/docs/logs/README.md) show the same evidence.
 The log files are never copied into a database.
 
 ## Project ID

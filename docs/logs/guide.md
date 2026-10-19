@@ -51,7 +51,7 @@ explicit `Orders.OrderID → fulfillment_events.order_id` mapping.
 ## Expected path
 
 1. In the order, confirm `CustomerID=LINOD`, `ShipVia=2`, and an unset
-   `ShippedDate`. The saved [record query](../../queries/demodb/northwind-order-11039.query.sql)
+   `ShippedDate`. The saved [record query](../../demo-project-1/queries/demodb/northwind-order-11039.query.sql)
    joins the Shippers table to show United Package; four order-detail rows
    exist for this order.
 2. The timeline at `/demo/logs?order=11039` queries the ordinary OVDB

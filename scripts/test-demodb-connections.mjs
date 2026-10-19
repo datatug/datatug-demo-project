@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { existsSync, readFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { dirname, resolve } from 'node:path';
 import test from 'node:test';
 
 const root = resolve(import.meta.dirname, '..');
@@ -196,10 +197,18 @@ test('showcase charts use exact admitted server DTQL and inspector uses explicit
   const inspector = inspectorRow.cards.find((card) => card.id === 'source-inspector');
   assert.equal(inspector.cols, 12, 'inspector uses the full row');
   const tabs = inspector.widget.data.tabs;
+  const paired = board.rows.flatMap((row) => row.cards).find((card) => card.id === 'shared-customer-countries');
+  assert.equal(paired.cols, 6);
+  assert.deepEqual(paired.widget.data.sources, [{ id: 'shared-country-counts', queryId: 'demodb/customer-country-comparison-server' }]);
+  assert.deepEqual(paired.widget.data.chart, {
+    type: 'bar', categoryColumn: 'country', unit: 'customer records', selectionId: 'customer-country',
+    series: [{ id: 'northwind', title: 'Northwind', valueColumn: 'northwindCustomers' }, { id: 'chinook', title: 'Chinook', valueColumn: 'chinookCustomers' }],
+  });
+  assert.deepEqual(tabs[0].widget.data.sql.presentationFilter, { selectionId: 'customer-country', column: 'ShipCountry' });
   assert.equal(race.data.sources[0].queryId, 'demodb/northwind-orders-full-sqlite');
   assert.equal(bars.data.sources[0].queryId, 'demodb/northwind-shipping-country-count-sqlite');
   assert.deepEqual(tabs.map((tab) => tab.widget.data.sql.queryId), [
-    'demodb/northwind-orders-server', 'demodb/northwind-country-counts-server',
+    'demodb/northwind-orders-full-sqlite', 'demodb/northwind-country-counts-server',
     'demodb/customer-country-comparison-server', 'demodb/chinook-billing-server',
   ]);
   assert.deepEqual(tabs.map((tab) => tab.title), [
@@ -288,4 +297,47 @@ test('explicit optional browser SQL definitions retain their pinned fixtures', (
     assert.match(connection.fixtureSha256, /^[a-f0-9]{64}$/);
     assert.equal(connection.browserFixture.url, `/assets/showcase/${connection.dataset}.sqlite`);
   }
+});
+
+
+test('direct log inputs retain their mount and relocated documentation stays linked and reproducible offline', () => {
+  const config = read('fixtures/logs/ovdb-direct.json');
+  assert.equal(config.sources.files[0].Root, 'demo-project-1/fixtures/logs');
+  for (const source of config.sources.files[0].Sources) {
+    assert.ok(existsSync(resolve(root, config.sources.files[0].Root, source.Path)));
+  }
+  const documents = ['README.md', 'demo-project-1/README.md', 'demo-project-1/fixtures/logs/README.md',
+    'docs/logs/README.md', 'docs/logs/guide.md', 'docs/logs/walkthrough.html', 'docs/logs/walkthrough.template.html'];
+  const publicPrefix = 'https://github.com/datatug/datatug-demo-project/blob/main/';
+  for (const document of documents) {
+    const text = readFileSync(resolve(root, document), 'utf8');
+    assert.doesNotMatch(text, /(?:demo-project-1\/)?fixtures\/logs\/(?:guide\.md|walkthrough(?:\.template)?\.html|screenshot-[^ )"']+)/);
+    for (const match of text.matchAll(/(?:\]\(([^)]+)\)|href="([^"]+)"|src="([^"]+)")/g)) {
+      const link = (match[1] || match[2] || match[3]).split('#')[0];
+      if (!link || (/^https?:/.test(link) && !link.startsWith(publicPrefix))) continue;
+      if (!document.startsWith('docs/') && !link.includes('docs/logs')) continue;
+      const target = link.startsWith(publicPrefix) ? resolve(root, link.slice(publicPrefix.length)) : resolve(root, dirname(document), link);
+      assert.ok(existsSync(target), `${document}: missing ${link}`);
+    }
+  }
+  execFileSync('python3', ['-c', `
+import json, pathlib, re, runpy, tempfile
+root = pathlib.Path.cwd()
+docs = root / 'docs/logs'
+html = (docs / 'walkthrough.html').read_text()
+data = json.loads(re.search(r'<script id="evidence-data" type="application/json">(.*?)</script>', html, re.S).group(1))
+module = runpy.run_path(str(root / 'scripts/build-logs-walkthrough.py'))
+assert module['TARGET'] == docs / 'walkthrough.html'
+assert module['TEMPLATE'] == docs / 'walkthrough.template.html'
+calls = []
+def query(collection):
+    calls.append(collection)
+    return data[{'fulfillment_events': 'fulfillment', 'carrier_events': 'carrier'}[collection]]
+with tempfile.TemporaryDirectory() as directory:
+    target = pathlib.Path(directory) / 'walkthrough.html'
+    module['main'].__globals__.update(query=query, TARGET=target)
+    module['main']()
+    assert target.read_text() == html, 'committed HTML differs from offline builder output'
+assert calls == ['fulfillment_events', 'carrier_events']
+`], { cwd: root });
 });
