@@ -70,7 +70,7 @@
         },
         {
           "id": "source-inspector",
-          "title": "Inspect three saved query results",
+          "title": "Inspect saved query results",
           "cols": 6,
           "widget": {
             "name": "tabs",
@@ -98,6 +98,19 @@
                       "title": "Inspect all 21 shipping-country counts from an independent live Northwind server query.",
                       "sql": {
                         "queryId": "demodb/northwind-country-counts-server"
+                      }
+                    }
+                  }
+                },
+                {
+                  "id": "shared-customer-countries",
+                  "title": "Northwind + Chinook · shared countries",
+                  "widget": {
+                    "name": "SQL",
+                    "data": {
+                      "title": "Customer records, not shared people · exact shared labels; UK variants and nulls excluded.",
+                      "sql": {
+                        "queryId": "demodb/customer-country-comparison-server"
                       }
                     }
                   }
