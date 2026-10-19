@@ -1,10 +1,14 @@
 # Direct Google Cloud Logging pilot — execution receipt
 
 Status on 2026-10-19: **source and DALGO read verified; hosted consent and UI
-journey not yet activated**. This optional live pilot uses the existing
+journey not activated**. This optional live pilot uses the existing
 `sneat-eur3-1` project as a log source. The default, reproducible DataTug demo
 continues to read the committed local files described in [the guide](guide.md).
 There is no log database, snapshot, ingestion service or aggregation system.
+The DataTug OAuth web client now exists in the shared project; the verified
+Firebase identity at `auth.sneat.co` remains shared with Sneat. This records
+configuration progress only, not a completed Google user grant or hosted
+journey.
 
 ## What exists
 
@@ -17,7 +21,7 @@ There is no log database, snapshot, ingestion service or aggregation system.
 | Pilot entries | Eight structured entries written on 2026-10-19 to the dedicated log ID: six for order `11039`, one each for `11038` and `11040` |
 | Classification | Every payload has `synthetic: true`, `pilot_id: datatug-log-evidence-pilot-2026-10-19`, and an `event_index` |
 | Source access tested | The active Google account could read the view, but had project `roles/editor`; this does **not** prove view-only IAM |
-| Hosted production service | Read-only inspection of ready revision `datatug-cloud-00006-bwb` found no `DATATUG_PERSONAL_CLOUD_LOGS_ENABLED` variable, minimum instance, or instance-based CPU setting |
+| Hosted service and cleanup | Ready revision `datatug-cloud-00008-tw6` serves 100% traffic from image tag `1d2822f2e0d853352738a01bb3bb39846d5efc98`; GET health check returned 200 and `X-Sneat-Service: datatug-cloud`. The feature-enabled and pilot UID allowlist env vars are absent. Task cleanup is merged in host PR #12, authenticated by task OIDC, but not activated or provisioned. The pilot UID allowlist applies to verified user management/query routes. Deployment workflow [39272895816](https://github.com/datatug/datatug-cloud/actions/runs/39272895816) completed successfully. |
 
 The eight Cloud Logging entry timestamps span
 `2026-10-19T13:52:15.978008256Z` through
@@ -59,19 +63,34 @@ hosted OAuth consent, narrow IAM or browser path.
 
 ## Remaining live-pilot checks
 
-- Configure a dedicated DataTug OAuth consent/client boundary with
-  `https://www.googleapis.com/auth/logging.read` and the registered hosted
-  callback. The existing `sneat-eur3-1` OAuth project also contains production
-  Sneat clients, so changing its audience or using a shared user grant needs
-  an explicit project choice.
+- Complete and verify consent using the dedicated OAuth web client already
+  created in the shared `sneat-eur3-1` project. Its client ID is
+  `588648831063-rr6titvvsu52j9n7gqc07uagqoru3lfd.apps.googleusercontent.com`
+  and its registered callback is
+  `https://api.sneat.cloud/v0/datatug/me/google-log-grants/oauth/callback`.
+  The `auth.sneat.co` verified Firebase identity remains shared; no Google user
+  grant has been completed.
 - Give a separate low-privilege Google test identity
   `roles/logging.viewAccessor` **on this view only**; verify it can read this
   view and cannot query broader project logs. The current Editor account is
   unsuitable for that permission proof.
-- Configure KMS, encrypted credential storage, the host's cleanup liveness,
-  and exact Origin/callback settings; then enable the hosted flag and test
-  consent, AG Grid query, `Remove view`, and account disconnect with a test
-  identity. The hosted feature remains disabled until these checks pass.
+- Create and approve a KMS key and store the client secret securely; the KMS
+  API is enabled, but no key exists and the client secret has not been
+  downloaded or stored. Provision the managed Cloud Scheduler OIDC POST to
+  the existing `/_tasks` route only after the host route is deployed. The
+  intended job is `datatug-personal-cloud-log-cleanup` in `europe-west3`, using
+  `cloud-tasks-invoker@sneat-eur3-1.iam.gserviceaccount.com` and audience
+  `https://datatug-cloud-354fvnqbaa-ey.a.run.app`; it should remain paused until
+  the route and feature configuration are ready. No Scheduler job or Scheduler
+  invoker grant is provisioned. Then enable the hosted flag and test consent,
+  AG Grid query, `Remove view`, and account disconnect with a test identity.
+  The hosted feature remains disabled until these checks pass.
+- Resolve the separate shared Google popup/login blocker before claiming the
+  browser journey: the test returned `auth/popup-closed-by-user`, and a
+  same-origin `createAuthUri` probe returned HTTP 400 `INVALID_CONTINUE_URI`
+  because the domain belongs to a different Firebase Hosting project. The
+  cause of the popup result is not established. No identity or auth-domain
+  change is proposed, and no auth configuration was mutated.
 - Confirm DataTug's hosted route can navigate from a structured record into
   the view and back. The committed local order-to-log route already does so;
   it must not be described as hosted functionality.
@@ -83,6 +102,8 @@ checks finish or at that review, unless the owner explicitly extends it.
 Proposed teardown, **not executed**, is `gcloud logging views delete
 datatug-log-evidence-pilot --bucket=_Default --location=global
 --project=sneat-eur3-1`. Deleting the view does not delete its entries;
-the `_Default` bucket's observed retention is 30 days. No IAM grant, OAuth
-client, KMS key, Cloud Run flag or minimum instance was created by this pilot
-step. No incremental always-on Cloud Run spend has been introduced.
+the `_Default` bucket's observed retention is 30 days. No view-only IAM grant,
+Scheduler job or Scheduler invoker grant, KMS key, Cloud Run flag, or Google
+user grant has been created. The dedicated OAuth client exists, but its secret
+has not been downloaded or stored. No minimum-instance configuration was
+introduced by this pilot step.
