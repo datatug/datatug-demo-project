@@ -196,10 +196,18 @@ test('showcase charts use exact admitted server DTQL and inspector uses explicit
   const inspector = inspectorRow.cards.find((card) => card.id === 'source-inspector');
   assert.equal(inspector.cols, 12, 'inspector uses the full row');
   const tabs = inspector.widget.data.tabs;
+  const paired = board.rows.flatMap((row) => row.cards).find((card) => card.id === 'shared-customer-countries');
+  assert.equal(paired.cols, 6);
+  assert.deepEqual(paired.widget.data.sources, [{ id: 'shared-country-counts', queryId: 'demodb/customer-country-comparison-server' }]);
+  assert.deepEqual(paired.widget.data.chart, {
+    type: 'bar', categoryColumn: 'country', unit: 'customer records', selectionId: 'customer-country',
+    series: [{ id: 'northwind', title: 'Northwind', valueColumn: 'northwindCustomers' }, { id: 'chinook', title: 'Chinook', valueColumn: 'chinookCustomers' }],
+  });
+  assert.deepEqual(tabs[0].widget.data.sql.presentationFilter, { selectionId: 'customer-country', column: 'ShipCountry' });
   assert.equal(race.data.sources[0].queryId, 'demodb/northwind-orders-full-sqlite');
   assert.equal(bars.data.sources[0].queryId, 'demodb/northwind-shipping-country-count-sqlite');
   assert.deepEqual(tabs.map((tab) => tab.widget.data.sql.queryId), [
-    'demodb/northwind-orders-server', 'demodb/northwind-country-counts-server',
+    'demodb/northwind-orders-full-sqlite', 'demodb/northwind-country-counts-server',
     'demodb/customer-country-comparison-server', 'demodb/chinook-billing-server',
   ]);
   assert.deepEqual(tabs.map((tab) => tab.title), [

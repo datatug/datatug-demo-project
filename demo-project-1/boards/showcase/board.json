@@ -67,6 +67,42 @@
               "defaultView": "chart"
             }
           }
+        },
+        {
+          "id": "shared-customer-countries",
+          "title": "Customer records by shared country",
+          "cols": 6,
+          "widget": {
+            "name": "chart",
+            "data": {
+              "title": "Northwind + Chinook · distinct customer records, not shared people. Exact country labels; UK variants and nulls excluded.",
+              "sources": [
+                {
+                  "id": "shared-country-counts",
+                  "queryId": "demodb/customer-country-comparison-server"
+                }
+              ],
+              "chart": {
+                "type": "bar",
+                "categoryColumn": "country",
+                "unit": "customer records",
+                "selectionId": "customer-country",
+                "series": [
+                  {
+                    "id": "northwind",
+                    "title": "Northwind",
+                    "valueColumn": "northwindCustomers"
+                  },
+                  {
+                    "id": "chinook",
+                    "title": "Chinook",
+                    "valueColumn": "chinookCustomers"
+                  }
+                ]
+              },
+              "defaultView": "chart"
+            }
+          }
         }
       ]
     },
@@ -86,9 +122,13 @@
                   "widget": {
                     "name": "SQL",
                     "data": {
-                      "title": "Inspect an independent live server query of the complete 14-field Orders projection.",
+                      "title": "Complete verified Orders · select a customer-country label above to explore orders shipped there. This is not a customer-to-order join.",
                       "sql": {
-                        "queryId": "demodb/northwind-orders-server"
+                        "queryId": "demodb/northwind-orders-full-sqlite",
+                        "presentationFilter": {
+                          "selectionId": "customer-country",
+                          "column": "ShipCountry"
+                        }
                       }
                     }
                   }
