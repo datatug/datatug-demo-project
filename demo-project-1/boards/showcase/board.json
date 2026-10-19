@@ -1,18 +1,18 @@
 {
   "id": "showcase",
-  "title": "Orders in motion \u00b7 DataTug visual showcase",
+  "title": "Orders in motion · DataTug visual showcase",
   "access": "public",
   "rows": [
     {
       "cards": [
         {
           "id": "orders-by-month-country",
-          "title": "Where Northwind orders shipped \u00b7 month by month",
+          "title": "Where Northwind orders shipped · month by month",
           "cols": 12,
           "widget": {
             "name": "chart",
             "data": {
-              "title": "830 orders \u00b7 July 2016\u2013May 2018 \u00b7 shipping country",
+              "title": "830 orders · July 2016–May 2018 · shipping country",
               "sources": [
                 {
                   "id": "northwind-orders",
@@ -51,7 +51,7 @@
           "widget": {
             "name": "chart",
             "data": {
-              "title": "Order count by destination \u00b7 Northwind server",
+              "title": "Order count by destination · Northwind server",
               "sources": [
                 {
                   "id": "northwind-country-counts",
@@ -82,7 +82,7 @@
               "tabs": [
                 {
                   "id": "sqlite-orders",
-                  "title": "Northwind \u00b7 server orders",
+                  "title": "Northwind · server orders",
                   "widget": {
                     "name": "SQL",
                     "data": {
@@ -95,7 +95,7 @@
                 },
                 {
                   "id": "sqlite-countries",
-                  "title": "Northwind \u00b7 server countries",
+                  "title": "Northwind · server countries",
                   "widget": {
                     "name": "SQL",
                     "data": {
@@ -108,11 +108,11 @@
                 },
                 {
                   "id": "shared-customer-countries",
-                  "title": "Northwind + Chinook \u00b7 shared countries",
+                  "title": "Northwind + Chinook · shared countries",
                   "widget": {
                     "name": "SQL",
                     "data": {
-                      "title": "Customer records, not shared people \u00b7 exact shared labels; UK variants and nulls excluded.",
+                      "title": "Customer records, not shared people · exact shared labels; UK variants and nulls excluded.",
                       "sql": {
                         "queryId": "demodb/customer-country-comparison-server"
                       }
@@ -121,7 +121,7 @@
                 },
                 {
                   "id": "chinook-customers",
-                  "title": "Chinook \u00b7 customer billing",
+                  "title": "Chinook · customer billing",
                   "widget": {
                     "name": "SQL",
                     "data": {
