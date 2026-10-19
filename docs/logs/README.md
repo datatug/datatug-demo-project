@@ -22,6 +22,11 @@ embeds the actual OVDB responses for these committed fixtures and needs no
 network or server after generation. It is an interactive explanation, not a
 screenshot of the product.
 
+An [optional Google Cloud Logging pilot receipt](google-cloud-pilot.md) records
+the narrow view and direct DALGO read verified in `sneat-eur3-1`. Hosted OAuth
+and browser access remain disabled; this is separate from the default local
+demo.
+
 These screenshots show the working DataTug app at `127.0.0.1:4200` with the
 direct local OVDB source. The AG Grid images were captured from the merged
 DataTug app while the real adapter served the versioned synthetic fixture;
