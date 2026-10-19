@@ -25,6 +25,8 @@ Google user grant or hosted log journey.
 | Source access tested | The active Google account could read the view, but had project `roles/editor`; this does **not** prove view-only IAM |
 | Hosted service and cleanup | Host PR #15's historical provider snapshot at 18:05:25 UTC found production datatug-cloud-00013-hjk and preview datatug-cloud-preview-00014-np9, both at 100% traffic on image e5925566ab0c81f95a7bbe46b73fd9836f1c024f; neither had Cloud Logs environment variables or OAuth secret bindings, and no pilot Scheduler job existed. README-only host PR #16 merged at b5c6c8444fd3c98c177d441b47f691cbdfae1d5b. Candidate build/lint [39299058079](https://github.com/datatug/datatug-cloud/actions/runs/39299058079), post-merge Go CI [39299663820](https://github.com/datatug/datatug-cloud/actions/runs/39299663820), and deployment [39299949750](https://github.com/datatug/datatug-cloud/actions/runs/39299949750) passed. Provider readback at 18:11:59 UTC found production datatug-cloud-00014-lhg and preview datatug-cloud-preview-00015-6w6 at 100% traffic on the PR #16 image; both had no Cloud Logs environment variables or OAuth secret bindings, and no pilot Scheduler job existed. GET /health-check returned 200 with X-Sneat-Service: datatug-cloud at 18:12:01 UTC. The user-routes switch omits all eight handlers while retaining cleanup registration and credentials when enabled; it was not exercised with the master feature enabled. No grant, live cleanup or shutdown proof exists. |
 | Production DataTug UI | [Apps PR #407](https://github.com/datatug/datatug-apps/pull/407) merged at `a63cfe2883d1078f9a3c1058483197126ea372de`; post-merge [CI run 39292521711](https://github.com/datatug/datatug-apps/actions/runs/39292521711) passed preflight, build, test, Cloud Logs E2E and deploy-gate checks. Cloudflare workflow [39293867514](https://github.com/datatug/datatug-apps/actions/runs/39293867514) succeeded; public build-info reports the same SHA and version `0.1.0+1201`. The production UI flag is on behind the fail-closed server-confirmed UID gate; Business Preview is off. No post-deploy CI smoke was run, and the absent backend configuration leaves access denied. |
+| Activation backend | [Backend PR #67](https://github.com/datatug/backend/pull/67) merged at `d3112f646accffedcc7279995ea7362c390f8e8c`. Reviewed candidate `7a52784dbdf7e923941fc66f202ad8092e15be65` passed [Backend CI 39308503102](https://github.com/datatug/backend/actions/runs/39308503102) and [Security 39308502042](https://github.com/datatug/backend/actions/runs/39308502042). The local full Firestore adapter suite passed with `-race`, 100% statement coverage and zero uncovered statements in 14.416s. Published `v0.38.0` points to that merge commit. Post-merge [Backend CI 39309725492](https://github.com/datatug/backend/actions/runs/39309725492) and [Security 39309724286](https://github.com/datatug/backend/actions/runs/39309724286) passed; WB verified the exact target at 19:25:05 UTC. No live lifecycle invocation is claimed. |
+| Activation host | [Host PR #17](https://github.com/datatug/datatug-cloud/pull/17) merged at `669728342d2b9c36d7b37e254c821ba19b4162bf`, pinning backend `v0.38.0`. Reviewed candidate `a67028d5f689d0ff0f73719d535cd638836780de` passed [Go CI 39313747372](https://github.com/datatug/datatug-cloud/actions/runs/39313747372), including build/test, lint and the actual Firestore-emulator HTTP journey with `-race` (8.446s). The local full host race suite had 100% statement coverage and zero uncovered statements. The private fixed-UID OIDC control supports status, pause, resume and bounded durable reconciliation; its synthetic tests use fake OAuth/KMS/OIDC and do not prove live authenticated task delivery or Google consent/read/revoke. Post-merge [Go CI 39314930149](https://github.com/datatug/datatug-cloud/actions/runs/39314930149) and [deployment 39316404362](https://github.com/datatug/datatug-cloud/actions/runs/39316404362) passed; WB verified all ten exact-target checks at 20:09:41 UTC. Provider readback at 20:09:47 UTC found production `datatug-cloud-00015-vdq` and preview `datatug-cloud-preview-00016-p9d` at 100% traffic, both configured with the merge SHA image tag. Their immutable image digests are respectively `dfc28e7b327c4950d8ec1d1955851975b08a0aa3a4c2a32659d905b18d773115` and `6af0f4fc286dce15a5fad73c42213750d73d50daf60ebd36f7e67bdab7adaaa9`. Both had no personal Cloud Logs environment variables or OAuth secret bindings, and no pilot Scheduler job existed. GET health checks at 20:10:10 UTC returned 200 with `X-Sneat-Service: datatug-cloud` for both services. The code is deployed with the master feature off; no live lifecycle invocation or hosted Google journey is claimed. |
 
 The eight Cloud Logging entry timestamps span
 `2026-10-19T13:52:15.978008256Z` through
@@ -93,7 +95,10 @@ approved and the following prerequisites were applied:
   `588648831063-compute@developer.gserviceaccount.com` on the named KMS key only.
 - Version `1` of `datatug-cloud-logs-oauth-state-key`: a standard-base64 encoding
   of 32 random bytes, generated and transferred in memory, with read-back
-  equality verified. Its sole replication location is `europe-west3`.
+  equality verified. Its sole replication location is `europe-west3`. The
+  application uses this as an AES-GCM key for short-lived pending PKCE
+  verifiers and nonces, bound to the state hash and UID. KMS separately
+  encrypts Google refresh tokens; neither storage path stores log entries.
 
 Existing project-level Secret Manager access remains unchanged. The runtime
 identity is shared, so other workloads using it also have access to this new
@@ -125,19 +130,23 @@ checks passed locally and independently. That is not provider activation.
   `https://datatug-cloud-354fvnqbaa-ey.a.run.app`; it should remain paused until
   the route and feature configuration are ready. No Scheduler job is provisioned;
   the existing task invoker already has Cloud Run invoke permission, verified
-  by policy readback. Then enable the hosted flag and test consent,
-  AG Grid query, `Remove view`, and account disconnect with a test identity.
-  The hosted feature remains disabled until these checks pass.
+  by policy readback. Configure only the single allowlisted pilot after the
+  prerequisites are verified, initially with its activation epoch paused.
+  Prove private OIDC delivery and exclusion of older unguarded writers before
+  an explicit pilot resume. Then test consent, AG Grid query, `Remove view`,
+  and account disconnect with the test identity. These are unexecuted release
+  gates; no broader access is enabled or approved by this receipt.
 - Host PR #15 added the private route-stop switch under the master feature
   flag: setting DATATUG_PERSONAL_CLOUD_LOGS_USER_ROUTES_ENABLED=0 omits all
   eight user handlers while retaining cleanup registration, credentials and
-  task OIDC. The latest PR #16 deployment and provider receipt are listed above.
+  task OIDC. The latest PR #17 deployment and provider receipt are listed above.
   No Cloud Logs environment configuration or Scheduler job was present, so the
   route stop with the master feature enabled was not exercised. The switch does
-  not revoke grants or establish full shutdown. Source review identified a
-  shutdown race: an in-flight finish can activate a completion after the initial
-  revoke inventory, removing that completion and creating an active grant;
-  cleanup only handles expiring completions and queued revocations. Before
+  not revoke grants or establish full shutdown. The new activation epoch guards
+  fence admission, callback persistence and completion activation in guarded
+  writers. Older revisions using the unguarded backend ignore that epoch and
+  can still activate a grant after an initial disconnect inventory; cleanup
+  alone only handles expiring completions and queued revocations. Before
   turning the master feature flag off after activation, prove a
   no-further-activation barrier across all serving and old revisions and
   in-flight start/callback/finish requests, then take a final active-grant
