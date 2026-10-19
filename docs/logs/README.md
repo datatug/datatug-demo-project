@@ -22,11 +22,19 @@ embeds the actual OVDB responses for these committed fixtures and needs no
 network or server after generation. It is an interactive explanation, not a
 screenshot of the product.
 
-These are screenshots from the built DataTug app at `127.0.0.1:4200`, taken
-after navigating record → logs → record in a browser. They show the local
-development emulator banner and do not imply public deployment:
+These screenshots show the working DataTug app at `127.0.0.1:4200` with the
+direct local OVDB source. The AG Grid images were captured from the merged
+DataTug app while the real adapter served the versioned synthetic fixture;
+the local development emulator banner is visible. They do not imply public
+deployment:
 
-- [Six-event DataTug timeline](screenshot-datatug-timeline.png)
+- [Six related entries in the AG Grid](screenshot-datatug-ag-grid.png)
+- [Selected carrier failure with original raw entry](screenshot-datatug-ag-grid-detail.png)
+
+The following record screenshots and older timeline screenshots predate the
+AG Grid change and remain as journey evidence:
+
+- [Earlier six-event DataTug timeline](screenshot-datatug-timeline.png)
 - [Expanded raw retry evidence](screenshot-evidence-detail.png)
 - [Selected order 11039 record and related-evidence link](screenshot-northwind-record.png)
 - [The same record's unset ShippedDate](screenshot-northwind-shipped-date.png)
