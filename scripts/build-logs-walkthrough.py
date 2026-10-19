@@ -8,8 +8,8 @@ import urllib.request
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 BASE = "http://127.0.0.1:6832/v1/databases/northwind_evidence"
-TARGET = ROOT / "demo-project-1/fixtures/logs/walkthrough.html"
-TEMPLATE = ROOT / "demo-project-1/fixtures/logs/walkthrough.template.html"
+TARGET = ROOT / "docs/logs/walkthrough.html"
+TEMPLATE = ROOT / "docs/logs/walkthrough.template.html"
 
 
 def query(collection):

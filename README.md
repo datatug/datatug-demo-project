@@ -1,7 +1,7 @@
 # datatug-demo-projects
 A demo project for [DataTug.app](https://datatug.app)
 
-The [Northwind direct log investigation](demo-project-1/fixtures/logs/guide.md)
+The [Northwind direct log investigation](docs/logs/guide.md)
 shows a real order record alongside synthetic JSONL and multiline log evidence
 through DataTug and unchanged OpenVaultDB queries. Start with that guide for
 the local end-to-end demonstration.
