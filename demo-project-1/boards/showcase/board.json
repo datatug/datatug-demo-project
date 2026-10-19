@@ -67,11 +67,15 @@
               "defaultView": "chart"
             }
           }
-        },
+        }
+      ]
+    },
+    {
+      "cards": [
         {
           "id": "source-inspector",
           "title": "Inspect saved query results",
-          "cols": 6,
+          "cols": 12,
           "widget": {
             "name": "tabs",
             "data": {

@@ -190,7 +190,12 @@ test('showcase charts use exact admitted server DTQL and inspector uses explicit
   const board = read('boards/showcase/board.json');
   const race = board.rows[0].cards[0].widget;
   const bars = board.rows[1].cards[0].widget;
-  const tabs = board.rows[1].cards[1].widget.data.tabs;
+  const inspectorRow = board.rows.find((row) => row.cards.some((card) => card.id === 'source-inspector'));
+  assert.ok(inspectorRow, 'source inspector is present');
+  assert.equal(inspectorRow.cards.length, 1, 'inspector owns its row');
+  const inspector = inspectorRow.cards.find((card) => card.id === 'source-inspector');
+  assert.equal(inspector.cols, 12, 'inspector uses the full row');
+  const tabs = inspector.widget.data.tabs;
   assert.equal(race.data.sources[0].queryId, 'demodb/northwind-orders-full-sqlite');
   assert.equal(bars.data.sources[0].queryId, 'demodb/northwind-shipping-country-count-sqlite');
   assert.deepEqual(tabs.map((tab) => tab.widget.data.sql.queryId), [
