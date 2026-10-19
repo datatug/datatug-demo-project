@@ -36,15 +36,18 @@
     .filters label { display:grid; gap:4px; font-size:12px; color:#47606d; font-weight:750; }
     .filters input,.filters select { min-width:0; width:100%; border:1px solid #acbec5; border-radius:7px; padding:8px; background:white; color:#162b37; }
     .note { color:#647481; font-size:12px; margin:6px 0 18px; }
-    .entries { padding:0; margin:0; list-style:none; border-left:2px solid #bdd1d5; }
-    .entry-wrap { position:relative; padding:0 0 12px 20px; }
-    .entry-wrap:before { content:""; position:absolute; background:#e79a4b; width:10px; height:10px; border-radius:50%; left:-6px; top:20px; }
-    .entry { border:1px solid #d8e0df; border-radius:11px; width:100%; background:white; color:#18303e; padding:12px 14px; text-align:left; display:grid; grid-template-columns:90px 82px 130px minmax(0,1fr); gap:8px; align-items:center; cursor:pointer; }
-    .entry:hover { border-color:#e79a4b; } .entry time { font-variant-numeric:tabular-nums; font-weight:750; }
+    .grid-frame { overflow:auto; border:1px solid #cbd6d5; border-radius:9px; }
+    .evidence-grid { border-collapse:collapse; width:100%; min-width:900px; background:#fff; font-size:13px; }
+    .evidence-grid th { position:sticky; top:0; z-index:1; background:#e7eff0; color:#405865; text-align:left; font-size:12px; letter-spacing:.04em; }
+    .evidence-grid th,.evidence-grid td { padding:10px 12px; border-bottom:1px solid #e0e7e5; vertical-align:top; }
+    .evidence-grid tbody tr:hover,.evidence-grid tbody tr.selected { background:#fff5e5; }
+    .evidence-grid tbody tr:last-child td { border-bottom:0; }
+    .row-select { border:0; padding:0; min-height:0; background:transparent; color:#173e51; text-align:left; font-weight:750; cursor:pointer; font-variant-numeric:tabular-nums; }
     .severity { display:inline-block; border-radius:5px; padding:2px 6px; width:max-content; font-size:12px; font-weight:850; }
     .severity.ERROR { background:#ffded8; color:#9c301e; } .severity.WARN { background:#ffedc6; color:#855114; } .severity.INFO { background:#d9f1ec; color:#176e63; }
-    .service { font-size:12px; color:#536776; } .message { font-size:13px; }
-    .details { border:1px solid #d8e0df; border-top:0; border-radius:0 0 10px 10px; padding:14px; background:#f0f4f2; }
+    .service,.source-cell { font-size:12px; color:#536776; } .message { min-width:280px; }
+    .details { border:1px solid #d8e0df; border-radius:0 0 10px 10px; padding:14px; background:#f0f4f2; }
+    .details h3 { margin:14px 0 6px; font-size:14px; }
     .details dl { display:grid; grid-template-columns:110px 1fr; gap:7px; margin:0 0 12px; font-size:12px; }
     .details dt { color:#647481; } .details dd { margin:0; overflow-wrap:anywhere; }
     .details pre { white-space:pre-wrap; overflow-wrap:anywhere; background:#172a38; color:#ecf6f6; border-radius:8px; padding:13px; max-height:220px; overflow:auto; font-size:12px; }
@@ -56,52 +59,54 @@
     .architecture { border-top:1px solid #324d60; padding-top:30px; } .architecture h2 { margin:0 0 12px; }
     .architecture p { color:#afc3d0; max-width:900px; } .architecture .path { margin:20px 0; }
     @media(max-width:850px) { .hero,.layout { grid-template-columns:1fr; } .hero { gap:22px; padding-top:35px; } .claims { grid-template-columns:1fr; } }
-    @media(max-width:650px) { .shell { padding:0 14px 50px; } .filters { grid-template-columns:1fr 1fr; } .entry { grid-template-columns:75px 70px 1fr; } .message { grid-column:1 / -1; } .hero-note { padding:15px; } }
+    @media(max-width:650px) { .shell { padding:0 14px 50px; } .filters { grid-template-columns:1fr 1fr; } .hero-note { padding:15px; } }
   </style>
 </head>
 <body>
 <div class="shell">
-  <header class="top"><div class="brand">Data<em>Tug</em> / Evidence Lab</div><small>Standalone walkthrough · generated from the running local OVDB server<br>Interactive explanation, not a screenshot of the product</small></header>
+  <header class="top"><div class="brand">Data<em>Tug</em> / Evidence Lab</div><small>Standalone walkthrough · generated from the running local OVDB server<br>Illustrative HTML grid · not AG Grid or a product screenshot</small></header>
   <section class="hero" aria-labelledby="headline">
-    <div><div class="eyebrow">Northwind / Order 11039 / Case study</div><h1>Why did this order<br><span>never ship?</span></h1><p class="lead">Start with a real database record. Follow a synthetic, directly queried log timeline to a precise explanation without an LLM.</p></div>
+    <div><div class="eyebrow">Northwind / Order 11039 / Case study</div><h1>Why did this order<br><span>never ship?</span></h1><p class="lead">Start with a real database record. Follow synthetic log entries in a selectable evidence grid to a precise explanation without an LLM.</p></div>
     <aside class="hero-note"><strong>Evidence boundary</strong><p>The Northwind order and carrier names come from the pinned sample database. The logs are intentionally synthetic. They explain this constructed run, not the historical reason this sample order was left unshipped.</p></aside>
   </section>
   <div class="path" aria-label="Investigation flow"><span>01 · Order record</span> → <span>02 · Explicit order_id mapping</span> → <span>03 · Direct file query</span> → <span>04 · Raw evidence</span> → <span>05 · Return to record</span></div>
   <main class="layout">
     <section class="card" aria-labelledby="record-title"><div class="record-head"><h2 id="record-title">Orders / 11039</h2><p>Real DemoDB Northwind SQLite record</p></div><div class="record-body"><dl><dt>Customer ID</dt><dd>LINOD</dd><dt>Order date</dt><dd>2018-04-21</dd><dt>Ship via</dt><dd>2 · United Package</dd><dt>Order details</dt><dd>4 lines</dd><dt>Shipped date</dt><dd><span class="unset">Unset</span></dd></dl><p class="claim"><strong>The business symptom</strong>The order record has no shipped date. Its carrier points to United Package. The database alone does not explain why.</p><p class="claim"><a href="../../demo-project-1/queries/demodb/northwind-order-11039.query.sql">View the saved record query</a> · <a href="guide.md">Repeat the working DataTug journey</a></p></div></section>
-    <section class="card timeline-card" aria-labelledby="timeline-title"><div class="section-title"><div><h2 id="timeline-title">Evidence timeline</h2><p>Ordinary OVDB collections backed by current files</p></div><div id="count" role="status"></div></div>
+    <section class="card timeline-card" aria-labelledby="timeline-title"><div class="section-title"><div><h2 id="timeline-title">Log evidence</h2><p>Ordinary OVDB collections backed by current files</p></div><div id="count" role="status"></div></div>
       <div class="filters"><label>Order ID<input id="order" value="11039" aria-label="Filter by exact order ID"></label><label>Severity<select id="severity"><option value="">All severities</option><option>INFO</option><option>WARN</option><option>ERROR</option></select></label><label>Source<select id="source"><option value="">Both file collections</option><option value="fulfillment">JSONL fulfillment</option><option value="carrier">Text carrier</option></select></label></div>
-      <p class="note">These controls filter the embedded walkthrough data. In DataTug, order ID, correlation ID, severity and time bounds are sent as supported queries; free text and regex are unavailable. Clear Order ID to inspect noise and malformed rows.</p>
-      <ol class="entries" id="entries"></ol>
+      <p class="note">Illustration only: this semantic HTML table is not AG Grid. These controls filter the embedded walkthrough data in your browser. In DataTug, supported filters are sent as bounded queries; free text and regex are unavailable. Clear Order ID to inspect noise and malformed rows.</p>
+      <div class="grid-frame"><table class="evidence-grid" id="entries" aria-label="Illustrative log evidence grid"><thead><tr><th scope="col">Timestamp</th><th scope="col">Severity</th><th scope="col">Service</th><th scope="col">Source</th><th scope="col">Message</th></tr></thead><tbody id="evidence-rows"></tbody></table></div>
+      <section class="details" id="selected-entry" aria-label="Entry details" hidden></section>
     </section>
   </main>
   <section class="claims" aria-label="Evidence to conclusion"><div class="claim-card"><b>1 / Carrier failure</b><p>At 09:13:05, the carrier gateway reports HTTP 503. The multiline text entry retains the original stack.</p></div><div class="claim-card"><b>2 / Retry disabled</b><p>At 09:13:05.300, shipping-worker says the retryable failure became terminal because retry_budget=0.</p></div><div class="claim-card"><b>3 / Update deferred</b><p>At 09:13:06, orders-api reports the shipment update was deferred. The real order still has no ShippedDate.</p></div></section>
-  <section class="architecture"><h2>How the working slice is wired</h2><p>The file adapter scans a bounded allowed file on each query and exposes a DALGO collection. A programmatic OVDB mount serves the existing discovery and query protocol. DataTug uses an explicit field mapping and timeline presentation. Nothing is copied into a log database.</p><div class="path"><span>Versioned JSONL + text files</span> → <span>dalgo2logs</span> → <span>DALGO</span> → <span>Unchanged OVDB HTTP</span> → <span>DataTug timeline</span></div><p>Google Cloud Logging is a second direct-read adapter with a fixed project and bounded time window. Hosted access to a user's own project requires separate server-side authorization.</p></section>
+  <section class="architecture"><h2>How the working slice is wired</h2><p>The file adapter scans a bounded allowed file on each query and exposes a DALGO collection. A programmatic OVDB mount serves the existing discovery and query protocol. DataTug maps the ordinary result fields into its log evidence grid. Nothing is copied into a log database.</p><div class="path"><span>Versioned JSONL + text files</span> → <span>dalgo2logs</span> → <span>DALGO</span> → <span>Unchanged OVDB HTTP</span> → <span>DataTug evidence grid</span></div><p>Google Cloud Logging is a second direct-read adapter with a fixed project and bounded time window. Hosted access to a user's own project requires separate server-side authorization.</p></section>
 </div>
 <!--EVIDENCE_DATA-->
 <script>
   const data = JSON.parse(document.getElementById('evidence-data').textContent);
   const entries = data.fulfillment.map(x => ({...x, sourceCollection:'fulfillment'})).concat(data.carrier.map(x => ({...x, sourceCollection:'carrier'})));
   const order = document.getElementById('order'), severity = document.getElementById('severity'), source = document.getElementById('source');
-  const list = document.getElementById('entries'), count = document.getElementById('count');
+  const list = document.getElementById('evidence-rows'), details = document.getElementById('selected-entry'), count = document.getElementById('count');
   function element(tag, cls, value) { const node=document.createElement(tag); if(cls) node.className=cls; if(value !== undefined) node.textContent=String(value); return node; }
   function render() {
     const id=order.value.trim(), level=severity.value, selectedSource=source.value;
     const filtered=entries.filter(x => (!id || String(x.data.order_id || '')===id) && (!level || x.data.severity===level) && (!selectedSource || x.sourceCollection===selectedSource))
-      .sort((a,b) => { const at=a.data.timestamp, bt=b.data.timestamp; if(!at) return 1; if(!bt) return -1; return Date.parse(at)-Date.parse(bt) || String(a.key).localeCompare(String(b.key)); });
-    list.replaceChildren(); count.textContent=filtered.length+' entries';
-    if(!filtered.length) { list.append(element('li','empty','No entries match these exact filters.')); return; }
+      .sort((a,b) => { const at=a.data.timestamp, bt=b.data.timestamp; if(!at) return 1; if(!bt) return -1; return Date.parse(bt)-Date.parse(at) || String(a.key).localeCompare(String(b.key)); });
+    list.replaceChildren(); details.hidden=true; details.replaceChildren(); count.textContent=filtered.length+' entries';
+    if(!filtered.length) { const row=element('tr','empty'); const cell=element('td','', 'No entries match these exact filters.'); cell.colSpan=5; row.append(cell); list.append(row); return; }
     filtered.forEach(x => {
-      const d=x.data, wrap=element('li','entry-wrap'), button=element('button','entry'); button.type='button'; button.setAttribute('aria-expanded','false');
-      button.append(element('time','',d.timestamp ? d.timestamp.slice(11,23).replace('Z','')+' UTC' : 'Time unknown'));
-      button.append(element('span','severity '+(d.severity || ''),d.severity || 'UNKNOWN'));
-      button.append(element('span','service',d.service || x.sourceCollection));
-      button.append(element('span','message',d.message || 'Unparsed entry'));
-      const details=element('section','details'); details.hidden=true;
-      const dl=element('dl'); [['Parse status',d.parse_status || 'parsed'],['Correlation ID',d.correlation_id || 'Not supplied'],['Order ID',d.order_id || 'Not supplied'],['Source reference',d.source_ref]].forEach(pair => { dl.append(element('dt','',pair[0]),element('dd','',pair[1])); });
-      details.append(dl); const copy=element('button','copy','Copy source reference'); copy.type='button'; copy.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(d.source_ref);copy.textContent='Copied';}catch{copy.textContent='Select the reference above to copy';}}); details.append(copy);
-      details.append(element('h3','','Original entry'),element('pre','',d.raw || '')); if(d.fields_json) details.append(element('h3','','Structured fields'),element('pre','',d.fields_json));
-      button.addEventListener('click',()=>{details.hidden=!details.hidden;button.setAttribute('aria-expanded',String(!details.hidden));}); wrap.append(button,details); list.append(wrap);
+      const d=x.data, row=element('tr',''); row.dataset.key=x.key;
+      const timeCell=element('td',''); const select=element('button','row-select',d.timestamp ? d.timestamp.slice(0,23).replace('T',' ')+' UTC' : 'Time unavailable'); select.type='button'; select.setAttribute('aria-label','Inspect log entry at '+(d.timestamp || 'unknown time')); timeCell.append(select);
+      const severityCell=element('td',''); severityCell.append(element('span','severity '+(d.severity || ''),d.severity || 'UNKNOWN'));
+      row.append(timeCell,severityCell,element('td','service',d.service || 'Unknown service'),element('td','source-cell',d.source || x.sourceCollection),element('td','message',d.message || 'Unparsed entry'));
+      select.addEventListener('click',()=>{
+        list.querySelectorAll('tr.selected').forEach(selected=>selected.classList.remove('selected')); row.classList.add('selected'); details.hidden=false; details.replaceChildren();
+        const heading=element('h3','','Selected entry evidence'); details.append(heading);
+        const dl=element('dl'); [['Parse status',d.parse_status || 'parsed'],['Correlation ID',d.correlation_id || 'Not supplied'],['Order ID',d.order_id || 'Not supplied'],['Source reference',d.source_ref || 'Not supplied']].forEach(pair => { dl.append(element('dt','',pair[0]),element('dd','',pair[1])); }); details.append(dl);
+        if(d.source_ref) { const copy=element('button','copy','Copy source reference'); copy.type='button'; copy.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(d.source_ref);copy.textContent='Copied';}catch{copy.textContent='Select the reference above to copy';}}); details.append(copy); }
+        details.append(element('h3','','Original entry'),element('pre','',d.raw || '')); if(d.fields_json) details.append(element('h3','','Structured fields'),element('pre','',d.fields_json));
+      }); list.append(row);
     });
   }
   [order,severity,source].forEach(control => control.addEventListener('input',render)); render();

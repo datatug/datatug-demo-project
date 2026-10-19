@@ -22,11 +22,13 @@ embeds the actual OVDB responses for these committed fixtures and needs no
 network or server after generation. It is an interactive explanation, not a
 screenshot of the product.
 
-These are screenshots from the built DataTug app at `127.0.0.1:4200`, taken
-after navigating record → logs → record in a browser. They show the local
-development emulator banner and do not imply public deployment:
+These screenshots show the earlier timeline presentation in the built DataTug
+app at `127.0.0.1:4200`, before the AG Grid change in PR #398. They were taken
+after navigating record → logs → record in a browser, show the local
+development emulator banner and do not imply public deployment. They are not
+screenshots of the PR #398 grid:
 
-- [Six-event DataTug timeline](screenshot-datatug-timeline.png)
+- [Earlier six-event DataTug timeline](screenshot-datatug-timeline.png)
 - [Expanded raw retry evidence](screenshot-evidence-detail.png)
 - [Selected order 11039 record and related-evidence link](screenshot-northwind-record.png)
 - [The same record's unset ShippedDate](screenshot-northwind-shipped-date.png)
