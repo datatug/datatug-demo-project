@@ -1,0 +1,24 @@
+{
+  "listen": "127.0.0.1:6832",
+  "sources": {
+    "corsOrigins": ["http://localhost:4200", "http://127.0.0.1:4200"],
+    "files": [
+      {
+        "ID": "northwind_evidence",
+        "Root": "demo-project-1/fixtures/logs",
+        "Sources": [
+          {
+            "Collection": "fulfillment_events",
+            "Path": "northwind-fulfillment.jsonl",
+            "Format": "jsonl"
+          },
+          {
+            "Collection": "carrier_events",
+            "Path": "northwind-carrier.log",
+            "Format": "timestamped-text"
+          }
+        ]
+      }
+    ]
+  }
+}

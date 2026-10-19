@@ -1,0 +1,10 @@
+{"timestamp":"2018-04-21T09:12:52Z","severity":"INFO","service":"orders-api","correlation_id":"nw-11038-f1","order_id":"11038","message":"Fulfillment check completed for unrelated order","outcome":"unchanged"}
+{"timestamp":"2018-04-21T09:13:00Z","severity":"INFO","service":"orders-api","correlation_id":"nw-11039-f1","order_id":"11039","customer_id":"LINOD","message":"Order accepted for fulfillment","ship_via":2}
+{"timestamp":"2018-04-21T09:13:02Z","severity":"INFO","service":"inventory-worker","correlation_id":"nw-11039-f1","order_id":"11039","message":"Inventory reservation confirmed","line_count":4}
+{"timestamp":"2018-04-21T09:13:04Z","severity":"INFO","service":"shipping-worker","correlation_id":"nw-11039-f1","order_id":"11039","message":"Requesting label from United Package","carrier_id":2,"attempt":1}
+{"timestamp":"2018-04-21T09:13:05Z","severity":"ERROR","service":"carrier-gateway","correlation_id":"nw-11039-f1","order_id":"11039","message":"United Package label request failed with HTTP 503","carrier_id":2,"retryable":true,"attempt":1}
+{"timestamp":"2018-04-21T09:13:05.300Z","severity":"WARN","service":"shipping-worker","correlation_id":"nw-11039-f1","order_id":"11039","message":"Retryable carrier failure treated as terminal because retry_budget=0","retry_budget":0,"classification":"terminal"}
+{"timestamp":"2018-04-21T09:13:06Z","severity":"INFO","service":"orders-api","correlation_id":"nw-11039-f1","order_id":"11039","message":"Shipment update deferred; ShippedDate remains unset","outcome":"deferred"}
+{"timestamp":"2018-04-21T09:13:09Z","severity":"INFO","service":"orders-api","correlation_id":"nw-11040-f1","order_id":"11040","message":"Fulfillment check completed for unrelated order","outcome":"unchanged"}
+{"time":"unparseable","severity":"WARN","service":"shipping-worker","message":"Synthetic clock-corruption control record"}
+not-json-control-record
