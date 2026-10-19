@@ -1,14 +1,16 @@
 # Direct Google Cloud Logging pilot — execution receipt
 
-Status on 2026-10-19: **source and DALGO read verified; hosted consent and UI
-journey not activated**. This optional live pilot uses the existing
-`sneat-eur3-1` project as a log source. The default, reproducible DataTug demo
+Status on 2026-10-19: **source and DALGO read verified; the gated production
+UI is deployed, but hosted sign-in and consent are not verified**. This
+optional live pilot uses the existing `sneat-eur3-1` project as a log source.
+The default, reproducible DataTug demo
 continues to read the committed local files described in [the guide](guide.md).
 There is no log database, snapshot, ingestion service or aggregation system.
 The DataTug OAuth web client now exists in the shared project; the verified
-Firebase identity at `auth.sneat.co` remains shared with Sneat. This records
-configuration progress only, not a completed Google user grant or hosted
-journey.
+Firebase identity at `auth.sneat.co` remains shared with Sneat. Popup and
+redirect attempts reached the shared helper but did not produce a usable
+DataTug session. This records configuration progress only, not a completed
+Google user grant or hosted log journey.
 
 ## What exists
 
@@ -21,7 +23,8 @@ journey.
 | Pilot entries | Eight structured entries written on 2026-10-19 to the dedicated log ID: six for order `11039`, one each for `11038` and `11040` |
 | Classification | Every payload has `synthetic: true`, `pilot_id: datatug-log-evidence-pilot-2026-10-19`, and an `event_index` |
 | Source access tested | The active Google account could read the view, but had project `roles/editor`; this does **not** prove view-only IAM |
-| Hosted service and cleanup | On the 2026-10-19 provisioning readback, ready revision `datatug-cloud-00009-9zk` serves 100% traffic from image tag `eca0f01d3121d4bce095f0006a5931ba086a1fe5`. The feature-enabled and pilot UID allowlist env vars and both OAuth secret bindings are absent. Task cleanup is merged in host PR #12, authenticated by task OIDC, but not activated or provisioned. The pilot UID allowlist applies to verified user management/query routes. The earlier PR #12 deployment workflow [39272895816](https://github.com/datatug/datatug-cloud/actions/runs/39272895816) succeeded at revision `00008-tw6`, with GET health 200 and `X-Sneat-Service: datatug-cloud`. |
+| Hosted service and cleanup | Host PR #15's historical provider snapshot at 18:05:25 UTC found production datatug-cloud-00013-hjk and preview datatug-cloud-preview-00014-np9, both at 100% traffic on image e5925566ab0c81f95a7bbe46b73fd9836f1c024f; neither had Cloud Logs environment variables or OAuth secret bindings, and no pilot Scheduler job existed. README-only host PR #16 merged at b5c6c8444fd3c98c177d441b47f691cbdfae1d5b. Candidate build/lint [39299058079](https://github.com/datatug/datatug-cloud/actions/runs/39299058079), post-merge Go CI [39299663820](https://github.com/datatug/datatug-cloud/actions/runs/39299663820), and deployment [39299949750](https://github.com/datatug/datatug-cloud/actions/runs/39299949750) passed. Provider readback at 18:11:59 UTC found production datatug-cloud-00014-lhg and preview datatug-cloud-preview-00015-6w6 at 100% traffic on the PR #16 image; both had no Cloud Logs environment variables or OAuth secret bindings, and no pilot Scheduler job existed. GET /health-check returned 200 with X-Sneat-Service: datatug-cloud at 18:12:01 UTC. The user-routes switch omits all eight handlers while retaining cleanup registration and credentials when enabled; it was not exercised with the master feature enabled. No grant, live cleanup or shutdown proof exists. |
+| Production DataTug UI | [Apps PR #407](https://github.com/datatug/datatug-apps/pull/407) merged at `a63cfe2883d1078f9a3c1058483197126ea372de`; post-merge [CI run 39292521711](https://github.com/datatug/datatug-apps/actions/runs/39292521711) passed preflight, build, test, Cloud Logs E2E and deploy-gate checks. Cloudflare workflow [39293867514](https://github.com/datatug/datatug-apps/actions/runs/39293867514) succeeded; public build-info reports the same SHA and version `0.1.0+1201`. The production UI flag is on behind the fail-closed server-confirmed UID gate; Business Preview is off. No post-deploy CI smoke was run, and the absent backend configuration leaves access denied. |
 
 The eight Cloud Logging entry timestamps span
 `2026-10-19T13:52:15.978008256Z` through
@@ -96,9 +99,9 @@ Existing project-level Secret Manager access remains unchanged. The runtime
 identity is shared, so other workloads using it also have access to this new
 key; that is an explicitly approved pilot limitation. The Scheduler job and
 hosted activation are still unprovisioned. Generic release
-wiring is under review in [CICD PR #44](https://github.com/sneat-co/cicd/pull/44)
-so subsequent deployments can preserve the configuration; its 133 fake-provider
-step checks passed locally and independently. That is not provider activation.
+wiring is merged in [CICD PR #44](https://github.com/sneat-co/cicd/pull/44)
+at `9571a3c78a448598ccce184a2aa7625ab07d6a53`; its 133 fake-provider step
+checks passed locally and independently. That is not provider activation.
 
 ## Remaining live-pilot checks
 
@@ -125,12 +128,35 @@ step checks passed locally and independently. That is not provider activation.
   by policy readback. Then enable the hosted flag and test consent,
   AG Grid query, `Remove view`, and account disconnect with a test identity.
   The hosted feature remains disabled until these checks pass.
-- Resolve the separate shared Google popup/login blocker before claiming the
-  browser journey: the test returned `auth/popup-closed-by-user`, and a
-  same-origin `createAuthUri` probe returned HTTP 400 `INVALID_CONTINUE_URI`
-  because the domain belongs to a different Firebase Hosting project. The
-  cause of the popup result is not established. No identity or auth-domain
-  change is proposed, and no auth configuration was mutated.
+- Host PR #15 added the private route-stop switch under the master feature
+  flag: setting DATATUG_PERSONAL_CLOUD_LOGS_USER_ROUTES_ENABLED=0 omits all
+  eight user handlers while retaining cleanup registration, credentials and
+  task OIDC. The latest PR #16 deployment and provider receipt are listed above.
+  No Cloud Logs environment configuration or Scheduler job was present, so the
+  route stop with the master feature enabled was not exercised. The switch does
+  not revoke grants or establish full shutdown. Source review identified a
+  shutdown race: an in-flight finish can activate a completion after the initial
+  revoke inventory, removing that completion and creating an active grant;
+  cleanup only handles expiring completions and queued revocations. Before
+  turning the master feature flag off after activation, prove a
+  no-further-activation barrier across all serving and old revisions and
+  in-flight start/callback/finish requests, then take a final active-grant
+  inventory. Any late active grant needs a separately verified revocation path,
+  followed by a generation-fenced drain of queued revocations and purge of all
+  completion records while cleanup and keys remain available. This shutdown
+  sequence has no live proof. Turning the master flag to 0 removes cleanup
+  registration and its credential bindings.
+- Resolve the shared Google login blocker before claiming the hosted browser
+  journey. Popup and redirect attempts with the existing shared Firebase
+  identity reached `auth.sneat.co` but did not return a usable DataTug session;
+  the popup attempt returned `auth/popup-closed-by-user`. Public checks showed
+  the shared helper returns HTTP 200, its `init.json` identifies
+  `sneat-eur3-1` / `auth.sneat.co`, and both handler scripts match the canonical
+  Firebase helper by SHA-256. These checks do not establish the browser-flow
+  failure cause. A separate same-origin `createAuthUri` probe returned HTTP 400
+  `INVALID_CONTINUE_URI` because `datatug.app` belongs to a different Firebase
+  Hosting project. No identity or auth-domain change is proposed, and no auth
+  configuration was mutated.
 - Confirm DataTug's hosted route can navigate from a structured record into
   the view and back. The committed local order-to-log route already does so;
   it must not be described as hosted functionality.
