@@ -35,8 +35,8 @@ overview, or **Source rows** for its held data. The monthly presentation uses
 the same complete 830 Orders, grouped by **OrderDate** calendar month:
 July 2016 through May 2018,
 23 months, with monthly counts summing to 830. The observed **OrderDate**
-range is **2016-07-04–2018-05-06**. Counts cover the available sample dates;
-the first and last calendar months are partial.
+range is **2016-07-04–2018-05-06**. Counts cover the available observed sample
+dates; boundary months may be partial.
 
 Selecting a country or changing the race's Top N does not filter this
 overview. The line counts all orders, not revenue, customer records or
