@@ -3,9 +3,11 @@
 This local demo reads the committed synthetic files directly. It creates no
 log database, copy, index or snapshot. The order is a real record in the pinned
 Northwind DemoDB SQLite edition; the log entries are invented for this test.
-The DataTug page in PR #398 presents them in AG Grid. The standalone
+The DataTug page presents them in AG Grid. The standalone
 walkthrough uses an illustrative HTML table with similar columns and row
-selection; it is not AG Grid and is not a product screenshot.
+selection; it is not AG Grid and is not a product screenshot. See the
+[working AG Grid screenshot](screenshot-datatug-ag-grid.png) and
+[selected raw evidence](screenshot-datatug-ag-grid-detail.png).
 
 ## Start
 
@@ -58,7 +60,7 @@ explicit `Orders.OrderID → fulfillment_events.order_id` mapping.
    joins the Shippers table to show United Package; four order-detail rows
    exist for this order.
 2. The evidence page at `/demo/logs?order=11039` queries the ordinary OVDB
-   `northwind_evidence/fulfillment_events` collection. PR #398 renders the
+   `northwind_evidence/fulfillment_events` collection. DataTug renders the
    results in AG Grid with Timestamp, Severity, Service, Source and Message
    columns, newest first. Selecting a row opens its parse status, correlation
    and order IDs, source reference, original entry and structured fields. The
