@@ -2,7 +2,12 @@
 
 This local demo reads the committed synthetic files directly. It creates no
 log database, copy, index or snapshot. The order is a real record in the pinned
-Northwind DemoDB SQLite edition; the log timeline is invented for this test.
+Northwind DemoDB SQLite edition; the log entries are invented for this test.
+The DataTug page presents them in AG Grid. The standalone
+walkthrough uses an illustrative HTML table with similar columns and row
+selection; it is not AG Grid and is not a product screenshot. See the
+[working AG Grid screenshot](screenshot-datatug-ag-grid.png) and
+[selected raw evidence](screenshot-datatug-ag-grid-detail.png).
 
 ## Start
 
@@ -54,25 +59,28 @@ explicit `Orders.OrderID → fulfillment_events.order_id` mapping.
    `ShippedDate`. The saved [record query](../../demo-project-1/queries/demodb/northwind-order-11039.query.sql)
    joins the Shippers table to show United Package; four order-detail rows
    exist for this order.
-2. The timeline at `/demo/logs?order=11039` queries the ordinary OVDB
-   `northwind_evidence/fulfillment_events` collection. It returns six related
-   entries from 09:13:00 through 09:13:06 UTC, newest first. A request for
-   `order_id=11040` returns one noise entry; a request for an unknown ID is
-   empty.
-3. Select the 09:13:05 ERROR event: the synthetic carrier gateway returned
-   HTTP 503. Select the 09:13:05.300 WARN event: `retry_budget=0` made the
-   retryable failure terminal. The 09:13:06 event says the shipment update was
-   deferred. These log facts explain this **synthetic** run; the real database
-   never recorded the historical cause of its unset `ShippedDate`.
+2. The evidence page at `/demo/logs?order=11039` queries the ordinary OVDB
+   `northwind_evidence/fulfillment_events` collection. DataTug renders the
+   results in AG Grid with Timestamp, Severity, Service, Source and Message
+   columns, newest first. Selecting a row opens its parse status, correlation
+   and order IDs, source reference, original entry and structured fields. The
+   query returns six related entries from 09:13:00 through 09:13:06 UTC. A
+   request for `order_id=11040` returns one noise entry; an unknown ID is empty.
+3. Select the 09:13:06 event: `orders-api` says the shipment update was
+   deferred. Select the 09:13:05.300 WARN event: `retry_budget=0` made the
+   retryable failure terminal. Then select the 09:13:05 ERROR event: the
+   synthetic carrier gateway returned HTTP 503. These entries explain this
+   **synthetic** run; the real database never recorded the historical cause
+   of its unset `ShippedDate`.
 4. Switch collection to `carrier_events` and keep order 11039 to inspect the
    raw multiline stack. Set severity to `ERROR` or narrow the UTC range to
    isolate events. Set correlation ID to `nw-11039-f1` to follow this run.
    Clear the order filter and select **Include untimed or malformed entries**
    to see parser failures. That control intentionally skips the time bounds;
    it is available only for the local file adapter.
-5. Copy a source reference from an expanded entry and use **Open the order
-   record** to return to the selected database record. The route, order ID,
-   fixture revision and copied reference are the current reproducible
+5. Copy a source reference from the selected row's details and use **Open the
+   order record** to return to the selected database record. The route, order
+   ID, fixture revision and copied reference are the current reproducible
    investigation mechanism. Persisted Detective cases are not implemented.
 
 ## Direct API check
