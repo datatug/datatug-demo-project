@@ -43,6 +43,7 @@
     .evidence-grid tbody tr:hover,.evidence-grid tbody tr.selected { background:#fff5e5; }
     .evidence-grid tbody tr:last-child td { border-bottom:0; }
     .row-select { border:0; padding:0; min-height:0; background:transparent; color:#173e51; text-align:left; font-weight:750; cursor:pointer; font-variant-numeric:tabular-nums; }
+    .selection-status { min-height:1.5em; }
     .severity { display:inline-block; border-radius:5px; padding:2px 6px; width:max-content; font-size:12px; font-weight:850; }
     .severity.ERROR { background:#ffded8; color:#9c301e; } .severity.WARN { background:#ffedc6; color:#855114; } .severity.INFO { background:#d9f1ec; color:#176e63; }
     .service,.source-cell { font-size:12px; color:#536776; } .message { min-width:280px; }
@@ -76,6 +77,7 @@
       <div class="filters"><label>Order ID<input id="order" value="11039" aria-label="Filter by exact order ID"></label><label>Severity<select id="severity"><option value="">All severities</option><option>INFO</option><option>WARN</option><option>ERROR</option></select></label><label>Source<select id="source"><option value="">Both file collections</option><option value="fulfillment">JSONL fulfillment</option><option value="carrier">Text carrier</option></select></label></div>
       <p class="note">Illustration only: this semantic HTML table is not AG Grid. These controls filter the embedded walkthrough data in your browser. In DataTug, supported filters are sent as bounded queries; free text and regex are unavailable. Clear Order ID to inspect noise and malformed rows.</p>
       <div class="grid-frame"><table class="evidence-grid" id="entries" aria-label="Illustrative log evidence grid"><thead><tr><th scope="col">Timestamp</th><th scope="col">Severity</th><th scope="col">Service</th><th scope="col">Source</th><th scope="col">Message</th></tr></thead><tbody id="evidence-rows"></tbody></table></div>
+      <p class="note selection-status" id="selection-status" role="status" aria-live="polite" aria-atomic="true">Select a row to inspect its evidence.</p>
       <section class="details" id="selected-entry" aria-label="Entry details" hidden></section>
     </section>
   </main>
@@ -87,21 +89,23 @@
   const data = JSON.parse(document.getElementById('evidence-data').textContent);
   const entries = data.fulfillment.map(x => ({...x, sourceCollection:'fulfillment'})).concat(data.carrier.map(x => ({...x, sourceCollection:'carrier'})));
   const order = document.getElementById('order'), severity = document.getElementById('severity'), source = document.getElementById('source');
-  const list = document.getElementById('evidence-rows'), details = document.getElementById('selected-entry'), count = document.getElementById('count');
+  const list = document.getElementById('evidence-rows'), details = document.getElementById('selected-entry'), count = document.getElementById('count'), selectionStatus = document.getElementById('selection-status');
   function element(tag, cls, value) { const node=document.createElement(tag); if(cls) node.className=cls; if(value !== undefined) node.textContent=String(value); return node; }
   function render() {
     const id=order.value.trim(), level=severity.value, selectedSource=source.value;
     const filtered=entries.filter(x => (!id || String(x.data.order_id || '')===id) && (!level || x.data.severity===level) && (!selectedSource || x.sourceCollection===selectedSource))
       .sort((a,b) => { const at=a.data.timestamp, bt=b.data.timestamp; if(!at) return 1; if(!bt) return -1; return Date.parse(bt)-Date.parse(at) || String(a.key).localeCompare(String(b.key)); });
     list.replaceChildren(); details.hidden=true; details.replaceChildren(); count.textContent=filtered.length+' entries';
+    selectionStatus.textContent=`Showing ${filtered.length} entries. Select a row to inspect its evidence.`;
     if(!filtered.length) { const row=element('tr','empty'); const cell=element('td','', 'No entries match these exact filters.'); cell.colSpan=5; row.append(cell); list.append(row); return; }
     filtered.forEach(x => {
       const d=x.data, row=element('tr',''); row.dataset.key=x.key;
-      const timeCell=element('td',''); const select=element('button','row-select',d.timestamp ? d.timestamp.slice(0,23).replace('T',' ')+' UTC' : 'Time unavailable'); select.type='button'; select.setAttribute('aria-label','Inspect log entry at '+(d.timestamp || 'unknown time')); timeCell.append(select);
+      const timeCell=element('td',''); const timestamp=d.timestamp || ''; const displayTimestamp=timestamp.endsWith('Z') ? timestamp.slice(0,-1)+' UTC' : timestamp || 'Time unavailable'; const select=element('button','row-select',displayTimestamp); select.type='button'; select.setAttribute('aria-label','Inspect log entry at '+(timestamp || 'unknown time')); select.setAttribute('aria-controls','selected-entry'); select.setAttribute('aria-expanded','false'); select.setAttribute('aria-pressed','false'); timeCell.append(select);
       const severityCell=element('td',''); severityCell.append(element('span','severity '+(d.severity || ''),d.severity || 'UNKNOWN'));
       row.append(timeCell,severityCell,element('td','service',d.service || 'Unknown service'),element('td','source-cell',d.source || x.sourceCollection),element('td','message',d.message || 'Unparsed entry'));
       select.addEventListener('click',()=>{
-        list.querySelectorAll('tr.selected').forEach(selected=>selected.classList.remove('selected')); row.classList.add('selected'); details.hidden=false; details.replaceChildren();
+        list.querySelectorAll('tr.selected').forEach(selected=>{selected.classList.remove('selected'); const button=selected.querySelector('.row-select'); button?.setAttribute('aria-expanded','false'); button?.setAttribute('aria-pressed','false');}); row.classList.add('selected'); select.setAttribute('aria-expanded','true'); select.setAttribute('aria-pressed','true'); details.hidden=false; details.replaceChildren();
+        selectionStatus.textContent=`Selected ${d.severity || 'UNKNOWN'} event at ${timestamp || 'unknown time'}. Details shown below the grid.`;
         const heading=element('h3','','Selected entry evidence'); details.append(heading);
         const dl=element('dl'); [['Parse status',d.parse_status || 'parsed'],['Correlation ID',d.correlation_id || 'Not supplied'],['Order ID',d.order_id || 'Not supplied'],['Source reference',d.source_ref || 'Not supplied']].forEach(pair => { dl.append(element('dt','',pair[0]),element('dd','',pair[1])); }); details.append(dl);
         if(d.source_ref) { const copy=element('button','copy','Copy source reference'); copy.type='button'; copy.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(d.source_ref);copy.textContent='Copied';}catch{copy.textContent='Select the reference above to copy';}}); details.append(copy); }
