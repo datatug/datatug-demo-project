@@ -194,10 +194,12 @@ test('showcase charts use exact admitted server DTQL and inspector uses explicit
   assert.equal(race.data.sources[0].queryId, 'demodb/northwind-orders-full-sqlite');
   assert.equal(bars.data.sources[0].queryId, 'demodb/northwind-shipping-country-count-sqlite');
   assert.deepEqual(tabs.map((tab) => tab.widget.data.sql.queryId), [
-    'demodb/northwind-orders-server', 'demodb/northwind-country-counts-server', 'demodb/chinook-billing-server',
+    'demodb/northwind-orders-server', 'demodb/northwind-country-counts-server',
+    'demodb/customer-country-comparison-server', 'demodb/chinook-billing-server',
   ]);
   assert.deepEqual(tabs.map((tab) => tab.title), [
-    'Northwind · server orders', 'Northwind · server countries', 'Chinook · customer billing',
+    'Northwind · server orders', 'Northwind · server countries',
+    'Northwind + Chinook · shared countries', 'Chinook · customer billing',
   ]);
   for (const [id, columns, sha256] of [
     ['northwind-orders-full-sqlite', 14, 'ba8e43a239489bfb17761990658909b969c9d4939dd8aa008615c867671b2c52'],
@@ -228,6 +230,38 @@ test('showcase charts use exact admitted server DTQL and inspector uses explicit
     assert.match(dtql, /alias:/);
     assert.doesNotMatch(dtql, /\b(?:INSERT|UPDATE|DELETE|ATTACH|PRAGMA)\b/i);
   }
+});
+
+test('shared-country comparison executes one qualified server plan with distinct customer-record counts', () => {
+  const query = read('queries/demodb/customer-country-comparison-server.query.json');
+  assert.equal(query.id, 'customer-country-comparison-server');
+  assert.equal(query.type, 'DTQL');
+  assert.equal(query.connectionId, undefined, 'comparison cannot fall back to a browser fixture');
+  assert.equal(query.federation.ovdbBaseUrl, 'https://cloud.openvaultdb.com');
+  assert.equal(query.federation.bounds, undefined, 'comparison is a whole server query, not bounded client scans');
+  assert.equal(query.federation.lookups, undefined);
+  assert.deepEqual(query.federation.tables, [
+    { database: 'northwind', name: 'Customers', fields: ['CustomerID', 'Country'] },
+    { database: 'chinook', name: 'Customer', fields: ['CustomerId', 'Country'] },
+  ]);
+  assert.deepEqual(query.recordsets[0].columns, [
+    { name: 'country', type: 'string' },
+    { name: 'northwindCustomers', type: 'integer' },
+    { name: 'chinookCustomers', type: 'integer' },
+  ]);
+  assert.match(query.purpose, /customer-record counts/i);
+  assert.match(query.purpose, /UK\/United Kingdom/);
+  assert.match(query.purpose, /null countries/);
+  assert.match(query.purpose, /only one sample/);
+  const dtql = readFileSync(resolve(project, 'queries/demodb/customer-country-comparison-server.query.dtql'), 'utf8');
+  assert.match(dtql, /database: northwind/);
+  assert.match(dtql, /database: chinook/);
+  assert.match(dtql, /field: Country, source: n.*op: '=='.*field: Country, source: c/);
+  assert.match(dtql, /groupBy: \[\{field: Country, source: n\}\]/);
+  assert.match(dtql, /function: count, distinct: true, args: \[\{field: CustomerID, source: n\}\]/);
+  assert.match(dtql, /function: count, distinct: true, args: \[\{field: CustomerId, source: c\}\]/);
+  assert.match(dtql, /limit: 100\s*$/);
+  assert.doesNotMatch(dtql, /\b(?:INSERT|UPDATE|DELETE|ATTACH|PRAGMA)\b/i);
 });
 
 test('explicit optional browser SQL definitions retain their pinned fixtures', () => {

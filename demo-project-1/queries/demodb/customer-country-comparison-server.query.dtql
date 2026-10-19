@@ -1,0 +1,19 @@
+# Customer records in countries with exactly matching labels in both samples.
+# Count distinct IDs within each database, never joined pairs or shared people.
+# Country aliases are not normalized: UK and United Kingdom do not match.
+# Null countries and countries present in only one sample are excluded.
+from:
+  database: northwind
+  name: Customers
+  alias: n
+  joins:
+    - from: {database: chinook, name: Customer, alias: c}
+      on:
+        - {left: {field: Country, source: n}, op: '==', right: {field: Country, source: c}}
+groupBy: [{field: Country, source: n}]
+columns:
+  - {field: Country, source: n, as: country}
+  - {aggregate: {function: count, distinct: true, args: [{field: CustomerID, source: n}]}, as: northwindCustomers}
+  - {aggregate: {function: count, distinct: true, args: [{field: CustomerId, source: c}]}, as: chinookCustomers}
+orderBy: [{field: Country, source: n}]
+limit: 100
