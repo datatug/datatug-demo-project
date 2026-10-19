@@ -93,9 +93,9 @@ Project copying and database exporting serve different purposes:
   SQLite database and exports its database bytes, including local edits.
   That export is not a GitHub project copy or a copy of hosted DemoDB services.
 
-The local handoff above describes the application's generated flow. Its
-complete acceptance with the next released CLI has **not been executed** for
-this guide. Follow the commands generated for your actual project and file
+The local handoff above describes the application's generated flow. The
+complete browser handoff with released DataTug CLI **v0.103.2** is **not yet
+accepted**. Follow the commands generated for your actual project and file
 path; this page is not a separately executed command runbook.
 
 The [direct log investigation](logs/guide.md) is a separate walkthrough using
