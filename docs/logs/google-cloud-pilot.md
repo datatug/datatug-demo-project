@@ -21,7 +21,7 @@ journey.
 | Pilot entries | Eight structured entries written on 2026-10-19 to the dedicated log ID: six for order `11039`, one each for `11038` and `11040` |
 | Classification | Every payload has `synthetic: true`, `pilot_id: datatug-log-evidence-pilot-2026-10-19`, and an `event_index` |
 | Source access tested | The active Google account could read the view, but had project `roles/editor`; this does **not** prove view-only IAM |
-| Hosted cleanup implementation | `datatug-cloud` PR #12 merged at `1d2822f2e0d853352738a01bb3bb39846d5efc98`; bounded cleanup uses the existing taskshost OIDC task route and the pilot UID allowlist. It is not activated or provisioned. |
+| Hosted service and cleanup | Ready revision `datatug-cloud-00008-tw6` serves 100% traffic from image tag `1d2822f2e0d853352738a01bb3bb39846d5efc98`; GET health check returned 200 and `X-Sneat-Service: datatug-cloud`. The feature-enabled and pilot UID allowlist env vars are absent. Task cleanup is merged in host PR #12 but not activated or provisioned. Deployment workflow 39272895816 was still running its remaining preview/verify steps at the latest receipt. |
 
 The eight Cloud Logging entry timestamps span
 `2026-10-19T13:52:15.978008256Z` through
