@@ -11,9 +11,12 @@ The verified Firebase identity and auth project remain shared with Sneat.
 The owner approved the Google unverified-app consent prompt for
 `openid email logging.read` and offline consent. A replacement provider
 identity was selected; its email, UID, Google subject, and grant ID are omitted
-from this receipt. It has no direct project roles. Its only Logging access is
-`roles/logging.viewAccessor` on the synthetic pilot view. The earlier
-unrecognized test-identity binding was removed at `13:15:56Z`.
+from this receipt. It has no direct project roles. The pilot's only added IAM
+binding for this identity was `roles/logging.viewAccessor` on the synthetic
+pilot view. Inherited,
+group-based, and other-view effective permissions were not exhaustively
+audited. The earlier unrecognized test identity's view binding was removed at
+`13:15:56Z`.
 
 The Google OAuth audience readback shows the app is **In production**, user
 type **External**, and **requires verification**. Its consent screen displays
@@ -26,8 +29,8 @@ On production revision `datatug-cloud-00010-bjt`, the OAuth callback POST
 returned 303 at `13:21:01.118Z`; the signed-in finish POST returned 200 at
 `13:21:34.563Z`. Connecting the synthetic view returned 200 at
 `13:22:08.821Z`. A probe against the existing `_Default/_AllLogs` view returned
-403 at `13:23:05.371Z`, and the Google UI showed access denied. No broader
-permission was added. In the hosted query window
+403 at `13:23:05.371Z`; the DataTug UI reported that Google denied access. No
+broader permission was added. In the hosted query window
 `2026-10-19T13:52:00Z`–`13:53:00Z`, the UI queried order `11039` and rendered
 six synthetic events in the actual AG Grid. Selecting the carrier `ERROR`
 row shows the original raw JSON and fields, including correlation
@@ -35,8 +38,8 @@ row shows the original raw JSON and fields, including correlation
 severity `ERROR` with uppercase correlation `NW-11039-F1` and service
 `CARRIER-GATEWAY` returns the same one carrier error; an unmatched identifier
 shows “No entries matched this bounded query.” A window longer than 24 hours
-shows “Choose a time range no longer than 24 hours.” These captures omit
-account details.
+shows “Choose a time range no longer than 24 hours.” These cropped captures
+omit account details.
 
 To repeat this in the [production DataTug UI](https://datatug.app), open
 **My connections → Google Cloud logs**, select the connected synthetic pilot
@@ -45,7 +48,7 @@ local walkthrough remains available through [the credential-free guide](guide.md
 
 ![Hosted Cloud Logging pilot showing six synthetic entries in the actual DataTug AG Grid](screenshot-cloud-logs-live-grid.png)
 
-*Actual hosted AG Grid query for order 11039 in the bounded 24-hour window.*
+*Actual hosted AG Grid query for order 11039 in a one-minute UTC window within the 24-hour limit.*
 
 ![Selected carrier error with original raw JSON and synthetic correlation fields](screenshot-cloud-logs-live-raw.png)
 
@@ -61,17 +64,17 @@ disconnect or token revocation has **not** been executed. Hosted log-to-record
 navigation remains a product gap; the local file demo already demonstrates
 record↔log context. Data remains synthetic, with no persistent log copies.
 
-## Current operator targets — checked 2026-10-20
+## Deployment migration receipts — 2026-10-20
 
 [Host PR #18](https://github.com/datatug/datatug-cloud/pull/18) moved new
 deployments to Belgium (`europe-west1`), at merge
-`ffd7b6fc2216cce9c7691678481fea35fd984ad1`. Use the Belgium service URL
-`https://datatug-cloud-354fvnqbaa-ew.a.run.app` for the future cleanup POST and
-its OIDC audience. The intended Scheduler location is also `europe-west1`.
-The approved KMS key and Secret Manager replication remain in `europe-west3`;
-the host move did not move these resources.
+`ffd7b6fc2216cce9c7691678481fea35fd984ad1`. The 07:39 provider readback
+below is a historical migration checkpoint. The recurring cleanup job is now
+enabled against the deployed Belgium service, as recorded in later 2026-10-20
+receipts below. The approved KMS key and Secret Manager replication remain in
+`europe-west3`; the host move did not move these resources.
 
-Provider readback at 07:39:57 UTC found Belgium production revision
+Historical provider readback at 07:39:57 UTC found Belgium production revision
 `datatug-cloud-00002-lcj` and preview `datatug-cloud-preview-00002-4gc`, each
 at 100% traffic on the PR #18 image tag. Both GET health checks returned 200
 with `X-Sneat-Service: datatug-cloud` at 07:41:09 UTC. The Frankfurt services
@@ -182,7 +185,8 @@ The approved managed cleanup schedule is enabled and its target returned HTTP
 200 as recorded above; no receipt identifies affected records. Automatic
 review had rejected an earlier potentially destructive operation; the owner
 later approved the bounded cleanup check and recurring job. No Cloud Logging
-user grant exists.
+user grant existed at that cleanup checkpoint; the later connection is
+recorded at the top of this guide.
 Earlier dated provider snapshots below remain historical and do not describe
 the current runtime configuration or Scheduler state.
 
@@ -193,10 +197,10 @@ the current runtime configuration or Scheduler state.
 | Logging bucket | `projects/sneat-eur3-1/locations/global/buckets/_Default`, active, 30-day retention |
 | Log view | `projects/sneat-eur3-1/locations/global/buckets/_Default/views/datatug-log-evidence-pilot` |
 | View filter | `log_id("datatug-log-evidence-pilot") AND resource.type="global"` |
-| View IAM | The selected replacement Google identity has no direct project roles; its only Logging role is `roles/logging.viewAccessor` on this synthetic view. Hosted connect and query succeeded. A probe against `_Default/_AllLogs` returned 403 and Google showed access denied; no broader access was added. |
+| View IAM | The selected replacement identity had no direct project roles. The pilot's only added IAM binding for this identity was `roles/logging.viewAccessor` on this synthetic view. Inherited, group-based, and other-view effective permissions were not exhaustively audited. Hosted connect and query succeeded; a probe against `_Default/_AllLogs` returned 403 and the DataTug UI reported that Google denied access. No broader permission was added. |
 | Pilot entries | Eight structured entries written on 2026-10-19 to the dedicated log ID: six for order `11039`, one each for `11038` and `11040` |
 | Classification | Every payload has `synthetic: true`, `pilot_id: datatug-log-evidence-pilot-2026-10-19`, and an `event_index` |
-| Source access tested | Hosted query succeeded with the replacement identity under view-only IAM. The earlier Editor identity and its binding were retired from this pilot. |
+| Source access tested | Hosted query succeeded with the replacement identity. An earlier source read used an Editor identity; the current hosted read used the replacement identity. |
 | Hosted service and cleanup | Host PR #15's historical provider snapshot at 18:05:25 UTC found production datatug-cloud-00013-hjk and preview datatug-cloud-preview-00014-np9, both at 100% traffic on image e5925566ab0c81f95a7bbe46b73fd9836f1c024f; neither had Cloud Logs environment variables or OAuth secret bindings, and no pilot Scheduler job existed. README-only host PR #16 merged at b5c6c8444fd3c98c177d441b47f691cbdfae1d5b. Candidate build/lint [39299058079](https://github.com/datatug/datatug-cloud/actions/runs/39299058079), post-merge Go CI [39299663820](https://github.com/datatug/datatug-cloud/actions/runs/39299663820), and deployment [39299949750](https://github.com/datatug/datatug-cloud/actions/runs/39299949750) passed. Provider readback at 18:11:59 UTC found production datatug-cloud-00014-lhg and preview datatug-cloud-preview-00015-6w6 at 100% traffic on the PR #16 image; both had no Cloud Logs environment variables or OAuth secret bindings, and no pilot Scheduler job existed. GET /health-check returned 200 with X-Sneat-Service: datatug-cloud at 18:12:01 UTC. The user-routes switch omits all eight handlers while retaining cleanup registration and credentials when enabled; it was not exercised with the master feature enabled. No grant, live cleanup or shutdown proof exists. |
 | Production DataTug UI | [Apps PR #407](https://github.com/datatug/datatug-apps/pull/407) merged at `a63cfe2883d1078f9a3c1058483197126ea372de`; post-merge [CI run 39292521711](https://github.com/datatug/datatug-apps/actions/runs/39292521711) passed preflight, build, test, Cloud Logs E2E and deploy-gate checks. Cloudflare workflow [39293867514](https://github.com/datatug/datatug-apps/actions/runs/39293867514) succeeded; public build-info reports the same SHA and version `0.1.0+1201`. The production UI flag is on behind the fail-closed server-confirmed UID gate; Business Preview is off. At this earlier PR #407 checkpoint, no post-deploy CI smoke was run and the backend configuration was absent, so access remained denied. |
 | Activation backend | [Backend PR #67](https://github.com/datatug/backend/pull/67) merged at `d3112f646accffedcc7279995ea7362c390f8e8c`. Reviewed candidate `7a52784dbdf7e923941fc66f202ad8092e15be65` passed [Backend CI 39308503102](https://github.com/datatug/backend/actions/runs/39308503102) and [Security 39308502042](https://github.com/datatug/backend/actions/runs/39308502042). The local full Firestore adapter suite passed with `-race`, 100% statement coverage and zero uncovered statements in 14.416s. Published `v0.38.0` points to that merge commit. Post-merge [Backend CI 39309725492](https://github.com/datatug/backend/actions/runs/39309725492) and [Security 39309724286](https://github.com/datatug/backend/actions/runs/39309724286) passed; WB verified the exact target at 19:25:05 UTC. No live lifecycle invocation is claimed. |
