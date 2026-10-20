@@ -12,6 +12,29 @@ redirect attempts reached the shared helper but did not produce a usable
 DataTug session. This records configuration progress only, not a completed
 Google user grant or hosted log journey.
 
+## Current operator targets — checked 2026-10-20
+
+[Host PR #18](https://github.com/datatug/datatug-cloud/pull/18) moved new
+deployments to Belgium (`europe-west1`), at merge
+`ffd7b6fc2216cce9c7691678481fea35fd984ad1`. Use the Belgium service URL
+`https://datatug-cloud-354fvnqbaa-ew.a.run.app` for the future cleanup POST and
+its OIDC audience. The intended Scheduler location is also `europe-west1`.
+The approved KMS key and Secret Manager replication remain in `europe-west3`;
+the host move did not move these resources.
+
+Provider readback at 07:39:57 UTC found Belgium production revision
+`datatug-cloud-00002-lcj` and preview `datatug-cloud-preview-00002-4gc`, each
+at 100% traffic on the PR #18 image tag. Both GET health checks returned 200
+with `X-Sneat-Service: datatug-cloud` at 07:41:09 UTC. The Frankfurt services
+remain present, configured on the earlier PR #17 revisions recorded below. Neither
+region had personal Cloud Logs environment variables or OAuth secret bindings,
+and neither had the named pilot Scheduler job. Before activation, inventory
+both regions and any tagged revisions, direct targets and in-flight work;
+checking only the new Belgium deployment does not establish the activation
+barrier. These were read-only checks; no service was enabled or deleted.
+
+The execution receipts below retain their original dates and regions.
+
 ## What exists
 
 | Item | Observed state |
@@ -85,8 +108,8 @@ During browser recovery, a tool ignored output suppression and emitted the
 client secret into private tool output. Independent security review requires
 replacing it before activation, storing the replacement as a new pinned Secret
 Manager version, and retiring the exposed version after verification. The owner
-handoff is at this client's **Add secret** control. No Google user-token
-revocation is needed: no user grant or runtime secret binding exists.
+created that replacement on 2026-10-20, as recorded below. No Google user-token
+revocation was performed: no user grant or runtime secret binding exists.
 
 After automatic approval review required exact permission, the owner separately
 approved and the following prerequisites were applied:
@@ -108,6 +131,22 @@ wiring is merged in [CICD PR #44](https://github.com/sneat-co/cicd/pull/44)
 at `9571a3c78a448598ccce184a2aa7625ab07d6a53`; its 133 fake-provider step
 checks passed locally and independently. That is not provider activation.
 
+### Credential replacement — 2026-10-20
+
+The owner clicked **Add secret** on the dedicated client. Its downloaded JSON
+was checked against the client ID and project, made private, and processed in
+memory. The replacement differs from the original secret, is stored as enabled
+Secret Manager version `2`, and matched a private read-back. The temporary JSON
+was deleted. Secret Manager version `1` is now disabled; the state-key secret
+remains version `1`. The non-secret GitHub repository selector
+`DATATUG_PERSONAL_CLOUD_LOGS_CLIENT_SECRET_VERSION` is pinned to `2`, while the
+master feature variable remains absent and no runtime binding was added.
+
+Retirement of the original credential **in Google's OAuth client** still
+requires the owner's confirmation. Disabling its stored Secret Manager copy
+does not disable that Google credential or revoke any Google user token. Keep
+the hosted feature off until that handoff and the remaining live checks pass.
+
 ## Remaining live-pilot checks
 
 - Complete and verify consent using the dedicated OAuth web client already
@@ -121,13 +160,15 @@ checks passed locally and independently. That is not provider activation.
   `roles/logging.viewAccessor` **on this view only**; verify it can read this
   view and cannot query broader project logs. The current Editor account is
   unsuitable for that permission proof.
-- Complete credential replacement and bind the new version only after verifying
-  it. The named runtime's key-level permission and separate state key now exist.
+- Confirm retirement of the original Google client secret. Replacement version
+  `2` is verified and selected for future deployment; bind it only with the
+  other pilot prerequisites satisfied. The named runtime's key-level permission
+  and separate state key now exist.
   Provision the managed Cloud Scheduler OIDC POST to
   the existing `/_tasks` route only after the host route is deployed. The
-  intended job is `datatug-personal-cloud-log-cleanup` in `europe-west3`, using
+  intended job is `datatug-personal-cloud-log-cleanup` in `europe-west1`, using
   `cloud-tasks-invoker@sneat-eur3-1.iam.gserviceaccount.com` and audience
-  `https://datatug-cloud-354fvnqbaa-ey.a.run.app`; it should remain paused until
+  `https://datatug-cloud-354fvnqbaa-ew.a.run.app`; it should remain paused until
   the route and feature configuration are ready. No Scheduler job is provisioned;
   the existing task invoker already has Cloud Run invoke permission, verified
   by policy readback. Configure only the single allowlisted pilot after the
@@ -139,7 +180,8 @@ checks passed locally and independently. That is not provider activation.
 - Host PR #15 added the private route-stop switch under the master feature
   flag: setting DATATUG_PERSONAL_CLOUD_LOGS_USER_ROUTES_ENABLED=0 omits all
   eight user handlers while retaining cleanup registration, credentials and
-  task OIDC. The latest PR #17 deployment and provider receipt are listed above.
+  task OIDC. The PR #17 execution receipt and current PR #18 deployment targets
+  are listed above.
   No Cloud Logs environment configuration or Scheduler job was present, so the
   route stop with the master feature enabled was not exercised. The switch does
   not revoke grants or establish full shutdown. The new activation epoch guards
@@ -179,6 +221,7 @@ datatug-log-evidence-pilot --bucket=_Default --location=global
 --project=sneat-eur3-1`. Deleting the view does not delete its entries;
 the `_Default` bucket's observed retention is 30 days. No view-only IAM grant,
 Scheduler job, Cloud Run enable flag, or Google user grant has been created.
-The approved KMS key, key-level runtime permission and both Secret Manager
-versions exist as recorded above. No minimum-instance configuration was introduced
+The approved KMS key, key-level runtime permission, state-key version `1` and
+OAuth client-secret version `2` exist as recorded above; the old stored client
+secret version `1` is disabled. No minimum-instance configuration was introduced
 by this pilot step.
