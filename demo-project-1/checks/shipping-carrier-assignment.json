@@ -1,0 +1,91 @@
+{
+  "id": "shipping-carrier-assignment",
+  "title": "Carrier assignment",
+  "description": "Synthetic training; queries are read-only. Source failures must remain unavailable, never pass.",
+  "version": 1,
+  "inputs": [
+    {
+      "name": "order_id",
+      "type": "integer",
+      "cardinality": "scalar",
+      "required": true
+    }
+  ],
+  "steps": [
+    {
+      "id": "effective-route",
+      "kind": "query",
+      "queryId": "shipping/current-route",
+      "bindings": [
+        {
+          "input": "order_id",
+          "fromInput": "order_id"
+        }
+      ],
+      "onUnavailable": "block",
+      "validators": [
+        {
+          "id": "effective-route",
+          "scope": "set",
+          "kind": "row-count",
+          "severity": "error",
+          "expected": {
+            "type": "integer",
+            "value": "1"
+          },
+          "onUnavailable": "block"
+        }
+      ]
+    },
+    {
+      "id": "partner-enabled",
+      "kind": "query",
+      "queryId": "shipping/partner-enabled",
+      "bindings": [
+        {
+          "input": "order_id",
+          "fromInput": "order_id"
+        }
+      ],
+      "onUnavailable": "block",
+      "validators": [
+        {
+          "id": "partner-enabled",
+          "scope": "set",
+          "kind": "row-count",
+          "severity": "error",
+          "expected": {
+            "type": "integer",
+            "value": "1"
+          },
+          "onUnavailable": "block"
+        }
+      ]
+    },
+    {
+      "id": "accepted-assignment",
+      "kind": "query",
+      "queryId": "shipping/assignment-outcome",
+      "bindings": [
+        {
+          "input": "order_id",
+          "fromInput": "order_id"
+        }
+      ],
+      "onUnavailable": "block",
+      "validators": [
+        {
+          "id": "accepted-assignment",
+          "scope": "set",
+          "kind": "row-count",
+          "severity": "error",
+          "expected": {
+            "type": "integer",
+            "value": "1"
+          },
+          "onUnavailable": "block"
+        }
+      ]
+    }
+  ]
+}

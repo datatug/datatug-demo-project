@@ -1,0 +1,1 @@
+SELECT r.order_id,r.request_id,r.route_id,r.partner_id,r.current_config FROM current_routes r WHERE r.order_id=@order_id AND r.route_id IS NOT NULL AND (SELECT COUNT(*) FROM current_routes c WHERE c.request_id=r.request_id AND c.route_id IS NOT NULL)=1

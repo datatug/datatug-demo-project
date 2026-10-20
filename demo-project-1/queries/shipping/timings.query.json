@@ -1,0 +1,116 @@
+{
+  "id": "timings",
+  "title": "Measured adjacent stage timings",
+  "type": "SQL",
+  "connectionId": "shipping-working-copy",
+  "purpose": "Read deterministic synthetic shipping application records; requires an independently admitted isolated source binding.",
+  "parameters": [
+    {
+      "id": "order_id",
+      "type": "integer",
+      "isRequired": true
+    }
+  ],
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "order_id",
+          "type": "integer"
+        },
+        {
+          "name": "attempt_id",
+          "type": "string"
+        },
+        {
+          "name": "attempt_no",
+          "type": "integer"
+        },
+        {
+          "name": "start_kind",
+          "type": "string"
+        },
+        {
+          "name": "end_kind",
+          "type": "string"
+        },
+        {
+          "name": "start_at",
+          "type": "string"
+        },
+        {
+          "name": "end_at",
+          "type": "string"
+        },
+        {
+          "name": "clock_domain",
+          "type": "string"
+        },
+        {
+          "name": "precision_ms",
+          "type": "integer"
+        },
+        {
+          "name": "duration_ms",
+          "type": "integer"
+        },
+        {
+          "name": "start_event_id",
+          "type": "string"
+        },
+        {
+          "name": "end_event_id",
+          "type": "string"
+        },
+        {
+          "name": "start_artifact",
+          "type": "string"
+        },
+        {
+          "name": "start_artifact_sha256",
+          "type": "string"
+        },
+        {
+          "name": "start_byte_start",
+          "type": "integer"
+        },
+        {
+          "name": "start_byte_end",
+          "type": "integer"
+        },
+        {
+          "name": "end_artifact",
+          "type": "string"
+        },
+        {
+          "name": "end_artifact_sha256",
+          "type": "string"
+        },
+        {
+          "name": "end_byte_start",
+          "type": "integer"
+        },
+        {
+          "name": "end_byte_end",
+          "type": "integer"
+        },
+        {
+          "name": "row_key",
+          "type": "string"
+        },
+        {
+          "name": "start_evidence_ref",
+          "type": "string"
+        },
+        {
+          "name": "end_evidence_ref",
+          "type": "string"
+        },
+        {
+          "name": "source_generation",
+          "type": "string"
+        }
+      ]
+    }
+  ]
+}

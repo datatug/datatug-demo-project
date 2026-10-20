@@ -1,0 +1,68 @@
+{
+  "id": "readiness",
+  "title": "Readiness and assignment evidence",
+  "type": "SQL",
+  "connectionId": "shipping-working-copy",
+  "purpose": "Read deterministic synthetic shipping application records; requires an independently admitted isolated source binding.",
+  "parameters": [
+    {
+      "id": "order_id",
+      "type": "integer",
+      "isRequired": true
+    }
+  ],
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "order_id",
+          "type": "integer"
+        },
+        {
+          "name": "request_id",
+          "type": "string"
+        },
+        {
+          "name": "expectation",
+          "type": "string"
+        },
+        {
+          "name": "status",
+          "type": "string"
+        },
+        {
+          "name": "explanation",
+          "type": "string"
+        },
+        {
+          "name": "current_config",
+          "type": "integer"
+        },
+        {
+          "name": "business_clock",
+          "type": "string"
+        },
+        {
+          "name": "row_key",
+          "type": "string"
+        },
+        {
+          "name": "evidence_ref",
+          "type": "string"
+        },
+        {
+          "name": "source_generation",
+          "type": "string"
+        },
+        {
+          "name": "source_collection",
+          "type": "string"
+        },
+        {
+          "name": "source_record_key",
+          "type": "string"
+        }
+      ]
+    }
+  ]
+}

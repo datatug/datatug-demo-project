@@ -1,0 +1,41 @@
+{
+  "id": "shipping-request-received",
+  "title": "Request received",
+  "description": "Synthetic training; queries are read-only. Source failures must remain unavailable, never pass.",
+  "version": 1,
+  "inputs": [
+    {
+      "name": "order_id",
+      "type": "integer",
+      "cardinality": "scalar",
+      "required": true
+    }
+  ],
+  "steps": [
+    {
+      "id": "matching-receipt",
+      "kind": "query",
+      "queryId": "shipping/request-receipt",
+      "bindings": [
+        {
+          "input": "order_id",
+          "fromInput": "order_id"
+        }
+      ],
+      "onUnavailable": "block",
+      "validators": [
+        {
+          "id": "matching-receipt",
+          "scope": "set",
+          "kind": "row-count",
+          "severity": "error",
+          "expected": {
+            "type": "integer",
+            "value": "1"
+          },
+          "onUnavailable": "block"
+        }
+      ]
+    }
+  ]
+}
