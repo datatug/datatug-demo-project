@@ -70,10 +70,16 @@ More than an hour after the successful query and reconnect above, the original
 tab showed “Please Sign In” and no hosted access. Why that session ended is
 unknown. A new basic sign-in attempt through the shared Google popup ended with
 `auth/popup-closed-by-user`. A full-page redirect attempt returned a blank
-page; the redirect setting has since been restored to its default and a clean
-tab is open, but a fresh popup has not completed. No later hosted query or
-Google refresh-token/expired-grant behavior is verified. The backend grant
-remains stored; Google revocation was neither requested nor performed.
+page; the redirect setting has since been restored to its default. In a
+clean tab at 15:05–15:06 UTC, the normal shared Google popup completed and
+signed the owner in at
+[`datatug.app/my/cloud-logs?signInMethod=default`](https://datatug.app/my/cloud-logs?signInMethod=default).
+The connected test account and its one existing view loaded. Selecting
+**VIEW LOGS** and querying the one-minute window above for order `11039`
+returned six rows in the actual AG Grid at 15:06 UTC. This used the retained
+grant and view: no new Logging consent, revocation, or provider configuration
+change occurred. The token refresh mechanism remains unverified. The backend
+grant remains stored; Google revocation was neither requested nor performed.
 
 Current public Firebase Auth URI reads returned an `authUri` for
 `auth.sneat.co` and `400 INVALID_CONTINUE_URI` for `datatug.app`, reporting
