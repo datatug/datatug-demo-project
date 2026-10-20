@@ -64,6 +64,28 @@ disconnect or token revocation has **not** been executed. Hosted log-to-record
 navigation remains a product gap; the local file demo already demonstrates
 record↔log context. Data remains synthetic, with no persistent log copies.
 
+### Later re-entry check — 2026-10-20
+
+More than an hour after the successful query and reconnect above, the original
+tab showed “Please Sign In” and no hosted access. Why that session ended is
+unknown. A new basic sign-in attempt through the shared Google popup ended with
+`auth/popup-closed-by-user`. A full-page redirect attempt returned a blank
+page; the redirect setting has since been restored to its default and a clean
+tab is open, but a fresh popup has not completed. No later hosted query or
+Google refresh-token/expired-grant behavior is verified. The backend grant
+remains stored; Google revocation was neither requested nor performed.
+
+Current public Firebase Auth URI reads returned an `authUri` for
+`auth.sneat.co` and `400 INVALID_CONTINUE_URI` for `datatug.app`, reporting
+that the domain belongs to a different Firebase Hosting project. The
+resource inventory listed 8 projects and 17 sites across 6 successful Hosting
+project reads; 2 other Hosting reads returned 404. No `datatug.app`
+custom-domain association appeared in those reads, so its owner is unknown.
+No association or auth, identity, project, DNS, or domain configuration was
+changed. A lookup through another stored account was blocked by automatic
+approval review; owner permission is pending, and it has not been retried or
+bypassed.
+
 ## Deployment migration receipts — 2026-10-20
 
 [Host PR #18](https://github.com/datatug/datatug-cloud/pull/18) moved new
