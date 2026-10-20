@@ -1,0 +1,13 @@
+{
+  "format": "datatug-demo-connections/v1",
+  "connections": [
+    {
+      "id": "shipping-working-copy",
+      "dataset": "shipping-training",
+      "storage": "sqlite",
+      "tags": ["shipping", "synthetic", "training"],
+      "readiness": "not-published",
+      "query": "admission-required"
+    }
+  ]
+}

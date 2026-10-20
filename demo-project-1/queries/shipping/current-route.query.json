@@ -1,0 +1,40 @@
+{
+  "id": "current-route",
+  "title": "Effective unambiguous route",
+  "type": "SQL",
+  "connectionId": "shipping-working-copy",
+  "purpose": "Read deterministic synthetic shipping application records; requires an independently admitted isolated source binding.",
+  "parameters": [
+    {
+      "id": "order_id",
+      "type": "integer",
+      "isRequired": true
+    }
+  ],
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "order_id",
+          "type": "integer"
+        },
+        {
+          "name": "request_id",
+          "type": "string"
+        },
+        {
+          "name": "route_id",
+          "type": "string"
+        },
+        {
+          "name": "partner_id",
+          "type": "string"
+        },
+        {
+          "name": "current_config",
+          "type": "integer"
+        }
+      ]
+    }
+  ]
+}

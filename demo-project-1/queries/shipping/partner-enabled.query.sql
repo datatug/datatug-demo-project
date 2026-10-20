@@ -1,0 +1,1 @@
+SELECT r.order_id,r.request_id,p.partner_id,p.enabled FROM requests r JOIN latest_attempts a ON a.request_id=r.request_id JOIN routes x ON x.shipper_id=r.shipper_id AND x.revision=a.config_revision JOIN partners p ON p.partner_id=x.partner_id WHERE r.order_id=@order_id AND p.enabled=1
