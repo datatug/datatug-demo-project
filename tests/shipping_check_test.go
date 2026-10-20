@@ -50,7 +50,11 @@ func TestShippingChecksExecuteRealSQLiteEvidence(t *testing.T) {
 	require.NoError(t, os.WriteFile(path, b, 0600))
 	db, e := sql.Open("sqlite", path)
 	require.NoError(t, e)
-	defer db.Close()
+	defer func() {
+		if err := db.Close(); err != nil {
+			t.Errorf("close shipping database: %v", err)
+		}
+	}()
 
 	declaration, err := os.ReadFile(filepath.Join(root, "connections/shipping.json"))
 	require.NoError(t, err)
@@ -77,7 +81,11 @@ func TestShippingChecksExecuteRealSQLiteEvidence(t *testing.T) {
 		if e != nil {
 			return apicontract.Result{}, e
 		}
-		defer rows.Close()
+		defer func() {
+			if err := rows.Close(); err != nil {
+				t.Errorf("close shipping query rows: %v", err)
+			}
+		}()
 		names, e := rows.Columns()
 		if e != nil {
 			return apicontract.Result{}, e
