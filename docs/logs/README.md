@@ -23,9 +23,9 @@ network or server after generation. It is an interactive explanation, not a
 screenshot of the product.
 
 An [optional Google Cloud Logging pilot receipt](google-cloud-pilot.md) records
-the narrow view and direct DALGO read verified in `sneat-eur3-1`. Hosted OAuth
-and browser access remain disabled; this is separate from the default local
-demo.
+the narrowly allowlisted hosted pilot in `sneat-eur3-1`, including real Google
+consent, synthetic-view reads in AG Grid, broader-view access denial, and known
+limits. The default local demo remains credential-free.
 
 These screenshots show the working DataTug app at `127.0.0.1:4200` with the
 direct local OVDB source. The AG Grid images were captured from the merged
