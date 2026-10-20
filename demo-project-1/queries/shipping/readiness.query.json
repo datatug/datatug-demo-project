@@ -23,6 +23,18 @@
           "type": "string"
         },
         {
+          "name": "expectation",
+          "type": "string"
+        },
+        {
+          "name": "status",
+          "type": "string"
+        },
+        {
+          "name": "explanation",
+          "type": "string"
+        },
+        {
           "name": "current_config",
           "type": "integer"
         },
@@ -31,15 +43,23 @@
           "type": "string"
         },
         {
-          "name": "current_route",
+          "name": "row_key",
           "type": "string"
         },
         {
-          "name": "partner_state",
+          "name": "evidence_ref",
           "type": "string"
         },
         {
-          "name": "assignment_state",
+          "name": "source_generation",
+          "type": "string"
+        },
+        {
+          "name": "source_collection",
+          "type": "string"
+        },
+        {
+          "name": "source_record_key",
           "type": "string"
         }
       ]

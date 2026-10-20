@@ -8,6 +8,7 @@ import (
 	"github.com/datatug/datatug-core/pkg/apicontract"
 	"github.com/datatug/datatug-core/pkg/datatug"
 	"github.com/datatug/datatug-core/pkg/detective"
+	"github.com/datatug/datatug-core/pkg/incidents"
 	"github.com/datatug/datatug-core/pkg/investigation"
 	"github.com/stretchr/testify/require"
 	"os"
@@ -134,6 +135,30 @@ func TestShippingChecksExecuteRealSQLiteEvidence(t *testing.T) {
 	require.NoError(t, err)
 	require.NotEqual(t, "pass", unavailable.Outcome)
 
+	// Raw SQL has no authority to mint execution IDs. Its NULL ref slots
+	// must fail the actual shared ArtifactRef admission validator.
+	for _, name := range []string{"events", "readiness"} {
+		text, err := os.ReadFile(filepath.Join(root, "queries/shipping", name+".query.sql"))
+		require.NoError(t, err)
+		rows, err := db.Query("SELECT evidence_ref FROM ("+string(text)+")", sql.Named("order_id", 11045))
+		require.NoError(t, err)
+		count := 0
+		for rows.Next() {
+			var raw any
+			require.NoError(t, rows.Scan(&raw))
+			require.Nil(t, raw)
+			wire, err := json.Marshal(raw)
+			require.NoError(t, err)
+			var ref incidents.ArtifactRef
+			require.NoError(t, json.Unmarshal(wire, &ref))
+			require.Error(t, ref.Validate(), "raw unadmitted SQL row must not become chart evidence")
+			count++
+		}
+		require.NoError(t, rows.Err())
+		require.NoError(t, rows.Close())
+		require.Positive(t, count)
+	}
+
 	run("shipping-request-received", 11045, "pass")
 	for _, order := range []int{90004, 90005, 99999} {
 		run("shipping-request-received", order, "fail")
@@ -156,4 +181,9 @@ func TestShippingChecksExecuteRealSQLiteEvidence(t *testing.T) {
 	run("shipping-carrier-assignment", 11062, "fail")
 	mutate(true)
 	run("shipping-carrier-assignment", 11045, "pass")
+	// A later effective configuration/partner invalidates the old accepted
+	// assignment without changing this saved Check definition.
+	_, e = db.Exec("INSERT INTO configurations VALUES(19,'2018-05-20T10:06:00Z'); INSERT INTO partners VALUES('new-partner',1); INSERT INTO routes VALUES('route-19-2',19,2,'new-partner','2018-05-20T10:06:00Z',NULL); UPDATE workspace_state SET current_config=19,business_clock='2018-05-20T10:06:00Z'")
+	require.NoError(t, e)
+	run("shipping-carrier-assignment", 11045, "fail")
 }

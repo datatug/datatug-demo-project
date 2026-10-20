@@ -31,7 +31,8 @@ class ShippingFixtureTest(unittest.TestCase):
   self.assertEqual({'ambiguous'},set(row[-1] for row in self.query('historical-route',90002)))
   self.assertEqual('disabled',self.query('historical-route',90003)[0][-1])
   self.assertEqual([],self.query('assignment-outcome',11045))
-  self.assertEqual(1,len(self.query('assignment-outcome',11038)))
+  self.assertEqual([],self.query('assignment-outcome',11038)) # historical control's route has since expired
+  self.assertEqual(1,self.db.execute("SELECT COUNT(*) FROM assignments WHERE assignment_id='assignment-11038'").fetchone()[0])
   self.assertEqual([],self.query('current-route',90002))
   self.assertEqual([],self.query('partner-enabled',90003))
  def test_correction_replay_history_idempotency_and_reuse(self):
@@ -63,6 +64,52 @@ class ShippingFixtureTest(unittest.TestCase):
   self.assertEqual([1000]*3,[r[9] for r in self.query('timings',11045)])
   self.assertFalse(any('partner-call' in str(r) for r in rows))
   self.assertFalse(self.db.execute("SELECT name FROM sqlite_master WHERE type='table' AND name LIKE '%log%'").fetchall())
+ def test_chart_projection_and_current_configuration_consistency(self):
+  def records(name,order):
+   cursor=self.db.execute((ROOT/f'demo-project-1/queries/shipping/{name}.query.sql').read_text(),{'order_id':order})
+   names=[c[0] for c in cursor.description]
+   return [dict(zip(names,row)) for row in cursor]
+  def heatmap(order):
+   rows=records('readiness',order)
+   self.assertEqual(3,len(rows)); self.assertEqual(3,len({(r['request_id'],r['expectation']) for r in rows}))
+   for row in rows:
+    self.assertIn(row['status'],['pass','fail','unknown'])
+    self.assertEqual('shipping-base-v1',row['source_generation'])
+    self.assertEqual('requests',row['source_collection'])
+    self.assertEqual(row['request_id'],row['source_record_key'])
+    self.assertEqual(row['request_id']+':'+row['expectation'],row['row_key'])
+    self.assertIsNone(row['evidence_ref']) # Only runtime can name its actual execution.
+   return {r['expectation']:r['status'] for r in rows}
+  admission=json.loads((self.path/'manifest.json').read_text())['chartAdmission']
+  self.assertFalse(admission['rawRowsAdmitted']); self.assertTrue(admission['requiresActualScopedExecutionRef']); self.assertTrue(admission['requiresExactHeldRowKey'])
+  for chart,query_name in [('timeline','events'),('heatmap','readiness')]:
+   mapping=admission['queryMappings'][chart]
+   self.assertEqual(len(mapping),len(set(mapping.values())))
+   for row in records(query_name,11045):
+    for column in mapping.values(): self.assertIn(column,row)
+    self.assertTrue(row['row_key'])
+  self.assertEqual({'Effective route':'fail','Partner enabled':'pass','Accepted assignment':'fail'},heatmap(11045))
+  for row in records('events',11045):
+   self.assertIn(row['status'],['pass','fail','unknown'])
+   self.assertEqual('events',row['source_collection']); self.assertEqual(row['event_id'],row['source_record_key']); self.assertEqual(row['event_id'],row['row_key'])
+   self.assertIsNone(row['evidence_ref'])
+  for row in records('timings',11045):
+   for end in ['start','end']:
+    self.assertTrue(row[end+'_event_id'])
+    data=(self.path/'logs'/row[end+'_artifact']).read_bytes()
+    self.assertEqual(row[end+'_artifact_sha256'],shipping.digest(data))
+    entry=json.loads(data[row[end+'_byte_start']:row[end+'_byte_end']])
+    self.assertEqual(row[end+'_event_id'],entry['event_id'])
+  shipping.correct(self.db)
+  self.assertEqual('pass',heatmap(11045)['Effective route'])
+  self.assertEqual('fail',heatmap(11045)['Accepted assignment'])
+  self.assertEqual('fail',heatmap(11062)['Accepted assignment'])
+  shipping.replay(self.db,11045,self.recovery)
+  self.assertEqual('pass',heatmap(11045)['Accepted assignment'])
+  self.db.executescript("INSERT INTO configurations VALUES(19,'2018-05-20T10:06:00Z'); INSERT INTO partners VALUES('new-partner',1); INSERT INTO routes VALUES('route-19-2',19,2,'new-partner','2018-05-20T10:06:00Z',NULL); UPDATE workspace_state SET current_config=19,business_clock='2018-05-20T10:06:00Z';")
+  self.assertEqual([],self.query('assignment-outcome',11045))
+  self.assertEqual('fail',heatmap(11045)['Accepted assignment'])
+  self.assertEqual('expired',self.query('historical-route',11045)[0][-1])
  def test_northwind_pin_when_available(self):
   source=Path('/Users/alex/projects/demo-db/northwind/data-source/source.sqlite')
   if not source.exists(): self.skipTest('external Northwind source not in this checkout')

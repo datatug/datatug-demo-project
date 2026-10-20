@@ -73,6 +73,30 @@
         {
           "name": "byte_end",
           "type": "integer"
+        },
+        {
+          "name": "status",
+          "type": "string"
+        },
+        {
+          "name": "row_key",
+          "type": "string"
+        },
+        {
+          "name": "evidence_ref",
+          "type": "string"
+        },
+        {
+          "name": "source_generation",
+          "type": "string"
+        },
+        {
+          "name": "source_collection",
+          "type": "string"
+        },
+        {
+          "name": "source_record_key",
+          "type": "string"
         }
       ]
     }

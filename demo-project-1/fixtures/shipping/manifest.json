@@ -1,5 +1,32 @@
 {
   "businessClock": "2018-05-20T10:00:00Z",
+  "chartAdmission": {
+    "metadataEnrichmentOnly": true,
+    "noHiddenRerun": true,
+    "providerIntegrationAcceptance": "Actual query execution persists raw snapshot/fingerprint; metadata adapter attaches its scoped ExecutionRef and exact held row_key; NULL refs refused; selection opens that same execution and held row without rerun.",
+    "queryMappings": {
+      "heatmap": {
+        "columnColumn": "expectation",
+        "evidenceRefColumn": "evidence_ref",
+        "rowColumn": "request_id",
+        "statusColumn": "status"
+      },
+      "timeline": {
+        "clockDomainColumn": "clock_domain",
+        "eventColumn": "kind",
+        "evidenceRefColumn": "evidence_ref",
+        "laneColumn": "attempt_id",
+        "precisionColumn": "precision_ms",
+        "sequenceColumn": "sequence",
+        "statusColumn": "status",
+        "timeColumn": "occurred_at"
+      }
+    },
+    "rawRowsAdmitted": false,
+    "requiresActualScopedExecutionRef": true,
+    "requiresExactHeldRowKey": true,
+    "retainRawFingerprintAndSourceProvenance": true
+  },
   "clockDomain": "synthetic-shipping-utc",
   "connectionId": "shipping-working-copy",
   "database": {
@@ -10,7 +37,7 @@
   },
   "format": "datatug-shipping-fixture/v1",
   "generation": "shipping-base-v1",
-  "generatorSha256": "1fd31af3fc437594f873a0de40edd3a61d48f54404d93d58991962da85fed20c",
+  "generatorSha256": "eb6e9e59b633686da3982b90c3e1b91eacb26c38a9566c8f09dee872d0af5e57",
   "logs": [
     {
       "bytes": 6873,
