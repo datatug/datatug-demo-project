@@ -78,8 +78,17 @@ The connected test account and its one existing view loaded. Selecting
 **VIEW LOGS** and querying the one-minute window above for order `11039`
 returned six rows in the actual AG Grid at 15:06 UTC. This used the retained
 grant and view: no new Logging consent, revocation, or provider configuration
-change occurred. The token refresh mechanism remains unverified. The backend
-grant remains stored; Google revocation was neither requested nor performed.
+change occurred. The backend grant remains stored; Google revocation was
+neither requested nor performed.
+
+Code inspection of the deployed host's pinned backend release `v0.39.2`
+shows that each query creates a request-scoped token provider without a
+reusable token cache. Its [token provider](https://github.com/datatug/backend/blob/75fc6572827115bc0d1e2662a1e32c54b0b0df00/googlecloudlogs4datatug/reader.go)
+calls [OAuth.Refresh](https://github.com/datatug/backend/blob/75fc6572827115bc0d1e2662a1e32c54b0b0df00/googlecloudlogs4datatug/oauth.go)
+to exchange the stored refresh token. The successful retained-grant query
+therefore supports the ordinary refresh path by code-path inference. No
+outbound token exchange was traced, and forced expiry, revoked-grant recovery
+and real Google revocation remain untested.
 
 Current public Firebase Auth URI reads returned an `authUri` for
 `auth.sneat.co` and `400 INVALID_CONTINUE_URI` for `datatug.app`, reporting
@@ -88,9 +97,16 @@ resource inventory listed 8 projects and 17 sites across 6 successful Hosting
 project reads; 2 other Hosting reads returned 404. No `datatug.app`
 custom-domain association appeared in those reads, so its owner is unknown.
 No association or auth, identity, project, DNS, or domain configuration was
-changed. A lookup through another stored account was blocked by automatic
-approval review; owner permission is pending, and it has not been retried or
-bypassed.
+changed. An initial lookup through another stored account was blocked by
+automatic approval review. After explicit owner approval, the read-only
+lookup completed at 15:46 UTC: that account saw the same eight projects, all
+eight Hosting listings and all 17 sites were read successfully with complete
+pagination, and no `datatug.app` association appeared. Firebase's project list
+with deleted entries included returned six active projects, all already in
+that inventory; the deleted Cloud project query returned none. These are
+visibility-bounded results, so the conflicting project's owner remains
+unknown. The saved active CLI account was unchanged. No account, credential,
+permission, domain, DNS or billing configuration was changed.
 
 ## Deployment migration receipts — 2026-10-20
 
