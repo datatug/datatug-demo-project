@@ -1,4 +1,5 @@
 {
+  "createdAt": "2026-10-10T09:11:06Z",
   "id": "chinook-customer-invoice-count",
   "title": "Chinook Customer Invoice Count",
   "type": "DTQL",

@@ -1,4 +1,5 @@
 {
+  "createdAt": "2026-10-16T13:14:15Z",
   "id": "northwind-orders-full-sqlite",
   "title": "Northwind Orders · verified full projection",
   "type": "DTQL",

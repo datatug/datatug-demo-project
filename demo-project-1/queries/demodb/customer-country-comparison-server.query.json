@@ -1,4 +1,5 @@
 {
+  "createdAt": "2026-10-19T02:56:34Z",
   "id": "customer-country-comparison-server",
   "title": "Northwind + Chinook · customer records by shared country",
   "type": "DTQL",

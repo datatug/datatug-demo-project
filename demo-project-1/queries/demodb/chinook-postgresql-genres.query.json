@@ -1,4 +1,5 @@
 {
+  "createdAt": "2026-10-07T15:31:36Z",
   "id": "chinook-postgresql-genres",
   "title": "Compare Chinook genres in PostgreSQL and SQLite",
   "type": "DTQL",
