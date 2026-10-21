@@ -1,11 +1,15 @@
 # Orders in motion
 
 `board.json` is the shareable showcase. `?mode=tutorial` derives a browser session
-copy and reveals the cards in order: `orders-by-month-country`,
-`northwind-shipping-countries`, then `source-inspector`. Tutorial actions do not
-edit the saved project.
+copy from the saved canonical cards and guides their construction in board
+order: `orders-by-month-country`, `northwind-shipping-countries`,
+`shared-customer-countries`, `customer-country-sources`, and `source-inspector`.
+The independent-source card starts with one source before adding the second.
+Tutorial actions do not edit the saved project.
 
-The normal board and tutorial execute read-only DTQL on `ovdb.demodb.dev`.
+The normal board and tutorial execute read-only server DTQL. The existing
+Northwind shipping sources use `ovdb.demodb.dev`; customer comparisons use
+`cloud.openvaultdb.com` through the normal direct OVDB dispatcher.
 They do not download SQLite fixtures. The existing browser SQL examples remain
 available as explicit saved queries; `/demo/sqlite` provides the editable local
 clone journey.
@@ -39,3 +43,41 @@ The current public server publishes an empty server identity and omits structure
 inspector results preserve that absence and do not claim publisher admission.
 
 The saved-query inspector occupies its own full-width row; the shipping-country chart keeps its six-column slot for future chart space. Tabs retain their stable IDs and saved query references; layout changes do not rerun held results.
+
+
+## Independent customer-country sources
+
+The full-width `customer-country-sources` plain bar card compares two saved
+queries: `demodb/northwind-customer-country-counts-server` and
+`demodb/chinook-customer-country-counts-server`. Each independently counts
+unique customer keys in its own physical table (`northwind/Customers` and
+`chinook/Customer`), groups exact `Country` labels, and returns `country`
+(string) plus `customers` (integer), ordered by country with a 100-group bound.
+The common declared unit is **customer records**. This is an independent-source
+comparison; it does not identify the same people in the two samples.
+
+Each query explicitly excludes null countries. The card discloses the dated
+local fixture observation: on 2026-10-21, Northwind had two excluded customer
+records and Chinook had none. Those are fixture observations, not dynamically
+measured exclusions in the live result. Live data can change. No country alias
+normalization occurs: `UK` and `United Kingdom` remain separate categories.
+Only complete source results can be combined. The chart uses the full union of
+observed country labels and retains an absent source value as missing.
+
+This new card is separate from the existing `shared-customer-countries` card.
+That card retains the single server federation query
+`demodb/customer-country-comparison-server`, distinct per-source counts, and
+its exact-label shared-country scope. Adding independent sources does not
+change its query, selection behavior, or the Shipping board.
+
+The local fixture checks used read-only SQLite connections to these existing
+artifacts (no fixture download or browser database execution):
+
+| Source | Artifact SHA-256 | Non-null groups | Customer records counted |
+| --- | --- | ---: | ---: |
+| Northwind | `279b34136771aee75d802094b3329515a2b01da65d2a20a4a9e3b58c29b4fd20` | 21 | 91 |
+| Chinook | `7651ba378ac2fcd0dfc3c66fb101f7a7eed3ba39a612ec642b96e20702061f15` | 24 | 59 |
+
+These observations validate the measure and null disclosure; they do not prove
+current server results or browser acceptance. Deployment of the Apps support
+for independent chart sources must precede publishing this board revision.

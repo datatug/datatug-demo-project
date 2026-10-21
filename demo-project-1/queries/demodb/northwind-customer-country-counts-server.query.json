@@ -1,0 +1,34 @@
+{
+  "createdAt": "2026-10-21T18:40:00Z",
+  "id": "northwind-customer-country-counts-server",
+  "title": "Northwind customer records by country",
+  "type": "DTQL",
+  "purpose": "Independent read-only server aggregate: distinct Northwind customer records grouped by exact Country labels; each customer key is unique within this source. Declared measure: customer records, not shared people. Null Country records are excluded. The 2026-10-21 local pinned fixture had two such records; live data can change. Country aliases are not normalized: UK and United Kingdom remain distinct. The complete result is bounded to 100 country groups.",
+  "federation": {
+    "ovdbBaseUrl": "https://cloud.openvaultdb.com",
+    "tables": [
+      {
+        "database": "northwind",
+        "name": "Customers",
+        "fields": [
+          "CustomerID",
+          "Country"
+        ]
+      }
+    ]
+  },
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "country",
+          "type": "string"
+        },
+        {
+          "name": "customers",
+          "type": "integer"
+        }
+      ]
+    }
+  ]
+}
