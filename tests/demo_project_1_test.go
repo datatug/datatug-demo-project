@@ -106,14 +106,14 @@ func TestDemoProject1_Validate(t *testing.T) {
 	wantEntityIDs := []string{"Album", "Artist", "Country", "Customer", "Invoice", "InvoiceLine", "Person", "Track"}
 	assert.ElementsMatch(t, wantEntityIDs, project.Entities.IDs())
 
-	if assert.Len(t, project.Boards, 3) {
+	if assert.Len(t, project.Boards, 4) {
 		boardIDs := make([]string, 0, len(project.Boards))
 		for _, board := range project.Boards {
 			boardIDs = append(boardIDs, board.ID)
 			require.NotEmpty(t, board.Rows, "board %s has no useful content", board.ID)
 			assert.NoError(t, board.Validate(), "board %s is invalid", board.ID)
 		}
-		assert.ElementsMatch(t, []string{"board1", "northwind", "showcase"}, boardIDs)
+		assert.ElementsMatch(t, []string{"board1", "northwind", "showcase", "shipping"}, boardIDs)
 	}
 
 	if assert.Len(t, project.DbModels, 1) {
