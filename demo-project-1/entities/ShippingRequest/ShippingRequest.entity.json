@@ -1,0 +1,17 @@
+{
+  "id": "ShippingRequest",
+  "fields": [
+    {
+      "id": "id",
+      "type": "string",
+      "isKeyField": true,
+      "mappings": [
+        {
+          "source": "shipping-working-copy",
+          "collection": "requests",
+          "column": "request_id"
+        }
+      ]
+    }
+  ]
+}

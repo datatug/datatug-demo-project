@@ -103,7 +103,7 @@ func TestDemoProject1_Validate(t *testing.T) {
 	project, err := store.LoadProject(context.Background())
 	require.NoError(t, err, "failed to load %s", projectDir)
 
-	wantEntityIDs := []string{"Album", "Artist", "Country", "Customer", "Invoice", "InvoiceLine", "Person", "Track"}
+	wantEntityIDs := []string{"Album", "Artist", "Country", "Customer", "Invoice", "InvoiceLine", "Order", "Person", "ShippingRequest", "Track"}
 	assert.ElementsMatch(t, wantEntityIDs, project.Entities.IDs())
 
 	if assert.Len(t, project.Boards, 4) {
