@@ -81,3 +81,24 @@ artifacts (no fixture download or browser database execution):
 These observations validate the measure and null disclosure; they do not prove
 current server results or browser acceptance. Deployment of the Apps support
 for independent chart sources must precede publishing this board revision.
+
+
+## Pending customer-collection rights publication
+
+The five customer-reading server definitions now bind the selected API base to
+its canonical operator identity, `https://demodb.dev/ovdb`: the two independent
+customer-country aggregates, the existing shared-country federation, Chinook
+billing, and the hosted customer preview. The client normalizes the preview's
+legacy `https://demodb.dev/ovdb` API base to `https://ovdb.demodb.dev` for both
+execution and identity comparison.
+
+This binding depends on the provider owner publishing that stable identity and
+structured server-declared terms for exactly `northwind/Customers` and
+`chinook/Customer`, with matching live source usage evidence. Until that
+publication is verified, these staged definitions may refuse execution. The
+empty-identity observation above describes the preceding server state; it is
+not a claim that this dependency has been deployed. Server-declared terms are
+separate from the existing publisher-verified Orders sidecars. The Orders
+query bodies, publisher pins, and strict 830-order/21-country admissions stay
+unchanged. Customer terms must not be expanded to Orders through a database or
+server-wide declaration as part of this publication.

@@ -6,6 +6,10 @@
   "purpose": "Preview hosted Chinook customer names and countries in the browser.",
   "federation": {
     "ovdbBaseUrl": "https://demodb.dev/ovdb",
+    "expectedServerIdentity": {
+      "baseUrl": "https://demodb.dev/ovdb",
+      "serverId": "https://demodb.dev/ovdb"
+    },
     "tables": [
       {
         "database": "chinook",
