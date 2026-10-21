@@ -1,6 +1,7 @@
 {
   "id": "showcase",
   "title": "Orders in motion · DataTug visual showcase",
+  "tags": ["northwind", "chinook", "customers"],
   "access": "public",
   "rows": [
     {

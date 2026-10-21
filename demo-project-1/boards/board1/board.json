@@ -1,6 +1,7 @@
 {
   "id": "board1",
   "title": "Chinook customer insights",
+  "tags": ["chinook", "sales", "customers"],
   "access": "public",
   "rows": [
     {

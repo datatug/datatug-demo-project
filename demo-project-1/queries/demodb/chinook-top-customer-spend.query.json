@@ -1,6 +1,7 @@
 {
   "id": "chinook-top-customer-spend",
   "title": "Top Customer Spend",
+  "tags": ["chinook", "sales", "customers"],
   "type": "SQL",
   "connectionId": "chinook-sqlite",
   "recordsets": [
