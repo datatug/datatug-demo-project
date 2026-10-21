@@ -2,9 +2,11 @@ package tests
 
 import (
 	"bytes"
+	"context"
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"strings"
@@ -122,4 +124,77 @@ func TestNativeDemoMeaningsAndExactSavedQueryUses(t *testing.T) {
 		queryCounts[binding.Query]++
 	}
 	require.Equal(t, map[string]int{"customers/customer-invoices": 3, "invoices/invoice-lines": 3, "demodb/chinook-top-customer-spend": 2}, queryCounts)
+}
+
+func TestAllSavedQueryLegacyMeaningReferencesResolve(t *testing.T) {
+	ctx := context.Background()
+	store := newStore(t)
+	project, err := store.LoadProject(ctx)
+	require.NoError(t, err)
+	definitions := map[string]map[string]bool{}
+	for _, entity := range project.Entities {
+		fields := map[string]bool{}
+		for _, field := range entity.Fields {
+			fields[field.ID] = true
+		}
+		definitions[entity.ID] = fields
+	}
+	var files []string
+	err = filepath.WalkDir(filepath.Join(projectDir, "queries"), func(path string, entry fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if !entry.IsDir() && strings.HasSuffix(path, ".json") {
+			files = append(files, path)
+		}
+		return nil
+	})
+	require.NoError(t, err)
+	require.NotEmpty(t, files)
+	require.LessOrEqual(t, len(files), 1000)
+	references := 0
+	for _, path := range files {
+		data, err := os.ReadFile(path)
+		require.NoError(t, err)
+		require.LessOrEqual(t, len(data), 1<<20)
+		var document any
+		require.NoError(t, json.Unmarshal(data, &document), path)
+		var visit func(any)
+		visit = func(value any) {
+			switch value := value.(type) {
+			case map[string]any:
+				if meta, ok := value["meta"].(map[string]any); ok && (meta["entity"] != nil || meta["field"] != nil) {
+					references++
+					entity, entityOK := meta["entity"].(string)
+					field, fieldOK := meta["field"].(string)
+					if !entityOK || !fieldOK || entity == "" || field == "" || !definitions[entity][field] {
+						t.Errorf("%s has unresolved legacy meaning %v.%v", path, meta["entity"], meta["field"])
+					}
+				}
+				for _, child := range value {
+					visit(child)
+				}
+			case []any:
+				for _, child := range value {
+					visit(child)
+				}
+			}
+		}
+		visit(document)
+	}
+	require.Positive(t, references, "the scan must exercise declared query references")
+	for _, expected := range []struct{ Entity, Field, Type string }{
+		{"Customer", "FirstName", "string"},
+		{"Customer", "LastName", "string"},
+		{"Invoice", "InvoiceDate", "datetime"},
+	} {
+		entity, err := store.LoadEntity(ctx, expected.Entity)
+		require.NoError(t, err)
+		field := fieldByID(t, entity, expected.Field)
+		require.Equal(t, expected.Type, field.Type)
+		require.Len(t, field.Mappings, 1)
+		require.Equal(t, "chinook", field.Mappings[0].Source)
+		require.Equal(t, expected.Entity, field.Mappings[0].Collection)
+		require.Equal(t, expected.Field, field.Mappings[0].Column)
+	}
 }

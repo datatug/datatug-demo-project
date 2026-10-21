@@ -22,6 +22,17 @@
     {
       "id": "Total",
       "type": "number"
+    },
+    {
+      "id": "InvoiceDate",
+      "type": "datetime",
+      "mappings": [
+        {
+          "source": "chinook",
+          "collection": "Invoice",
+          "column": "InvoiceDate"
+        }
+      ]
     }
   ],
   "tables": [
