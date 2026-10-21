@@ -1,0 +1,17 @@
+{
+  "tags": [
+    "Customers"
+  ],
+  "columns": [
+    {
+      "name": "ID",
+      "ordinalPosition": 1,
+      "pkPosition": 1,
+      "isNullable": false,
+      "dbType": "INTEGER",
+      "tags": [
+        "Customers"
+      ]
+    }
+  ]
+}

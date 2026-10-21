@@ -1,0 +1,30 @@
+{
+  "id": "Northwind",
+  "title": "Northwind",
+  "schemas": [
+    {
+      "id": "dbo",
+      "tables": [
+        {
+          "name": "Customers",
+          "tags": [
+            "Customers"
+          ],
+          "Columns": [
+            {
+              "name": "ID",
+              "ordinalPosition": 1,
+              "pkPosition": 1,
+              "isNullable": false,
+              "dbType": "INTEGER",
+              "tags": [
+                "Customers"
+              ]
+            }
+          ]
+        }
+      ],
+      "views": []
+    }
+  ]
+}
