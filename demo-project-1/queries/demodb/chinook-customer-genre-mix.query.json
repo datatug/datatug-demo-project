@@ -1,6 +1,7 @@
 {
   "id": "chinook-customer-genre-mix",
   "title": "Customer Genre Mix",
+  "tags": ["chinook", "customers", "music"],
   "type": "SQL",
   "connectionId": "chinook-sqlite",
   "recordsets": [

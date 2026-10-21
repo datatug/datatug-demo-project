@@ -1,6 +1,7 @@
 {
   "id": "northwind-reorder-watchlist",
   "title": "Reorder Watchlist",
+  "tags": ["northwind", "operations", "inventory"],
   "type": "SQL",
   "recordsets": [
     {

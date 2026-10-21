@@ -1,6 +1,7 @@
 {
   "id": "northwind",
   "title": "Northwind operations · browse queries",
+  "tags": ["northwind", "sales", "operations"],
   "access": "public",
   "rows": [
     {
