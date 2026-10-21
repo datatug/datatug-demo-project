@@ -7,9 +7,7 @@
       "tables": [
         {
           "name": "Customers",
-          "tags": [
-            "Customers"
-          ],
+          "tags": [],
           "Columns": [
             {
               "name": "ID",
@@ -17,9 +15,7 @@
               "pkPosition": 1,
               "isNullable": false,
               "dbType": "INTEGER",
-              "tags": [
-                "Customers"
-              ]
+              "tags": []
             }
           ]
         }

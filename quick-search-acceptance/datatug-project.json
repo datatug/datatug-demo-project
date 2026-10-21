@@ -2,16 +2,12 @@
   "id": "quick-search-synthetic-demo",
   "title": "Quick Search synthetic acceptance",
   "access": "public",
-  "tags": {
-    "Customers": {}
-  },
+  "tags": {},
   "boards": [
     {
       "id": "Customers",
       "title": "Customers",
-      "tags": [
-        "Customers"
-      ]
+      "tags": []
     }
   ],
   "dbModels": [
