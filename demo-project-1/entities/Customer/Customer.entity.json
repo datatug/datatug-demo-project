@@ -38,6 +38,28 @@
           "column": "Email"
         }
       ]
+    },
+    {
+      "id": "FirstName",
+      "type": "string",
+      "mappings": [
+        {
+          "source": "chinook",
+          "collection": "Customer",
+          "column": "FirstName"
+        }
+      ]
+    },
+    {
+      "id": "LastName",
+      "type": "string",
+      "mappings": [
+        {
+          "source": "chinook",
+          "collection": "Customer",
+          "column": "LastName"
+        }
+      ]
     }
   ],
   "tables": [
