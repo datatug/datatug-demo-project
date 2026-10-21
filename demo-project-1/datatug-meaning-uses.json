@@ -1,0 +1,71 @@
+{
+  "version": 1,
+  "bindings": [
+    {
+      "query": "customers/customer-invoices",
+      "queryHash": "6a0b28cf717193bf96e3968fd47f9da2d701da156fdec103f3e4f7f0baf928ae",
+      "parameter": "CustomerId",
+      "meaning": "customer-id"
+    },
+    {
+      "query": "customers/customer-invoices",
+      "queryHash": "6a0b28cf717193bf96e3968fd47f9da2d701da156fdec103f3e4f7f0baf928ae",
+      "column": {
+        "recordset": 0,
+        "name": "InvoiceId"
+      },
+      "meaning": "invoice-id"
+    },
+    {
+      "query": "customers/customer-invoices",
+      "queryHash": "6a0b28cf717193bf96e3968fd47f9da2d701da156fdec103f3e4f7f0baf928ae",
+      "column": {
+        "recordset": 0,
+        "name": "Total"
+      },
+      "meaning": "invoice-total"
+    },
+    {
+      "query": "invoices/invoice-lines",
+      "queryHash": "a6f25392634a9fd0bf737752cb3bae410e1963f32918d1b9bc02e271e6108dc8",
+      "parameter": "InvoiceId",
+      "meaning": "invoice-id"
+    },
+    {
+      "query": "invoices/invoice-lines",
+      "queryHash": "a6f25392634a9fd0bf737752cb3bae410e1963f32918d1b9bc02e271e6108dc8",
+      "column": {
+        "recordset": 0,
+        "name": "UnitPrice"
+      },
+      "meaning": "unit-price"
+    },
+    {
+      "query": "invoices/invoice-lines",
+      "queryHash": "a6f25392634a9fd0bf737752cb3bae410e1963f32918d1b9bc02e271e6108dc8",
+      "column": {
+        "recordset": 0,
+        "name": "Quantity"
+      },
+      "meaning": "quantity"
+    },
+    {
+      "query": "demodb/chinook-top-customer-spend",
+      "queryHash": "530184755e9ddbea3e3528f4a9ce0197f35d706ea3a082ec58c162fd3c103005",
+      "column": {
+        "recordset": 0,
+        "name": "CustomerId"
+      },
+      "meaning": "customer-id"
+    },
+    {
+      "query": "demodb/chinook-top-customer-spend",
+      "queryHash": "530184755e9ddbea3e3528f4a9ce0197f35d706ea3a082ec58c162fd3c103005",
+      "column": {
+        "recordset": 0,
+        "name": "Country"
+      },
+      "meaning": "customer-country"
+    }
+  ]
+}

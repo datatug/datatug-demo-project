@@ -820,7 +820,9 @@ func TestDemoProject1_ResolveChinookCustomerColumns(t *testing.T) {
 		{Name: "CustomerId", Type: "integer"},
 		{Name: "Country", Type: "string"},
 		{Name: "Email", Type: "string"},
-		{Name: "FirstName", Type: "string"}, // no mapping, no pattern -> absent
+		{Name: "FirstName", Type: "string"},
+		{Name: "LastName", Type: "string"},
+		{Name: "Phone", Type: "string"}, // no mapping, no pattern -> absent
 	}
 	got := semantic.Resolve(entities, "chinook", "Customer", columns)
 
@@ -840,8 +842,11 @@ func TestDemoProject1_ResolveChinookCustomerColumns(t *testing.T) {
 	assertDeclared("Country", "Country", "Name")
 	assertDeclared("Email", "Customer", "Email")
 
-	_, hasFirstName := byColumn["FirstName"]
-	assert.False(t, hasFirstName, "FirstName has no mapping or name pattern and must not resolve")
+	assertDeclared("FirstName", "Customer", "FirstName")
+	assertDeclared("LastName", "Customer", "LastName")
+
+	_, hasPhone := byColumn["Phone"]
+	assert.False(t, hasPhone, "Phone has no mapping or name pattern and must not resolve")
 }
 
 // TestDemoProject1_ApplicableQueries runs semantic.Applicable with
