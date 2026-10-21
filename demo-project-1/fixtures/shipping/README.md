@@ -24,3 +24,9 @@ Raw SQLite cannot mint a hosted query execution identity. Therefore evidence-ref
 Accepted assignment must match the latest attempt **and** current configuration, the unique current effective route and its enabled partner. A later configuration invalidates the old green assignment, while historical config17 failure evidence remains intact.
 
 `manifest.json.chartAdmission` records the exact column mappings and unresolved provider integration gate. The Go integration test feeds raw NULL slots through actual Core `ArtifactRef.Validate`, proving that these raw rows are refused as admitted evidence. That test does not prove the future provider enrichment or renderer journey; those need real persisted execution/snapshot/selection acceptance.
+
+## Persisted dashboard definition
+
+`boards/shipping/board.json` binds the required dynamic `order_id` parameter to the saved `shipping/events`, `shipping/timings` and `shipping/readiness` queries. Its timeline shows observed milestones, timing bars map real adjacent endpoint identities, and the heatmap maps categorical readiness. Each chart has a distinct selection identity. No order value, SQL text, cached result or execution reference is embedded. Missing endpoints are unavailable, never invented spans.
+
+This is a Core v0.63-compatible definition, not source publication or hosted rendering evidence. Native import, current source admission, retained execution/row-evidence metadata and the shared app consumer remain integration gates. Raw evidence-ref cells stay NULL. The immutable SQLite/schema/log fixture bytes are unchanged. Request received is the eventual initial Check; Carrier assignment remains a blueprint for the story's explicitly authored Check.
