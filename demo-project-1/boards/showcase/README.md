@@ -93,8 +93,10 @@ legacy `https://demodb.dev/ovdb` API base to `https://ovdb.demodb.dev` for both
 execution and identity comparison.
 
 This binding depends on the provider owner publishing that stable identity and
-structured server-declared terms for exactly `northwind/Customers` and
-`chinook/Customer`, with matching live source usage evidence. Until that
+structured server-declared terms for exactly `northwind/Customers`,
+`chinook/Customer`, and `chinook/Invoice`, with matching live source usage
+evidence. Invoice terms cover the existing Chinook billing query's second
+input; its Customer and Invoice usage must both retain their real declarations. Until that
 publication is verified, these staged definitions may refuse execution. The
 empty-identity observation above describes the preceding server state; it is
 not a claim that this dependency has been deployed. Server-declared terms are
