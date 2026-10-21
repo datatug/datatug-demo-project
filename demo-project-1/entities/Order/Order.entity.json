@@ -1,0 +1,22 @@
+{
+  "id": "Order",
+  "fields": [
+    {
+      "id": "id",
+      "type": "integer",
+      "isKeyField": true,
+      "mappings": [
+        {
+          "source": "northwind-postgresql",
+          "collection": "Orders",
+          "column": "OrderID"
+        },
+        {
+          "source": "shipping-working-copy",
+          "collection": "requests",
+          "column": "order_id"
+        }
+      ]
+    }
+  ]
+}
