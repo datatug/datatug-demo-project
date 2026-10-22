@@ -856,6 +856,11 @@ func TestDemoProject1_CustomerMeaningSeparatesNorthwindFromChinook(t *testing.T)
 	require.Len(t, got, 1)
 	assert.Equal(t, "ChinookCustomer", got[0].Entity)
 	assert.Equal(t, semantic.Inferred, got[0].Provenance)
+	// No Chinook edition spells it customer_id (Sakila does), so no customer
+	// meaning is inferred for snake_case columns.
+	for _, source := range []string{"sakila-sqlite", "sakila-postgresql", "northwind-ingitdb"} {
+		assert.Empty(t, semantic.Resolve(entities, source, "customer", []semantic.Column{{Name: "customer_id", Type: "integer"}}), source)
+	}
 }
 
 // TestDemoProject1_ResolveChinookCustomerColumns runs semantic.Resolve over a

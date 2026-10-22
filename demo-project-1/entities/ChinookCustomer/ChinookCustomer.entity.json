@@ -10,10 +10,6 @@
           "type": "exact",
           "value": "CustomerId",
           "caseSensitive": true
-        },
-        {
-          "type": "exact",
-          "value": "customer_id"
         }
       ],
       "mappings": [

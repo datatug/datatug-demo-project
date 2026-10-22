@@ -122,15 +122,11 @@
               "sources": [
                 {
                   "id": "route-readiness-held",
-                  "queryId": "shipping/readiness-comparison",
+                  "queryId": "shipping/readiness",
                   "parameters": [
                     {
                       "id": "order_id",
                       "boardParameterId": "order_id"
-                    },
-                    {
-                      "id": "comparison_order_id",
-                      "boardParameterId": "comparison_order_id"
                     }
                   ]
                 }

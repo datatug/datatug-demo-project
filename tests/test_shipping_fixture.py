@@ -133,6 +133,9 @@ class ShippingFixtureTest(unittest.TestCase):
   self.assertEqual({'Route at attempt':'fail','Assignment at attempt':'fail','Effective route':'fail','Partner enabled':'pass','Accepted assignment':'fail'},heatmap(11045))
   # The healthy historical control passes for its own attempt; its current-configuration cells stay honest.
   self.assertEqual({'Route at attempt':'pass','Assignment at attempt':'pass','Effective route':'fail','Partner enabled':'pass','Accepted assignment':'fail'},heatmap(11038))
+  explanations={r['expectation']:r['explanation'] for r in records('readiness',11038)}
+  self.assertEqual('Assigned under configuration 17 by attempt-11038-1; that assignment does not match the current effective route',explanations['Accepted assignment'])
+  self.assertNotIn('replay',explanations['Accepted assignment'],'an already assigned order is not told to replay')
   comparison=self.db.execute((ROOT/'demo-project-1/queries/shipping/readiness-comparison.query.sql').read_text(),{'order_id':11045,'comparison_order_id':11038})
   names=[c[0] for c in comparison.description]; comparison=[dict(zip(names,row)) for row in comparison]
   self.assertEqual(records('readiness',11038)+records('readiness',11045),comparison)
