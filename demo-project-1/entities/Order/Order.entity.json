@@ -7,9 +7,19 @@
       "isKeyField": true,
       "mappings": [
         {
+          "source": "northwind-sqlite",
+          "collection": "Orders",
+          "column": "OrderID"
+        },
+        {
           "source": "northwind-postgresql",
           "collection": "Orders",
           "column": "OrderID"
+        },
+        {
+          "source": "shipping-sqlite",
+          "collection": "requests",
+          "column": "order_id"
         },
         {
           "source": "shipping-working-copy",

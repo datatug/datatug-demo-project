@@ -40,6 +40,15 @@ def log_artifact(path, entries):
 def event_entries(order, attempt, start, kinds):
     return [dict(event_id=f'{attempt}-e{i}',attempt_id=attempt,order_id=order,sequence=i,kind=kind,occurred_at=f'{start}{i-1:02d}Z',clock_domain='synthetic-shipping-utc',precision_ms=1000,synthetic=True) for i,kind in enumerate(kinds,1)]
 
+def carrier_calls(order, attempt, requested_at, confirmed_at):
+    """Synthetic carrier-gateway booking call for one accepted attempt: an outbound
+    request line and its booked response line. No real carrier, network call or
+    physical shipment is represented; the booking is keyed by the same
+    deduplication identity as the accepted assignment."""
+    common=dict(stream='carrier-gateway',order_id=order,request_id=f'request-{order}',correlation_id=f'correlation-{order}',attempt_id=attempt,carrier='united-package',deduplication_key=f'request-{order}:assignment',clock_domain='synthetic-shipping-utc',precision_ms=1000,synthetic=True,note='Synthetic outbound carrier booking call (simulated; not the public carrier sandbox); no real carrier, booking or shipment.')
+    return [dict(common,event_id=f'{attempt}-c1',sequence=1,kind='booking-requested',occurred_at=requested_at,http_method='POST',http_path='/v1/bookings'),
+            dict(common,event_id=f'{attempt}-c2',sequence=2,kind='booking-confirmed',occurred_at=confirmed_at,http_method='POST',http_path='/v1/bookings',http_status=201,booking_status='booked',booking_reference=f'booking-{order}')]
+
 def insert_events(db, entries, artifact):
     for e in entries:
         ref=artifact['entries'][e['event_id']]
@@ -85,6 +94,13 @@ def build(output):
     recovery_artifacts=[log_artifact(output/f'logs/recovery-{order}.jsonl',[e for e in recovery if e['order_id']==order]) for order in [11045,11062]]
     (output/'logs/recovery.jsonl').unlink(missing_ok=True)
     recovery_artifact={'entries':{key:value for artifact in recovery_artifacts for key,value in artifact['entries'].items()}}
+    # Carrier-gateway calls are additive direct files. The baseline stream holds only the
+    # healthy 11038 booking (route resolved 09:00:03, assignment accepted 09:00:04); replay
+    # calls live only in their per-request recovery artifact (route resolved 10:05:01,
+    # assignment accepted 10:05:02). Blocked 11045/11062 have no call before replay.
+    carrier_artifacts=[dict(log_artifact(output/'logs/carrier-gateway.jsonl',carrier_calls(11038,'attempt-11038-1','2018-04-30T09:00:03Z','2018-04-30T09:00:04Z')),stream='carrier-gateway',classification='baseline',orders=[11038])]
+    for order in [11045,11062]:
+        carrier_artifacts.append(dict(log_artifact(output/f'logs/carrier-gateway-recovery-{order}.jsonl',carrier_calls(order,f'attempt-{order}-2','2018-05-20T10:05:01Z','2018-05-20T10:05:02Z')),stream='carrier-gateway',classification='recovery-example',orders=[order],eligibleWith=f'logs/recovery-{order}.jsonl'))
     path=output/'base.sqlite'; path.unlink(missing_ok=True)
     db=sqlite3.connect(path); db.executescript(SCHEMA)
     db.execute("INSERT INTO workspace_state VALUES('shipping-base-v1',17,'2018-05-20T10:00:00Z')")
@@ -104,7 +120,7 @@ def build(output):
     db.execute("INSERT INTO assignments VALUES('assignment-11038','attempt-11038-1','united-package','2018-04-30T09:00:04Z','request-11038:assignment')")
     db.commit(); db.execute('VACUUM'); db.close()
     (output/'schema.sql').write_text(SCHEMA)
-    write_json(output/'manifest.json',{'format':'datatug-shipping-fixture/v1','synthetic':True,'publication':'not-published','generatorSha256':digest(Path(__file__).read_bytes()),'rightsSha256':digest((FIXTURE/'rights.json').read_bytes()),'connectionId':'shipping-working-copy','generation':'shipping-base-v1','businessClock':'2018-05-20T10:00:00Z','recoveryClock':'2018-05-20T10:05:00Z','clockDomain':'synthetic-shipping-utc','precisionMs':1000,'database':{'path':'base.sqlite','sha256':digest(path.read_bytes()),'bytes':path.stat().st_size,'schemaSha256':digest(SCHEMA.encode())},'logs':[base_artifact,*recovery_artifacts],'northwind':{'sha256':'279b34136771aee75d802094b3329515a2b01da65d2a20a4a9e3b58c29b4fd20','readOnly':True,'orders':[11038,11045,11062]},'recovery':{'configuration':18,'orders':[11045,11062],'deduplicationKey':'request_id + :assignment','changesGeneration':False},'reset':{'newGenerationRequired':True,'retainOldArtifactAndHistory':True},'chartAdmission':{'rawRowsAdmitted':False,'requiresActualScopedExecutionRef':True,'requiresExactHeldRowKey':True,'metadataEnrichmentOnly':True,'retainRawFingerprintAndSourceProvenance':True,'noHiddenRerun':True,'queryMappings':{'timeline':{'laneColumn':'attempt_id','eventColumn':'kind','sequenceColumn':'sequence','timeColumn':'occurred_at','clockDomainColumn':'clock_domain','precisionColumn':'precision_ms','statusColumn':'status','evidenceRefColumn':'evidence_ref'},'heatmap':{'rowColumn':'request_id','columnColumn':'expectation','statusColumn':'status','evidenceRefColumn':'evidence_ref'}},'providerIntegrationAcceptance':'Actual query execution persists raw snapshot/fingerprint; metadata adapter attaches its scoped ExecutionRef and exact held row_key; NULL refs refused; selection opens that same execution and held row without rerun.'}})
+    write_json(output/'manifest.json',{'format':'datatug-shipping-fixture/v1','synthetic':True,'publication':'not-published','generatorSha256':digest(Path(__file__).read_bytes()),'rightsSha256':digest((FIXTURE/'rights.json').read_bytes()),'connectionId':'shipping-working-copy','generation':'shipping-base-v1','businessClock':'2018-05-20T10:00:00Z','recoveryClock':'2018-05-20T10:05:00Z','clockDomain':'synthetic-shipping-utc','precisionMs':1000,'database':{'path':'base.sqlite','sha256':digest(path.read_bytes()),'bytes':path.stat().st_size,'schemaSha256':digest(SCHEMA.encode())},'logs':[base_artifact,*recovery_artifacts],'carrierGatewayLogs':carrier_artifacts,'northwind':{'sha256':'279b34136771aee75d802094b3329515a2b01da65d2a20a4a9e3b58c29b4fd20','readOnly':True,'orders':[11038,11045,11062]},'recovery':{'configuration':18,'orders':[11045,11062],'deduplicationKey':'request_id + :assignment','changesGeneration':False},'reset':{'newGenerationRequired':True,'retainOldArtifactAndHistory':True},'chartAdmission':{'rawRowsAdmitted':False,'requiresActualScopedExecutionRef':True,'requiresExactHeldRowKey':True,'metadataEnrichmentOnly':True,'retainRawFingerprintAndSourceProvenance':True,'noHiddenRerun':True,'queryMappings':{'timeline':{'laneColumn':'attempt_id','eventColumn':'kind','sequenceColumn':'sequence','timeColumn':'occurred_at','clockDomainColumn':'clock_domain','precisionColumn':'precision_ms','statusColumn':'status','evidenceRefColumn':'evidence_ref'},'heatmap':{'rowColumn':'request_id','columnColumn':'expectation','statusColumn':'status','evidenceRefColumn':'evidence_ref'}},'providerIntegrationAcceptance':'Actual query execution persists raw snapshot/fingerprint; metadata adapter attaches its scoped ExecutionRef and exact held row_key; NULL refs refused; selection opens that same execution and held row without rerun.'}})
     return base_artifact,recovery_artifact
 
 if __name__=='__main__':
