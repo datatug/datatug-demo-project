@@ -50,7 +50,44 @@
           "column": "CompanyName"
         }
       ]
+    },
+    {
+      "id": "ContactName",
+      "type": "string",
+      "mappings": [
+        {
+          "source": "northwind-sqlite",
+          "collection": "Customers",
+          "column": "ContactName"
+        },
+        {
+          "source": "northwind-postgresql",
+          "collection": "Customers",
+          "column": "ContactName"
+        }
+      ]
+    },
+    {
+      "id": "City",
+      "type": "string",
+      "mappings": [
+        {
+          "source": "northwind-sqlite",
+          "collection": "Customers",
+          "column": "City"
+        },
+        {
+          "source": "northwind-postgresql",
+          "collection": "Customers",
+          "column": "City"
+        }
+      ]
     }
+  ],
+  "display": [
+    "CompanyName",
+    "ContactName",
+    "City"
   ],
   "tables": [
     {
