@@ -33,7 +33,7 @@ func TestNativeDemoMeaningsAndExactSavedQueryUses(t *testing.T) {
 	require.Equal(t, "CC0-1.0", graph.License)
 	require.NotEmpty(t, graph.Name)
 	require.NotEmpty(t, graph.Description)
-	wantIDs := []string{"customer", "invoice", "invoice-line", "country", "customer-id", "invoice-id", "customer-country", "invoice-total", "unit-price", "quantity"}
+	wantIDs := []string{"customer", "chinook-customer", "invoice", "invoice-line", "country", "customer-id", "chinook-customer-id", "invoice-id", "chinook-customer-country", "invoice-total", "unit-price", "quantity"}
 	conceptKinds := make(map[string]string, len(graph.Concepts))
 	var actualIDs []string
 	for _, concept := range graph.Concepts {
@@ -49,12 +49,15 @@ func TestNativeDemoMeaningsAndExactSavedQueryUses(t *testing.T) {
 			require.Equal(t, "entity", conceptKinds[concept.Of])
 		}
 		switch concept.ID {
-		case "customer-id", "invoice-id":
+		case "customer-id", "chinook-customer-id", "invoice-id":
 			require.Empty(t, concept.Extends, "project identifiers have no invented shared definition")
 		case "country":
 			require.Equal(t, "meaning://github.com/meaninggraph/core/country?ref=982916d73f0a35ff2558b0062f58aa3ac4f24d97", concept.Extends)
+		case "customer":
+			// The demo story's customer is Northwind's (Bottom-Dollar Markets, BOTTM).
+			require.Equal(t, "meaning://github.com/demo-db/northwind/customer?ref=f5855699eafaba6f09b7f4897abdb2a304698b67", concept.Extends)
 		default:
-			require.Equal(t, "meaning://github.com/demo-db/chinook/"+concept.ID+"?ref=3e7bb316d8a438eb7e5930067997a4e4543a275c", concept.Extends)
+			require.Equal(t, "meaning://github.com/demo-db/chinook/"+strings.TrimPrefix(concept.ID, "chinook-")+"?ref=3e7bb316d8a438eb7e5930067997a4e4543a275c", concept.Extends)
 		}
 	}
 	var uses struct {
@@ -74,7 +77,7 @@ func TestNativeDemoMeaningsAndExactSavedQueryUses(t *testing.T) {
 	jsonDecoder.DisallowUnknownFields()
 	require.NoError(t, jsonDecoder.Decode(&uses))
 	require.Equal(t, 1, uses.Version)
-	require.Len(t, uses.Bindings, 8)
+	require.Len(t, uses.Bindings, 10)
 	queryCounts := map[string]int{}
 	for _, binding := range uses.Bindings {
 		t.Run(binding.Query+"/"+binding.Meaning, func(t *testing.T) {
@@ -123,7 +126,7 @@ func TestNativeDemoMeaningsAndExactSavedQueryUses(t *testing.T) {
 		})
 		queryCounts[binding.Query]++
 	}
-	require.Equal(t, map[string]int{"customers/customer-invoices": 3, "invoices/invoice-lines": 3, "demodb/chinook-top-customer-spend": 2}, queryCounts)
+	require.Equal(t, map[string]int{"customers/customer-invoices": 3, "invoices/invoice-lines": 3, "demodb/chinook-top-customer-spend": 2, "northwind/customer-by-id": 1, "northwind/orders-by-customer": 1}, queryCounts)
 }
 
 func TestAllSavedQueryLegacyMeaningReferencesResolve(t *testing.T) {
@@ -183,10 +186,10 @@ func TestAllSavedQueryLegacyMeaningReferencesResolve(t *testing.T) {
 		visit(document)
 	}
 	require.Positive(t, references, "the scan must exercise declared query references")
-	for _, expected := range []struct{ Entity, Field, Type string }{
-		{"Customer", "FirstName", "string"},
-		{"Customer", "LastName", "string"},
-		{"Invoice", "InvoiceDate", "datetime"},
+	for _, expected := range []struct{ Entity, Field, Type, Collection string }{
+		{"ChinookCustomer", "FirstName", "string", "Customer"},
+		{"ChinookCustomer", "LastName", "string", "Customer"},
+		{"Invoice", "InvoiceDate", "datetime", "Invoice"},
 	} {
 		entity, err := store.LoadEntity(ctx, expected.Entity)
 		require.NoError(t, err)
@@ -194,7 +197,7 @@ func TestAllSavedQueryLegacyMeaningReferencesResolve(t *testing.T) {
 		require.Equal(t, expected.Type, field.Type)
 		require.Len(t, field.Mappings, 1)
 		require.Equal(t, "chinook", field.Mappings[0].Source)
-		require.Equal(t, expected.Entity, field.Mappings[0].Collection)
+		require.Equal(t, expected.Collection, field.Mappings[0].Collection)
 		require.Equal(t, expected.Field, field.Mappings[0].Column)
 	}
 }

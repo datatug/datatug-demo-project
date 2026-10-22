@@ -1,5 +1,5 @@
 {
-  "id": "Customer",
+  "id": "ChinookCustomer",
   "fields": [
     {
       "id": "ID",
@@ -8,7 +8,8 @@
       "namePatterns": [
         {
           "type": "exact",
-          "value": "CustomerId"
+          "value": "CustomerId",
+          "caseSensitive": true
         },
         {
           "type": "exact",

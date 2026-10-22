@@ -1,0 +1,60 @@
+{
+  "id": "Customer",
+  "fields": [
+    {
+      "id": "ID",
+      "type": "string",
+      "isKeyField": true,
+      "namePatterns": [
+        {
+          "type": "exact",
+          "value": "CustomerID",
+          "caseSensitive": true
+        }
+      ],
+      "mappings": [
+        {
+          "source": "northwind-sqlite",
+          "collection": "Customers",
+          "column": "CustomerID"
+        },
+        {
+          "source": "northwind-sqlite",
+          "collection": "Orders",
+          "column": "CustomerID"
+        },
+        {
+          "source": "northwind-postgresql",
+          "collection": "Customers",
+          "column": "CustomerID"
+        },
+        {
+          "source": "northwind-postgresql",
+          "collection": "Orders",
+          "column": "CustomerID"
+        }
+      ]
+    },
+    {
+      "id": "CompanyName",
+      "type": "string",
+      "mappings": [
+        {
+          "source": "northwind-sqlite",
+          "collection": "Customers",
+          "column": "CompanyName"
+        },
+        {
+          "source": "northwind-postgresql",
+          "collection": "Customers",
+          "column": "CompanyName"
+        }
+      ]
+    }
+  ],
+  "tables": [
+    {
+      "name": "Customers"
+    }
+  ]
+}

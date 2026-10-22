@@ -19,7 +19,7 @@
       "id": "CustomerId",
       "type": "integer",
       "isRequired": true,
-      "meta": { "entity": "Customer", "field": "ID" }
+      "meta": { "entity": "ChinookCustomer", "field": "ID" }
     }
   ],
   "recordsets": [
