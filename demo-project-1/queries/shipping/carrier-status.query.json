@@ -1,5 +1,5 @@
 {
-  "createdAt": "2026-10-22T19:00:00Z",
+  "createdAt": "2026-10-22T18:36:41Z",
   "id": "carrier-status",
   "title": "Carrier booking for a Shipping request (synthetic carrier sandbox)",
   "type": "HTTP",
@@ -24,11 +24,13 @@
           "meta": {
             "entity": "ShippingRequest",
             "field": "id"
-          }
+          },
+          "required": true
         },
         {
           "name": "status",
-          "type": "string"
+          "type": "string",
+          "required": true
         },
         {
           "name": "booking_reference",
@@ -44,15 +46,18 @@
         },
         {
           "name": "as_of",
-          "type": "string"
+          "type": "string",
+          "required": true
         },
         {
           "name": "synthetic",
-          "type": "boolean"
+          "type": "boolean",
+          "required": true
         },
         {
           "name": "notice",
-          "type": "string"
+          "type": "string",
+          "required": true
         }
       ]
     }
