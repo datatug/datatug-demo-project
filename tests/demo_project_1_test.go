@@ -298,6 +298,7 @@ func TestDemoProject1_QueriesLoad(t *testing.T) {
 		"invoice-lines":               datatug.QueryTypeSQL,
 		"country-facts":               datatug.QueryTypeHTTP,
 		"currency-rate":               datatug.QueryTypeHTTP,
+		"carrier-status":              datatug.QueryTypeHTTP,
 	}
 	for id, wantType := range wantTypes {
 		q := findQuery(project.Queries, id)
