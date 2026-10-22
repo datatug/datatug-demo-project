@@ -50,6 +50,10 @@ github.com/datatug/datatug-core v0.60.1 h1:e/9rbOINoI00KxGrUnuPLcF+8q0noraYJCGvL
 github.com/datatug/datatug-core v0.60.1/go.mod h1:wso0YIEvVauLuZU19/Q4rn5WRWJJzuWGmpQc5U0M6D8=
 github.com/datatug/datatug-core v0.63.0 h1:DDVZzdq+3nlS5Oz7BiSWFu3mbOGMQOX6roFc7m6yBoA=
 github.com/datatug/datatug-core v0.63.0/go.mod h1:wso0YIEvVauLuZU19/Q4rn5WRWJJzuWGmpQc5U0M6D8=
+github.com/datatug/datatug-core v0.70.0 h1:wsuZzzzObJkrUgkOZ0cjWcReJ/+b1+BCPpM+w917Mas=
+github.com/datatug/datatug-core v0.70.0/go.mod h1:wso0YIEvVauLuZU19/Q4rn5WRWJJzuWGmpQc5U0M6D8=
+github.com/datatug/datatug-core v0.71.0 h1:3riYnkdEuXw5S8/HBhcfqz14OrEYrtHx2QsUdXH97D8=
+github.com/datatug/datatug-core v0.71.0/go.mod h1:wso0YIEvVauLuZU19/Q4rn5WRWJJzuWGmpQc5U0M6D8=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/dustin/go-humanize v1.0.1 h1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkpeCY=
 github.com/dustin/go-humanize v1.0.1/go.mod h1:Mu1zIs6XwVuF/gI1OepvI0qD18qycQx+mFykh5fBlto=

@@ -235,7 +235,13 @@ test('showcase charts use exact admitted server DTQL and inspector uses explicit
     assert.equal(query.type, 'DTQL');
     assert.equal(query.connectionId, undefined, 'server queries cannot fall back to a browser fixture connection');
     assert.equal(query.federation.ovdbBaseUrl, 'https://ovdb.demodb.dev');
-    assert.equal(query.federation.expectedServerIdentity, undefined, 'legacy server publishes no meaningful identity');
+    if (id === 'chinook-billing-server') {
+      assert.deepEqual(query.federation.expectedServerIdentity, {
+        baseUrl: query.federation.ovdbBaseUrl, serverId: 'https://demodb.dev/ovdb',
+      });
+    } else {
+      assert.equal(query.federation.expectedServerIdentity, undefined, 'Orders queries retain their existing legacy binding');
+    }
     assert.deepEqual(query.federation.tables.map((table) => table.database), tables.map(() => database));
     assert.deepEqual(query.federation.tables.map((table) => table.name), tables);
     assert.equal(query.recordsets[0].columns.length, columns);
@@ -243,6 +249,28 @@ test('showcase charts use exact admitted server DTQL and inspector uses explicit
     assert.match(dtql, new RegExp(`database: ${database}`));
     assert.match(dtql, /alias:/);
     assert.doesNotMatch(dtql, /\b(?:INSERT|UPDATE|DELETE|ATTACH|PRAGMA)\b/i);
+  }
+});
+
+test('customer queries bind the provider identity to their selected base without changing Orders admission', () => {
+  const bindings = [
+    ['demodb/northwind-customer-country-counts-server', 'https://cloud.openvaultdb.com'],
+    ['demodb/chinook-customer-country-counts-server', 'https://cloud.openvaultdb.com'],
+    ['demodb/customer-country-comparison-server', 'https://cloud.openvaultdb.com'],
+    ['demodb/chinook-billing-server', 'https://ovdb.demodb.dev'],
+    ['hosted/chinook-customer-preview', 'https://demodb.dev/ovdb'],
+  ];
+  for (const [id, baseUrl] of bindings) {
+    const query = read(`queries/${id}.query.json`);
+    assert.equal(query.type, 'DTQL', id);
+    assert.equal(query.federation.ovdbBaseUrl, baseUrl, id);
+    assert.deepEqual(query.federation.expectedServerIdentity, {
+      baseUrl, serverId: 'https://demodb.dev/ovdb',
+    }, id);
+    assert.ok(query.federation.tables.some((table) =>
+      (table.database === 'northwind' && table.name === 'Customers') ||
+      (table.database === 'chinook' && table.name === 'Customer')), id);
+    assert.equal(query.federation.expectedSourceRights, undefined, 'live server terms are not replaced by copied publisher assertions');
   }
 });
 

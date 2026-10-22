@@ -110,6 +110,38 @@
     {
       "cards": [
         {
+          "id": "customer-country-sources",
+          "title": "Customer records by country · independent sources",
+          "cols": 12,
+          "widget": {
+            "name": "chart",
+            "data": {
+              "title": "Customer records · nulls excluded: fixture 2026-10-21 Northwind 2, Chinook 0; live data may change.",
+              "sources": [
+                {
+                  "id": "northwind",
+                  "queryId": "demodb/northwind-customer-country-counts-server"
+                },
+                {
+                  "id": "chinook",
+                  "queryId": "demodb/chinook-customer-country-counts-server"
+                }
+              ],
+              "chart": {
+                "type": "bar",
+                "categoryColumn": "country",
+                "valueColumn": "customers",
+                "unit": "customer records"
+              },
+              "defaultView": "chart"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "cards": [
+        {
           "id": "source-inspector",
           "title": "Inspect saved query results",
           "cols": 12,

@@ -56,13 +56,20 @@ func TestShippingSemanticSeedActualStoreAndSQLite(t *testing.T) {
 	require.Equal(t, []semantic.Lookup{{Source: "shipping-working-copy", Collection: "requests", Column: "order_id", Kind: semantic.LookupSameField, Via: "field:Order.id"}}, semantic.RelatedLookups(entities, nil, order))
 	files, err := filepath.Glob(filepath.Join(projectDir, "queries/shipping/*.query.json"))
 	require.NoError(t, err)
-	require.Len(t, files, 8)
+	require.Len(t, files, 9)
 	var queries []*datatug.QueryDef
 	for _, file := range files {
 		q, err := store.LoadQuery(ctx, "shipping/"+strings.TrimSuffix(filepath.Base(file), ".query.json"))
 		require.NoError(t, err)
 		require.NoError(t, q.Validate())
 		require.Equal(t, "shipping-working-copy", q.ConnectionID)
+		if q.Comparison != nil {
+			require.Equal(t, "events-comparison", q.ID)
+			require.Len(t, q.Parameters, 2)
+			require.Equal(t, datatug.ParameterDef{ID: "comparison_order_id", Type: "integer", IsRequired: true}, q.Parameters[1])
+			// Explicit control is not supplied by the selected Order.id semantic value.
+			continue
+		}
 		require.Len(t, q.Parameters, 1)
 		require.Equal(t, datatug.ParameterDef{ID: "order_id", Type: "integer", IsRequired: true, Meta: &datatug.EntityFieldRef{Entity: "Order", Field: "id"}}, q.Parameters[0])
 		queries = append(queries, q)

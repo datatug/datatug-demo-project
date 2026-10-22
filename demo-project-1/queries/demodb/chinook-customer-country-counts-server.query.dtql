@@ -1,0 +1,10 @@
+# Independent Chinook customer-record counts; exact country labels, no alias normalization.
+# Exclude null-country records explicitly; see saved query purpose for fixture observation.
+from: {database: chinook, name: Customer, alias: customer}
+where: {isNotNull: {field: Country, source: customer}}
+groupBy: [{field: Country, source: customer}]
+columns:
+  - {field: Country, source: customer, as: country}
+  - {aggregate: {function: count, distinct: true, args: [{field: CustomerId, source: customer}]}, as: customers}
+orderBy: [{field: Country, source: customer}]
+limit: 100
