@@ -30,34 +30,6 @@
         { "database": "https://ovdb.demodb.dev/v1/databases/shipping", "collection": "requests", "field": "order_id", "param": "order" },
         { "database": "https://ovdb.demodb.dev/v1/databases/shipping", "collection": "attempts", "field": "attempt_id", "param": "attempt" }
       ]
-    },
-    {
-      "id": "northwind-local",
-      "title": "Northwind evidence (local agent)",
-      "database": "http://127.0.0.1:6832/v1/databases/northwind_evidence",
-      "synthetic": true,
-      "collections": [
-        { "id": "fulfillment_events", "title": "Fulfillment events" },
-        { "id": "carrier_events", "title": "Carrier events" }
-      ],
-      "fields": {
-        "timestamp": "timestamp",
-        "severity": "severity",
-        "service": "service",
-        "origin": "source",
-        "message": "message",
-        "correlation": "correlation_id",
-        "reference": "source_ref",
-        "raw": "raw",
-        "parser": "parser",
-        "parseStatus": "parse_status",
-        "structured": "fields_json"
-      },
-      "identifiers": [
-        { "field": "order_id", "label": "Order ID", "param": "order", "type": "string" }
-      ],
-      "window": { "from": "2018-04-21T09:12:00Z", "to": "2018-04-21T09:14:00Z" },
-      "records": []
     }
   ]
 }
