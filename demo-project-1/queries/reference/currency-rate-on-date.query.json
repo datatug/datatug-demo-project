@@ -1,0 +1,59 @@
+{
+  "createdAt": "2026-10-22T19:00:00Z",
+  "id": "currency-rate-on-date",
+  "title": "USD amount in the customer's currency on a date",
+  "type": "HTTP",
+  "parameters": [
+    {
+      "id": "date",
+      "type": "date",
+      "title": "Rate date (YYYY-MM-DD; the ECB reference rate of that working day, or the last one before it)",
+      "defaultValue": "2018-04-23",
+      "isRequired": true
+    },
+    {
+      "id": "to",
+      "type": "string",
+      "title": "Currency code (ISO 4217)",
+      "defaultValue": "CAD",
+      "isRequired": true,
+      "meta": {
+        "entity": "Country",
+        "field": "Currency"
+      }
+    },
+    {
+      "id": "amount",
+      "type": "number",
+      "title": "Amount in USD",
+      "defaultValue": 1,
+      "isRequired": true
+    }
+  ],
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "amount",
+          "type": "number"
+        },
+        {
+          "name": "base",
+          "type": "string"
+        },
+        {
+          "name": "date",
+          "type": "string"
+        },
+        {
+          "name": "rates",
+          "type": "JSON",
+          "meta": {
+            "entity": "Country",
+            "field": "Currency"
+          }
+        }
+      ]
+    }
+  ]
+}
