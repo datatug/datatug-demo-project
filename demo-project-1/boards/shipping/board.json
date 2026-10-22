@@ -7,11 +7,18 @@
       "title": "Order ID",
       "type": "integer",
       "isRequired": true
+    },
+    {
+      "id": "comparison_order_id",
+      "title": "Compare order",
+      "type": "integer",
+      "isRequired": true
     }
   ],
   "requiredParams": [
     [
-      "order_id"
+      "order_id",
+      "comparison_order_id"
     ]
   ],
   "rows": [
@@ -19,7 +26,7 @@
       "cards": [
         {
           "id": "milestones",
-          "title": "Request milestones \u00b7 observed events",
+          "title": "Request processing",
           "cols": 12,
           "widget": {
             "name": "chart",
@@ -27,11 +34,15 @@
               "sources": [
                 {
                   "id": "milestones-held",
-                  "queryId": "shipping/events",
+                  "queryId": "shipping/events-comparison",
                   "parameters": [
                     {
                       "id": "order_id",
                       "boardParameterId": "order_id"
+                    },
+                    {
+                      "id": "comparison_order_id",
+                      "boardParameterId": "comparison_order_id"
                     }
                   ]
                 }
@@ -47,7 +58,9 @@
                   "clockDomainColumn": "clock_domain",
                   "precisionColumn": "precision_ms",
                   "statusColumn": "status",
-                  "evidenceRefColumn": "evidence_ref"
+                  "evidenceRefColumn": "evidence_ref",
+                  "timeMode": "elapsed",
+                  "anchorColumn": "elapsed_anchor"
                 }
               },
               "defaultView": "chart"
