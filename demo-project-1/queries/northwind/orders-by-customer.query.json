@@ -1,0 +1,42 @@
+{
+  "createdAt": "2026-10-22T09:00:00Z",
+  "id": "orders-by-customer",
+  "title": "Northwind orders by customer",
+  "tags": ["northwind", "customers", "orders"],
+  "type": "SQL",
+  "connectionId": "northwind-sqlite",
+  "parameters": [
+    {
+      "id": "CustomerID",
+      "type": "string",
+      "isRequired": true
+    }
+  ],
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "OrderID",
+          "type": "integer"
+        },
+        {
+          "name": "OrderDate",
+          "type": "string"
+        },
+        {
+          "name": "ShippedDate",
+          "type": "string"
+        },
+        {
+          "name": "ShipCountry",
+          "type": "string"
+        },
+        {
+          "name": "Freight",
+          "type": "number"
+        }
+      ]
+    }
+  ],
+  "purpose": "The most recent Northwind orders of one customer; the Orders tab of the Customer project card."
+}
