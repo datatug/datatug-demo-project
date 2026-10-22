@@ -114,7 +114,7 @@
         },
         {
           "id": "route-readiness",
-          "title": "Route and assignment \u00b7 current readiness",
+          "title": "Route and assignment \u00b7 at each attempt and now",
           "cols": 5,
           "widget": {
             "name": "chart",

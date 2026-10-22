@@ -5,7 +5,7 @@
       "query": "customers/customer-invoices",
       "queryHash": "6a0b28cf717193bf96e3968fd47f9da2d701da156fdec103f3e4f7f0baf928ae",
       "parameter": "CustomerId",
-      "meaning": "customer-id"
+      "meaning": "chinook-customer-id"
     },
     {
       "query": "customers/customer-invoices",
@@ -56,7 +56,7 @@
         "recordset": 0,
         "name": "CustomerId"
       },
-      "meaning": "customer-id"
+      "meaning": "chinook-customer-id"
     },
     {
       "query": "demodb/chinook-top-customer-spend",
@@ -65,7 +65,19 @@
         "recordset": 0,
         "name": "Country"
       },
-      "meaning": "customer-country"
+      "meaning": "chinook-customer-country"
+    },
+    {
+      "query": "northwind/customer-by-id",
+      "queryHash": "634c213a28d234c727d9e428aa8a020ead531134feeceb49ebf35c1e40062805",
+      "parameter": "CustomerID",
+      "meaning": "customer-id"
+    },
+    {
+      "query": "northwind/orders-by-customer",
+      "queryHash": "b2d71ee6dbc96b33bf661c25f649d0112024febcfc7e3ff9c2be41649c7fabef",
+      "parameter": "CustomerID",
+      "meaning": "customer-id"
     }
   ]
 }

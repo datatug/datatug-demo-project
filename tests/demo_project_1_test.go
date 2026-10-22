@@ -103,7 +103,7 @@ func TestDemoProject1_Validate(t *testing.T) {
 	project, err := store.LoadProject(context.Background())
 	require.NoError(t, err, "failed to load %s", projectDir)
 
-	wantEntityIDs := []string{"Album", "Artist", "Country", "Customer", "Invoice", "InvoiceLine", "Order", "Person", "ShippingRequest", "Track"}
+	wantEntityIDs := []string{"Album", "Artist", "ChinookCustomer", "Country", "Customer", "Invoice", "InvoiceLine", "Order", "Person", "ShippingRequest", "Track"}
 	assert.ElementsMatch(t, wantEntityIDs, project.Entities.IDs())
 
 	if assert.Len(t, project.Boards, 4) {
@@ -298,6 +298,7 @@ func TestDemoProject1_QueriesLoad(t *testing.T) {
 		"invoice-lines":               datatug.QueryTypeSQL,
 		"country-facts":               datatug.QueryTypeHTTP,
 		"currency-rate":               datatug.QueryTypeHTTP,
+		"carrier-status":              datatug.QueryTypeHTTP,
 	}
 	for id, wantType := range wantTypes {
 		q := findQuery(project.Queries, id)
@@ -485,7 +486,7 @@ func TestDemoProject1_ChinookCustomerInvoiceJoinStarter(t *testing.T) {
 	assert.Equal(t, "CustomerId", definition.Parameters[0].ID)
 	assert.Equal(t, "integer", definition.Parameters[0].Type)
 	assert.True(t, definition.Parameters[0].IsRequired)
-	assert.Equal(t, "Customer", definition.Parameters[0].Meta.Entity)
+	assert.Equal(t, "ChinookCustomer", definition.Parameters[0].Meta.Entity)
 	assert.Equal(t, "ID", definition.Parameters[0].Meta.Field)
 	require.Len(t, definition.Recordsets, 1)
 	require.Len(t, definition.Recordsets[0].Columns, 5)
@@ -493,10 +494,10 @@ func TestDemoProject1_ChinookCustomerInvoiceJoinStarter(t *testing.T) {
 		name, typ, entity, field string
 	}{
 		{"InvoiceId", "integer", "Invoice", "ID"},
-		{"CustomerId", "integer", "Customer", "ID"},
-		{"FirstName", "string", "Customer", "FirstName"},
-		{"LastName", "string", "Customer", "LastName"},
-		{"Email", "string", "Customer", "Email"},
+		{"CustomerId", "integer", "ChinookCustomer", "ID"},
+		{"FirstName", "string", "ChinookCustomer", "FirstName"},
+		{"LastName", "string", "ChinookCustomer", "LastName"},
+		{"Email", "string", "ChinookCustomer", "Email"},
 	}
 	for i, want := range wantColumns {
 		got := definition.Recordsets[0].Columns[i]
@@ -791,7 +792,8 @@ func TestDemoProject1_DeclaredMappings(t *testing.T) {
 		require.NoError(t, err, "failed to load entity %s", id)
 		return e
 	}
-	customer := loadEntity("Customer")
+	customer := loadEntity("ChinookCustomer")
+	northwindCustomer := loadEntity("Customer")
 	invoice := loadEntity("Invoice")
 	country := loadEntity("Country")
 
@@ -807,6 +809,59 @@ func TestDemoProject1_DeclaredMappings(t *testing.T) {
 		datatug.PhysicalRef{Source: "chinook", Collection: "Customer", Column: "Country"})
 	assert.Contains(t, fieldByID(t, country, "Name").Mappings,
 		datatug.PhysicalRef{Source: "support-notes", Collection: "support-notes", Column: "Country"})
+
+	// The demo story's Customer is Northwind's text CustomerID in both public
+	// editions the demo queries (SQLite OVDB provider and PostgreSQL OVDB).
+	id := fieldByID(t, northwindCustomer, "ID")
+	assert.Equal(t, "string", id.Type)
+	assert.True(t, id.IsKeyField)
+	assert.Equal(t, datatug.PhysicalRefs{
+		{Source: "northwind-sqlite", Collection: "Customers", Column: "CustomerID"},
+		{Source: "northwind-sqlite", Collection: "Orders", Column: "CustomerID"},
+		{Source: "northwind-postgresql", Collection: "Customers", Column: "CustomerID"},
+		{Source: "northwind-postgresql", Collection: "Orders", Column: "CustomerID"},
+	}, id.Mappings)
+	for _, entity := range []*datatug.Entity{customer, northwindCustomer} {
+		for _, field := range entity.Fields {
+			for _, ref := range field.Mappings {
+				if entity.ID == "Customer" {
+					assert.True(t, strings.HasPrefix(ref.Source, "northwind-"), "Customer stays Northwind-only: %+v", ref)
+				} else {
+					assert.False(t, strings.HasPrefix(ref.Source, "northwind-"), "ChinookCustomer never maps Northwind: %+v", ref)
+				}
+			}
+		}
+	}
+}
+
+// TestDemoProject1_CustomerMeaningSeparatesNorthwindFromChinook pins the
+// remap: Northwind CustomerID cells resolve to Customer.ID (text), Chinook
+// CustomerId cells to ChinookCustomer.ID (integer), and neither name pattern
+// captures the other database's spelling.
+func TestDemoProject1_CustomerMeaningSeparatesNorthwindFromChinook(t *testing.T) {
+	entities, err := newStore(t).LoadEntities(context.Background())
+	require.NoError(t, err)
+	for _, source := range []string{"northwind-sqlite", "northwind-postgresql"} {
+		for _, collection := range []string{"Customers", "Orders"} {
+			got := semantic.Resolve(entities, source, collection, []semantic.Column{{Name: "CustomerID", Type: "string"}})
+			require.Len(t, got, 1, "%s/%s", source, collection)
+			assert.Equal(t, semantic.Resolution{Column: "CustomerID", Entity: "Customer", Field: "ID", Provenance: semantic.Declared}, got[0])
+		}
+	}
+	// An undeclared Northwind edition infers only the Northwind spelling.
+	got := semantic.Resolve(entities, "northwind-ingitdb", "Orders", []semantic.Column{{Name: "CustomerID", Type: "string"}})
+	require.Len(t, got, 1)
+	assert.Equal(t, "Customer", got[0].Entity)
+	assert.Equal(t, semantic.Inferred, got[0].Provenance)
+	got = semantic.Resolve(entities, "chinook-sqlite", "Invoice", []semantic.Column{{Name: "CustomerId", Type: "integer"}})
+	require.Len(t, got, 1)
+	assert.Equal(t, "ChinookCustomer", got[0].Entity)
+	assert.Equal(t, semantic.Inferred, got[0].Provenance)
+	// No Chinook edition spells it customer_id (Sakila does), so no customer
+	// meaning is inferred for snake_case columns.
+	for _, source := range []string{"sakila-sqlite", "sakila-postgresql", "northwind-ingitdb"} {
+		assert.Empty(t, semantic.Resolve(entities, source, "customer", []semantic.Column{{Name: "customer_id", Type: "integer"}}), source)
+	}
 }
 
 // TestDemoProject1_ResolveChinookCustomerColumns runs semantic.Resolve over a
@@ -838,19 +893,19 @@ func TestDemoProject1_ResolveChinookCustomerColumns(t *testing.T) {
 		assert.Equal(t, field, r.Field, "column %q field", column)
 		assert.Equal(t, semantic.Declared, r.Provenance, "column %q provenance", column)
 	}
-	assertDeclared("CustomerId", "Customer", "ID")
+	assertDeclared("CustomerId", "ChinookCustomer", "ID")
 	assertDeclared("Country", "Country", "Name")
-	assertDeclared("Email", "Customer", "Email")
+	assertDeclared("Email", "ChinookCustomer", "Email")
 
-	assertDeclared("FirstName", "Customer", "FirstName")
-	assertDeclared("LastName", "Customer", "LastName")
+	assertDeclared("FirstName", "ChinookCustomer", "FirstName")
+	assertDeclared("LastName", "ChinookCustomer", "LastName")
 
 	_, hasPhone := byColumn["Phone"]
 	assert.False(t, hasPhone, "Phone has no mapping or name pattern and must not resolve")
 }
 
 // TestDemoProject1_ApplicableQueries runs semantic.Applicable with
-// Customer.ID=5, per s3b-demo-mappings.md item 3.
+// ChinookCustomer.ID=5, per s3b-demo-mappings.md item 3.
 func TestDemoProject1_ApplicableQueries(t *testing.T) {
 	store := newStore(t)
 	queries := loadQueries(t, store, "customers/customer-invoices", "customers/customer-purchases-by-genre", "invoices/invoice-lines")
@@ -859,7 +914,7 @@ func TestDemoProject1_ApplicableQueries(t *testing.T) {
 	assert.Equal(t, datatug.QueryTypeDTQL, customerInvoices.Type, "customer-invoices must have been converted to DTQL")
 
 	available := []semantic.SemanticValue{
-		{Entity: "Customer", Field: "ID", Value: 5, Source: "chinook", Collection: "Customer", Column: "CustomerId", Provenance: semantic.Declared},
+		{Entity: "ChinookCustomer", Field: "ID", Value: 5, Source: "chinook", Collection: "Customer", Column: "CustomerId", Provenance: semantic.Declared},
 	}
 
 	applicable, notYet := semantic.Applicable(

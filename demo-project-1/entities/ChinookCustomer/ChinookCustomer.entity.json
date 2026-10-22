@@ -1,0 +1,67 @@
+{
+  "id": "ChinookCustomer",
+  "fields": [
+    {
+      "id": "ID",
+      "type": "integer",
+      "isKeyField": true,
+      "namePatterns": [
+        {
+          "type": "exact",
+          "value": "CustomerId",
+          "caseSensitive": true
+        }
+      ],
+      "mappings": [
+        {
+          "source": "chinook",
+          "collection": "Customer",
+          "column": "CustomerId"
+        },
+        {
+          "source": "support-notes",
+          "collection": "support-notes",
+          "column": "CustomerId"
+        }
+      ]
+    },
+    {
+      "id": "Email",
+      "type": "string",
+      "mappings": [
+        {
+          "source": "chinook",
+          "collection": "Customer",
+          "column": "Email"
+        }
+      ]
+    },
+    {
+      "id": "FirstName",
+      "type": "string",
+      "mappings": [
+        {
+          "source": "chinook",
+          "collection": "Customer",
+          "column": "FirstName"
+        }
+      ]
+    },
+    {
+      "id": "LastName",
+      "type": "string",
+      "mappings": [
+        {
+          "source": "chinook",
+          "collection": "Customer",
+          "column": "LastName"
+        }
+      ]
+    }
+  ],
+  "tables": [
+    {
+      "name": "Customer"
+    }
+  ]
+}

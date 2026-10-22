@@ -9,7 +9,7 @@
       "type": "integer",
       "required": true,
       "meta": {
-        "entity": "Customer",
+        "entity": "ChinookCustomer",
         "field": "ID"
       }
     },

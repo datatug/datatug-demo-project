@@ -45,7 +45,9 @@ func TestShippingSemanticSeedActualStoreAndSQLite(t *testing.T) {
 	for _, e := range entities {
 		if e.ID == "Order" {
 			require.Equal(t, "integer", e.Fields[0].Type)
-			require.Equal(t, datatug.PhysicalRefs{{Source: "northwind-postgresql", Collection: "Orders", Column: "OrderID"}, {Source: "shipping-working-copy", Collection: "requests", Column: "order_id"}}, e.Fields[0].Mappings)
+			// Northwind's public SQLite (anonymous Acts 1-2) and PostgreSQL editions, the public
+			// Shipping OVDB provider and the signed-in working copy all carry Order.id.
+			require.Equal(t, datatug.PhysicalRefs{{Source: "northwind-sqlite", Collection: "Orders", Column: "OrderID"}, {Source: "northwind-postgresql", Collection: "Orders", Column: "OrderID"}, {Source: "shipping-sqlite", Collection: "requests", Column: "order_id"}, {Source: "shipping-working-copy", Collection: "requests", Column: "order_id"}}, e.Fields[0].Mappings)
 		} else {
 			require.Equal(t, "string", e.Fields[0].Type)
 			require.Equal(t, datatug.PhysicalRefs{{Source: "shipping-working-copy", Collection: "requests", Column: "request_id"}}, e.Fields[0].Mappings)
@@ -53,16 +55,34 @@ func TestShippingSemanticSeedActualStoreAndSQLite(t *testing.T) {
 	}
 	require.Equal(t, []semantic.Resolution{{Column: "order_id", Entity: "Order", Field: "id", Provenance: semantic.Declared}, {Column: "request_id", Entity: "ShippingRequest", Field: "id", Provenance: semantic.Declared}}, semantic.Resolve(entities, "shipping-working-copy", "requests", []semantic.Column{{Name: "order_id", Type: "integer"}, {Name: "request_id", Type: "string"}}))
 	order := semantic.SemanticValue{Entity: "Order", Field: "id", Value: int64(11045), Source: "northwind-postgresql", Collection: "Orders", Column: "OrderID", Provenance: semantic.Declared}
-	require.Equal(t, []semantic.Lookup{{Source: "shipping-working-copy", Collection: "requests", Column: "order_id", Kind: semantic.LookupSameField, Via: "field:Order.id"}}, semantic.RelatedLookups(entities, nil, order))
+	require.Equal(t, []semantic.Lookup{{Source: "northwind-sqlite", Collection: "Orders", Column: "OrderID", Kind: semantic.LookupSameField, Via: "field:Order.id"}, {Source: "shipping-sqlite", Collection: "requests", Column: "order_id", Kind: semantic.LookupSameField, Via: "field:Order.id"}, {Source: "shipping-working-copy", Collection: "requests", Column: "order_id", Kind: semantic.LookupSameField, Via: "field:Order.id"}}, semantic.RelatedLookups(entities, nil, order))
+	// Anonymous Act 2: the public Northwind SQLite order reaches the public Shipping request by meaning, not a join.
+	public := semantic.SemanticValue{Entity: "Order", Field: "id", Value: int64(11045), Source: "northwind-sqlite", Collection: "Orders", Column: "OrderID", Provenance: semantic.Declared}
+	require.Contains(t, semantic.RelatedLookups(entities, nil, public), semantic.Lookup{Source: "shipping-sqlite", Collection: "requests", Column: "order_id", Kind: semantic.LookupSameField, Via: "field:Order.id"})
+	require.Equal(t, []semantic.Resolution{{Column: "order_id", Entity: "Order", Field: "id", Provenance: semantic.Declared}}, semantic.Resolve(entities, "shipping-sqlite", "requests", []semantic.Column{{Name: "order_id", Type: "integer"}, {Name: "request_id", Type: "string"}}), "the public copy carries no ShippingRequest mapping, so Act 7 learning stays a working-copy change")
 	files, err := filepath.Glob(filepath.Join(projectDir, "queries/shipping/*.query.json"))
 	require.NoError(t, err)
-	require.Len(t, files, 9)
+	require.Len(t, files, 11) // 10 SQL + the carrier-status HTTP query
 	var queries []*datatug.QueryDef
+	var carrier *datatug.QueryDef
 	for _, file := range files {
 		q, err := store.LoadQuery(ctx, "shipping/"+strings.TrimSuffix(filepath.Base(file), ".query.json"))
 		require.NoError(t, err)
 		require.NoError(t, q.Validate())
+		if q.Type == datatug.QueryTypeHTTP {
+			require.Equal(t, "carrier-status", q.ID)
+			require.Empty(t, q.ConnectionID)
+			require.Equal(t, "https://carrier.demodb.dev/v1/bookings?request_id={request_id}", strings.TrimSpace(q.Text))
+			require.Equal(t, datatug.Parameters{{ID: "request_id", Type: "string", IsRequired: true, Meta: &datatug.EntityFieldRef{Entity: "ShippingRequest", Field: "id"}}}, q.Parameters)
+			carrier = q
+			continue
+		}
 		require.Equal(t, "shipping-working-copy", q.ConnectionID)
+		if q.ID == "readiness-comparison" {
+			require.Nil(t, q.Comparison, "timeline pair projection does not describe heatmap cells")
+			require.Equal(t, datatug.Parameters{{ID: "order_id", Type: "integer", IsRequired: true, Meta: &datatug.EntityFieldRef{Entity: "Order", Field: "id"}}, {ID: "comparison_order_id", Type: "integer", IsRequired: true}}, q.Parameters)
+			continue
+		}
 		if q.Comparison != nil {
 			require.Equal(t, "events-comparison", q.ID)
 			require.Len(t, q.Parameters, 2)
@@ -74,6 +94,13 @@ func TestShippingSemanticSeedActualStoreAndSQLite(t *testing.T) {
 		require.Equal(t, datatug.ParameterDef{ID: "order_id", Type: "integer", IsRequired: true, Meta: &datatug.EntityFieldRef{Entity: "Order", Field: "id"}}, q.Parameters[0])
 		queries = append(queries, q)
 	}
+	require.NotNil(t, carrier)
+	shippingRequest := semantic.SemanticValue{Entity: "ShippingRequest", Field: "id", Value: "request-11038", Source: "shipping-working-copy", Collection: "requests", Column: "request_id", Provenance: semantic.Declared}
+	carrierReady, carrierMissing := semantic.Applicable([]*datatug.QueryDef{carrier}, []semantic.SemanticValue{shippingRequest})
+	require.Empty(t, carrierMissing)
+	require.Equal(t, "request-11038", carrierReady[0].Bindings[0].Value)
+	_, carrierMissing = semantic.Applicable([]*datatug.QueryDef{carrier}, []semantic.SemanticValue{order})
+	require.Equal(t, []string{"ShippingRequest.id"}, carrierMissing[0].Missing) // an order number alone cannot drive it
 	ready, missing := semantic.Applicable(queries, []semantic.SemanticValue{order})
 	require.Empty(t, missing)
 	require.Len(t, ready, 8)
