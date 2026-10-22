@@ -34,10 +34,10 @@ func TestShippingComparisonActualSource(t *testing.T) {
 	require.NoError(t, err)
 	db, err := sql.Open("sqlite", "file:"+path+"?mode=ro&immutable=1")
 	require.NoError(t, err)
-	defer db.Close()
+	t.Cleanup(func() { require.NoError(t, db.Close()) })
 	rows, err := db.QueryContext(ctx, q.Text, sql.Named("order_id", int64(11045)), sql.Named("comparison_order_id", int64(11038)))
 	require.NoError(t, err)
-	defer rows.Close()
+	t.Cleanup(func() { require.NoError(t, rows.Close()) })
 	names, err := rows.Columns()
 	require.NoError(t, err)
 	var declared []string
