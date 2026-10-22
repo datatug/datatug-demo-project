@@ -208,7 +208,6 @@ func TestShippingReadinessComparisonCard(t *testing.T) {
 	for rows.Next() {
 		var order int64
 		var request, expectation, value string
-		var ignored []any
 		names, err := rows.Columns()
 		require.NoError(t, err)
 		targets := make([]any, len(names))
@@ -227,8 +226,6 @@ func TestShippingReadinessComparisonCard(t *testing.T) {
 				expectation = v.(string)
 			case "status":
 				value = v.(string)
-			default:
-				ignored = append(ignored, v)
 			}
 		}
 		require.Contains(t, []int64{11038, 11045}, order)
