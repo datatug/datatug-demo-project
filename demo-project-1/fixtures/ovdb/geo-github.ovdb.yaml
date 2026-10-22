@@ -1,0 +1,65 @@
+# Countries for Act 4 ("Add the world"), read by the DataTug browser straight
+# from GitHub: ingitdb/geo-ingitdb is an inGitDB database (plain JSON files in a
+# public Git repository). This OpenVaultDB (OVDB) descriptor says where it is and
+# which collections a query may read; each collection is one published default
+# view ($ingitdb/<collection>/<collection>.ingr), fetched from
+# raw.githubusercontent.com with no server in between. Queries name it in
+# federation.ingitdbSources. The local `ovdb serve` manifest for the same data is
+# geo.ovdb.yaml beside this file.
+format: ovdb-manifest/draft-1
+id: geo
+title: Countries
+description: >-
+  252 countries and territories keyed by ISO 3166-1 alpha-2 (GeoNames), the
+  latest World Bank population per country (216 countries, all for 2025) and the
+  Chinook and Northwind country spellings mapped to a country.
+homepage: https://github.com/ingitdb/geo-ingitdb
+publisher:
+  name: inGitDB
+  url: https://github.com/ingitdb
+  repository: https://github.com/ingitdb/geo-ingitdb
+licences:
+  data: CC-BY-4.0
+attribution: >-
+  Derived from GeoNames (CC BY 4.0) and World Bank SP.POP.TOTL (CC BY 4.0);
+  see DATA-LICENSE.md in the repository.
+database: {id: geo, schema_mode: strict}
+storage:
+  engine: ingitdb
+  github:
+    repository: ingitdb/geo-ingitdb
+    revision: 2a84199bcab79744b48ec529e48559a89a4b8851
+    # RFC 9111 Cache-Control for files at this revision. A commit SHA is content-addressed,
+    # so browsers may keep them for a year without asking again (GitHub itself sends max-age=300).
+    cacheControl: public, max-age=31536000, immutable
+schemas:
+  collections:
+    countries:
+      fields:
+        names: {type: object}
+        iso2: {type: string}
+        iso3: {type: string}
+        continent: {type: string}
+        capital: {type: string}
+        population: {type: integer}
+        area_km2: {type: number}
+        currency_code: {type: string}
+        currency_name: {type: string}
+        phone_prefix: {type: string}
+        tld: {type: string}
+        geonameid: {type: integer}
+    population_wb:
+      fields:
+        country: {type: string}
+        iso3: {type: string}
+        year: {type: integer}
+        population: {type: integer}
+        indicator: {type: string}
+        source_url: {type: string}
+        fetched_at: {type: string}
+        source_updated: {type: string}
+    country_aliases:
+      fields:
+        alias: {type: string}
+        country: {type: string}
+        source: {type: string}

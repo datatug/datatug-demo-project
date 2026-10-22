@@ -1,0 +1,27 @@
+{
+  "createdAt": "2026-10-23T09:00:00Z",
+  "id": "chinook-customers-per-million",
+  "title": "Chinook customers per million people",
+  "type": "DTQL",
+  "purpose": "Act 4, Add the world. Chinook customers (OVDB) joined to Countries, an inGitDB database the browser reads straight from GitHub (ingitdb/geo-ingitdb), through its country alias table, then to the latest World Bank population. Population: World Bank SP.POP.TOTL, CC BY 4.0.",
+  "federation": {
+    "ovdbBaseUrl": "https://cloud.openvaultdb.com",
+    "expectedServerIdentity": {
+      "baseUrl": "https://cloud.openvaultdb.com",
+      "serverId": "https://demodb.dev/ovdb"
+    },
+    "ingitdbSources": [{ "database": "geo", "descriptor": "https://raw.githubusercontent.com/datatug/datatug-demo-project/main/demo-project-1/fixtures/ovdb/geo-github.ovdb.yaml" }],
+    "tables": [
+      { "database": "chinook", "name": "Customer", "fields": ["CustomerId", "Country"] },
+      { "database": "geo", "name": "country_aliases", "fields": ["alias", "country"] },
+      { "database": "geo", "name": "population_wb", "fields": ["country", "population", "year"] }
+    ]
+  },
+  "recordsets": [{ "columns": [
+    { "name": "country", "type": "string" },
+    { "name": "customers", "type": "integer" },
+    { "name": "population", "type": "integer" },
+    { "name": "populationYear", "type": "integer" },
+    { "name": "customersPerMillion", "type": "number" }
+  ] }]
+}

@@ -1,0 +1,29 @@
+{
+  "createdAt": "2026-10-23T09:00:00Z",
+  "id": "northwind-customer-countries",
+  "title": "Northwind customers by country, with currency and population",
+  "type": "DTQL",
+  "purpose": "Act 4, Add the world. Northwind customers (OVDB) per country with the ISO code, currency and latest World Bank population from Countries, an inGitDB database the browser reads straight from GitHub (ingitdb/geo-ingitdb). Country data: GeoNames, CC BY 4.0; population: World Bank SP.POP.TOTL, CC BY 4.0.",
+  "federation": {
+    "ovdbBaseUrl": "https://cloud.openvaultdb.com",
+    "expectedServerIdentity": {
+      "baseUrl": "https://cloud.openvaultdb.com",
+      "serverId": "https://demodb.dev/ovdb"
+    },
+    "ingitdbSources": [{ "database": "geo", "descriptor": "https://raw.githubusercontent.com/datatug/datatug-demo-project/main/demo-project-1/fixtures/ovdb/geo-github.ovdb.yaml" }],
+    "tables": [
+      { "database": "northwind", "name": "Customers", "fields": ["CustomerID", "Country"] },
+      { "database": "geo", "name": "country_aliases", "fields": ["alias", "country"] },
+      { "database": "geo", "name": "countries", "fields": ["id", "iso2", "currency_code"] },
+      { "database": "geo", "name": "population_wb", "fields": ["country", "population", "year"] }
+    ]
+  },
+  "recordsets": [{ "columns": [
+    { "name": "country", "type": "string" },
+    { "name": "iso2", "type": "string" },
+    { "name": "currency", "type": "string" },
+    { "name": "customers", "type": "integer" },
+    { "name": "population", "type": "integer" },
+    { "name": "populationYear", "type": "integer" }
+  ] }]
+}

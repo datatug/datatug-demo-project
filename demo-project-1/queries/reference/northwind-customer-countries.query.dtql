@@ -1,0 +1,34 @@
+# Act 4, Add the world: Northwind customers by country, with each country's ISO
+# code, currency and latest World Bank population. Order 11045's customer,
+# Bottom-Dollar Markets, is in Canada (CAD).
+#
+#   Customers (Northwind, Country such as "UK")                 OVDB, cloud.openvaultdb.com
+#     -> country_aliases (alias -> ISO country key)             inGitDB on GitHub, ingitdb/geo-ingitdb
+#        -> countries (GeoNames: ISO codes, currency)           inGitDB on GitHub
+#        -> population_wb (World Bank SP.POP.TOTL)              inGitDB on GitHub
+#
+# The two Northwind customers without a Country have no alias and are left out.
+from:
+  database: northwind
+  name: Customers
+  alias: n
+  joins:
+    - from:
+        database: geo
+        name: country_aliases
+        alias: a
+        joins:
+          - from: {database: geo, name: countries, alias: k}
+            on: [{left: {field: country, source: a}, op: '==', right: {field: id, source: k}}]
+          - from: {database: geo, name: population_wb, alias: p}
+            on: [{left: {field: country, source: a}, op: '==', right: {field: country, source: p}}]
+      on: [{left: {field: Country, source: n}, op: '==', right: {field: alias, source: a}}]
+groupBy: [{field: alias, source: a}, {field: iso2, source: k}, {field: currency_code, source: k}, {field: population, source: p}, {field: year, source: p}]
+columns:
+  - {field: alias, source: a, as: country}
+  - {field: iso2, source: k, as: iso2}
+  - {field: currency_code, source: k, as: currency}
+  - {aggregate: {function: count, distinct: true, args: [{field: CustomerID, source: n}]}, as: customers}
+  - {field: population, source: p, as: population}
+  - {field: year, source: p, as: populationYear}
+orderBy: [{field: alias, source: a}]

@@ -76,7 +76,10 @@ thing.
   [`shipping/carrier-status`](demo-project-1/queries/shipping) query is live-only and
   intentionally has no offline fixture.
 - **Shipping logs**, synthetic event streams published as a native inGitDB database.
-- **Countries and currencies**: GeoNames and World Bank data vendored in this repository, and a
+- **Countries and currencies**: Countries comes from inGitDB on GitHub. It is a public database
+  kept as plain files in a Git repository, [ingitdb/geo-ingitdb](https://github.com/ingitdb/geo-ingitdb)
+  (GeoNames and World Bank data). An OpenVaultDB (OVDB) descriptor tells DataTug where it is, and
+  your browser reads it straight from GitHub, with no server in between. Currency rates come from a
   public exchange-rate API.
 
 Northwind and the other third-party samples are never edited. Everything the story adds lives in
