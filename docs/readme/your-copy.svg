@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 330" width="880" height="330" role="img" aria-labelledby="t d">
+  <title id="t">How your copy works</title>
+  <desc id="d">The public demo repository is copied into your own GitHub account. You investigate in DataTug.app, and what you save lands as plain files in your copy: saved queries, checks, boards and meanings, ready to review in a pull request.</desc>
+  <defs>
+    <linearGradient id="sea2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#173f5c"/>
+      <stop offset="1" stop-color="#0f2c42"/>
+    </linearGradient>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#f2b36b"/>
+    </marker>
+    <style>
+      text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+      .card { fill: #f7f0e3; stroke: #e6d6b8; }
+      .h { font-size: 15px; font-weight: 600; fill: #12324a; }
+      .s { font-size: 12px; fill: #4a5d6b; }
+      .tag { font-size: 11px; font-weight: 600; fill: #9a4a1c; letter-spacing: .04em; }
+      .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; fill: #12324a; }
+      .step { font-size: 12px; fill: #fbe3c2; }
+      .flow { stroke: #f2b36b; stroke-width: 2.5; fill: none; marker-end: url(#arr); }
+    </style>
+  </defs>
+  <rect width="880" height="330" rx="18" fill="url(#sea2)"/>
+  <text x="32" y="44" font-size="20" font-weight="700" fill="#f7f0e3">Your copy keeps what you learn</text>
+  <text x="32" y="68" font-size="13" fill="#b9cbd8">What you save in your copy becomes a file you can diff, review and share</text>
+
+  <rect class="card" x="32" y="104" width="220" height="86" rx="12"/>
+  <text class="tag" x="48" y="128">PUBLIC ORIGINAL</text>
+  <text class="h" x="48" y="152">datatug/</text>
+  <text class="h" x="48" y="172">datatug-demo-project</text>
+
+  <path class="flow" d="M262 147 H330"/>
+  <text class="step" x="296" y="128" text-anchor="middle">fork</text>
+
+  <rect class="card" x="340" y="104" width="220" height="86" rx="12"/>
+  <text class="tag" x="356" y="128">YOUR WRITABLE COPY</text>
+  <text class="h" x="356" y="152">your-org/</text>
+  <text class="h" x="356" y="172">datatug-demo-project</text>
+
+  <path class="flow" d="M570 147 H630"/>
+  <text class="step" x="600" y="128" text-anchor="middle">save</text>
+
+  <rect class="card" x="640" y="92" width="208" height="160" rx="12"/>
+  <text class="tag" x="656" y="116">PLAIN FILES IN GIT</text>
+  <text xml:space="preserve" class="mono" x="656" y="142">queries/  *.sql + *.json</text>
+  <text xml:space="preserve" class="mono" x="656" y="164">checks/   *.json</text>
+  <text xml:space="preserve" class="mono" x="656" y="186">boards/   board.json</text>
+  <text xml:space="preserve" class="mono" x="656" y="208">cards/    card.json</text>
+  <text xml:space="preserve" class="mono" x="656" y="230">entities/ meanings</text>
+
+  <text class="step" x="450" y="222" text-anchor="middle">open it in DataTug.app or with the</text>
+  <text class="step" x="450" y="240" text-anchor="middle">datatug CLI, investigate, then save</text>
+
+  <!-- water and tug -->
+  <path d="M0 286 C 90 274, 170 298, 260 286 S 430 274, 520 288 S 700 298, 880 282 L880 312 Q880 330 862 330 L18 330 Q0 330 0 312 Z" fill="#1f5577" opacity=".85"/>
+  <g transform="translate(150 258)">
+    <circle cx="40" cy="-16" r="5" fill="#d9e4ea" opacity=".55"/>
+    <circle cx="50" cy="-25" r="7" fill="#d9e4ea" opacity=".4"/>
+    <path d="M-70 28 C -46 24, -22 20, 4 18" stroke="#f7f0e3" stroke-width="1.5" fill="none"/>
+    <rect x="34" y="-8" width="10" height="12" rx="2" fill="#f2b36b"/>
+    <rect x="34" y="-4" width="10" height="3" fill="#12324a"/>
+    <rect x="22" y="2" width="30" height="14" rx="3" fill="#f7f0e3"/>
+    <rect x="27" y="6" width="6" height="5" rx="1" fill="#173f5c"/>
+    <rect x="37" y="6" width="6" height="5" rx="1" fill="#173f5c"/>
+    <path d="M0 16 H86 L76 30 H8 Z" fill="#e2703a"/>
+  </g>
+</svg>
