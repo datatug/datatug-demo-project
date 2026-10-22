@@ -19,17 +19,17 @@
       "id": "CustomerId",
       "type": "integer",
       "isRequired": true,
-      "meta": { "entity": "Customer", "field": "ID" }
+      "meta": { "entity": "ChinookCustomer", "field": "ID" }
     }
   ],
   "recordsets": [
     {
       "columns": [
         { "name": "InvoiceId", "type": "integer", "meta": { "entity": "Invoice", "field": "ID" } },
-        { "name": "CustomerId", "type": "integer", "meta": { "entity": "Customer", "field": "ID" } },
-        { "name": "FirstName", "type": "string", "meta": { "entity": "Customer", "field": "FirstName" } },
-        { "name": "LastName", "type": "string", "meta": { "entity": "Customer", "field": "LastName" } },
-        { "name": "Email", "type": "string", "meta": { "entity": "Customer", "field": "Email" } }
+        { "name": "CustomerId", "type": "integer", "meta": { "entity": "ChinookCustomer", "field": "ID" } },
+        { "name": "FirstName", "type": "string", "meta": { "entity": "ChinookCustomer", "field": "FirstName" } },
+        { "name": "LastName", "type": "string", "meta": { "entity": "ChinookCustomer", "field": "LastName" } },
+        { "name": "Email", "type": "string", "meta": { "entity": "ChinookCustomer", "field": "Email" } }
       ]
     }
   ]

@@ -1,0 +1,65 @@
+{
+  "createdAt": "2026-10-22T18:36:41Z",
+  "id": "carrier-status",
+  "title": "Carrier booking for a Shipping request (synthetic carrier sandbox)",
+  "type": "HTTP",
+  "purpose": "Ask the synthetic carrier sandbox whether it holds a booking for the selected Shipping request. Answers booked or not_found; synthetic data, frozen at the demo clock, never reflects a training copy or replay.",
+  "parameters": [
+    {
+      "id": "request_id",
+      "type": "string",
+      "isRequired": true,
+      "meta": {
+        "entity": "ShippingRequest",
+        "field": "id"
+      }
+    }
+  ],
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "request_id",
+          "type": "string",
+          "meta": {
+            "entity": "ShippingRequest",
+            "field": "id"
+          },
+          "required": true
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "booking_reference",
+          "type": "string"
+        },
+        {
+          "name": "carrier",
+          "type": "string"
+        },
+        {
+          "name": "booked_at",
+          "type": "string"
+        },
+        {
+          "name": "as_of",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "synthetic",
+          "type": "boolean",
+          "required": true
+        },
+        {
+          "name": "notice",
+          "type": "string",
+          "required": true
+        }
+      ]
+    }
+  ]
+}

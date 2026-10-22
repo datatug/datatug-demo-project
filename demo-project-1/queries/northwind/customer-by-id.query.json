@@ -9,7 +9,11 @@
     {
       "id": "CustomerID",
       "type": "string",
-      "isRequired": true
+      "isRequired": true,
+      "meta": {
+        "entity": "Customer",
+        "field": "ID"
+      }
     }
   ],
   "recordsets": [

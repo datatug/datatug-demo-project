@@ -3,16 +3,25 @@ id: demo
 name: Demo customer and invoice meanings
 description: >-
   Meanings used by the saved customer and invoice queries in demo-project-1.
+  The demo story's customer is a Northwind customer keyed by its text
+  CustomerID; Chinook customers are a separate concept keyed by an integer.
   Shared concepts are reused by immutable address; query usage is recorded
   separately in demo-project-1/datatug-meaning-uses.json.
 license: CC0-1.0
 concepts:
   - id: customer
     kind: entity
-    extends: meaning://github.com/demo-db/chinook/customer?ref=3e7bb316d8a438eb7e5930067997a4e4543a275c
+    extends: meaning://github.com/demo-db/northwind/customer?ref=f5855699eafaba6f09b7f4897abdb2a304698b67
     labels:
       en: Demo customer
-    description: A Chinook customer selected in the demo's saved customer queries.
+    description: A Northwind customer, such as Bottom-Dollar Markets, followed through the public demo story.
+
+  - id: chinook-customer
+    kind: entity
+    extends: meaning://github.com/demo-db/chinook/customer?ref=3e7bb316d8a438eb7e5930067997a4e4543a275c
+    labels:
+      en: Chinook customer
+    description: A Chinook customer selected in the demo's saved Chinook customer queries.
 
   - id: invoice
     kind: entity
@@ -41,7 +50,14 @@ concepts:
     of: customer
     labels:
       en: Customer ID
-    description: The CustomerId integer identifying the customer in the saved queries.
+    description: The Northwind CustomerID text code, such as BOTTM, identifying the customer in Customers and Orders.
+
+  - id: chinook-customer-id
+    kind: attribute
+    of: chinook-customer
+    labels:
+      en: Chinook customer ID
+    description: The Chinook CustomerId integer identifying the customer in the saved Chinook queries.
 
   - id: invoice-id
     kind: attribute
@@ -50,9 +66,9 @@ concepts:
       en: Invoice ID
     description: The InvoiceId integer passed from customer invoices to invoice lines.
 
-  - id: customer-country
+  - id: chinook-customer-country
     kind: attribute
-    of: customer
+    of: chinook-customer
     extends: meaning://github.com/demo-db/chinook/customer-country?ref=3e7bb316d8a438eb7e5930067997a4e4543a275c
     labels:
       en: Customer country
