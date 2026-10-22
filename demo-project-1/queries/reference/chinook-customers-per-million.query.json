@@ -10,7 +10,7 @@
       "baseUrl": "https://cloud.openvaultdb.com",
       "serverId": "https://demodb.dev/ovdb"
     },
-    "ingitdbSources": [{ "database": "geo", "descriptor": "https://raw.githubusercontent.com/datatug/datatug-demo-project/main/demo-project-1/fixtures/ovdb/geo-github.ovdb.yaml" }],
+    "ingitdbSources": [{ "database": "geo", "descriptor": "https://raw.githubusercontent.com/datatug/datatug-demo-project/50ed33afd0aee803588b186a2a09b36760a7c99e/demo-project-1/fixtures/ovdb/geo-github.ovdb.yaml" }],
     "tables": [
       { "database": "chinook", "name": "Customer", "fields": ["CustomerId", "Country"] },
       { "database": "geo", "name": "country_aliases", "fields": ["alias", "country"] },

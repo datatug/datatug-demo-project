@@ -1,0 +1,20 @@
+# Act 4, Add the world: every country's ISO code, currency and latest World
+# Bank population, straight from inGitDB on GitHub (ingitdb/geo-ingitdb). No
+# OVDB server and no DataTug server: the browser reads the two published
+# collection views described by fixtures/ovdb/geo-github.ovdb.yaml.
+# Countries without a World Bank population (36 of 252) are left out.
+from:
+  database: geo
+  name: countries
+  alias: k
+  joins:
+    - from: {database: geo, name: population_wb, alias: p}
+      on: [{left: {field: id, source: k}, op: '==', right: {field: country, source: p}}]
+columns:
+  - {field: iso2, source: k, as: iso2}
+  - {field: iso3, source: k, as: iso3}
+  - {field: capital, source: k, as: capital}
+  - {field: currency_code, source: k, as: currency}
+  - {field: population, source: p, as: population}
+  - {field: year, source: p, as: populationYear}
+orderBy: [{field: population, source: p, desc: true}]

@@ -130,11 +130,13 @@ same sentence with one action, **See the source**.
 | Query | Joins | Shows |
 |---|---|---|
 | [`reference/chinook-customers-per-million`](queries/reference/chinook-customers-per-million.query.dtql) | Chinook `Customer` (OVDB) → `country_aliases` → `population_wb` | customers per million people, highest first |
+| [`reference/countries-currency-population`](queries/reference/countries-currency-population.query.dtql) | `countries` → `population_wb`, both from GitHub | every country's ISO code, capital, currency and population, largest first; no server at all |
 | [`reference/northwind-customer-countries`](queries/reference/northwind-customer-countries.query.dtql) | Northwind `Customers` (OVDB) → `country_aliases` → `countries` and `population_wb` | each country's ISO code, currency and population; Canada, home of order 11045's customer, is `CAD` |
 
 - **Descriptor.** [fixtures/ovdb/geo-github.ovdb.yaml](fixtures/ovdb/geo-github.ovdb.yaml) is an
   `ovdb-manifest/draft-1` with `storage.engine: ingitdb`, the GitHub repository, a pinned commit and
-  the collections a query may read. Queries name it in `federation.ingitdbSources`. Each collection
+  the collections a query may read. Queries name it in `federation.ingitdbSources` by its raw URL
+  at a commit of this repository, so the descriptor a query reads cannot change under it. Each collection
   is one published inGitDB default view (`$ingitdb/<collection>/<collection>.ingr`), so a run costs
   a handful of anonymous `raw.githubusercontent.com` requests and none against the GitHub API.
 - **Caching.** The descriptor's `cacheControl` is a standard HTTP Cache-Control value. Files at a
