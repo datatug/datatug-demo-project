@@ -33,7 +33,8 @@ references:
 - **HTTP** — two public, keyless reference endpoints
   ([`queries/reference`](demo-project-1/queries/reference), with recorded snapshots under
   [`fixtures/http`](demo-project-1/fixtures/http) so the demo works offline): country facts
-  by name, and a currency exchange rate by currency code.
+  by name, and a currency exchange rate by currency code. A third, live-only HTTP query,
+  `shipping/carrier-status`, asks the synthetic carrier sandbox and intentionally has no fixture.
 
 `Customer`, `Invoice` and `Country` ([`entities`](demo-project-1/entities)) declare
 `NamePatterns` so a `CustomerId`/`customer_id` column, an `InvoiceId` column or a `Country`
