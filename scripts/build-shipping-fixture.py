@@ -45,7 +45,7 @@ def carrier_calls(order, attempt, requested_at, confirmed_at):
     request line and its booked response line. No real carrier, network call or
     physical shipment is represented; the booking is keyed by the same
     deduplication identity as the accepted assignment."""
-    common=dict(stream='carrier-gateway',order_id=order,request_id=f'request-{order}',correlation_id=f'correlation-{order}',attempt_id=attempt,carrier='united-package',deduplication_key=f'request-{order}:assignment',clock_domain='synthetic-shipping-utc',precision_ms=1000,synthetic=True,note='Synthetic carrier sandbox call; no real carrier, booking or shipment.')
+    common=dict(stream='carrier-gateway',order_id=order,request_id=f'request-{order}',correlation_id=f'correlation-{order}',attempt_id=attempt,carrier='united-package',deduplication_key=f'request-{order}:assignment',clock_domain='synthetic-shipping-utc',precision_ms=1000,synthetic=True,note='Synthetic outbound carrier booking call (simulated; not the public carrier sandbox); no real carrier, booking or shipment.')
     return [dict(common,event_id=f'{attempt}-c1',sequence=1,kind='booking-requested',occurred_at=requested_at,http_method='POST',http_path='/v1/bookings'),
             dict(common,event_id=f'{attempt}-c2',sequence=2,kind='booking-confirmed',occurred_at=confirmed_at,http_method='POST',http_path='/v1/bookings',http_status=201,booking_status='booked',booking_reference=f'booking-{order}')]
 
