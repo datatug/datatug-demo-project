@@ -72,7 +72,7 @@ thing.
   assignments, with the business clock stopped at 20 May 2018 10:00 UTC.
 - **The carrier sandbox** at [carrier.demodb.dev](https://carrier.demodb.dev/): a static,
   read-only HTTP API that answers "is there a booking for this request?" Every response is
-  labelled synthetic Its
+  labelled synthetic. Its
   [`shipping/carrier-status`](demo-project-1/queries/shipping) query is live-only and
   intentionally has no offline fixture.
 - **Shipping logs**, synthetic event streams published as a native inGitDB database.
