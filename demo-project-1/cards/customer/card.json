@@ -1,7 +1,7 @@
 {
   "id": "customer",
   "title": "Customer",
-  "description": "A Northwind customer: profile and recent orders. Shown beside any CustomerID cell.",
+  "description": "A Northwind customer: profile and recent orders. Shown beside a cell that means Customer.ID (Northwind CustomerID text code) and beside Orders.CustomerID.",
   "display": "panel",
   "parameters": [
     {
@@ -9,9 +9,10 @@
       "type": "string",
       "title": "Customer ID",
       "isRequired": true,
+      "meta": { "entity": "Customer", "field": "ID" },
       "match": [
-        { "table": "Orders", "column": "CustomerID" },
-        { "column": "CustomerID" }
+        { "entity": "Customer", "field": "ID" },
+        { "table": "Orders", "column": "CustomerID" }
       ]
     }
   ],

@@ -9,7 +9,12 @@
     {
       "id": "CustomerID",
       "type": "string",
-      "isRequired": true
+      "isRequired": true,
+      "defaultValue": "ALFKI",
+      "meta": {
+        "entity": "Customer",
+        "field": "ID"
+      }
     }
   ],
   "recordsets": [

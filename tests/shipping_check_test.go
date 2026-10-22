@@ -127,7 +127,7 @@ func TestShippingChecksExecuteRealSQLiteEvidence(t *testing.T) {
 
 	// Resolve all new definitions with the actual file-store reader.
 	store := newStore(t)
-	for _, name := range []string{"request-receipt", "current-route", "partner-enabled", "assignment-outcome", "historical-route", "events", "timings", "readiness"} {
+	for _, name := range []string{"request-receipt", "current-route", "partner-enabled", "assignment-outcome", "historical-route", "events", "timings", "readiness", "readiness-comparison"} {
 		query, err := store.LoadQuery(ctx, "shipping/"+name)
 		require.NoError(t, err)
 		require.Equal(t, "shipping-working-copy", query.ConnectionID)

@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 460" width="880" height="460" role="img" aria-labelledby="t d">
+  <title id="t">The demo universe</title>
+  <desc id="d">Five sources around one order: Northwind, the Shipping database, the carrier sandbox, the shipping logs and public country data. Meanings in the middle tell DataTug which columns refer to the same order, request or country.</desc>
+  <defs>
+    <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#173f5c"/>
+      <stop offset="1" stop-color="#0f2c42"/>
+    </linearGradient>
+    <style>
+      text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+      .h { font-size: 15px; font-weight: 600; fill: #12324a; }
+      .s { font-size: 12px; fill: #4a5d6b; }
+      .tag { font-size: 11px; font-weight: 600; fill: #9a4a1c; letter-spacing: .04em; }
+      .edge { stroke: #f2b36b; stroke-width: 2; stroke-dasharray: 6 5; fill: none; }
+      .lbl { font-size: 12px; fill: #fbe3c2; paint-order: stroke; stroke: #163b56; stroke-width: 7px; stroke-linejoin: round; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+      .card { fill: #f7f0e3; stroke: #e6d6b8; stroke-width: 1; }
+    </style>
+  </defs>
+  <rect width="880" height="460" rx="18" fill="url(#sea)"/>
+  <text x="32" y="44" font-size="20" font-weight="700" fill="#f7f0e3">One order, five sources</text>
+  <text x="32" y="68" font-size="13" fill="#b9cbd8">Order 11045 · Bottom-Dollar Markets · Tsawassen, Canada · demo clock 20 May 2018</text>
+
+  <!-- edges (drawn first) -->
+  <path class="edge" d="M440 268 C 330 240, 260 200, 160 166"/>
+  <path class="edge" d="M440 250 L440 166"/>
+  <path class="edge" d="M440 268 C 550 240, 620 200, 720 166"/>
+  <path class="edge" d="M410 290 C 330 310, 260 320, 230 326"/>
+  <path class="edge" d="M470 290 C 550 310, 620 320, 650 326"/>
+  <text class="lbl" x="232" y="214">Order.id</text>
+  <text class="lbl" x="450" y="212">Order.id</text>
+  <text class="lbl" x="580" y="214">request_id</text>
+  <text class="lbl" x="250" y="296">Country</text>
+  <text class="lbl" x="520" y="296">order_id · attempt_id</text>
+
+  <!-- top row -->
+  <rect class="card" x="40" y="96" width="240" height="72" rx="12"/>
+  <text class="tag" x="56" y="118">THIRD-PARTY SAMPLE, UNCHANGED</text>
+  <text class="h" x="56" y="140">Northwind</text>
+  <text class="s" x="56" y="158">customers, orders, order lines</text>
+
+  <rect class="card" x="320" y="96" width="240" height="72" rx="12"/>
+  <text class="tag" x="336" y="118">SYNTHETIC · DATATUG</text>
+  <text class="h" x="336" y="140">Shipping database</text>
+  <text class="s" x="336" y="158">requests, routes, attempts</text>
+
+  <rect class="card" x="600" y="96" width="240" height="72" rx="12"/>
+  <text class="tag" x="616" y="118">SYNTHETIC · HTTP API</text>
+  <text class="h" x="616" y="140">Carrier sandbox</text>
+  <text class="s" x="616" y="158">carrier.demodb.dev bookings</text>
+
+  <!-- hub -->
+  <ellipse cx="440" cy="270" rx="82" ry="34" fill="#f2b36b"/>
+  <text x="440" y="266" text-anchor="middle" font-size="15" font-weight="700" fill="#12324a">Meanings</text>
+  <text x="440" y="284" text-anchor="middle" font-size="12" fill="#12324a">MeaningGraph</text>
+
+  <!-- bottom row -->
+  <rect class="card" x="40" y="300" width="240" height="72" rx="12"/>
+  <text class="tag" x="56" y="322">PUBLIC REFERENCE DATA</text>
+  <text class="h" x="56" y="344">Countries &amp; currency</text>
+  <text class="s" x="56" y="362">GeoNames, World Bank, rates</text>
+
+  <rect class="card" x="600" y="300" width="240" height="72" rx="12"/>
+  <text class="tag" x="616" y="322">SYNTHETIC · INGITDB</text>
+  <text class="h" x="616" y="344">Shipping logs</text>
+  <text class="s" x="616" y="362">event streams, read in place</text>
+
+  <!-- harbour water and a small tug -->
+  <path d="M0 412 C 80 400, 160 424, 240 412 S 400 400, 480 412 S 640 424, 720 412 S 840 402, 880 410 L880 442 Q880 460 862 460 L18 460 Q0 460 0 442 Z" fill="#1f5577" opacity=".85"/>
+  <path d="M0 428 C 90 420, 170 440, 260 428 S 430 418, 520 430 S 700 440, 880 426" stroke="#7fb3cf" stroke-width="1.5" fill="none" opacity=".6"/>
+  <g transform="translate(400 384)">
+    <circle cx="40" cy="-16" r="5" fill="#d9e4ea" opacity=".55"/>
+    <circle cx="50" cy="-25" r="7" fill="#d9e4ea" opacity=".4"/>
+    <path d="M-60 26 C -40 22, -20 20, 4 18" stroke="#f7f0e3" stroke-width="1.5" fill="none"/>
+    <rect x="34" y="-8" width="10" height="12" rx="2" fill="#f2b36b"/>
+    <rect x="34" y="-4" width="10" height="3" fill="#12324a"/>
+    <rect x="22" y="2" width="30" height="14" rx="3" fill="#f7f0e3"/>
+    <rect x="27" y="6" width="6" height="5" rx="1" fill="#173f5c"/>
+    <rect x="37" y="6" width="6" height="5" rx="1" fill="#173f5c"/>
+    <path d="M0 16 H86 L76 30 H8 Z" fill="#e2703a"/>
+  </g>
+  <text x="848" y="448" text-anchor="end" font-size="11" fill="#b9cbd8">Related links are meaning-based, not SQL joins</text>
+</svg>

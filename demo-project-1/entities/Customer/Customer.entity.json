@@ -3,68 +3,95 @@
   "fields": [
     {
       "id": "ID",
-      "type": "integer",
+      "type": "string",
       "isKeyField": true,
       "namePatterns": [
         {
           "type": "exact",
-          "value": "CustomerId"
-        },
-        {
-          "type": "exact",
-          "value": "customer_id"
+          "value": "CustomerID",
+          "caseSensitive": true
         }
       ],
       "mappings": [
         {
-          "source": "chinook",
-          "collection": "Customer",
-          "column": "CustomerId"
+          "source": "northwind-sqlite",
+          "collection": "Customers",
+          "column": "CustomerID"
         },
         {
-          "source": "support-notes",
-          "collection": "support-notes",
-          "column": "CustomerId"
+          "source": "northwind-sqlite",
+          "collection": "Orders",
+          "column": "CustomerID"
+        },
+        {
+          "source": "northwind-postgresql",
+          "collection": "Customers",
+          "column": "CustomerID"
+        },
+        {
+          "source": "northwind-postgresql",
+          "collection": "Orders",
+          "column": "CustomerID"
         }
       ]
     },
     {
-      "id": "Email",
+      "id": "CompanyName",
       "type": "string",
       "mappings": [
         {
-          "source": "chinook",
-          "collection": "Customer",
-          "column": "Email"
+          "source": "northwind-sqlite",
+          "collection": "Customers",
+          "column": "CompanyName"
+        },
+        {
+          "source": "northwind-postgresql",
+          "collection": "Customers",
+          "column": "CompanyName"
         }
       ]
     },
     {
-      "id": "FirstName",
+      "id": "ContactName",
       "type": "string",
       "mappings": [
         {
-          "source": "chinook",
-          "collection": "Customer",
-          "column": "FirstName"
+          "source": "northwind-sqlite",
+          "collection": "Customers",
+          "column": "ContactName"
+        },
+        {
+          "source": "northwind-postgresql",
+          "collection": "Customers",
+          "column": "ContactName"
         }
       ]
     },
     {
-      "id": "LastName",
+      "id": "City",
       "type": "string",
       "mappings": [
         {
-          "source": "chinook",
-          "collection": "Customer",
-          "column": "LastName"
+          "source": "northwind-sqlite",
+          "collection": "Customers",
+          "column": "City"
+        },
+        {
+          "source": "northwind-postgresql",
+          "collection": "Customers",
+          "column": "City"
         }
       ]
     }
   ],
+  "display": [
+    "CompanyName",
+    "ContactName",
+    "City"
+  ],
   "tables": [
     {
-      "name": "Customer"
+      "name": "Customers"
     }
   ]
 }

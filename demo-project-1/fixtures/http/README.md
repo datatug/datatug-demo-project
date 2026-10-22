@@ -26,3 +26,5 @@ returns the ISO currency code the `currency-rate` query needs next.
 `currency-rate.query.http` keeps the plan's Frankfurter choice but follows its 2026
 domain move from `api.frankfurter.app` (still 301s, may not forever) to
 `api.frankfurter.dev`.
+
+`shipping/carrier-status` calls the synthetic carrier sandbox, is live-only and intentionally has no fixture: the CLI serves one fixture per query for every parameter value, so a recorded answer would report the wrong booking for other requests.
