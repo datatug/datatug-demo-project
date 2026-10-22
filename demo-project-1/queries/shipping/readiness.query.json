@@ -1,7 +1,7 @@
 {
   "createdAt": "2026-10-20T21:57:52Z",
   "id": "readiness",
-  "title": "Readiness and assignment evidence",
+  "title": "Readiness per attempt and under current configuration",
   "type": "SQL",
   "connectionId": "shipping-working-copy",
   "purpose": "Read deterministic synthetic shipping application records; requires an independently admitted isolated source binding.",
@@ -45,6 +45,22 @@
         },
         {
           "name": "business_clock",
+          "type": "string"
+        },
+        {
+          "name": "basis",
+          "type": "string"
+        },
+        {
+          "name": "attempt_id",
+          "type": "string"
+        },
+        {
+          "name": "evaluated_config",
+          "type": "integer"
+        },
+        {
+          "name": "evaluated_at",
           "type": "string"
         },
         {

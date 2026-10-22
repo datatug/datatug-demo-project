@@ -1,0 +1,47 @@
+{
+  "id": "shipping-readiness-comparison",
+  "title": "Shipping readiness comparison",
+  "description": "Route and assignment readiness for an order beside a comparison order, per attempt and under the current configuration. Synthetic shipping training data. Not yet admitted inside a hosted Incident or Case, which accepts only the single order_id input.",
+  "display": "panel",
+  "parameters": [
+    {
+      "id": "order_id",
+      "title": "Order ID",
+      "type": "integer",
+      "isRequired": true,
+      "meta": { "entity": "Order", "field": "id" }
+    },
+    {
+      "id": "comparison_order_id",
+      "title": "Compare order",
+      "type": "integer",
+      "isRequired": true
+    }
+  ],
+  "widget": {
+    "name": "chart",
+    "data": {
+      "sources": [
+        {
+          "id": "readiness-comparison-held",
+          "queryId": "shipping/readiness-comparison",
+          "parameters": [
+            { "id": "order_id", "boardParameterId": "order_id" },
+            { "id": "comparison_order_id", "boardParameterId": "comparison_order_id" }
+          ]
+        }
+      ],
+      "chart": {
+        "type": "heatmap",
+        "selectionId": "readiness-comparison-selection",
+        "heatmap": {
+          "rowColumn": "request_id",
+          "columnColumn": "expectation",
+          "statusColumn": "status",
+          "evidenceRefColumn": "evidence_ref"
+        }
+      },
+      "defaultView": "chart"
+    }
+  }
+}
