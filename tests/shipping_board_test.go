@@ -20,8 +20,8 @@ func TestShippingBoardActualStoreAndSQLiteMappings(t *testing.T) {
 	board, err := newStore(t).LoadBoard(ctx, "shipping")
 	require.NoError(t, err)
 	require.NoError(t, board.Validate())
-	require.Equal(t, datatug.Parameters{{ID: "order_id", Title: "Order ID", Type: "integer", IsRequired: true}}, board.Parameters)
-	require.Equal(t, [][]string{{"order_id"}}, board.RequiredParams)
+	require.Equal(t, datatug.Parameters{{ID: "order_id", Title: "Order ID", Type: "integer", IsRequired: true}, {ID: "comparison_order_id", Title: "Compare order", Type: "integer", IsRequired: true}}, board.Parameters)
+	require.Equal(t, [][]string{{"order_id", "comparison_order_id"}}, board.RequiredParams)
 	store := filestore.NewProjectStore("roundtrip", t.TempDir())
 	require.NoError(t, store.SaveBoard(ctx, board))
 	loaded, err := store.LoadBoard(ctx, "shipping")
@@ -48,7 +48,14 @@ func TestShippingBoardActualStoreAndSQLiteMappings(t *testing.T) {
 			require.NoError(t, json.Unmarshal(encoded, &widget))
 			require.Len(t, widget.Sources, 1)
 			source := widget.Sources[0]
-			require.Equal(t, datatug.WidgetParameterBindings{{ID: "order_id", BoardParameterID: "order_id"}}, source.Parameters)
+			bindings := datatug.WidgetParameterBindings{{ID: "order_id", BoardParameterID: "order_id"}}
+			if widget.Chart.Type == "timeline" {
+				bindings = append(bindings, datatug.WidgetParameterBinding{ID: "comparison_order_id", BoardParameterID: "comparison_order_id"})
+				require.Equal(t, "shipping/events-comparison", source.QueryID)
+				require.Equal(t, "elapsed", widget.Chart.Timeline.TimeMode)
+				require.Equal(t, "elapsed_anchor", widget.Chart.Timeline.AnchorColumn)
+			}
+			require.Equal(t, bindings, source.Parameters)
 			require.Nil(t, source.Transform)
 			require.False(t, selections[widget.Chart.SelectionID])
 			selections[widget.Chart.SelectionID] = true
@@ -74,7 +81,11 @@ func TestShippingBoardActualStoreAndSQLiteMappings(t *testing.T) {
 			require.NoError(t, err)
 			require.NoError(t, json.Unmarshal(raw, &mapping))
 			for _, order := range []int64{11045, 11062} {
-				rows, err := db.QueryContext(ctx, q.Text, sql.Named("order_id", order))
+				args := []any{sql.Named("order_id", order)}
+				if q.Comparison != nil {
+					args = append(args, sql.Named("comparison_order_id", int64(11038)))
+				}
+				rows, err := db.QueryContext(ctx, q.Text, args...)
 				require.NoError(t, err)
 				names, err := rows.Columns()
 				require.NoError(t, err)
@@ -83,6 +94,9 @@ func TestShippingBoardActualStoreAndSQLiteMappings(t *testing.T) {
 					columns[name] = i
 				}
 				for role, name := range mapping {
+					if role == "timeMode" {
+						continue
+					}
 					_, exists := columns[name]
 					require.True(t, exists, "%s/%s maps missing %s", source.QueryID, role, name)
 				}
@@ -95,7 +109,12 @@ func TestShippingBoardActualStoreAndSQLiteMappings(t *testing.T) {
 					}
 					require.NoError(t, rows.Scan(targets...))
 					count++
-					require.Equal(t, order, values[columns["order_id"]])
+					member := values[columns["order_id"]]
+					if q.Comparison != nil {
+						require.Contains(t, []int64{order, 11038}, member)
+					} else {
+						require.Equal(t, order, member)
+					}
 					for _, name := range names {
 						if strings.Contains(name, "evidence_ref") {
 							require.Nil(t, values[columns[name]], "raw SQL cannot mint execution evidence")
@@ -112,7 +131,11 @@ func TestShippingBoardActualStoreAndSQLiteMappings(t *testing.T) {
 					if keys[order] == nil {
 						keys[order] = map[string]bool{}
 					}
-					if index, exists := columns["row_key"]; exists {
+					keyColumn := "row_key"
+					if q.Comparison != nil {
+						keyColumn = q.Comparison.Projection.ObservationColumn
+					}
+					if index, exists := columns[keyColumn]; exists && member == order {
 						key := fmt.Sprint(values[index])
 						require.NotEmpty(t, key)
 						keys[order][key] = true
