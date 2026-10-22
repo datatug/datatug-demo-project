@@ -1,0 +1,94 @@
+{
+  "createdAt": "2026-10-22T18:00:00Z",
+  "id": "readiness-comparison",
+  "title": "Readiness comparison per attempt and under current configuration",
+  "type": "SQL",
+  "connectionId": "shipping-working-copy",
+  "purpose": "Read deterministic synthetic shipping application records; requires an independently admitted isolated source binding.",
+  "parameters": [
+    {
+      "id": "order_id",
+      "type": "integer",
+      "isRequired": true,
+      "meta": {
+        "entity": "Order",
+        "field": "id"
+      }
+    },
+    {
+      "id": "comparison_order_id",
+      "type": "integer",
+      "isRequired": true
+    }
+  ],
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "order_id",
+          "type": "integer"
+        },
+        {
+          "name": "request_id",
+          "type": "string"
+        },
+        {
+          "name": "expectation",
+          "type": "string"
+        },
+        {
+          "name": "status",
+          "type": "string"
+        },
+        {
+          "name": "explanation",
+          "type": "string"
+        },
+        {
+          "name": "current_config",
+          "type": "integer"
+        },
+        {
+          "name": "business_clock",
+          "type": "string"
+        },
+        {
+          "name": "basis",
+          "type": "string"
+        },
+        {
+          "name": "attempt_id",
+          "type": "string"
+        },
+        {
+          "name": "evaluated_config",
+          "type": "integer"
+        },
+        {
+          "name": "evaluated_at",
+          "type": "string"
+        },
+        {
+          "name": "row_key",
+          "type": "string"
+        },
+        {
+          "name": "evidence_ref",
+          "type": "string"
+        },
+        {
+          "name": "source_generation",
+          "type": "string"
+        },
+        {
+          "name": "source_collection",
+          "type": "string"
+        },
+        {
+          "name": "source_record_key",
+          "type": "string"
+        }
+      ]
+    }
+  ]
+}

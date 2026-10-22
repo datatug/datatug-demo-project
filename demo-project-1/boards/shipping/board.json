@@ -114,7 +114,7 @@
         },
         {
           "id": "route-readiness",
-          "title": "Route and assignment \u00b7 current readiness",
+          "title": "Route and assignment \u00b7 at each attempt and now",
           "cols": 5,
           "widget": {
             "name": "chart",
@@ -122,11 +122,15 @@
               "sources": [
                 {
                   "id": "route-readiness-held",
-                  "queryId": "shipping/readiness",
+                  "queryId": "shipping/readiness-comparison",
                   "parameters": [
                     {
                       "id": "order_id",
                       "boardParameterId": "order_id"
+                    },
+                    {
+                      "id": "comparison_order_id",
+                      "boardParameterId": "comparison_order_id"
                     }
                   ]
                 }

@@ -49,12 +49,18 @@ func TestShippingBoardActualStoreAndSQLiteMappings(t *testing.T) {
 			require.Len(t, widget.Sources, 1)
 			source := widget.Sources[0]
 			bindings := datatug.WidgetParameterBindings{{ID: "order_id", BoardParameterID: "order_id"}}
-			if widget.Chart.Type == "timeline" {
+			switch widget.Chart.Type {
+			case "timeline":
 				bindings = append(bindings, datatug.WidgetParameterBinding{ID: "comparison_order_id", BoardParameterID: "comparison_order_id"})
 				require.Equal(t, "shipping/events-comparison", source.QueryID)
 				require.Equal(t, "elapsed", widget.Chart.Timeline.TimeMode)
 				require.Equal(t, "elapsed_anchor", widget.Chart.Timeline.AnchorColumn)
+			case "heatmap":
+				// The healthy control's cells sit beside the affected order's (AC healthy-comparison-reads-healthy).
+				bindings = append(bindings, datatug.WidgetParameterBinding{ID: "comparison_order_id", BoardParameterID: "comparison_order_id"})
+				require.Equal(t, "shipping/readiness-comparison", source.QueryID)
 			}
+			compared := len(bindings) == 2
 			require.Equal(t, bindings, source.Parameters)
 			require.Nil(t, source.Transform)
 			require.False(t, selections[widget.Chart.SelectionID])
@@ -82,7 +88,7 @@ func TestShippingBoardActualStoreAndSQLiteMappings(t *testing.T) {
 			require.NoError(t, json.Unmarshal(raw, &mapping))
 			for _, order := range []int64{11045, 11062} {
 				args := []any{sql.Named("order_id", order)}
-				if q.Comparison != nil {
+				if compared {
 					args = append(args, sql.Named("comparison_order_id", int64(11038)))
 				}
 				rows, err := db.QueryContext(ctx, q.Text, args...)
@@ -110,7 +116,7 @@ func TestShippingBoardActualStoreAndSQLiteMappings(t *testing.T) {
 					require.NoError(t, rows.Scan(targets...))
 					count++
 					member := values[columns["order_id"]]
-					if q.Comparison != nil {
+					if compared {
 						require.Contains(t, []int64{order, 11038}, member)
 					} else {
 						require.Equal(t, order, member)
