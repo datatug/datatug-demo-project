@@ -33,9 +33,9 @@ The story is told in acts. The first five need no account.
 | 6–9 Fix it | raise an Incident, investigate, teach DataTug the missing link, watch a Check go red and then green after the replay | incidents, checks and meanings, in your own writable training copy |
 
 From Act 6 you sign in, because those steps change data: you work in your own copy and the public
-original is never touched. The guided demo is opening act by act ahead of launch;
-[datatug.app/demo](https://datatug.app/demo) says what is live. Everything in this repository can
-be opened and read today.
+original is never touched. The guided demo is still being prepared and will open at
+[datatug.app/demo](https://datatug.app/demo). Everything in this repository can be opened and
+read today.
 
 ## Why your own copy
 
@@ -114,12 +114,12 @@ and read the [guide](docs/explore-showcase.md).
 Install the [DataTug CLI](https://datatug.io/install/) and start the demo:
 
 ```sh
-brew install datatug/tap/datatug
+brew install --cask datatug/tap/datatug
 datatug demo
 ```
 
-`datatug demo` clones this repository, fetches its SQLite fixtures and serves the project to the
-DataTug web UI from your machine. To serve your own fork instead:
+`datatug demo` clones this repository, fetches the Chinook SQLite fixture and serves the project
+to the DataTug web UI from your machine. To serve your own fork instead:
 
 ```sh
 git clone https://github.com/<you>/datatug-demo-project.git
@@ -160,8 +160,10 @@ needs it.
 
 - This repository's own files, including the synthetic Shipping data, logs and carrier responses,
   are released under [CC0 1.0](LICENSE).
-- Northwind and Chinook come unchanged from [DemoDB](https://github.com/demo-db) under their
-  upstream MIT licences.
+- Northwind and Chinook are unchanged third-party samples under the MIT licence, from
+  [jpwhite3/northwind-SQLite3](https://github.com/jpwhite3/northwind-SQLite3/blob/main/LICENSE)
+  and [lerocha/chinook-database](https://github.com/lerocha/chinook-database/blob/master/LICENSE.md),
+  as published by the [DemoDB](https://github.com/demo-db) mirrors.
 - Geo data is derived from GeoNames and World Bank Open Data under CC BY 4.0; see
   [`DATA-LICENSE.md`](demo-project-1/data/geo/DATA-LICENSE.md).
 - The Shipping records, logs and carrier responses are synthetic and say so; the people in the
