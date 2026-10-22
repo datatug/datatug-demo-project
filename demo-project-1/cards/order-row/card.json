@@ -1,0 +1,30 @@
+{
+  "id": "order-row",
+  "title": "Order",
+  "description": "A data card: shows the selected Orders row as it was supplied, with no query of its own.",
+  "display": "panel",
+  "parameters": [
+    {
+      "id": "row",
+      "type": "record",
+      "title": "Order row",
+      "isRequired": true,
+      "match": [{ "table": "Orders", "column": "OrderID" }]
+    }
+  ],
+  "widget": {
+    "name": "fields",
+    "data": {
+      "title": "Order",
+      "source": { "parameter": "row" },
+      "fields": [
+        { "column": "OrderID", "label": "Order" },
+        { "column": "CustomerID", "label": "Customer" },
+        { "column": "OrderDate", "label": "Ordered" },
+        { "column": "ShippedDate", "label": "Shipped" },
+        { "column": "ShipCountry", "label": "Ship to" },
+        { "column": "Freight" }
+      ]
+    }
+  }
+}
