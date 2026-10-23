@@ -4,6 +4,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { dirname, resolve } from 'node:path';
 import test from 'node:test';
+import { demoPostgresqlConnection } from './demodb-postgresql-connection.mjs';
 
 const root = resolve(import.meta.dirname, '..');
 const project = resolve(root, 'demo-project-1');
@@ -17,6 +18,25 @@ const sourceRightsPins = {
   northwind: { url: '/assets/showcase/northwind-source-rights.json', bytes: 1405,
     sha256: '523f610b513473d166f4afe0c5c0c77e10e291f1baebcc3cadf556b5a8ac7a82' },
 };
+
+test('PostgreSQL activation preserves six edition identities and QA/UAT memberships', () => {
+  for (const dataset of datasets) {
+    const pending = demoPostgresqlConnection(dataset);
+    const publicApi = demoPostgresqlConnection(dataset, true);
+    assert.equal(pending.id, publicApi.id);
+    assert.equal(pending.readiness, 'hosted-api-pending');
+    assert.equal(pending.query, 'setup-required');
+    assert.equal(pending.source, `https://demodb.dev/${dataset}/`);
+    assert.deepEqual(pending.environments, ['QA', 'UAT']);
+    assert.deepEqual(catalog.connections.find((entry) => entry.id === publicApi.id), publicApi);
+    assert.equal(publicApi.readiness, 'public-api');
+    assert.equal(publicApi.query, 'ovdb-read');
+    assert.equal(publicApi.source, `https://cloud.openvaultdb.com/v1/databases/${dataset}-postgresql`);
+    assert.deepEqual(publicApi.environments, dataset === 'northwind' ? ['dev', 'QA', 'UAT'] : ['QA', 'UAT']);
+    assert.deepEqual(publicApi.tags, [dataset, 'postgresql']);
+    assert.equal(publicApi.copy, 'unavailable');
+  }
+});
 
 test('one canonical project exposes every DemoDB storage edition with truthful readiness', () => {
   assert.equal(projectFile.id, 'datatug-demo-project');
@@ -65,7 +85,7 @@ test('one canonical project exposes every DemoDB storage edition with truthful r
   }
 });
 
-test('environment memberships point to exact catalogue entries without adding database servers', () => {
+test('environment memberships point to exact active catalogue entries without adding database servers', () => {
   const ids = new Set(catalog.connections.map((connection) => connection.id));
   for (const env of ['dev', 'QA', 'UAT']) {
     const file = read(`environments/${env}/${env}.env.json`);
