@@ -1,0 +1,5 @@
+from: {schema: northwind, name: Orders}
+groupBy: [{field: ShipCountry}]
+orderBy: [{field: ShipCountry}]
+columns: [{field: ShipCountry}, {aggregate: {function: count, args: [{star: true}]}, as: orders}]
+limit: 100

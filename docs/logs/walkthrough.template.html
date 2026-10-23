@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Order 11039 · DataTug evidence walkthrough</title>
+  <style>
+    :root { color-scheme: dark; font: 16px/1.48 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background:#101b29; color:#eef3f7; }
+    * { box-sizing:border-box; } body { margin:0; } button,input,select { font:inherit; }
+    a { color:#86d7e7; } a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible { outline:3px solid #f9bd62; outline-offset:3px; }
+    .shell { max-width:1340px; margin:auto; padding:0 28px 80px; }
+    .top { display:flex; align-items:center; justify-content:space-between; padding:22px 0; border-bottom:1px solid #31475a; gap:20px; }
+    .brand { letter-spacing:.1em; font-weight:800; font-size:20px; } .brand em { color:#ffbd69; font-style:normal; }
+    .top small { color:#9eb2c4; text-align:right; }
+    .hero { display:grid; grid-template-columns:minmax(0,1.45fr) minmax(280px,.7fr); gap:34px; padding:58px 0 35px; align-items:end; }
+    .eyebrow { color:#ffbd69; text-transform:uppercase; font-size:12px; letter-spacing:.16em; font-weight:800; }
+    h1 { font-size:clamp(36px,5vw,68px); line-height:1.04; letter-spacing:-.045em; margin:12px 0 18px; }
+    h1 span { color:#ffbd69; } .lead { font-size:19px; color:#bed0dc; max-width:710px; margin:0; }
+    .hero-note { border:1px solid #506679; border-radius:14px; padding:19px 22px; background:#192a3a; box-shadow:0 22px 40px #09111b55; }
+    .hero-note strong { color:#ffbd69; } .hero-note p { margin:8px 0 0; font-size:14px; color:#c2d1dd; }
+    .path { display:flex; flex-wrap:wrap; gap:8px; margin:30px 0 38px; align-items:center; color:#91a9b9; font-size:13px; }
+    .path span { border:1px solid #40566b; border-radius:999px; padding:7px 12px; color:#dce9ef; }
+    .layout { display:grid; grid-template-columns:310px minmax(0,1fr); gap:24px; align-items:start; }
+    .card { background:#f8f5ef; color:#1c2934; border-radius:18px; box-shadow:0 18px 38px #06101b55; overflow:hidden; }
+    .card h2 { margin:0; font-size:21px; letter-spacing:-.02em; }
+    .record-head { background:#f8dba6; padding:22px 24px; } .record-head p { margin:3px 0 0; font-size:13px; color:#6e5740; }
+    .record-body { padding:20px 24px; } .record-body dl { display:grid; grid-template-columns:1fr auto; gap:11px; margin:0; border-bottom:1px solid #dcdedc; padding-bottom:20px; }
+    .record-body dt { color:#65717b; } .record-body dd { margin:0; font-weight:750; }
+    .unset { color:#af472e; background:#fff0e7; padding:2px 7px; border-radius:5px; }
+    .record-body .claim { font-size:14px; color:#3e5261; margin:20px 0 0; }
+    .record-body .claim strong { display:block; color:#1b3445; margin-bottom:6px; }
+    .record-body a { color:#14667a; }
+    .timeline-card { padding:22px 25px 26px; } .section-title { display:flex; justify-content:space-between; gap:16px; align-items:center; }
+    .section-title p { margin:3px 0 0; color:#647481; font-size:13px; } #count { color:#236276; font-weight:800; white-space:nowrap; }
+    .filters { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; background:#e7eff0; border-radius:12px; padding:14px; margin:19px 0 9px; }
+    .filters label { display:grid; gap:4px; font-size:12px; color:#47606d; font-weight:750; }
+    .filters input,.filters select { min-width:0; width:100%; border:1px solid #acbec5; border-radius:7px; padding:8px; background:white; color:#162b37; }
+    .note { color:#647481; font-size:12px; margin:6px 0 18px; }
+    .grid-frame { overflow:auto; border:1px solid #cbd6d5; border-radius:9px; }
+    .evidence-grid { border-collapse:collapse; width:100%; min-width:900px; background:#fff; font-size:13px; }
+    .evidence-grid th { position:sticky; top:0; z-index:1; background:#e7eff0; color:#405865; text-align:left; font-size:12px; letter-spacing:.04em; }
+    .evidence-grid th,.evidence-grid td { padding:10px 12px; border-bottom:1px solid #e0e7e5; vertical-align:top; }
+    .evidence-grid tbody tr:hover,.evidence-grid tbody tr.selected { background:#fff5e5; }
+    .evidence-grid tbody tr:last-child td { border-bottom:0; }
+    .row-select { border:0; padding:0; min-height:0; background:transparent; color:#173e51; text-align:left; font-weight:750; cursor:pointer; font-variant-numeric:tabular-nums; }
+    .selection-status { min-height:1.5em; }
+    .severity { display:inline-block; border-radius:5px; padding:2px 6px; width:max-content; font-size:12px; font-weight:850; }
+    .severity.ERROR { background:#ffded8; color:#9c301e; } .severity.WARN { background:#ffedc6; color:#855114; } .severity.INFO { background:#d9f1ec; color:#176e63; }
+    .service,.source-cell { font-size:12px; color:#536776; } .message { min-width:280px; }
+    .details { border:1px solid #d8e0df; border-radius:0 0 10px 10px; padding:14px; background:#f0f4f2; }
+    .details h3 { margin:14px 0 6px; font-size:14px; }
+    .details dl { display:grid; grid-template-columns:110px 1fr; gap:7px; margin:0 0 12px; font-size:12px; }
+    .details dt { color:#647481; } .details dd { margin:0; overflow-wrap:anywhere; }
+    .details pre { white-space:pre-wrap; overflow-wrap:anywhere; background:#172a38; color:#ecf6f6; border-radius:8px; padding:13px; max-height:220px; overflow:auto; font-size:12px; }
+    .copy { background:#173e51; color:white; border:0; border-radius:7px; padding:7px 10px; cursor:pointer; font-size:12px; }
+    .empty { padding:28px; text-align:center; color:#647481; }
+    .claims { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:17px; margin:26px 0; }
+    .claim-card { background:#1b3041; border:1px solid #3b596b; border-radius:13px; padding:18px; }
+    .claim-card b { display:block; color:#ffbd69; margin-bottom:6px; } .claim-card p { margin:0; color:#c7d6dd; font-size:13px; }
+    .architecture { border-top:1px solid #324d60; padding-top:30px; } .architecture h2 { margin:0 0 12px; }
+    .architecture p { color:#afc3d0; max-width:900px; } .architecture .path { margin:20px 0; }
+    @media(max-width:850px) { .hero,.layout { grid-template-columns:1fr; } .hero { gap:22px; padding-top:35px; } .claims { grid-template-columns:1fr; } }
+    @media(max-width:650px) { .shell { padding:0 14px 50px; } .filters { grid-template-columns:1fr 1fr; } .hero-note { padding:15px; } }
+  </style>
+</head>
+<body>
+<div class="shell">
+  <header class="top"><div class="brand">Data<em>Tug</em> / Evidence Lab</div><small>Standalone walkthrough · generated from the running local OVDB server<br>Illustrative HTML grid · not AG Grid or a product screenshot</small></header>
+  <section class="hero" aria-labelledby="headline">
+    <div><div class="eyebrow">Northwind / Order 11039 / Case study</div><h1>Why did this order<br><span>never ship?</span></h1><p class="lead">Start with a real database record. Follow synthetic log entries in a selectable evidence grid to a precise explanation without an LLM.</p></div>
+    <aside class="hero-note"><strong>Evidence boundary</strong><p>The Northwind order and carrier names come from the pinned sample database. The logs are intentionally synthetic. They explain this constructed run, not the historical reason this sample order was left unshipped.</p></aside>
+  </section>
+  <div class="path" aria-label="Investigation flow"><span>01 · Order record</span> → <span>02 · Explicit order_id mapping</span> → <span>03 · Direct file query</span> → <span>04 · Raw evidence</span> → <span>05 · Return to record</span></div>
+  <main class="layout">
+    <section class="card" aria-labelledby="record-title"><div class="record-head"><h2 id="record-title">Orders / 11039</h2><p>Real DemoDB Northwind SQLite record</p></div><div class="record-body"><dl><dt>Customer ID</dt><dd>LINOD</dd><dt>Order date</dt><dd>2018-04-21</dd><dt>Ship via</dt><dd>2 · United Package</dd><dt>Order details</dt><dd>4 lines</dd><dt>Shipped date</dt><dd><span class="unset">Unset</span></dd></dl><p class="claim"><strong>The business symptom</strong>The order record has no shipped date. Its carrier points to United Package. The database alone does not explain why.</p><p class="claim"><a href="../../demo-project-1/queries/demodb/northwind-order-11039.query.sql">View the saved record query</a> · <a href="guide.md">Repeat the working DataTug journey</a></p></div></section>
+    <section class="card timeline-card" aria-labelledby="timeline-title"><div class="section-title"><div><h2 id="timeline-title">Log evidence</h2><p>Ordinary OVDB collections backed by current files</p></div><div id="count" role="status"></div></div>
+      <div class="filters"><label>Order ID<input id="order" value="11039" aria-label="Filter by exact order ID"></label><label>Severity<select id="severity"><option value="">All severities</option><option>INFO</option><option>WARN</option><option>ERROR</option></select></label><label>Source<select id="source"><option value="">Both file collections</option><option value="fulfillment">JSONL fulfillment</option><option value="carrier">Text carrier</option></select></label></div>
+      <p class="note">Illustration only: this semantic HTML table is not AG Grid. These controls filter the embedded walkthrough data in your browser. In DataTug, supported filters are sent as bounded queries; free text and regex are unavailable. Clear Order ID to inspect noise and malformed rows.</p>
+      <div class="grid-frame"><table class="evidence-grid" id="entries" aria-label="Illustrative log evidence grid"><thead><tr><th scope="col">Timestamp</th><th scope="col">Severity</th><th scope="col">Service</th><th scope="col">Source</th><th scope="col">Message</th></tr></thead><tbody id="evidence-rows"></tbody></table></div>
+      <p class="note selection-status" id="selection-status" role="status" aria-live="polite" aria-atomic="true">Select a row to inspect its evidence.</p>
+      <section class="details" id="selected-entry" aria-label="Entry details" hidden></section>
+    </section>
+  </main>
+  <section class="claims" aria-label="Evidence to conclusion"><div class="claim-card"><b>1 / Carrier failure</b><p>At 09:13:05, the carrier gateway reports HTTP 503. The multiline text entry retains the original stack.</p></div><div class="claim-card"><b>2 / Retry disabled</b><p>At 09:13:05.300, shipping-worker says the retryable failure became terminal because retry_budget=0.</p></div><div class="claim-card"><b>3 / Update deferred</b><p>At 09:13:06, orders-api reports the shipment update was deferred. The real order still has no ShippedDate.</p></div></section>
+  <section class="architecture"><h2>How the working slice is wired</h2><p>The file adapter scans a bounded allowed file on each query and exposes a DALGO collection. A programmatic OVDB mount serves the existing discovery and query protocol. DataTug maps the ordinary result fields into its log evidence grid. Nothing is copied into a log database.</p><div class="path"><span>Versioned JSONL + text files</span> → <span>dalgo2logs</span> → <span>DALGO</span> → <span>Unchanged OVDB HTTP</span> → <span>DataTug evidence grid</span></div><p>Google Cloud Logging is a second direct-read adapter with a fixed project and bounded time window. The hosted synthetic-view pilot is now verified in production with separate Google consent, view-only IAM, and a bounded query in the real AG Grid. See the <a href="google-cloud-pilot.md">hosted pilot execution receipt and captures</a>. This standalone HTML table remains an illustrative local-file walkthrough, not the hosted grid; the default local repro requires no Google credentials.</p></section>
+</div>
+<!--EVIDENCE_DATA-->
+<script>
+  const data = JSON.parse(document.getElementById('evidence-data').textContent);
+  const entries = data.fulfillment.map(x => ({...x, sourceCollection:'fulfillment'})).concat(data.carrier.map(x => ({...x, sourceCollection:'carrier'})));
+  const order = document.getElementById('order'), severity = document.getElementById('severity'), source = document.getElementById('source');
+  const list = document.getElementById('evidence-rows'), details = document.getElementById('selected-entry'), count = document.getElementById('count'), selectionStatus = document.getElementById('selection-status');
+  function element(tag, cls, value) { const node=document.createElement(tag); if(cls) node.className=cls; if(value !== undefined) node.textContent=String(value); return node; }
+  function render() {
+    const id=order.value.trim(), level=severity.value, selectedSource=source.value;
+    const filtered=entries.filter(x => (!id || String(x.data.order_id || '')===id) && (!level || x.data.severity===level) && (!selectedSource || x.sourceCollection===selectedSource))
+      .sort((a,b) => { const at=a.data.timestamp, bt=b.data.timestamp; if(!at) return 1; if(!bt) return -1; return Date.parse(bt)-Date.parse(at) || String(a.key).localeCompare(String(b.key)); });
+    list.replaceChildren(); details.hidden=true; details.replaceChildren(); count.textContent=filtered.length+' entries';
+    selectionStatus.textContent=`Showing ${filtered.length} entries. Select a row to inspect its evidence.`;
+    if(!filtered.length) { const row=element('tr','empty'); const cell=element('td','', 'No entries match these exact filters.'); cell.colSpan=5; row.append(cell); list.append(row); return; }
+    filtered.forEach(x => {
+      const d=x.data, row=element('tr',''); row.dataset.key=x.key;
+      const timeCell=element('td',''); const timestamp=d.timestamp || ''; const displayTimestamp=timestamp.endsWith('Z') ? timestamp.slice(0,-1)+' UTC' : timestamp || 'Time unavailable'; const select=element('button','row-select',displayTimestamp); select.type='button'; select.setAttribute('aria-label','Inspect log entry at '+(timestamp || 'unknown time')); select.setAttribute('aria-controls','selected-entry'); select.setAttribute('aria-expanded','false'); select.setAttribute('aria-pressed','false'); timeCell.append(select);
+      const severityCell=element('td',''); severityCell.append(element('span','severity '+(d.severity || ''),d.severity || 'UNKNOWN'));
+      row.append(timeCell,severityCell,element('td','service',d.service || 'Unknown service'),element('td','source-cell',d.source || x.sourceCollection),element('td','message',d.message || 'Unparsed entry'));
+      select.addEventListener('click',()=>{
+        list.querySelectorAll('tr.selected').forEach(selected=>{selected.classList.remove('selected'); const button=selected.querySelector('.row-select'); button?.setAttribute('aria-expanded','false'); button?.setAttribute('aria-pressed','false');}); row.classList.add('selected'); select.setAttribute('aria-expanded','true'); select.setAttribute('aria-pressed','true'); details.hidden=false; details.replaceChildren();
+        selectionStatus.textContent=`Selected ${d.severity || 'UNKNOWN'} event at ${timestamp || 'unknown time'}. Details shown below the grid.`;
+        const heading=element('h3','','Selected entry evidence'); details.append(heading);
+        const dl=element('dl'); [['Parse status',d.parse_status || 'parsed'],['Correlation ID',d.correlation_id || 'Not supplied'],['Order ID',d.order_id || 'Not supplied'],['Source reference',d.source_ref || 'Not supplied']].forEach(pair => { dl.append(element('dt','',pair[0]),element('dd','',pair[1])); }); details.append(dl);
+        if(d.source_ref) { const copy=element('button','copy','Copy source reference'); copy.type='button'; copy.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(d.source_ref);copy.textContent='Copied';}catch{copy.textContent='Select the reference above to copy';}}); details.append(copy); }
+        details.append(element('h3','','Original entry'),element('pre','',d.raw || '')); if(d.fields_json) details.append(element('h3','','Structured fields'),element('pre','',d.fields_json));
+      }); list.append(row);
+    });
+  }
+  [order,severity,source].forEach(control => control.addEventListener('input',render)); render();
+</script>
+</body>
+</html>

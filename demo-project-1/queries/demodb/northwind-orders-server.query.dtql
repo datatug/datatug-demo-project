@@ -1,0 +1,4 @@
+from: {database: northwind, name: Orders, alias: orders}
+orderBy: [{field: OrderID}]
+columns: [{field: OrderID}, {field: CustomerID}, {field: EmployeeID}, {field: OrderDate}, {field: RequiredDate}, {field: ShippedDate}, {field: ShipVia}, {field: Freight}, {field: ShipName}, {field: ShipAddress}, {field: ShipCity}, {field: ShipRegion}, {field: ShipPostalCode}, {field: ShipCountry}]
+limit: 1000

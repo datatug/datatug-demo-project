@@ -1,0 +1,32 @@
+# Act 4, Add the world: how many Chinook customers per million people?
+#
+#   Customer (Chinook, Country is a name such as "USA")         OVDB, cloud.openvaultdb.com
+#     -> country_aliases (alias -> ISO country key)             inGitDB on GitHub, ingitdb/geo-ingitdb
+#        -> population_wb (World Bank SP.POP.TOTL, latest year) inGitDB on GitHub, ingitdb/geo-ingitdb
+#
+# geo is described by fixtures/ovdb/geo-github.ovdb.yaml; the browser reads its
+# published collection views straight from GitHub. Customers without a Country
+# have no alias and are left out by the inner join.
+from:
+  database: chinook
+  name: Customer
+  alias: c
+  joins:
+    - from:
+        database: geo
+        name: country_aliases
+        alias: a
+        joins:
+          - from: {database: geo, name: population_wb, alias: p}
+            on: [{left: {field: country, source: a}, op: '==', right: {field: country, source: p}}]
+      on: [{left: {field: Country, source: c}, op: '==', right: {field: alias, source: a}}]
+groupBy: [{field: alias, source: a}, {field: population, source: p}, {field: year, source: p}]
+columns:
+  - {field: alias, source: a, as: country}
+  - {aggregate: {function: count, distinct: true, args: [{field: CustomerId, source: c}]}, as: customers}
+  - {field: population, source: p, as: population}
+  - {field: year, source: p, as: populationYear}
+  - {binary: {op: '*', left: {binary: {op: '/', left: {aggregate: {function: count, distinct: true, args: [{field: CustomerId, source: c}]}}, right: {field: population, source: p}}}, right: {value: 1000000}}, as: customersPerMillion}
+orderBy:
+  - binary: {op: '*', left: {binary: {op: '/', left: {aggregate: {function: count, distinct: true, args: [{field: CustomerId, source: c}]}}, right: {field: population, source: p}}}, right: {value: 1000000}}
+    desc: true

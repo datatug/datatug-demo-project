@@ -1,4 +1,5 @@
 {
+  "createdAt": "2026-09-09T09:03:01Z",
   "id": "customer-purchases-by-genre",
   "title": "Customer purchases by genre",
   "type": "SQL",
@@ -9,7 +10,7 @@
       "type": "integer",
       "isRequired": true,
       "meta": {
-        "entity": "Customer",
+        "entity": "ChinookCustomer",
         "field": "ID"
       }
     }

@@ -1,0 +1,23 @@
+{
+  "createdAt": "2026-10-19T02:56:34Z",
+  "id": "customer-country-comparison-server",
+  "title": "Northwind + Chinook · customer records by shared country",
+  "type": "DTQL",
+  "purpose": "One server query compares customer-record counts in countries whose labels match exactly across Northwind and Chinook. Counts are distinct within each source, not shared people. UK/United Kingdom, null countries and countries found in only one sample are excluded. The 2026-10-19 observation returned 17 countries; Northwind included two null-country customer records. Source data can change.",
+  "federation": {
+    "ovdbBaseUrl": "https://cloud.openvaultdb.com",
+    "expectedServerIdentity": {
+      "baseUrl": "https://cloud.openvaultdb.com",
+      "serverId": "https://demodb.dev/ovdb"
+    },
+    "tables": [
+      { "database": "northwind", "name": "Customers", "fields": ["CustomerID", "Country"] },
+      { "database": "chinook", "name": "Customer", "fields": ["CustomerId", "Country"] }
+    ]
+  },
+  "recordsets": [{ "columns": [
+    { "name": "country", "type": "string" },
+    { "name": "northwindCustomers", "type": "integer" },
+    { "name": "chinookCustomers", "type": "integer" }
+  ] }]
+}

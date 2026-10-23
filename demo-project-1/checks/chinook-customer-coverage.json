@@ -1,0 +1,26 @@
+{
+  "id": "chinook-customer-coverage",
+  "title": "Chinook customer coverage",
+  "description": "The pinned Chinook snapshot contains 59 customers. Verify that the complete customer inventory still matches this baseline.",
+  "version": 1,
+  "inputs": [],
+  "steps": [
+    {
+      "id": "customer-inventory",
+      "kind": "query",
+      "queryId": "demodb/chinook-customer-inventory",
+      "validators": [
+        {
+          "id": "expected-customers",
+          "scope": "set",
+          "kind": "row-count",
+          "severity": "error",
+          "expected": {
+            "type": "integer",
+            "value": "59"
+          }
+        }
+      ]
+    }
+  ]
+}

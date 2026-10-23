@@ -1,0 +1,22 @@
+{
+  "createdAt": "2026-10-16T16:55:31Z",
+  "id": "northwind-country-counts-browser-sqlite",
+  "title": "Northwind SQLite orders by shipping country",
+  "type": "SQL",
+  "connectionId": "northwind-sqlite",
+  "purpose": "Standalone read-only SQL example: execute SQL in the browser against the bundled, SHA-256 and size pinned SQLite snapshot; no hosted query endpoint is required.",
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "ShipCountry",
+          "type": "string"
+        },
+        {
+          "name": "orders",
+          "type": "integer"
+        }
+      ]
+    }
+  ]
+}

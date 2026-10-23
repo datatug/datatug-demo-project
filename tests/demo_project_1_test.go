@@ -8,8 +8,13 @@ package tests
 
 import (
 	"context"
+	"encoding/json"
+	"os"
+	"path/filepath"
+	"strings"
 	"testing"
 
+	"github.com/dal-go/dalgo/dtql"
 	"github.com/datatug/datatug-core/pkg/datatug"
 	"github.com/datatug/datatug-core/pkg/semantic"
 	"github.com/datatug/datatug-core/pkg/storage/filestore"
@@ -52,28 +57,63 @@ func loadQueries(t *testing.T, store datatug.ProjectStore, ids ...string) datatu
 	return queries
 }
 
-// TestDemoProject1_Validate loads demo-project-1 through the real
-// filestore.LoadProject (datatug-core v0.20.0/#305 fixed entities loading
-// from demo-project-1's per-entity directories; v0.21.0/#306 fixed the same
-// bug class for boards and DB models, v0.22.0 makes LoadProject load each
-// environment's own "<id>.env.json" and fixes #307 so a file-based sqlite3
-// ServerRef with an empty host validates, and Project.Validate() has
-// covered declared mappings since v0.17.0/#302) and asserts: every entity
-// loads, the demo's board1 board and chinook DB model load with their real
-// content, every environment loads with a validating sqlite3 ServerRef, and
-// - once its three library queries are attached, the one thing LoadProject
-// still doesn't populate - Project.Validate() passes.
+type queryMetadata struct {
+	ID                   string                      `json:"id"`
+	Title                string                      `json:"title"`
+	Type                 string                      `json:"type"`
+	ConnectionID         string                      `json:"connectionId"`
+	Purpose              string                      `json:"purpose"`
+	Parameters           []any                       `json:"parameters"`
+	Targets              []any                       `json:"targets"`
+	RelationshipBindings []queryRelationshipMetadata `json:"relationshipBindings"`
+}
+
+type queryRelationshipMetadata struct {
+	ID      string `json:"id"`
+	Version string `json:"version"`
+	From    struct {
+		Schema string `json:"schema"`
+		Table  string `json:"table"`
+	} `json:"from"`
+	To struct {
+		Schema string `json:"schema"`
+		Table  string `json:"table"`
+	} `json:"to"`
+	Pairs []struct {
+		FromField string `json:"fromField"`
+		ToField   string `json:"toField"`
+	} `json:"pairs"`
+}
+
+func readQueryMetadata(t *testing.T, relativePath string) queryMetadata {
+	t.Helper()
+	path := filepath.Join(projectDir, "queries", relativePath+".query.json")
+	data, err := os.ReadFile(path)
+	require.NoError(t, err, "failed to read query metadata %s", path)
+	var metadata queryMetadata
+	require.NoError(t, json.Unmarshal(data, &metadata), "failed to parse query metadata %s", path)
+	return metadata
+}
+
+// TestDemoProject1_Validate checks the project as the real filestore loads it:
+// entities, all saved boards (including nested chart/query widgets), the
+// Chinook model, environments and saved queries must validate together.
 func TestDemoProject1_Validate(t *testing.T) {
 	store := newStore(t)
 	project, err := store.LoadProject(context.Background())
 	require.NoError(t, err, "failed to load %s", projectDir)
 
-	wantEntityIDs := []string{"Album", "Artist", "Country", "Customer", "Invoice", "InvoiceLine", "Person", "Track"}
+	wantEntityIDs := []string{"Album", "Artist", "ChinookCustomer", "Country", "Customer", "Invoice", "InvoiceLine", "Order", "Person", "ShippingRequest", "Track"}
 	assert.ElementsMatch(t, wantEntityIDs, project.Entities.IDs())
 
-	if assert.Len(t, project.Boards, 1) {
-		assert.Equal(t, "board1", project.Boards[0].ID)
-		assert.Equal(t, "1st board", project.Boards[0].Title)
+	if assert.Len(t, project.Boards, 4) {
+		boardIDs := make([]string, 0, len(project.Boards))
+		for _, board := range project.Boards {
+			boardIDs = append(boardIDs, board.ID)
+			require.NotEmpty(t, board.Rows, "board %s has no useful content", board.ID)
+			assert.NoError(t, board.Validate(), "board %s is invalid", board.ID)
+		}
+		assert.ElementsMatch(t, []string{"board1", "northwind", "showcase", "shipping"}, boardIDs)
 	}
 
 	if assert.Len(t, project.DbModels, 1) {
@@ -83,11 +123,74 @@ func TestDemoProject1_Validate(t *testing.T) {
 	wantEnvIDs := []string{"dev", "local", "prod", "QA", "UAT"}
 	assert.ElementsMatch(t, wantEnvIDs, project.Environments.IDs())
 
-	project.Queries = &datatug.QueriesFolder{
-		Items: loadQueries(t, store, "customers/customer-invoices", "customers/customer-purchases-by-genre", "invoices/invoice-lines"),
-	}
-
+	require.NotNil(t, project.Queries)
 	assert.NoError(t, project.Validate())
+}
+
+func TestDemoBoardsReferencePublishedQueries(t *testing.T) {
+	store := newStore(t)
+	project, err := store.LoadProject(context.Background())
+	require.NoError(t, err)
+
+	for _, board := range project.Boards {
+		for _, row := range board.Rows {
+			for _, card := range row.Cards {
+				require.NotNil(t, card.Widget, "board %s card %s", board.ID, card.ID)
+				assertBoardWidgetQueryReferences(t, store, board.ID, card.ID, card.Widget)
+			}
+		}
+	}
+}
+
+// Check every saved query through the real project loader, including chart
+// sources and SQL children of tabs. A valid widget shape alone cannot catch a
+// renamed or deleted query file, nor an empty saved query body.
+func assertBoardWidgetQueryReferences(t *testing.T, store datatug.ProjectStore, boardID, cardID string, widget *datatug.BoardWidget) {
+	t.Helper()
+	data, err := json.Marshal(widget.Data)
+	require.NoError(t, err)
+	checkQuery := func(queryID string) {
+		t.Helper()
+		require.NotEmpty(t, queryID, "board %s card %s", boardID, cardID)
+		metadata := readQueryMetadata(t, queryID)
+		assert.Equal(t, filepath.Base(queryID), metadata.ID)
+		query, err := store.LoadQuery(context.Background(), queryID)
+		require.NoError(t, err, "board %s card %s query %s", boardID, cardID, queryID)
+		require.NoError(t, query.Validate())
+		require.NotEmpty(t, query.Text, "board %s card %s query %s has no saved body", boardID, cardID, queryID)
+		assert.Equal(t, metadata.ConnectionID, query.ConnectionID)
+	}
+	switch widget.Name {
+	case "SQL":
+		var def datatug.SQLWidgetDef
+		require.NoError(t, json.Unmarshal(data, &def))
+		checkQuery(def.SQL.QueryID)
+		if boardID == "board1" {
+			assert.Equal(t, "chinook-sqlite", readQueryMetadata(t, def.SQL.QueryID).ConnectionID)
+		}
+	case "chart":
+		var def datatug.ChartWidgetDef
+		require.NoError(t, json.Unmarshal(data, &def))
+		require.NotEmpty(t, def.Sources)
+		for _, source := range def.Sources {
+			checkQuery(source.QueryID)
+		}
+	case "tabs":
+		var def datatug.TabsWidgetDef
+		require.NoError(t, json.Unmarshal(data, &def))
+		require.NotEmpty(t, def.Tabs)
+		for _, tab := range def.Tabs {
+			if tab.Widget.Name == "" {
+				continue // older boards may contain title-only placeholder tabs
+			}
+			if boardID == "showcase" {
+				require.NotEmpty(t, tab.ID, "new showcase tabs need stable IDs")
+			}
+			assertBoardWidgetQueryReferences(t, store, boardID, cardID+"/"+tab.Title, &tab.Widget)
+		}
+	default:
+		t.Fatalf("board %s card %s has untested widget type %q", boardID, cardID, widget.Name)
+	}
 }
 
 // TestDemoProject1_Environments loads every demo-project-1 environment
@@ -166,17 +269,8 @@ func TestDemoProject1_Environments(t *testing.T) {
 	assert.Equal(t, "chinook", chinookProd.DbModel)
 }
 
-// TestDemoProject1_QueriesLoad proves LoadProject itself (datatug-core
-// v0.23.0/#309) now populates Project.Queries directly - no manual
-// loadQueries patch-up needed, unlike TestDemoProject1_Validate above (still
-// kept as-is; not in scope for this bump) - with all 5 real demo queries
-// (DTQL customer-invoices, SQL customer-purchases-by-genre/invoice-lines,
-// HTTP country-facts/currency-rate), each with its non-empty Text body, and
-// that Project.Validate() passes on the project exactly as LoadProject
-// returned it, with no query-loading workaround at all. None of the 5 real
-// queries currently declare Targets (confirmed by direct inspection of
-// demo-project-1/queries/**/*.query.json) - the empty-credential path is
-// exercised separately, by construction, in datatug-core's own fixture test.
+// TestDemoProject1_QueriesLoad checks representative query types and saved
+// bodies after LoadProject populates Project.Queries directly.
 func TestDemoProject1_QueriesLoad(t *testing.T) {
 	store := newStore(t)
 	project, err := store.LoadProject(context.Background())
@@ -204,6 +298,7 @@ func TestDemoProject1_QueriesLoad(t *testing.T) {
 		"invoice-lines":               datatug.QueryTypeSQL,
 		"country-facts":               datatug.QueryTypeHTTP,
 		"currency-rate":               datatug.QueryTypeHTTP,
+		"carrier-status":              datatug.QueryTypeHTTP,
 	}
 	for id, wantType := range wantTypes {
 		q := findQuery(project.Queries, id)
@@ -236,6 +331,456 @@ func TestDemoProject1_HostedCustomerPreview(t *testing.T) {
 	}
 }
 
+// TestDemoProject1_StandaloneChinookBrowserBindings keeps the browser-ready
+// SQL allowlist limited to reviewed standalone SQLite examples. The separate
+// Northwind DTQL bindings name public OVDB sources; they do not claim that
+// the DataTug app can execute or compose them yet.
+func TestDemoProject1_StandaloneChinookBrowserBindings(t *testing.T) {
+	allowed := map[string]string{
+		"demodb/northwind-orders-browser-sqlite":         "northwind-sqlite",
+		"demodb/northwind-country-counts-browser-sqlite": "northwind-sqlite",
+		"demodb/chinook-billing-browser-sqlite":          "chinook-sqlite",
+		"demodb/chinook-customer-inventory":              "chinook-sqlite",
+		"demodb/chinook-customer-genre-mix":              "chinook-sqlite",
+		"demodb/chinook-playlist-composition":            "chinook-sqlite",
+		"demodb/chinook-top-customer-spend":              "chinook-sqlite",
+	}
+	allowedTugQL := map[string]string{
+		"demodb/chinook-invoice-author":                      "chinook-sqlite",
+		"demodb/chinook-customer-invoice-count":              "chinook-sqlite",
+		"demodb/chinook-customer-count-cte":                  "chinook-sqlite",
+		"demodb/chinook-customer-count-graph":                "chinook-sqlite",
+		"demodb/chinook-customer-invoice-join":               "chinook-sqlite",
+		"demodb/chinook-invoice-compare":                     "chinook-sqlite",
+		"demodb/northwind-shipping-country-count-sqlite":     "northwind-sqlite",
+		"demodb/northwind-shipping-country-count-postgresql": "northwind-postgresql",
+		"demodb/northwind-shipping-country-race":             "northwind-postgresql",
+		"demodb/northwind-orders-full-sqlite":                "northwind-sqlite",
+	}
+	for queryPath, connectionID := range allowed {
+		metadata := readQueryMetadata(t, queryPath)
+		assert.Equal(t, strings.TrimPrefix(queryPath, "demodb/"), metadata.ID, queryPath)
+		assert.Equal(t, connectionID, metadata.ConnectionID, queryPath)
+		assert.Equal(t, "SQL", metadata.Type, queryPath)
+		assert.Contains(t, strings.ToLower(metadata.Purpose), "standalone", queryPath)
+		assert.Contains(t, strings.ToLower(metadata.Purpose), "browser", queryPath)
+		assert.Empty(t, metadata.Parameters, queryPath)
+		assert.Empty(t, metadata.Targets, queryPath)
+	}
+
+	// Any future standalone DemoDB example stays unbound unless it is added to
+	// the allowlist above.
+	queryFiles, err := filepath.Glob(filepath.Join(projectDir, "queries", "demodb", "*.query.json"))
+	require.NoError(t, err)
+	for _, path := range queryFiles {
+		data, err := os.ReadFile(path)
+		require.NoError(t, err)
+		var metadata queryMetadata
+		require.NoError(t, json.Unmarshal(data, &metadata), path)
+		if metadata.ConnectionID != "" {
+			queryPath := filepath.ToSlash(filepath.Join("demodb", strings.TrimSuffix(filepath.Base(path), ".query.json")))
+			if expectedConnection, ok := allowedTugQL[queryPath]; ok {
+				assert.Equal(t, strings.TrimPrefix(queryPath, "demodb/"), metadata.ID, path)
+				assert.Equal(t, expectedConnection, metadata.ConnectionID, path)
+				assert.Equal(t, "DTQL", metadata.Type, path)
+				continue
+			}
+			assert.Equal(t, allowed["demodb/"+strings.TrimSuffix(filepath.Base(path), ".query.json")], metadata.ConnectionID, path)
+		}
+	}
+
+	for _, queryPath := range []string{
+		"demodb/chinook-postgresql-artist-tracks",
+		"demodb/northwind-top-customer-orders",
+		"customers/customer-purchases-by-genre",
+		"invoices/invoice-lines",
+	} {
+		assert.Empty(t, readQueryMetadata(t, queryPath).ConnectionID, queryPath)
+	}
+}
+
+func TestDemoProject1_NorthwindShowcaseQueriesLoadAndDeserialize(t *testing.T) {
+	for _, tc := range []struct {
+		id, connectionID string
+	}{
+		{"northwind-shipping-country-count-sqlite", "northwind-sqlite"},
+		{"northwind-shipping-country-count-postgresql", "northwind-postgresql"},
+		{"northwind-shipping-country-race", "northwind-postgresql"},
+		{"northwind-orders-full-sqlite", "northwind-sqlite"},
+	} {
+		t.Run(tc.id, func(t *testing.T) {
+			metadata := readQueryMetadata(t, "demodb/"+tc.id)
+			assert.Equal(t, tc.id, metadata.ID)
+			assert.Equal(t, tc.connectionID, metadata.ConnectionID)
+			query := loadQueries(t, newStore(t), "demodb/"+tc.id)[0]
+			require.Equal(t, datatug.QueryTypeDTQL, query.Type)
+			_, err := dtql.Deserialize([]byte(query.Text))
+			require.NoError(t, err, "saved structured DTQL must deserialize")
+		})
+	}
+}
+
+func TestDemoProject1_ChinookCustomerInvoiceJoinStarter(t *testing.T) {
+	metadata := readQueryMetadata(t, "demodb/chinook-customer-invoice-join")
+	assert.Equal(t, "chinook-customer-invoice-join", metadata.ID)
+	assert.Equal(t, "DTQL", metadata.Type)
+	assert.Equal(t, "chinook-sqlite", metadata.ConnectionID)
+	assert.Contains(t, strings.ToLower(metadata.Purpose), "browser")
+	require.Len(t, metadata.RelationshipBindings, 1)
+	assert.Equal(t, "FK_Invoice_Customer_CustomerId", metadata.RelationshipBindings[0].ID)
+	assert.Equal(t,
+		"7651ba378ac2fcd0dfc3c66fb101f7a7eed3ba39a612ec642b96e20702061f15:main.Invoice.CustomerId:INTEGER->main.Customer.CustomerId:INTEGER:PRIMARY_KEY:v1",
+		metadata.RelationshipBindings[0].Version,
+	)
+	assert.Equal(t, "main", metadata.RelationshipBindings[0].From.Schema)
+	assert.Equal(t, "Invoice", metadata.RelationshipBindings[0].From.Table)
+	assert.Equal(t, "main", metadata.RelationshipBindings[0].To.Schema)
+	assert.Equal(t, "Customer", metadata.RelationshipBindings[0].To.Table)
+	require.Len(t, metadata.RelationshipBindings[0].Pairs, 1)
+	assert.Equal(t, "CustomerId", metadata.RelationshipBindings[0].Pairs[0].FromField)
+	assert.Equal(t, "CustomerId", metadata.RelationshipBindings[0].Pairs[0].ToField)
+
+	source, err := os.ReadFile(filepath.Join(projectDir, "queries", "demodb", "chinook-customer-invoice-join.query.dtql"))
+	require.NoError(t, err)
+	text := string(source)
+	for _, expected := range []string{
+		"@CustomerId integer required",
+		"from Invoice as i",
+		"join Customer as c",
+		"on i.CustomerId = c.CustomerId",
+		"where i.CustomerId = @CustomerId",
+		"order by i.InvoiceId",
+		"limit 100",
+		"select i.InvoiceId as InvoiceId, i.CustomerId as CustomerId, c.FirstName as FirstName, c.LastName as LastName, c.Email as Email",
+	} {
+		assert.Contains(t, text, expected)
+	}
+	assert.NotContains(t, text, "InvoiceDate")
+	assert.NotContains(t, text, "Total")
+
+	data, err := os.ReadFile(filepath.Join(projectDir, "queries", "demodb", "chinook-customer-invoice-join.query.json"))
+	require.NoError(t, err)
+	var definition struct {
+		Parameters []struct {
+			ID         string `json:"id"`
+			Type       string `json:"type"`
+			IsRequired bool   `json:"isRequired"`
+			Meta       struct {
+				Entity string `json:"entity"`
+				Field  string `json:"field"`
+			} `json:"meta"`
+		} `json:"parameters"`
+		Recordsets []struct {
+			Columns []struct {
+				Name string `json:"name"`
+				Type string `json:"type"`
+				Meta struct {
+					Entity string `json:"entity"`
+					Field  string `json:"field"`
+				} `json:"meta"`
+			} `json:"columns"`
+		} `json:"recordsets"`
+	}
+	require.NoError(t, json.Unmarshal(data, &definition))
+	require.Len(t, definition.Parameters, 1)
+	assert.Equal(t, "CustomerId", definition.Parameters[0].ID)
+	assert.Equal(t, "integer", definition.Parameters[0].Type)
+	assert.True(t, definition.Parameters[0].IsRequired)
+	assert.Equal(t, "ChinookCustomer", definition.Parameters[0].Meta.Entity)
+	assert.Equal(t, "ID", definition.Parameters[0].Meta.Field)
+	require.Len(t, definition.Recordsets, 1)
+	require.Len(t, definition.Recordsets[0].Columns, 5)
+	wantColumns := []struct {
+		name, typ, entity, field string
+	}{
+		{"InvoiceId", "integer", "Invoice", "ID"},
+		{"CustomerId", "integer", "ChinookCustomer", "ID"},
+		{"FirstName", "string", "ChinookCustomer", "FirstName"},
+		{"LastName", "string", "ChinookCustomer", "LastName"},
+		{"Email", "string", "ChinookCustomer", "Email"},
+	}
+	for i, want := range wantColumns {
+		got := definition.Recordsets[0].Columns[i]
+		assert.Equal(t, want.name, got.Name)
+		assert.Equal(t, want.typ, got.Type)
+		assert.Equal(t, want.entity, got.Meta.Entity)
+		assert.Equal(t, want.field, got.Meta.Field)
+	}
+}
+
+func TestDemoProject1_ChinookInvoiceCompareStarterResolves(t *testing.T) {
+	const queryID = "chinook-invoice-compare"
+	const fixtureSchemaVersion = "7651ba378ac2fcd0dfc3c66fb101f7a7eed3ba39a612ec642b96e20702061f15"
+	metadata := readQueryMetadata(t, "demodb/"+queryID)
+	assert.Equal(t, queryID, metadata.ID)
+	assert.Equal(t, "Chinook Invoice Comparison", metadata.Title)
+	assert.Equal(t, "DTQL", metadata.Type)
+	assert.Equal(t, "chinook-sqlite", metadata.ConnectionID)
+	assert.Contains(t, strings.ToLower(metadata.Purpose), "synthetic candidate")
+	assert.Contains(t, strings.ToLower(metadata.Purpose), "page-memory")
+	require.Len(t, metadata.RelationshipBindings, 1)
+	relationship := metadata.RelationshipBindings[0]
+	assert.Equal(t, "FK_Invoice_Customer_CustomerId", relationship.ID)
+	assert.Equal(t, fixtureSchemaVersion+":main.Invoice.CustomerId:INTEGER->main.Customer.CustomerId:INTEGER:PRIMARY_KEY:v1", relationship.Version)
+	assert.Equal(t, "main", relationship.From.Schema)
+	assert.Equal(t, "Invoice", relationship.From.Table)
+	assert.Equal(t, "main", relationship.To.Schema)
+	assert.Equal(t, "Customer", relationship.To.Table)
+	require.Len(t, relationship.Pairs, 1)
+	assert.Equal(t, "CustomerId", relationship.Pairs[0].FromField)
+	assert.Equal(t, "CustomerId", relationship.Pairs[0].ToField)
+
+	queries := loadQueries(t, newStore(t), "demodb/"+queryID)
+	require.Len(t, queries, 1)
+	query := queries[0]
+	assert.Equal(t, datatug.QueryTypeDTQL, query.Type)
+	assert.Contains(t, query.Text, "@CustomerId integer required")
+	assert.NotContains(t, strings.ToLower(query.Text), " default ", "CustomerId has no default")
+	document, parseDiagnostics := dtql.ParseTugQL(query.Text)
+	require.Empty(t, parseDiagnostics, "comparison starter TugQL must parse")
+	require.NotNil(t, document.Tree)
+
+	resolved, resolveDiagnostics := dtql.ResolveTugQL(document, dtql.TugQLResolveContext{
+		AuthorizedSchemas: []dtql.TugQLAuthorizedSchema{{
+			Database: "chinook",
+			Schema:   "main",
+			Version:  fixtureSchemaVersion,
+			Tables: []dtql.TugQLTable{
+				{Name: "Invoice", Fields: []dtql.TugQLField{
+					{Name: "InvoiceId", Type: "integer", Authorized: true},
+					{Name: "CustomerId", Type: "integer", Authorized: true},
+					{Name: "InvoiceDate", Type: "datetime", Authorized: true},
+				}},
+				{Name: "Customer", Fields: []dtql.TugQLField{
+					{Name: "CustomerId", Type: "integer", Authorized: true},
+					{Name: "FirstName", Type: "string", Authorized: true},
+				}},
+			},
+		}},
+		Bindings: []dtql.TugQLBinding{{Name: "CustomerId", Set: true, Value: int64(1)}},
+	})
+	require.Empty(t, resolveDiagnostics, "comparison starter must resolve using the declared Invoice-Customer schema")
+	assert.Equal(t, fixtureSchemaVersion, resolved.SchemaVersion)
+	require.Len(t, resolved.Columns, 2)
+	assert.Equal(t, "InvoiceId", resolved.Columns[0].Name)
+	assert.Equal(t, "integer", resolved.Columns[0].Type)
+	assert.Equal(t, []dtql.TugQLOutputLineage{{Source: "i", Field: "InvoiceId"}}, resolved.Columns[0].Lineage)
+	assert.Equal(t, "InvoiceDate", resolved.Columns[1].Name)
+	assert.Equal(t, "datetime", resolved.Columns[1].Type)
+	assert.Equal(t, []dtql.TugQLOutputLineage{{Source: "i", Field: "InvoiceDate"}}, resolved.Columns[1].Lineage)
+
+	data, err := os.ReadFile(filepath.Join(projectDir, "queries", "demodb", queryID+".query.json"))
+	require.NoError(t, err)
+	var definition struct {
+		Parameters []struct {
+			ID         string `json:"id"`
+			Type       string `json:"type"`
+			IsRequired bool   `json:"isRequired"`
+		} `json:"parameters"`
+		Recordsets []struct {
+			Columns []struct {
+				Name string `json:"name"`
+				Type string `json:"type"`
+			} `json:"columns"`
+		} `json:"recordsets"`
+	}
+	require.NoError(t, json.Unmarshal(data, &definition))
+	require.Len(t, definition.Parameters, 1)
+	assert.Equal(t, "CustomerId", definition.Parameters[0].ID)
+	assert.Equal(t, "integer", definition.Parameters[0].Type)
+	assert.True(t, definition.Parameters[0].IsRequired)
+	require.Len(t, definition.Recordsets, 1)
+	require.Len(t, definition.Recordsets[0].Columns, 2)
+	assert.Equal(t, "InvoiceId", definition.Recordsets[0].Columns[0].Name)
+	assert.Equal(t, "integer", definition.Recordsets[0].Columns[0].Type)
+	assert.Equal(t, "InvoiceDate", definition.Recordsets[0].Columns[1].Name)
+	assert.Equal(t, "datetime", definition.Recordsets[0].Columns[1].Type)
+}
+
+func TestDemoProject1_ChinookInvoiceAuthorStarter(t *testing.T) {
+	metadata := readQueryMetadata(t, "demodb/chinook-invoice-author")
+	assert.Equal(t, "chinook-invoice-author", metadata.ID)
+	assert.Equal(t, "DTQL", metadata.Type)
+	assert.Equal(t, "chinook-sqlite", metadata.ConnectionID)
+	assert.Empty(t, metadata.Parameters, "TugQL declares its visible typed parameter in the source")
+
+	source, err := os.ReadFile(filepath.Join(projectDir, "queries", "demodb", "chinook-invoice-author.query.dtql"))
+	require.NoError(t, err)
+	assert.Contains(t, string(source), "@CustomerId integer required")
+	assert.Contains(t, string(source), "where i.CustomerId = @CustomerId")
+	assert.Contains(t, string(source), "select i.InvoiceId, i.InvoiceDate")
+	assert.Contains(t, string(source), "limit 100")
+	assert.NotContains(t, string(source), "Total", "SQLite NUMERIC money values are outside this exactness profile")
+}
+
+func TestDemoProject1_ChinookCustomerInvoiceCountStarter(t *testing.T) {
+	metadata := readQueryMetadata(t, "demodb/chinook-customer-invoice-count")
+	assert.Equal(t, "chinook-customer-invoice-count", metadata.ID)
+	assert.Equal(t, "DTQL", metadata.Type)
+	assert.Equal(t, "chinook-sqlite", metadata.ConnectionID)
+	assert.Empty(t, metadata.Parameters, "TugQL declares its visible typed parameter in the source")
+
+	source, err := os.ReadFile(filepath.Join(projectDir, "queries", "demodb", "chinook-customer-invoice-count.query.dtql"))
+	require.NoError(t, err)
+	text := string(source)
+	assert.Contains(t, text, "@CustomerId integer required")
+	assert.Contains(t, text, "where i.CustomerId = @CustomerId")
+	assert.Contains(t, text, "group by i.CustomerId")
+	assert.Contains(t, text, "having count(*) >= 7")
+	assert.Contains(t, text, "select i.CustomerId, count(*) as InvoiceCount")
+	assert.Contains(t, text, "limit 100")
+	assert.NotContains(t, text, "Total", "SQLite NUMERIC money values are outside this exactness profile")
+}
+
+func TestDemoProject1_ChinookCustomerCountsCTE(t *testing.T) {
+	const queryID = "chinook-customer-count-cte"
+	metadata := readQueryMetadata(t, "demodb/"+queryID)
+	assert.Equal(t, queryID, metadata.ID)
+	assert.Equal(t, "Chinook Customer Counts CTE", metadata.Title)
+	assert.Equal(t, "DTQL", metadata.Type)
+	assert.Equal(t, "chinook-sqlite", metadata.ConnectionID)
+	assert.Empty(t, metadata.Parameters, "TugQL declares the visible typed parameter in the source")
+	assert.Empty(t, metadata.RelationshipBindings, "the explicit join from a CTE export has no physical relationship binding")
+
+	connectionData, err := os.ReadFile(filepath.Join(projectDir, "connections", "demo-db.json"))
+	require.NoError(t, err)
+	var catalogue struct {
+		Connections []struct {
+			ID             string `json:"id"`
+			FixtureSHA256  string `json:"fixtureSha256"`
+			BrowserFixture struct {
+				URL string `json:"url"`
+			} `json:"browserFixture"`
+		} `json:"connections"`
+	}
+	require.NoError(t, json.Unmarshal(connectionData, &catalogue))
+	connectionFound := false
+	for i := range catalogue.Connections {
+		if catalogue.Connections[i].ID == metadata.ConnectionID {
+			connectionFound = true
+			assert.Equal(t, "7651ba378ac2fcd0dfc3c66fb101f7a7eed3ba39a612ec642b96e20702061f15", catalogue.Connections[i].FixtureSHA256)
+			assert.Equal(t, "/assets/showcase/chinook.sqlite", catalogue.Connections[i].BrowserFixture.URL)
+			break
+		}
+	}
+	require.True(t, connectionFound, "saved connection must exist in the catalogue")
+
+	store := newStore(t)
+	query, err := store.LoadQuery(context.Background(), "demodb/"+queryID)
+	require.NoError(t, err)
+	assert.Equal(t, datatug.QueryTypeDTQL, query.Type)
+
+	var definition struct {
+		Recordsets []struct {
+			Columns []struct {
+				Name string          `json:"name"`
+				Type string          `json:"type"`
+				Meta json.RawMessage `json:"meta"`
+			} `json:"columns"`
+		} `json:"recordsets"`
+	}
+	data, err := os.ReadFile(filepath.Join(projectDir, "queries", "demodb", queryID+".query.json"))
+	require.NoError(t, err)
+	require.NoError(t, json.Unmarshal(data, &definition))
+	require.Len(t, definition.Recordsets, 1)
+	require.Len(t, definition.Recordsets[0].Columns, 5)
+	wantColumns := []struct{ name, typ string }{
+		{"CustomerId", "integer"},
+		{"InvoiceCount", "integer"},
+		{"FirstName", "string"},
+		{"LastName", "string"},
+		{"Email", "string"},
+	}
+	for i, want := range wantColumns {
+		column := definition.Recordsets[0].Columns[i]
+		assert.Equal(t, want.name, column.Name)
+		assert.Equal(t, want.typ, column.Type)
+		assert.Empty(t, column.Meta, "lineage is supplied by compiler and worker execution metadata")
+	}
+
+}
+
+func TestDemoProject1_ChinookCustomerCountsGraphResolves(t *testing.T) {
+	const queryID = "chinook-customer-count-graph"
+	metadata := readQueryMetadata(t, "demodb/"+queryID)
+	assert.Equal(t, queryID, metadata.ID)
+	assert.Equal(t, "Chinook Customer Counts Graph", metadata.Title)
+	assert.Equal(t, "DTQL", metadata.Type)
+	assert.Equal(t, "chinook-sqlite", metadata.ConnectionID)
+	assert.Empty(t, metadata.Parameters, "TugQL declares the visible typed parameter in the source")
+	assert.Empty(t, metadata.RelationshipBindings, "the CTE-to-CTE join has no physical relationship binding")
+
+	queries := loadQueries(t, newStore(t), "demodb/"+queryID)
+	require.Len(t, queries, 1)
+	query := queries[0]
+	require.Equal(t, datatug.QueryTypeDTQL, query.Type)
+	document, parseDiagnostics := dtql.ParseTugQL(query.Text)
+	require.Empty(t, parseDiagnostics, "maintained graph TugQL must parse")
+	require.NotNil(t, document.Tree)
+
+	const fixtureSchemaVersion = "7651ba378ac2fcd0dfc3c66fb101f7a7eed3ba39a612ec642b96e20702061f15"
+	resolved, resolveDiagnostics := dtql.ResolveTugQL(document, dtql.TugQLResolveContext{
+		AuthorizedSchemas: []dtql.TugQLAuthorizedSchema{{
+			Database: "chinook",
+			Schema:   "main",
+			Version:  fixtureSchemaVersion,
+			Tables: []dtql.TugQLTable{
+				{Name: "Invoice", Fields: []dtql.TugQLField{
+					{Name: "CustomerId", Type: "integer", Authorized: true},
+				}},
+				{Name: "Customer", Fields: []dtql.TugQLField{
+					{Name: "CustomerId", Type: "integer", Authorized: true},
+					{Name: "FirstName", Type: "string", Authorized: true},
+					{Name: "LastName", Type: "string", Authorized: true},
+					{Name: "Email", Type: "string", Authorized: true},
+				}},
+			},
+		}},
+		Bindings: []dtql.TugQLBinding{{Name: "CustomerId", Set: true, Value: int64(1)}},
+	})
+	require.Empty(t, resolveDiagnostics, "maintained graph must resolve against the admitted Chinook physical schema")
+	assert.Equal(t, fixtureSchemaVersion, resolved.SchemaVersion)
+	assert.Empty(t, resolved.Relationships, "the explicit join between derived CTE sources must not fabricate physical relationship evidence")
+	require.Len(t, resolved.Columns, 5)
+	wantColumns := []struct {
+		name, typ string
+		lineage   []dtql.TugQLOutputLineage
+	}{
+		{"CustomerId", "integer", []dtql.TugQLOutputLineage{{Source: "i", Field: "CustomerId"}}},
+		{"InvoiceCount", "integer", nil},
+		{"FirstName", "string", []dtql.TugQLOutputLineage{{Source: "c", Field: "FirstName"}}},
+		{"LastName", "string", []dtql.TugQLOutputLineage{{Source: "c", Field: "LastName"}}},
+		{"Email", "string", []dtql.TugQLOutputLineage{{Source: "c", Field: "Email"}}},
+	}
+	for i, want := range wantColumns {
+		got := resolved.Columns[i]
+		assert.Equal(t, want.name, got.Name)
+		assert.Equal(t, want.typ, got.Type)
+		assert.Equal(t, want.lineage, got.Lineage)
+	}
+
+	data, err := os.ReadFile(filepath.Join(projectDir, "queries", "demodb", queryID+".query.json"))
+	require.NoError(t, err)
+	var definition struct {
+		Recordsets []struct {
+			Columns []struct {
+				Name string          `json:"name"`
+				Type string          `json:"type"`
+				Meta json.RawMessage `json:"meta"`
+			} `json:"columns"`
+		} `json:"recordsets"`
+	}
+	require.NoError(t, json.Unmarshal(data, &definition))
+	require.Len(t, definition.Recordsets, 1)
+	require.Len(t, definition.Recordsets[0].Columns, len(wantColumns))
+	for i, want := range wantColumns {
+		column := definition.Recordsets[0].Columns[i]
+		assert.Equal(t, want.name, column.Name)
+		assert.Equal(t, want.typ, column.Type)
+		assert.Empty(t, column.Meta, "derived lineage belongs to compiler/worker execution metadata")
+	}
+}
+
 // TestDemoProject1_DeclaredMappings asserts the mappings needed by the demo
 // are present, exactly as declared.
 func TestDemoProject1_DeclaredMappings(t *testing.T) {
@@ -247,7 +792,8 @@ func TestDemoProject1_DeclaredMappings(t *testing.T) {
 		require.NoError(t, err, "failed to load entity %s", id)
 		return e
 	}
-	customer := loadEntity("Customer")
+	customer := loadEntity("ChinookCustomer")
+	northwindCustomer := loadEntity("Customer")
 	invoice := loadEntity("Invoice")
 	country := loadEntity("Country")
 
@@ -263,6 +809,59 @@ func TestDemoProject1_DeclaredMappings(t *testing.T) {
 		datatug.PhysicalRef{Source: "chinook", Collection: "Customer", Column: "Country"})
 	assert.Contains(t, fieldByID(t, country, "Name").Mappings,
 		datatug.PhysicalRef{Source: "support-notes", Collection: "support-notes", Column: "Country"})
+
+	// The demo story's Customer is Northwind's text CustomerID in both public
+	// editions the demo queries (SQLite OVDB provider and PostgreSQL OVDB).
+	id := fieldByID(t, northwindCustomer, "ID")
+	assert.Equal(t, "string", id.Type)
+	assert.True(t, id.IsKeyField)
+	assert.Equal(t, datatug.PhysicalRefs{
+		{Source: "northwind-sqlite", Collection: "Customers", Column: "CustomerID"},
+		{Source: "northwind-sqlite", Collection: "Orders", Column: "CustomerID"},
+		{Source: "northwind-postgresql", Collection: "Customers", Column: "CustomerID"},
+		{Source: "northwind-postgresql", Collection: "Orders", Column: "CustomerID"},
+	}, id.Mappings)
+	for _, entity := range []*datatug.Entity{customer, northwindCustomer} {
+		for _, field := range entity.Fields {
+			for _, ref := range field.Mappings {
+				if entity.ID == "Customer" {
+					assert.True(t, strings.HasPrefix(ref.Source, "northwind-"), "Customer stays Northwind-only: %+v", ref)
+				} else {
+					assert.False(t, strings.HasPrefix(ref.Source, "northwind-"), "ChinookCustomer never maps Northwind: %+v", ref)
+				}
+			}
+		}
+	}
+}
+
+// TestDemoProject1_CustomerMeaningSeparatesNorthwindFromChinook pins the
+// remap: Northwind CustomerID cells resolve to Customer.ID (text), Chinook
+// CustomerId cells to ChinookCustomer.ID (integer), and neither name pattern
+// captures the other database's spelling.
+func TestDemoProject1_CustomerMeaningSeparatesNorthwindFromChinook(t *testing.T) {
+	entities, err := newStore(t).LoadEntities(context.Background())
+	require.NoError(t, err)
+	for _, source := range []string{"northwind-sqlite", "northwind-postgresql"} {
+		for _, collection := range []string{"Customers", "Orders"} {
+			got := semantic.Resolve(entities, source, collection, []semantic.Column{{Name: "CustomerID", Type: "string"}})
+			require.Len(t, got, 1, "%s/%s", source, collection)
+			assert.Equal(t, semantic.Resolution{Column: "CustomerID", Entity: "Customer", Field: "ID", Provenance: semantic.Declared}, got[0])
+		}
+	}
+	// An undeclared Northwind edition infers only the Northwind spelling.
+	got := semantic.Resolve(entities, "northwind-ingitdb", "Orders", []semantic.Column{{Name: "CustomerID", Type: "string"}})
+	require.Len(t, got, 1)
+	assert.Equal(t, "Customer", got[0].Entity)
+	assert.Equal(t, semantic.Inferred, got[0].Provenance)
+	got = semantic.Resolve(entities, "chinook-sqlite", "Invoice", []semantic.Column{{Name: "CustomerId", Type: "integer"}})
+	require.Len(t, got, 1)
+	assert.Equal(t, "ChinookCustomer", got[0].Entity)
+	assert.Equal(t, semantic.Inferred, got[0].Provenance)
+	// No Chinook edition spells it customer_id (Sakila does), so no customer
+	// meaning is inferred for snake_case columns.
+	for _, source := range []string{"sakila-sqlite", "sakila-postgresql", "northwind-ingitdb"} {
+		assert.Empty(t, semantic.Resolve(entities, source, "customer", []semantic.Column{{Name: "customer_id", Type: "integer"}}), source)
+	}
 }
 
 // TestDemoProject1_ResolveChinookCustomerColumns runs semantic.Resolve over a
@@ -276,7 +875,9 @@ func TestDemoProject1_ResolveChinookCustomerColumns(t *testing.T) {
 		{Name: "CustomerId", Type: "integer"},
 		{Name: "Country", Type: "string"},
 		{Name: "Email", Type: "string"},
-		{Name: "FirstName", Type: "string"}, // no mapping, no pattern -> absent
+		{Name: "FirstName", Type: "string"},
+		{Name: "LastName", Type: "string"},
+		{Name: "Phone", Type: "string"}, // no mapping, no pattern -> absent
 	}
 	got := semantic.Resolve(entities, "chinook", "Customer", columns)
 
@@ -292,16 +893,19 @@ func TestDemoProject1_ResolveChinookCustomerColumns(t *testing.T) {
 		assert.Equal(t, field, r.Field, "column %q field", column)
 		assert.Equal(t, semantic.Declared, r.Provenance, "column %q provenance", column)
 	}
-	assertDeclared("CustomerId", "Customer", "ID")
+	assertDeclared("CustomerId", "ChinookCustomer", "ID")
 	assertDeclared("Country", "Country", "Name")
-	assertDeclared("Email", "Customer", "Email")
+	assertDeclared("Email", "ChinookCustomer", "Email")
 
-	_, hasFirstName := byColumn["FirstName"]
-	assert.False(t, hasFirstName, "FirstName has no mapping or name pattern and must not resolve")
+	assertDeclared("FirstName", "ChinookCustomer", "FirstName")
+	assertDeclared("LastName", "ChinookCustomer", "LastName")
+
+	_, hasPhone := byColumn["Phone"]
+	assert.False(t, hasPhone, "Phone has no mapping or name pattern and must not resolve")
 }
 
 // TestDemoProject1_ApplicableQueries runs semantic.Applicable with
-// Customer.ID=5, per s3b-demo-mappings.md item 3.
+// ChinookCustomer.ID=5, per s3b-demo-mappings.md item 3.
 func TestDemoProject1_ApplicableQueries(t *testing.T) {
 	store := newStore(t)
 	queries := loadQueries(t, store, "customers/customer-invoices", "customers/customer-purchases-by-genre", "invoices/invoice-lines")
@@ -310,7 +914,7 @@ func TestDemoProject1_ApplicableQueries(t *testing.T) {
 	assert.Equal(t, datatug.QueryTypeDTQL, customerInvoices.Type, "customer-invoices must have been converted to DTQL")
 
 	available := []semantic.SemanticValue{
-		{Entity: "Customer", Field: "ID", Value: 5, Source: "chinook", Collection: "Customer", Column: "CustomerId", Provenance: semantic.Declared},
+		{Entity: "ChinookCustomer", Field: "ID", Value: 5, Source: "chinook", Collection: "Customer", Column: "CustomerId", Provenance: semantic.Declared},
 	}
 
 	applicable, notYet := semantic.Applicable(

@@ -1,0 +1,7 @@
+{
+  "synthetic": true,
+  "license": "MIT",
+  "licenseFile": "../../../LICENSE",
+  "description": "Deterministically authored shipping application records and independent synthetic log files. No real carrier, broker, customer communication, or physical shipment is represented.",
+  "northwind": "Existing separately licensed Northwind source is referenced read-only; no Northwind records are copied or modified."
+}

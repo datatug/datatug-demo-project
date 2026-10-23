@@ -1,5 +1,15 @@
 # DataTug demo project
 
+## Direct log evidence investigation
+
+The [Northwind order 11039 walkthrough](https://github.com/datatug/datatug-demo-project/blob/main/docs/logs/guide.md) starts with a
+real Northwind SQLite record and follows a synthetic fulfillment failure
+through directly queried JSONL and multiline text files. It uses the ordinary
+OpenVaultDB query route and DataTug's mapped log view. The
+[standalone interactive HTML](https://github.com/datatug/datatug-demo-project/blob/main/docs/logs/walkthrough.html) and
+[working-product screenshots](https://github.com/datatug/datatug-demo-project/blob/main/docs/logs/README.md) show the same evidence.
+The log files are never copied into a database.
+
 ## Project ID
 datatug-demo-project
 
@@ -10,7 +20,11 @@ hosted BigQuery editions. Each
 connection carries dataset and storage tags. The Dev environment lists the
 public SQLite APIs and repository-hosted inGitDB editions; QA and UAT refer to
 the same six PostgreSQL edition identities. PostgreSQL editions expose public
-read-only OpenVaultDB APIs and can be queried from QA and UAT. The inGitDB
+read-only OpenVaultDB APIs and can be queried from QA and UAT. They are hosted
+on Neon and served by the public OpenVaultDB server (`cloud.openvaultdb.com`);
+DataTug opens them at `/demo/ovdb/<dataset>-postgresql` through that server only
+(never Neon directly, with no credentials in the browser) and offers no editing.
+Northwind PostgreSQL is also listed on Dev. The inGitDB
 edition links to a pinned repository snapshot and needs a local checkout for
 native queries. The SQLite APIs are read-only and can be copied into the
 browser's persistent IndexedDB Dev connection only by an explicit user action.
@@ -34,7 +48,10 @@ and cannot run or copy data.
 
 The [guided DemoDB investigations](queries/demodb/README.md) provide three
 fixture-verified standalone SQL examples for each of the six SQLite datasets.
-They become browser-executable when dataset-specific Dev SQL connections are available.
+The saved Customer Genre Mix, Playlist Composition, and Top Customer Spend
+queries have explicit `chinook-sqlite` bindings and run against the pinned
+public Chinook fixture in the browser. The other standalone examples await
+source bindings.
 
 Regenerate the catalogue from the pinned DemoDB website registry, OVDB
 Directory inventory, and BigQuery hosting manifest with `node
@@ -48,8 +65,15 @@ commits, the provider fixture digests, and the public server catalogue.
 - [chinook](dbmodels/chinook)
 
 ## [Environments](environments)
-- [prod](environments/prod)
 - [local](environments/local)
+- [dev](environments/dev)
+- [QA](environments/QA)
+- [UAT](environments/UAT)
+- [prod](environments/prod)
+
+Each environment file includes optional presentation metadata for its display
+label, icon, and caution tone. Folder IDs remain the stable route and lookup
+keys; the metadata does not change connection assignments or query support.
 
 ## [Boards](boards)
 
@@ -95,6 +119,42 @@ Worker. It stores large output pages in a second temporary IndexedDB table
 and sends only the visible result page to the UI. Query input is deleted when
 the run ends; output is deleted when the result closes. The UI reports
 loaded and processed rows and completed, in-flight, and pending HTTP lookups.
+
+## Act 4, Add the world: countries read straight from GitHub
+
+**Countries comes from inGitDB on GitHub.** It is a public database kept as plain files in a Git
+repository, [ingitdb/geo-ingitdb](https://github.com/ingitdb/geo-ingitdb). An
+[OpenVaultDB (OVDB)](https://openvaultdb.com) descriptor tells DataTug where it is, and your
+browser reads it straight from GitHub, with no server in between. [inGitDB](https://ingitdb.com)
+keeps every record as a file you can diff and review. When a query reads it, the result shows the
+same sentence with one action, **See the source**.
+
+| Query | Joins | Shows |
+|---|---|---|
+| [`reference/chinook-customers-per-million`](queries/reference/chinook-customers-per-million.query.dtql) | Chinook `Customer` (OVDB) → `country_aliases` → `population_wb` | customers per million people, highest first |
+| [`reference/countries-currency-population`](queries/reference/countries-currency-population.query.dtql) | `countries` → `population_wb`, both from GitHub | every country's ISO code, capital, currency and population, largest first; no server at all |
+| [`reference/northwind-customer-countries`](queries/reference/northwind-customer-countries.query.dtql) | Northwind `Customers` (OVDB) → `country_aliases` → `countries` and `population_wb` | each country's ISO code, currency and population; Canada, home of order 11045's customer, is `CAD` |
+
+- **Descriptor.** [fixtures/ovdb/geo-github.ovdb.yaml](fixtures/ovdb/geo-github.ovdb.yaml) is an
+  `ovdb-manifest/draft-1` with `storage.engine: ingitdb`, the GitHub repository, a pinned commit and
+  the collections a query may read. Queries name it in `federation.ingitdbSources` by its raw URL
+  at a commit of this repository, so the descriptor a query reads cannot change under it. Each collection
+  is one published inGitDB default view (`$ingitdb/<collection>/<collection>.ingr`), so a run costs
+  a handful of anonymous `raw.githubusercontent.com` requests and none against the GitHub API.
+- **Caching.** The descriptor's `cacheControl` is a standard HTTP Cache-Control value. Files at a
+  commit SHA cannot change, so the browser keeps them (`public, max-age=31536000, immutable`) and
+  later runs and acts read them without asking GitHub again.
+- **Coverage.** 252 countries and territories; 216 have a World Bank population, all for 2025
+  (Taiwan, Jersey and Guernsey are among those without). Every Chinook and Northwind customer
+  country has an alias and a population. The two Northwind customers without a Country are left
+  out by the inner join; Northwind itself is unchanged.
+- **Where it runs.** In the browser. The DataTug CLI and the OVDB server do not read
+  `ingitdbSources` yet; the CLI hero query below reads the vendored copy in [data/geo](data/geo).
+- **If GitHub does not answer**, the query says "Countries is unavailable right now. Run the query
+  again in a minute." A collection without a published view is reported the same way, rather than
+  read file by file.
+- **Data and attribution.** GeoNames and World Bank SP.POP.TOTL, both CC BY 4.0, modified; see
+  geo-ingitdb's `DATA-LICENSE.md`. Countries is not a DemoDB database and has no demodb.dev host.
 
 ## Hero demo: sales per capita from real Chinook and World Bank data
 

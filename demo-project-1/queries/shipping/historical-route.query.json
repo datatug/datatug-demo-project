@@ -1,0 +1,73 @@
+{
+  "createdAt": "2026-10-20T21:57:52Z",
+  "id": "historical-route",
+  "title": "Historical route diagnosis",
+  "type": "SQL",
+  "connectionId": "shipping-working-copy",
+  "purpose": "Read deterministic synthetic shipping application records; requires an independently admitted isolated source binding.",
+  "parameters": [
+    {
+      "id": "order_id",
+      "type": "integer",
+      "isRequired": true,
+      "meta": {
+        "entity": "Order",
+        "field": "id"
+      }
+    }
+  ],
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "order_id",
+          "type": "integer"
+        },
+        {
+          "name": "request_id",
+          "type": "string"
+        },
+        {
+          "name": "attempt_id",
+          "type": "string"
+        },
+        {
+          "name": "attempt_no",
+          "type": "integer"
+        },
+        {
+          "name": "config_revision",
+          "type": "integer"
+        },
+        {
+          "name": "started_at",
+          "type": "string"
+        },
+        {
+          "name": "route_id",
+          "type": "string"
+        },
+        {
+          "name": "partner_id",
+          "type": "string"
+        },
+        {
+          "name": "enabled",
+          "type": "integer"
+        },
+        {
+          "name": "valid_from",
+          "type": "string"
+        },
+        {
+          "name": "valid_until",
+          "type": "string"
+        },
+        {
+          "name": "diagnosis",
+          "type": "string"
+        }
+      ]
+    }
+  ]
+}

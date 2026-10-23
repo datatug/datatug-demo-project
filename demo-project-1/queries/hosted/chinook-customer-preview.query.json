@@ -1,10 +1,15 @@
 {
+  "createdAt": "2026-10-07T20:42:07Z",
   "id": "chinook-customer-preview",
   "title": "Hosted Chinook customers",
   "type": "DTQL",
   "purpose": "Preview hosted Chinook customer names and countries in the browser.",
   "federation": {
     "ovdbBaseUrl": "https://demodb.dev/ovdb",
+    "expectedServerIdentity": {
+      "baseUrl": "https://demodb.dev/ovdb",
+      "serverId": "https://demodb.dev/ovdb"
+    },
     "tables": [
       {
         "database": "chinook",

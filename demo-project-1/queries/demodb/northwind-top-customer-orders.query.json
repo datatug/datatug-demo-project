@@ -1,6 +1,8 @@
 {
+  "createdAt": "2026-10-07T06:18:13Z",
   "id": "northwind-top-customer-orders",
   "title": "Top Customer Orders",
+  "tags": ["northwind", "sales", "customers"],
   "type": "SQL",
   "recordsets": [
     {

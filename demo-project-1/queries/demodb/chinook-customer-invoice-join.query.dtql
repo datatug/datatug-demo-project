@@ -1,0 +1,10 @@
+parameters (
+  @CustomerId integer required
+)
+from Invoice as i
+join Customer as c
+  on i.CustomerId = c.CustomerId
+where i.CustomerId = @CustomerId
+order by i.InvoiceId
+limit 100
+select i.InvoiceId as InvoiceId, i.CustomerId as CustomerId, c.FirstName as FirstName, c.LastName as LastName, c.Email as Email

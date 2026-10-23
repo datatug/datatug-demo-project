@@ -1,0 +1,99 @@
+format: meaning/draft-1
+id: demo
+name: Demo customer and invoice meanings
+description: >-
+  Meanings used by the saved customer and invoice queries in demo-project-1.
+  The demo story's customer is a Northwind customer keyed by its text
+  CustomerID; Chinook customers are a separate concept keyed by an integer.
+  Shared concepts are reused by immutable address; query usage is recorded
+  separately in demo-project-1/datatug-meaning-uses.json.
+license: CC0-1.0
+concepts:
+  - id: customer
+    kind: entity
+    extends: meaning://github.com/demo-db/northwind/customer?ref=f5855699eafaba6f09b7f4897abdb2a304698b67
+    labels:
+      en: Demo customer
+    description: A Northwind customer, such as Bottom-Dollar Markets, followed through the public demo story.
+
+  - id: chinook-customer
+    kind: entity
+    extends: meaning://github.com/demo-db/chinook/customer?ref=3e7bb316d8a438eb7e5930067997a4e4543a275c
+    labels:
+      en: Chinook customer
+    description: A Chinook customer selected in the demo's saved Chinook customer queries.
+
+  - id: invoice
+    kind: entity
+    extends: meaning://github.com/demo-db/chinook/invoice?ref=3e7bb316d8a438eb7e5930067997a4e4543a275c
+    labels:
+      en: Demo invoice
+    description: A Chinook invoice opened from the saved Customer invoices query.
+
+  - id: invoice-line
+    kind: entity
+    of: invoice
+    extends: meaning://github.com/demo-db/chinook/invoice-line?ref=3e7bb316d8a438eb7e5930067997a4e4543a275c
+    labels:
+      en: Demo invoice line
+    description: A purchased track returned by the saved Invoice lines query.
+
+  - id: country
+    kind: entity
+    extends: meaning://github.com/meaninggraph/core/country?ref=982916d73f0a35ff2558b0062f58aa3ac4f24d97
+    labels:
+      en: Demo country
+    description: The shared country concept available to this demo's country lookups.
+
+  - id: customer-id
+    kind: attribute
+    of: customer
+    labels:
+      en: Customer ID
+    description: The Northwind CustomerID text code, such as BOTTM, identifying the customer in Customers and Orders.
+
+  - id: chinook-customer-id
+    kind: attribute
+    of: chinook-customer
+    labels:
+      en: Chinook customer ID
+    description: The Chinook CustomerId integer identifying the customer in the saved Chinook queries.
+
+  - id: invoice-id
+    kind: attribute
+    of: invoice
+    labels:
+      en: Invoice ID
+    description: The InvoiceId integer passed from customer invoices to invoice lines.
+
+  - id: chinook-customer-country
+    kind: attribute
+    of: chinook-customer
+    extends: meaning://github.com/demo-db/chinook/customer-country?ref=3e7bb316d8a438eb7e5930067997a4e4543a275c
+    labels:
+      en: Customer country
+    description: The customer's address country returned by Top Customer Spend.
+
+  - id: invoice-total
+    kind: attribute
+    of: invoice
+    extends: meaning://github.com/demo-db/chinook/invoice-total?ref=3e7bb316d8a438eb7e5930067997a4e4543a275c
+    labels:
+      en: Invoice total
+    description: The amount in USD returned as Total by Customer invoices.
+
+  - id: unit-price
+    kind: attribute
+    of: invoice-line
+    extends: meaning://github.com/demo-db/chinook/unit-price?ref=3e7bb316d8a438eb7e5930067997a4e4543a275c
+    labels:
+      en: Unit price
+    description: The price in USD returned as UnitPrice by Invoice lines.
+
+  - id: quantity
+    kind: attribute
+    of: invoice-line
+    extends: meaning://github.com/demo-db/chinook/quantity?ref=3e7bb316d8a438eb7e5930067997a4e4543a275c
+    labels:
+      en: Quantity
+    description: The number of copies returned as Quantity by Invoice lines.

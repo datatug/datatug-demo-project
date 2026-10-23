@@ -1,4 +1,5 @@
 {
+  "createdAt": "2026-10-07T15:31:36Z",
   "id": "chinook-postgresql-artist-tracks",
   "title": "Chinook PostgreSQL artists by track count",
   "type": "DTQL",

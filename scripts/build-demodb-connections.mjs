@@ -37,6 +37,14 @@ const fixtureSha256 = {
 // Keep this flag aligned with the verified all-six public HTTP and browser
 // query proof before regenerating the published connection catalogue.
 const postgresqlPublicApiVerified = true;
+// Source-rights manifests are copied into the showcase app and pinned here so
+// the Demo Project catalogue cannot silently drift from the reviewed payloads.
+const sourceRights = {
+  chinook: { url: '/assets/showcase/chinook-source-rights.json', bytes: 1348,
+    sha256: '41cc624d2cfc9396dbaad7eef3f7d0d187de8e1949e17e25830abe7072a46ea0' },
+  northwind: { url: '/assets/showcase/northwind-source-rights.json', bytes: 1405,
+    sha256: '523f610b513473d166f4afe0c5c0c77e10e291f1baebcc3cadf556b5a8ac7a82' },
+};
 const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex');
 const entries = [];
 const seen = new Set();
@@ -55,6 +63,11 @@ for (const database of registry.databases) {
     source: `https://demodb.dev/ovdb/v1/databases/${id}`,
     descriptor: `https://demodb.dev/ovdb/db/${id}/ovdb-database.json`,
     fixtureSha256: fixtureSha256[id],
+    ...(['chinook', 'northwind'].includes(id) ? { browserFixture: {
+      url: `/assets/showcase/${id}.sqlite`,
+      bytes: id === 'chinook' ? 1007616 : 602112,
+      sourceRights: sourceRights[id],
+    } } : {}),
     query: 'ovdb-read', copy: 'explicit-browser-import',
   });
   entries.push(demoPostgresqlConnection(id, postgresqlPublicApiVerified));
@@ -99,6 +112,38 @@ const bigQueryEditions = [...seen].map((id) => {
     verification: 'https://github.com/demo-db/websites/blob/main/config/bigquery-hosting.json',
   };
 });
+const comparisonFixtures = [
+  {
+    id: 'chinook-baseline', role: 'baseline', displayLabel: 'Pinned upstream baseline',
+    environmentLabel: 'Public baseline endpoint',
+    url: 'https://chinook.demodb.dev/data/chinook.sqlite',
+    sha256: '7651ba378ac2fcd0dfc3c66fb101f7a7eed3ba39a612ec642b96e20702061f15',
+    bytes: 1007616,
+    schemaSha256: '8392c76c7fd8da3bce20d1cec2c60223692a08915787f5c7393cec1c0b6acb94',
+    provenance: {
+      providerRepository: 'https://github.com/demo-db/chinook',
+      providerCommit: '95d14a11256f8db512d5ecd7ea5be56e01d51781',
+      manifestPath: 'fixtures/compare/manifest.json',
+      manifestSha256: 'aa80280419d5e0e8bd99ae97574b5d91cbf4df6e560e536f8699f42ec175c887',
+      hostMergeCommit: '44d9f354ed5b7bf8aaf496dfde15e81d4307730c',
+    },
+  },
+  {
+    id: 'chinook-candidate', role: 'candidate', displayLabel: 'Synthetic comparison fixture (not production data)',
+    environmentLabel: 'Publicly hosted comparison fixture',
+    url: 'https://chinook.demodb.dev/data/compare/3369d25729dea9e21facc7226aee3d5247fa0f3d8d4be4678aa9247fd064845f.sqlite',
+    sha256: '3369d25729dea9e21facc7226aee3d5247fa0f3d8d4be4678aa9247fd064845f',
+    bytes: 1007616,
+    schemaSha256: '8392c76c7fd8da3bce20d1cec2c60223692a08915787f5c7393cec1c0b6acb94',
+    provenance: {
+      providerRepository: 'https://github.com/demo-db/chinook',
+      providerCommit: '95d14a11256f8db512d5ecd7ea5be56e01d51781',
+      manifestPath: 'fixtures/compare/manifest.json',
+      manifestSha256: 'aa80280419d5e0e8bd99ae97574b5d91cbf4df6e560e536f8699f42ec175c887',
+      hostMergeCommit: '44d9f354ed5b7bf8aaf496dfde15e81d4307730c',
+    },
+  },
+];
 const plans = ['bigquery-world-bank-wdi', 'bigquery-new-york-citibike'].map((id) => {
   const entry = directory.sources?.find((source) => source.id === id);
   if (!entry || entry.access_mode !== 'bigquery-native' || entry.query_activation !== 'blocked' || entry.status !== 'inactive') {
@@ -121,6 +166,7 @@ const result = {
     bigQueryImportTool: hosting.sourceTool,
   },
   connections: entries,
+  comparisonFixtures,
   bigQueryEditions,
   bigQueryPlans: plans,
 };

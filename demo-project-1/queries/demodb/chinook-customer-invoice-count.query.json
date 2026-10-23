@@ -1,0 +1,16 @@
+{
+  "createdAt": "2026-10-10T09:11:06Z",
+  "id": "chinook-customer-invoice-count",
+  "title": "Chinook Customer Invoice Count",
+  "type": "DTQL",
+  "connectionId": "chinook-sqlite",
+  "recordsets": [
+    {
+      "columns": [
+        { "name": "CustomerId", "type": "integer" },
+        { "name": "InvoiceCount", "type": "integer" }
+      ]
+    }
+  ],
+  "purpose": "Bounded grouped TugQL example for the browser-pinned Chinook SQLite fixture. It counts invoices per customer and applies an integer HAVING threshold before returning the grouped result."
+}

@@ -1,0 +1,45 @@
+{
+  "createdAt": "2026-10-20T21:57:52Z",
+  "id": "request-receipt",
+  "title": "Matching receiver receipt",
+  "type": "SQL",
+  "connectionId": "shipping-working-copy",
+  "purpose": "Read deterministic synthetic shipping application records; requires an independently admitted isolated source binding.",
+  "parameters": [
+    {
+      "id": "order_id",
+      "type": "integer",
+      "isRequired": true,
+      "meta": {
+        "entity": "Order",
+        "field": "id"
+      }
+    }
+  ],
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "order_id",
+          "type": "integer"
+        },
+        {
+          "name": "request_id",
+          "type": "string"
+        },
+        {
+          "name": "message_id",
+          "type": "string"
+        },
+        {
+          "name": "receipt_id",
+          "type": "string"
+        },
+        {
+          "name": "received_at",
+          "type": "string"
+        }
+      ]
+    }
+  ]
+}

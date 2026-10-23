@@ -1,0 +1,33 @@
+{
+  "createdAt": "2026-10-10T12:38:15Z",
+  "id": "chinook-invoice-compare",
+  "title": "Chinook Invoice Comparison",
+  "type": "DTQL",
+  "connectionId": "chinook-sqlite",
+  "relationshipBindings": [
+    {
+      "id": "FK_Invoice_Customer_CustomerId",
+      "version": "7651ba378ac2fcd0dfc3c66fb101f7a7eed3ba39a612ec642b96e20702061f15:main.Invoice.CustomerId:INTEGER->main.Customer.CustomerId:INTEGER:PRIMARY_KEY:v1",
+      "from": { "schema": "main", "table": "Invoice" },
+      "to": { "schema": "main", "table": "Customer" },
+      "pairs": [{ "fromField": "CustomerId", "toField": "CustomerId" }]
+    }
+  ],
+  "purpose": "Bounded Invoice-to-Customer query for comparing the same required CustomerId against the pinned Chinook baseline and a synthetic candidate in Compare. The page-memory comparison is session-only and is not durable evidence.",
+  "parameters": [
+    {
+      "id": "CustomerId",
+      "type": "integer",
+      "isRequired": true,
+      "meta": { "entity": "ChinookCustomer", "field": "ID" }
+    }
+  ],
+  "recordsets": [
+    {
+      "columns": [
+        { "name": "InvoiceId", "type": "integer", "meta": { "entity": "Invoice", "field": "ID" } },
+        { "name": "InvoiceDate", "type": "datetime", "meta": { "entity": "Invoice", "field": "InvoiceDate" } }
+      ]
+    }
+  ]
+}

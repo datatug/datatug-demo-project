@@ -1,0 +1,23 @@
+from:
+  database: chinook
+  name: Customer
+  alias: customer
+  joins:
+    - from: {database: chinook, name: Invoice, alias: invoice}
+      on: [{left: {field: CustomerId, source: customer}, op: '==', right: {field: CustomerId, source: invoice}}]
+groupBy:
+  - {field: CustomerId, source: customer}
+  - {field: FirstName, source: customer}
+  - {field: LastName, source: customer}
+  - {field: Country, source: customer}
+columns:
+  - {field: CustomerId, source: customer}
+  - {field: FirstName, source: customer}
+  - {field: LastName, source: customer}
+  - {field: Country, source: customer}
+  - {aggregate: {function: count, args: [{field: InvoiceId, source: invoice}]}, as: InvoiceCount}
+  - {aggregate: {function: sum, args: [{field: Total, source: invoice}]}, as: Total}
+orderBy:
+  - {aggregate: {function: sum, args: [{field: Total, source: invoice}]}, desc: true}
+  - {field: CustomerId, source: customer}
+limit: 10

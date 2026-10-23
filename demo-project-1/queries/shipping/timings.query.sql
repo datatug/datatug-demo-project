@@ -1,0 +1,11 @@
+SELECT r.order_id,a.attempt_id,a.attempt_no,s.kind AS start_kind,t.kind AS end_kind,s.occurred_at AS start_at,t.occurred_at AS end_at,s.clock_domain,s.precision_ms,
+CAST((julianday(t.occurred_at)-julianday(s.occurred_at))*86400000+0.5 AS INTEGER) AS duration_ms,
+s.event_id AS start_event_id,t.event_id AS end_event_id,
+s.artifact AS start_artifact,s.artifact_sha256 AS start_artifact_sha256,s.byte_start AS start_byte_start,s.byte_end AS start_byte_end,
+t.artifact AS end_artifact,t.artifact_sha256 AS end_artifact_sha256,t.byte_start AS end_byte_start,t.byte_end AS end_byte_end,
+a.attempt_id || ':' || s.event_id || ':' || t.event_id AS row_key,NULL AS start_evidence_ref,NULL AS end_evidence_ref,w.generation AS source_generation
+FROM requests r JOIN attempts a ON a.request_id=r.request_id
+JOIN events s ON s.attempt_id=a.attempt_id
+JOIN events t ON t.attempt_id=s.attempt_id AND t.sequence=s.sequence+1 AND t.clock_domain=s.clock_domain AND t.precision_ms=s.precision_ms
+CROSS JOIN workspace_state w
+WHERE r.order_id=@order_id AND t.occurred_at>=s.occurred_at ORDER BY a.attempt_no,s.sequence

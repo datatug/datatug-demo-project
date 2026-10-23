@@ -1,0 +1,16 @@
+{
+  "createdAt": "2026-10-16T12:10:47Z",
+  "id": "northwind-shipping-country-count-postgresql",
+  "title": "Northwind PostgreSQL orders by shipping country",
+  "type": "DTQL",
+  "connectionId": "northwind-postgresql",
+  "purpose": "Count Northwind orders by shipping country on the public PostgreSQL-backed OpenVaultDB endpoint. This independently executed result can be composed beside the SQLite edition; it is not a federated query.",
+  "recordsets": [
+    {
+      "columns": [
+        { "name": "ShipCountry", "type": "string" },
+        { "name": "orders", "type": "integer" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "createdAt": "2026-10-22T09:00:00Z",
+  "id": "customer-by-id",
+  "title": "Northwind customer by ID",
+  "tags": ["northwind", "customers"],
+  "type": "SQL",
+  "connectionId": "northwind-sqlite",
+  "parameters": [
+    {
+      "id": "CustomerID",
+      "type": "string",
+      "isRequired": true,
+      "meta": {
+        "entity": "Customer",
+        "field": "ID"
+      }
+    }
+  ],
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "CustomerID",
+          "type": "string"
+        },
+        {
+          "name": "CompanyName",
+          "type": "string"
+        },
+        {
+          "name": "ContactName",
+          "type": "string"
+        },
+        {
+          "name": "ContactTitle",
+          "type": "string"
+        },
+        {
+          "name": "City",
+          "type": "string"
+        },
+        {
+          "name": "Country",
+          "type": "string"
+        },
+        {
+          "name": "Phone",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "purpose": "One Northwind customer by ID; the Overview tab of the Customer project card."
+}

@@ -1,0 +1,28 @@
+{
+  "createdAt": "2026-10-16T13:14:15Z",
+  "id": "northwind-orders-full-sqlite",
+  "title": "Northwind Orders · verified full projection",
+  "type": "DTQL",
+  "connectionId": "northwind-sqlite",
+  "purpose": "Read all 830 Orders and all 14 source fields from DemoDB's public Northwind SQLite endpoint. The complete response is checked against the publisher's pinned Orders projection before deriving the month-by-shipping-country order-count chart; no chart frames are stored in this query.",
+  "recordsets": [
+    {
+      "columns": [
+        { "name": "OrderID", "type": "integer" },
+        { "name": "CustomerID", "type": "string" },
+        { "name": "EmployeeID", "type": "integer" },
+        { "name": "OrderDate", "type": "string" },
+        { "name": "RequiredDate", "type": "string" },
+        { "name": "ShippedDate", "type": "string" },
+        { "name": "ShipVia", "type": "integer" },
+        { "name": "Freight", "type": "number" },
+        { "name": "ShipName", "type": "string" },
+        { "name": "ShipAddress", "type": "string" },
+        { "name": "ShipCity", "type": "string" },
+        { "name": "ShipRegion", "type": "string" },
+        { "name": "ShipPostalCode", "type": "string" },
+        { "name": "ShipCountry", "type": "string" }
+      ]
+    }
+  ]
+}

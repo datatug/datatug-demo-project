@@ -1,0 +1,26 @@
+parameters (
+  @CustomerId integer required
+)
+with CustomerCounts as (
+  from Invoice as i
+  where i.CustomerId = @CustomerId
+  group by i.CustomerId
+  having count(*) >= 7
+  limit 100
+  select (
+    i.CustomerId
+    count(*) as InvoiceCount
+  )
+)
+from CustomerCounts as totals
+join Customer as c
+  on totals.CustomerId = c.CustomerId
+order by totals.CustomerId asc
+limit 10
+select (
+  totals.CustomerId
+  totals.InvoiceCount
+  c.FirstName
+  c.LastName
+  c.Email
+)

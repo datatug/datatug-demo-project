@@ -1,0 +1,3 @@
+{"attempt_id":"attempt-11045-2","clock_domain":"synthetic-shipping-utc","event_id":"attempt-11045-2-e1","kind":"replay-started","occurred_at":"2018-05-20T10:05:00Z","order_id":11045,"precision_ms":1000,"sequence":1,"synthetic":true}
+{"attempt_id":"attempt-11045-2","clock_domain":"synthetic-shipping-utc","event_id":"attempt-11045-2-e2","kind":"route-resolved","occurred_at":"2018-05-20T10:05:01Z","order_id":11045,"precision_ms":1000,"sequence":2,"synthetic":true}
+{"attempt_id":"attempt-11045-2","clock_domain":"synthetic-shipping-utc","event_id":"attempt-11045-2-e3","kind":"assignment-accepted","occurred_at":"2018-05-20T10:05:02Z","order_id":11045,"precision_ms":1000,"sequence":3,"synthetic":true}

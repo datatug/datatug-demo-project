@@ -1,0 +1,41 @@
+{
+  "createdAt": "2026-10-20T21:57:52Z",
+  "id": "partner-enabled",
+  "title": "Enabled configured partner",
+  "type": "SQL",
+  "connectionId": "shipping-working-copy",
+  "purpose": "Read deterministic synthetic shipping application records; requires an independently admitted isolated source binding.",
+  "parameters": [
+    {
+      "id": "order_id",
+      "type": "integer",
+      "isRequired": true,
+      "meta": {
+        "entity": "Order",
+        "field": "id"
+      }
+    }
+  ],
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "order_id",
+          "type": "integer"
+        },
+        {
+          "name": "request_id",
+          "type": "string"
+        },
+        {
+          "name": "partner_id",
+          "type": "string"
+        },
+        {
+          "name": "enabled",
+          "type": "integer"
+        }
+      ]
+    }
+  ]
+}

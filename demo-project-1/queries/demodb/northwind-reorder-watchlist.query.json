@@ -1,6 +1,8 @@
 {
+  "createdAt": "2026-10-07T06:18:13Z",
   "id": "northwind-reorder-watchlist",
   "title": "Reorder Watchlist",
+  "tags": ["northwind", "operations", "inventory"],
   "type": "SQL",
   "recordsets": [
     {

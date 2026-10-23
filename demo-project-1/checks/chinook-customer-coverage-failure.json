@@ -1,0 +1,26 @@
+{
+  "id": "chinook-customer-coverage-failure",
+  "title": "Chinook customer coverage \u2014 intentional failure",
+  "description": "Deliberately expects 60 customers instead of 59. Run this example to inspect a real failed Validator and its expected versus observed counts.",
+  "version": 1,
+  "inputs": [],
+  "steps": [
+    {
+      "id": "customer-inventory",
+      "kind": "query",
+      "queryId": "demodb/chinook-customer-inventory",
+      "validators": [
+        {
+          "id": "expected-customers",
+          "scope": "set",
+          "kind": "row-count",
+          "severity": "error",
+          "expected": {
+            "type": "integer",
+            "value": "60"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "id": "customer",
+  "title": "Customer",
+  "description": "A Northwind customer: profile and recent orders. Shown beside a cell that means Customer.ID (Northwind CustomerID text code) and beside Orders.CustomerID.",
+  "display": "panel",
+  "parameters": [
+    {
+      "id": "customerId",
+      "type": "string",
+      "title": "Customer ID",
+      "isRequired": true,
+      "meta": { "entity": "Customer", "field": "ID" },
+      "match": [
+        { "entity": "Customer", "field": "ID" },
+        { "table": "Orders", "column": "CustomerID" }
+      ]
+    }
+  ],
+  "widget": {
+    "name": "tabs",
+    "data": {
+      "tabs": [
+        {
+          "id": "overview",
+          "title": "Overview",
+          "widgets": [
+            {
+              "name": "fields",
+              "data": {
+                "title": "Profile",
+                "source": {
+                  "queryId": "northwind/customer-by-id",
+                  "parameters": [{ "id": "CustomerID", "boardParameterId": "customerId" }]
+                },
+                "fields": [
+                  { "column": "CompanyName", "label": "Company" },
+                  { "column": "ContactName", "label": "Contact" },
+                  { "column": "ContactTitle", "label": "Title" },
+                  { "column": "City" },
+                  { "column": "Country" },
+                  { "column": "Phone" }
+                ]
+              }
+            },
+            {
+              "name": "text",
+              "data": {
+                "markdown": "Customer **{{customerId}}**"
+              }
+            }
+          ]
+        },
+        {
+          "id": "orders",
+          "title": "Orders",
+          "widgets": [
+            {
+              "name": "SQL",
+              "data": {
+                "title": "Recent orders",
+                "sql": {
+                  "queryId": "northwind/orders-by-customer",
+                  "parameters": [{ "id": "CustomerID", "boardParameterId": "customerId" }]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

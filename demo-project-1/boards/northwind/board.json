@@ -1,0 +1,36 @@
+{
+  "id": "northwind",
+  "title": "Northwind operations · browse queries",
+  "tags": ["northwind", "sales", "operations"],
+  "access": "public",
+  "rows": [
+    {
+      "cards": [
+        {
+          "id": "reorder-watchlist",
+          "title": "Reorder watchlist",
+          "cols": 6,
+          "widget": {
+            "name": "SQL",
+            "data": {
+              "title": "Explore the saved query. Running it needs a local Northwind SQLite connection.",
+              "sql": { "queryId": "demodb/northwind-reorder-watchlist" }
+            }
+          }
+        },
+        {
+          "id": "top-customer-orders",
+          "title": "Top customer orders",
+          "cols": 6,
+          "widget": {
+            "name": "SQL",
+            "data": {
+              "title": "Explore the saved query. Browser execution is not available for Northwind yet.",
+              "sql": { "queryId": "demodb/northwind-top-customer-orders" }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

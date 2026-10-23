@@ -1,0 +1,4 @@
+from: {schema: northwind, name: Orders}
+orderBy: [{field: OrderDate}, {field: OrderID}]
+columns: [{field: OrderID}, {field: OrderDate}, {field: ShipCountry}]
+limit: 1000

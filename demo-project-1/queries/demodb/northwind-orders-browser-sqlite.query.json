@@ -1,0 +1,70 @@
+{
+  "createdAt": "2026-10-16T16:55:31Z",
+  "id": "northwind-orders-browser-sqlite",
+  "title": "Northwind Orders \u00b7 verified full projection",
+  "type": "SQL",
+  "connectionId": "northwind-sqlite",
+  "purpose": "Standalone read-only SQL example: execute SQL in the browser against the bundled, SHA-256 and size pinned SQLite snapshot; no hosted query endpoint is required.",
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "OrderID",
+          "type": "integer"
+        },
+        {
+          "name": "CustomerID",
+          "type": "string"
+        },
+        {
+          "name": "EmployeeID",
+          "type": "integer"
+        },
+        {
+          "name": "OrderDate",
+          "type": "string"
+        },
+        {
+          "name": "RequiredDate",
+          "type": "string"
+        },
+        {
+          "name": "ShippedDate",
+          "type": "string"
+        },
+        {
+          "name": "ShipVia",
+          "type": "integer"
+        },
+        {
+          "name": "Freight",
+          "type": "number"
+        },
+        {
+          "name": "ShipName",
+          "type": "string"
+        },
+        {
+          "name": "ShipAddress",
+          "type": "string"
+        },
+        {
+          "name": "ShipCity",
+          "type": "string"
+        },
+        {
+          "name": "ShipRegion",
+          "type": "string"
+        },
+        {
+          "name": "ShipPostalCode",
+          "type": "string"
+        },
+        {
+          "name": "ShipCountry",
+          "type": "string"
+        }
+      ]
+    }
+  ]
+}

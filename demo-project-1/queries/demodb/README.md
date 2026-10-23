@@ -1,12 +1,104 @@
 # DemoDB guided investigations
 
+The [visual showcase data evidence](visual-showcase-data-evidence.md) records
+the six-dataset comparison, the independently executed Northwind SQLite and
+PostgreSQL order-count queries, and the bounded raw input for a monthly
+shipping-country race. The saved queries are source definitions; DataTug app
+execution and cross-source dashboard composition still require runtime work.
+
 These 18 standalone, read-only SQLite examples give each public DemoDB dataset
 three concrete ways to investigate its data. Each `.query.sql` has matching
 `.query.json` metadata and a stable flat query ID. The current DataTug Dev
-environment exposes only `chinook-local`; it has no dataset-specific SQL
-connections for these six public SQLite editions, so the examples are not
-executable in the browser yet. Open a linked SQL file in a SQLite client and
-edit a filter or `LIMIT` to continue the investigation.
+environment exposes only `chinook-local`. The saved [Customer Genre Mix](chinook-customer-genre-mix.query.sql),
+[Playlist Composition](chinook-playlist-composition.query.sql), and
+[Top Customer Spend](chinook-top-customer-spend.query.sql) queries bind
+`chinook-sqlite` and run in the browser against the pinned public Chinook
+fixture. The remaining examples have no browser SQL binding yet. Open a
+linked SQL file in a SQLite client and edit a filter or `LIMIT` to continue
+those investigations.
+
+The saved [Invoice Author](chinook-invoice-author.query.dtql) and
+[Customer Invoice Count](chinook-customer-invoice-count.query.dtql) queries are
+TugQL examples for the same pinned fixture. They bind a required customer ID;
+the grouped count example also uses a bounded integer `HAVING` threshold.
+The [Chinook Invoice Comparison](chinook-invoice-compare.query.dtql) query is
+a bounded Invoice-to-Customer starter for comparing the same CustomerId against
+the pinned baseline and a synthetic candidate in Compare. It projects only
+InvoiceId and the authored InvoiceDate text; comparison evidence is held in the
+page session and is not persisted as a durable result.
+The [Customer Counts CTE](chinook-customer-count-cte.query.dtql) keeps that
+grouped count inside a nonrecursive CTE, joins its exported customer key to
+`Customer` with an explicit `ON`, and bounds the CTE's output groups and final
+rows. Its inner `LIMIT` follows `GROUP BY` and `HAVING`, so it does not cap the
+input invoice rows. Production verification used DataTug App build
+`0.1.0+429` at merge `f1516057c13952aadc2ec53056ca3a3095c14f12`; the deployed
+build hash matched that merge ([Cloudflare deployment run
+38086445939](https://github.com/datatug/datatug-apps/actions/runs/38086445939)).
+A cold open selected Code without executing.
+With `@CustomerId` unset, the parameterized SQL preview appeared and Run stayed
+disabled. Running with CustomerId `1` and the starter `>= 7` threshold returned
+`(1, 7, Luís, Gonçalves, luisg@embraer.com.br)`; the worker-issued SQL matched
+the preview (receipt `38b334ba-8771-4af3-80bb-40a0dc401dcf`, observed
+2026-10-10T21:12:18.736Z; pinned fixture SHA-256
+`7651ba378ac2fcd0dfc3c66fb101f7a7eed3ba39a612ec642b96e20702061f15`). Editing the threshold to `>= 8` invalidated the preview, disabled Run, and
+retained the previous result; after fresh preview the subsequent run returned
+no rows (receipt
+`1ac6e326-cf8c-4445-823c-6767f2a19b01`, observed 2026-10-10T21:13:39.943Z).
+An unsupported qualified outer source remained visible and was rejected before
+preview or Run. Restoring the maintained query returned the expected row again
+(receipt `21b80606-4177-4b02-8a5b-5559269a5ce6`, observed
+2026-10-10T21:14:18.178Z). Exact-target Apps main CI run
+[38086445571](https://github.com/datatug/datatug-apps/actions/runs/38086445571)
+passed all required checks at the exact merge head.
+
+The maintained [Customer Counts Graph](chinook-customer-count-graph.query.dtql)
+uses three nonrecursive CTEs: an Invoice count, a grouped-count filter, and an
+independent bounded Customer projection. Its root joins the two derived integer
+keys and returns the same five typed columns. [Open the query in Code](https://datatug.app/project/github.com/datatug/datatug-demo-project/tree/HEAD/demo-project-1/-/query/chinook-customer-count-graph?id=chinook-customer-count-graph&editor=text&env=local)
+and review the authored source before previewing; opening it does not execute
+the query.
+Production browser evidence is recorded on DataTug App build `0.1.0+433`,
+whose deployed git hash `8910b8fc47b8d2c26519d1d2ab20fa33e8509e9f` matches the
+Apps merge; Cloudflare deployment run
+[38117458093](https://github.com/datatug/datatug-apps/actions/runs/38117458093)
+succeeded. The pinned Chinook fixture SHA-256 is
+`7651ba378ac2fcd0dfc3c66fb101f7a7eed3ba39a612ec642b96e20702061f15`. Cold Code open did
+not execute the query, and unset CustomerId showed a placeholder preview with
+Run disabled. CustomerId `1` at both `>= 7` thresholds produced one row, and
+the executed SQL matched preview (worker receipt
+`4c921c2f-b558-4ece-aea3-550ac8745d39`, observed
+`2026-10-11T06:18:41.862Z`). Editing EligibleCounts to `>= 8` retained the
+previous receipt and disabled Run; after fresh preview, explicit Run returned
+zero rows with matching SQL (receipt
+`e93e2390-4ab0-40b5-9930-ca4e198f9043`, observed
+`2026-10-11T06:22:59.214Z`). A qualified CTE source was rejected before Run.
+Restoring the starter returned one row displayed as
+`(7, Luís, Gonçalves, luisg@embraer.com.br)` with matching SQL (receipt
+`8f4df003-74be-4552-93aa-2828b31afb4f`, observed
+`2026-10-11T06:23:13.966Z`). Exact-target Apps main-CI [run 38117457824](https://github.com/datatug/datatug-apps/actions/runs/38117457824) passed all four required checks on observed target head `8910b8fc47b8d2c26519d1d2ab20fa33e8509e9f`, with two stable terminal observations at `2026-10-11T06:31:53.496946Z`.
+
+Source-level validation is recorded in Demo project [#31](https://github.com/datatug/datatug-demo-project/pull/31), merged at
+`eb51c8fc525638f98922fe4509255c3048ce7c0f`. Its
+`TestDemoProject1_ChinookCustomerCountsGraphResolves` loads the maintained
+saved query, parses TugQL, and resolves it against the admitted Chinook
+physical schema and pinned fixture version. It checks the five ordered output
+names and types, `Invoice.CustomerId` leaf lineage for the projected key,
+empty single-field lineage for `InvoiceCount`, and the absence of fabricated
+relationship receipts and authored lineage metadata. This proves the sample
+source resolves against the admitted schema; it does not prove native Apps
+worker execution. The resolver fix is in DALgo-JS [#28](https://github.com/dal-go/dalgo-js/pull/28), merged at
+`72ffcc97031d52f21e51aed570d9ef70fc1564d1`, and its published compatible
+package is `@dalgo/core@0.7.4` from gitHead
+`c15d6849c3e8ee6055cebabd7cae0921bf959e23`
+([release workflow](https://github.com/dal-go/dalgo-js/actions/runs/38115251232)).
+Apps [#253](https://github.com/datatug/datatug-apps/pull/253) at exact PR head
+`ff2c2754213ee73ef0ae0adafc34e78e1a35356e` has an independent review with no
+blockers or majors, 192 focused Vitest passes and 2 skips, and 8/8 local
+query-author Playwright tests, including the graph one-row/stale/zero-row path.
+Both app and main Nx lint targets passed; exact PR-head CI
+[run 38116475416](https://github.com/datatug/datatug-apps/actions/runs/38116475416)
+completed successfully. These are local/PR checks, distinct from the production
+receipts above.
 
 ## Verified inputs
 
@@ -50,8 +142,10 @@ source pin. A separate
 shows names from both editions side by side. These are DTQL examples for the
 browser federation runner, distinct from the standalone SQLite SQL examples
 below. The public PostgreSQL endpoint is available through the QA and UAT
-connections in the shared catalogue; its read-only DataTug browser query path
-has been verified against the hosted edition.
+connections in the shared catalogue and is served read-only by the public
+OpenVaultDB server (`cloud.openvaultdb.com`). Its read-only DataTug browser
+query path has been verified against the hosted edition, so the catalogue
+offers the Chinook PostgreSQL Run link.
 
 ## Chinook
 

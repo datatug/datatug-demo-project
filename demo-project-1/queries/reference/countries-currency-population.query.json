@@ -1,0 +1,23 @@
+{
+  "createdAt": "2026-10-23T09:00:00Z",
+  "id": "countries-currency-population",
+  "title": "Countries: currency and population",
+  "type": "DTQL",
+  "purpose": "Act 4, Add the world. Every country's ISO code, capital, currency and latest World Bank population from Countries, an inGitDB database the browser reads straight from GitHub (ingitdb/geo-ingitdb), with no server in between. Country data: GeoNames, CC BY 4.0; population: World Bank SP.POP.TOTL, CC BY 4.0.",
+  "federation": {
+    "ovdbBaseUrl": "https://cloud.openvaultdb.com",
+    "ingitdbSources": [{ "database": "geo", "descriptor": "https://raw.githubusercontent.com/datatug/datatug-demo-project/50ed33afd0aee803588b186a2a09b36760a7c99e/demo-project-1/fixtures/ovdb/geo-github.ovdb.yaml" }],
+    "tables": [
+      { "database": "geo", "name": "countries", "fields": ["id", "iso2", "iso3", "capital", "currency_code"] },
+      { "database": "geo", "name": "population_wb", "fields": ["country", "population", "year"] }
+    ]
+  },
+  "recordsets": [{ "columns": [
+    { "name": "iso2", "type": "string" },
+    { "name": "iso3", "type": "string" },
+    { "name": "capital", "type": "string" },
+    { "name": "currency", "type": "string" },
+    { "name": "population", "type": "integer" },
+    { "name": "populationYear", "type": "integer" }
+  ] }]
+}

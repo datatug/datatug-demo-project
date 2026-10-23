@@ -1,0 +1,94 @@
+{
+  "createdAt": "2026-10-16T16:55:31Z",
+  "id": "northwind-orders-server",
+  "title": "Northwind Orders · read-only server",
+  "type": "DTQL",
+  "purpose": "Read-only DTQL executed by ovdb.demodb.dev. The browser displays the bounded server result without downloading a SQLite fixture.",
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "OrderID",
+          "type": "integer"
+        },
+        {
+          "name": "CustomerID",
+          "type": "string"
+        },
+        {
+          "name": "EmployeeID",
+          "type": "integer"
+        },
+        {
+          "name": "OrderDate",
+          "type": "string"
+        },
+        {
+          "name": "RequiredDate",
+          "type": "string"
+        },
+        {
+          "name": "ShippedDate",
+          "type": "string"
+        },
+        {
+          "name": "ShipVia",
+          "type": "integer"
+        },
+        {
+          "name": "Freight",
+          "type": "number"
+        },
+        {
+          "name": "ShipName",
+          "type": "string"
+        },
+        {
+          "name": "ShipAddress",
+          "type": "string"
+        },
+        {
+          "name": "ShipCity",
+          "type": "string"
+        },
+        {
+          "name": "ShipRegion",
+          "type": "string"
+        },
+        {
+          "name": "ShipPostalCode",
+          "type": "string"
+        },
+        {
+          "name": "ShipCountry",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "federation": {
+    "ovdbBaseUrl": "https://ovdb.demodb.dev",
+    "tables": [
+      {
+        "database": "northwind",
+        "name": "Orders",
+        "fields": [
+          "OrderID",
+          "CustomerID",
+          "EmployeeID",
+          "OrderDate",
+          "RequiredDate",
+          "ShippedDate",
+          "ShipVia",
+          "Freight",
+          "ShipName",
+          "ShipAddress",
+          "ShipCity",
+          "ShipRegion",
+          "ShipPostalCode",
+          "ShipCountry"
+        ]
+      }
+    ]
+  }
+}
