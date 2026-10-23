@@ -1,6 +1,6 @@
 # Explore the Northwind and Chinook showcase
 
-[Open the dashboard](https://datatug.app/project/github.com/datatug/datatug-demo-project/tree/HEAD/demo-project-1/-/board/showcase).
+[Open the dashboard](https://datatug.app/project/github.com/datatug/datatug-demo-project/demo-project-1/-/board/showcase).
 You can inspect the public results without copying a project or database.
 
 ## Compare customer records
@@ -65,7 +65,7 @@ presentation switching reuse held data.
 
 ## Take the guided tour
 
-[Start the tutorial](https://datatug.app/project/github.com/datatug/datatug-demo-project/tree/HEAD/demo-project-1/-/board/showcase?mode=tutorial).
+[Start the tutorial](https://datatug.app/project/github.com/datatug/datatug-demo-project/demo-project-1/-/board/showcase?mode=tutorial).
 It constructs a browser-session presentation of the dashboard. **Next Step**,
 **Previous** and **Restart** do not save changes to the canonical project.
 The guide introduces the monthly trend, then source rows, then the paused

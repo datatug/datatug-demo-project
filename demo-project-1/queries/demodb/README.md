@@ -54,7 +54,7 @@ passed all required checks at the exact merge head.
 The maintained [Customer Counts Graph](chinook-customer-count-graph.query.dtql)
 uses three nonrecursive CTEs: an Invoice count, a grouped-count filter, and an
 independent bounded Customer projection. Its root joins the two derived integer
-keys and returns the same five typed columns. [Open the query in Code](https://datatug.app/project/github.com/datatug/datatug-demo-project/tree/HEAD/demo-project-1/-/query/chinook-customer-count-graph?id=chinook-customer-count-graph&editor=text&env=local)
+keys and returns the same five typed columns. [Open the query in Code](https://datatug.app/project/github.com/datatug/datatug-demo-project/demo-project-1/-/query/chinook-customer-count-graph?id=chinook-customer-count-graph&editor=text&env=local)
 and review the authored source before previewing; opening it does not execute
 the query.
 Production browser evidence is recorded on DataTug App build `0.1.0+433`,

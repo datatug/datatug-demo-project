@@ -3,7 +3,7 @@
 **A demo project for [DataTug](https://datatug.app): follow one late order across databases, an
 HTTP API and logs, then save what you learned as files in your own Git repository.**
 
-[Open the demo project in DataTug](https://datatug.app/project/github.com/datatug/datatug-demo-project/tree/HEAD/demo-project-1)
+[Open the demo project in DataTug](https://datatug.app/project/github.com/datatug/datatug-demo-project/demo-project-1)
 · [Fork it to keep your own copy](https://github.com/datatug/datatug-demo-project/fork)
 · [Sign in to DataTug](https://datatug.app/login)
 
@@ -53,7 +53,7 @@ investigation already knows the way.
 Two ways to get one:
 
 - **On GitHub:** [fork this repository](https://github.com/datatug/datatug-demo-project/fork), then
-  open `https://datatug.app/project/github.com/<you>/datatug-demo-project/tree/HEAD/demo-project-1`.
+  open `https://datatug.app/project/github.com/<you>/datatug-demo-project/demo-project-1`.
 - **From DataTug:** after you edit the demo's browser database, choose **Copy this demo project to
   GitHub**.
 
@@ -110,7 +110,7 @@ can sit inside an existing repository without conflicts.
        alt="DataTug's Orders in motion board: a bar race of 830 Northwind orders by shipping country, here at May 2018 in the cumulative view, with Germany and USA leading.">
 </p>
 
-[Open the board](https://datatug.app/project/github.com/datatug/datatug-demo-project/tree/HEAD/demo-project-1/-/board/showcase)
+[Open the board](https://datatug.app/project/github.com/datatug/datatug-demo-project/demo-project-1/-/board/showcase)
 and read the [guide](docs/explore-showcase.md).
 </details>
 
