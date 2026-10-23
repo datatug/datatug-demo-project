@@ -4,7 +4,7 @@ go 1.27.0
 
 require (
 	github.com/dal-go/dalgo v0.95.2
-	github.com/datatug/datatug-cli v0.107.2-0.20261023145724-10f115e38391
+	github.com/datatug/datatug-cli v0.108.0
 	github.com/datatug/datatug-core v0.76.0
 	github.com/stretchr/testify v1.12.1
 	gopkg.in/yaml.v3 v3.0.1

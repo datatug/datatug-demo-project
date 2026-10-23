@@ -40,8 +40,8 @@ github.com/dal-go/dalgo2sqlite v0.4.5 h1:NRDK/aWLjI+XCDPfs/fa7KOg0c9a3zZDqws0m1o
 github.com/dal-go/dalgo2sqlite v0.4.5/go.mod h1:YIWLq8kOlNbUpUFMo7Uj4/SvJy0hq5FkH3gk/2Al5XY=
 github.com/dal-go/record v0.1.5 h1:lkPxiJA7S2oE5tA0WUayezd+lmaiEekrEcGz/HRhzLg=
 github.com/dal-go/record v0.1.5/go.mod h1:PuoOCH74/Vf+pIVWSdrMg7OdUmlSlPgj68yJ+gM42To=
-github.com/datatug/datatug-cli v0.107.2-0.20261023145724-10f115e38391 h1:D/1MZsgUTh3dj75T7msSth35z06PVmDKC9S3Pjfb9Go=
-github.com/datatug/datatug-cli v0.107.2-0.20261023145724-10f115e38391/go.mod h1:CfaHx97c7yW9AP3X4DqCej3JIpPliAWAHQJlESY0rpQ=
+github.com/datatug/datatug-cli v0.108.0 h1:mMJDjapuKKkmnx6LIJp/1Z7Xyz3YDkuZdL02mRgMMNs=
+github.com/datatug/datatug-cli v0.108.0/go.mod h1:CfaHx97c7yW9AP3X4DqCej3JIpPliAWAHQJlESY0rpQ=
 github.com/datatug/datatug-core v0.76.0 h1:uSxlRCSQ5N21iKdg3NeFhewFG9xQgnrIfIzlceK7CD0=
 github.com/datatug/datatug-core v0.76.0/go.mod h1:V92o0v0gXOAvqr+1WXXErnfKbvabksEkkwxVCVoF/kY=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
