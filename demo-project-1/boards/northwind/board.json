@@ -1,6 +1,6 @@
 {
   "id": "northwind",
-  "title": "Northwind operations · browse queries",
+  "title": "Northwind operations",
   "tags": ["northwind", "sales", "operations"],
   "access": "public",
   "rows": [
@@ -13,7 +13,7 @@
           "widget": {
             "name": "SQL",
             "data": {
-              "title": "Explore the saved query. Running it needs a local Northwind SQLite connection.",
+              "title": "Products at or below their reorder level. Runs in your browser on the public Northwind SQLite file.",
               "sql": { "queryId": "demodb/northwind-reorder-watchlist" }
             }
           }
@@ -25,7 +25,7 @@
           "widget": {
             "name": "SQL",
             "data": {
-              "title": "Explore the saved query. Browser execution is not available for Northwind yet.",
+              "title": "Customers by sales. Runs in your browser on the public Northwind SQLite file.",
               "sql": { "queryId": "demodb/northwind-top-customer-orders" }
             }
           }

@@ -11,11 +11,12 @@
 #     reads the `local` environment's catalogs DIRECTLY: the derived Chinook SQLite
 #     file and the vendored inGitDB directory data/geo. OpenVaultDB (OVDB) is NOT
 #     on the CLI's path.
-#   * OVDB serves the same two databases for the DataTug web app (the browser
-#     federated executor reads through the query's federation.ovdbBaseUrl). This
-#     script starts that server so the web path can be used and cross-checks it:
-#     the OVDB record for Ireland must carry the same population the CLI joined.
-#     It does not run the query through OVDB or the browser.
+#   * The DataTug web app runs the same query in the browser against public
+#     sources (federation.ovdbBaseUrl is https://cloud.openvaultdb.com; geo is read
+#     from GitHub through federation.ingitdbSources). This script also starts a
+#     local OVDB server with the same two databases and cross-checks it: the OVDB
+#     record for Ireland must carry the same population the CLI joined. It does
+#     not run the query through OVDB or the browser.
 #
 # Steps:
 #   1. Checks the tool versions and finds the Chinook file pinned in
@@ -25,7 +26,7 @@
 #   2. Derives demo-project-1/.demo-data/chinook.sqlite from it (adds the `id`
 #      column OVDB's SQLite adapter needs).
 #   3. Starts ONE ovdb server with the chinook and geo manifests from
-#      demo-project-1/fixtures/ovdb on the port in federation.ovdbBaseUrl (50501).
+#      demo-project-1/fixtures/ovdb on port 50501 (the local cross-check port).
 #      If that port is taken it says so and serves on another free port instead.
 #   4. Checks that the server answers for both databases.
 #   5. Runs the saved query with the DataTug CLI (--format json).
@@ -97,15 +98,11 @@ if [ ! -f "$chinook_src" ]; then
 fi
 python3 "$root/scripts/prepare_chinook.py" "$chinook_src" "$data/chinook.sqlite"
 
-# 2. OVDB on the port the saved query names (federation.ovdbBaseUrl). ovdb's own
-#    bind is the arbiter: a port that is taken makes it exit, and only then do we
-#    try another, so there is no check-then-bind race.
-configured_port="$(python3 - "$project/queries/sales/chinook-sales-per-capita.query.json" <<'PY'
-import json, sys
-from urllib.parse import urlparse
-print(urlparse(json.load(open(sys.argv[1]))["federation"]["ovdbBaseUrl"]).port)
-PY
-)"
+# 2. A local OVDB on the cross-check port. ovdb's own bind is the arbiter: a port
+#    that is taken makes it exit, and only then do we try another, so there is no
+#    check-then-bind race. (The saved query's federation.ovdbBaseUrl is the public
+#    server, so it no longer names a local port.)
+configured_port=50501
 log="$data/ovdb.log"
 ovdb_pid=""
 cleanup() {
@@ -150,8 +147,8 @@ port=""
 if [ -n "${OVDB_PORT:-}" ]; then
   try_port "$OVDB_PORT" || { cat "$log" >&2; die "ovdb could not serve on OVDB_PORT=$OVDB_PORT (see the log above)"; }
 elif ! try_port "$configured_port"; then
-  echo "run-hero-demo: port $configured_port (the saved query's federation.ovdbBaseUrl) is not available; trying another port." >&2
-  echo "run-hero-demo: the CLI result is unaffected (it does not read through OVDB), but the web app looks for OVDB on $configured_port." >&2
+  echo "run-hero-demo: port $configured_port is not available; trying another port." >&2
+  echo "run-hero-demo: the CLI result is unaffected (it does not read through OVDB)." >&2
   started=0
   for _ in 1 2 3 4 5; do
     candidate="$(python3 -c 'import random; print(random.randint(49152, 65000))')"

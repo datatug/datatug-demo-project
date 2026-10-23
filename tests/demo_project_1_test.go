@@ -344,6 +344,9 @@ func TestDemoProject1_StandaloneChinookBrowserBindings(t *testing.T) {
 		"demodb/chinook-customer-genre-mix":              "chinook-sqlite",
 		"demodb/chinook-playlist-composition":            "chinook-sqlite",
 		"demodb/chinook-top-customer-spend":              "chinook-sqlite",
+		"demodb/northwind-reorder-watchlist":             "northwind-sqlite",
+		"demodb/northwind-territory-coverage":            "northwind-sqlite",
+		"demodb/northwind-top-customer-orders":           "northwind-sqlite",
 	}
 	allowedTugQL := map[string]string{
 		"demodb/chinook-invoice-author":                      "chinook-sqlite",
@@ -391,7 +394,6 @@ func TestDemoProject1_StandaloneChinookBrowserBindings(t *testing.T) {
 
 	for _, queryPath := range []string{
 		"demodb/chinook-postgresql-artist-tracks",
-		"demodb/northwind-top-customer-orders",
 		"customers/customer-purchases-by-genre",
 		"invoices/invoice-lines",
 	} {

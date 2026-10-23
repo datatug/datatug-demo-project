@@ -3,7 +3,7 @@
   "id": "latest-100-sales-http-lookup",
   "title": "Sales per capita with HTTP country lookup",
   "type": "TugQL",
-  "purpose": "Show the same cross-database sales totals and enrich each country with population from the OVDB record endpoint.",
+  "purpose": "Show the same cross-database sales totals and enrich each country with population from the OVDB record endpoint. Local-only demo: it reads the orders and countries fixtures from an OVDB server on your own computer (see the README), so it runs from a DataTug app you run locally, not from datatug.app.",
   "federation": {
     "ovdbBaseUrl": "http://127.0.0.1:50501",
     "tables": [

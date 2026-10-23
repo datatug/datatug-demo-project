@@ -3,6 +3,7 @@
   "id": "northwind-territory-coverage",
   "title": "Territory Coverage",
   "type": "SQL",
+  "connectionId": "northwind-sqlite",
   "recordsets": [
     {
       "columns": [
@@ -29,5 +30,5 @@
       ]
     }
   ],
-  "purpose": "Standalone read-only SQLite example for the pinned Northwind fixture. The current DataTug Dev environment has no dataset-specific SQL connection; run against a local SQLite fixture or use the documented verifier."
+  "purpose": "Standalone read-only SQL example for the pinned public Northwind SQLite fixture. Its saved northwind-sqlite connection runs the query in the browser."
 }

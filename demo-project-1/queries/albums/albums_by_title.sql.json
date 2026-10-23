@@ -1,6 +1,7 @@
 {
   "createdAt": "2021-03-22T22:49:58Z",
   "title": "Albums by title",
+  "connectionId": "chinook-sqlite",
   "parameters": [
     {
       "id": "AlbumId",
@@ -25,7 +26,19 @@
     {
       "columns": [
         {
+          "id": "AlbumId",
+          "name": "AlbumId",
+          "type": "integer"
+        },
+        {
+          "id": "AlbumTitle",
+          "name": "AlbumTitle",
+          "type": "string"
+        },
+        {
           "id": "ArtistId",
+          "name": "ArtistId",
+          "type": "integer",
           "hideIf": {
             "parameters": [
               "ArtistId"
@@ -34,11 +47,23 @@
         },
         {
           "id": "ArtistName",
+          "name": "ArtistName",
+          "type": "string",
           "hideIf": {
             "parameters": [
               "ArtistId"
             ]
           }
+        },
+        {
+          "id": "TracksCount",
+          "name": "TracksCount",
+          "type": "integer"
+        },
+        {
+          "id": "GenresCount",
+          "name": "GenresCount",
+          "type": "integer"
         }
       ]
     }
