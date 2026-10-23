@@ -2,7 +2,7 @@
   "createdAt": "2026-10-10T12:38:15Z",
   "id": "chinook-invoice-compare",
   "title": "Chinook Invoice Comparison",
-  "type": "DTQL",
+  "type": "TugQL",
   "connectionId": "chinook-sqlite",
   "relationshipBindings": [
     {

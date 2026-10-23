@@ -2,7 +2,7 @@
   "createdAt": "2026-09-23T22:09:34Z",
   "id": "latest-100-sales-per-capita",
   "title": "Sales per capita from latest 100 invoices",
-  "type": "DTQL",
+  "type": "TugQL",
   "purpose": "Join the latest 100 invoices to country population across two databases, then show total sales and sales per capita.",
   "federation": {
     "ovdbBaseUrl": "http://127.0.0.1:50501",

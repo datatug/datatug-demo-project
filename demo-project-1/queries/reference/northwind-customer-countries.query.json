@@ -2,7 +2,7 @@
   "createdAt": "2026-10-23T09:00:00Z",
   "id": "northwind-customer-countries",
   "title": "Northwind customers by country, with currency and population",
-  "type": "DTQL",
+  "type": "TugQL",
   "purpose": "Act 4, Add the world. Northwind customers (OVDB) per country with the ISO code, currency and latest World Bank population from Countries, an inGitDB database the browser reads straight from GitHub (ingitdb/geo-ingitdb). Country data: GeoNames, CC BY 4.0; population: World Bank SP.POP.TOTL, CC BY 4.0.",
   "federation": {
     "ovdbBaseUrl": "https://cloud.openvaultdb.com",

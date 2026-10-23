@@ -1,0 +1,200 @@
+{
+  "purpose": "Test evidence only; not a runtime definition store or generation input",
+  "logical": {
+    "address": "modelspec://github.com/demo-db/chinook/chinook",
+    "repository": "https://github.com/demo-db/chinook",
+    "commit": "3e7bb316d8a438eb7e5930067997a4e4543a275c",
+    "sourcePath": "model/chinook.modelspec.json",
+    "sha256": "19be3e0f575e14aa999769da79ba3ecb7fe3cb7e6a7dee151399dcbebfc56a7b",
+    "license": "MIT",
+    "licenseSHA256": "876999e0a8c517a6a6e24c5315ac50812586ef837edaa92ff0f7390c8ca8d5d3"
+  },
+  "resolutionEvidence": {
+    "transport": "local-fixture",
+    "registryCommit": "b034db05dc74c13e2503d5135d4b4f1f814077bf",
+    "catalogSHA256": "f4103c609d1d8fc2422b854d3a2652b138ad7836fb28247e8576f3459013f631",
+    "revisionId": "770b32928920e4c4b0f389ecc6473eb18222be0bf61fecf90407bf24b98c2427"
+  },
+  "physical": {
+    "repository": "https://github.com/datatug/chinook-database",
+    "revision": "6334395117e2478a2712e083be614721341c26c9",
+    "path": "ChinookDatabase/DataSources/Chinook_Sqlite.sqlite",
+    "sha256": "f82efedb6c5c40734609e168bc5be5616a2eca6b90ed0048451a8674625e03a3"
+  },
+  "tables": [
+    {
+      "record": "Album",
+      "dbModel": "chinook",
+      "schema": "main",
+      "table": "Album",
+      "columnsPath": "demo-project-1/dbmodels/chinook/main/tables/Album/main.Album.columns.json",
+      "columnsSHA256": "79939527ab58f62e17df7f17498feacfd829123d83256863c1e5342dc4a70cf2",
+      "fields": [
+        "AlbumId",
+        "ArtistId",
+        "Title"
+      ]
+    },
+    {
+      "record": "Artist",
+      "dbModel": "chinook",
+      "schema": "main",
+      "table": "Artist",
+      "columnsPath": "demo-project-1/dbmodels/chinook/main/tables/Artist/main.Artist.columns.json",
+      "columnsSHA256": "5c94796d9665779b87eea56e55a755b861fcb8fd709018cd08566675c9e5541b",
+      "fields": [
+        "ArtistId",
+        "Name"
+      ]
+    },
+    {
+      "record": "Customer",
+      "dbModel": "chinook",
+      "schema": "main",
+      "table": "Customer",
+      "columnsPath": "demo-project-1/dbmodels/chinook/main/tables/Customer/main.Customer.columns.json",
+      "columnsSHA256": "40ae7e53cb8ff523defdee806a8c0baf519037860c2c6f100dc3f573063f9aad",
+      "fields": [
+        "Address",
+        "City",
+        "Company",
+        "Country",
+        "CustomerId",
+        "Email",
+        "Fax",
+        "FirstName",
+        "LastName",
+        "Phone",
+        "PostalCode",
+        "State",
+        "SupportRepId"
+      ]
+    },
+    {
+      "record": "Employee",
+      "dbModel": "chinook",
+      "schema": "main",
+      "table": "Employee",
+      "columnsPath": "demo-project-1/dbmodels/chinook/main/tables/Employee/main.Employee.columns.json",
+      "columnsSHA256": "6c7369e3c5caa6e04113e4b4b89e642d20d5b5535cbf9ab5852dc7ee457f3724",
+      "fields": [
+        "Address",
+        "BirthDate",
+        "City",
+        "Country",
+        "Email",
+        "EmployeeId",
+        "Fax",
+        "FirstName",
+        "HireDate",
+        "LastName",
+        "Phone",
+        "PostalCode",
+        "ReportsTo",
+        "State",
+        "Title"
+      ]
+    },
+    {
+      "record": "Genre",
+      "dbModel": "chinook",
+      "schema": "main",
+      "table": "Genre",
+      "columnsPath": "demo-project-1/dbmodels/chinook/main/tables/Genre/main.Genre.columns.json",
+      "columnsSHA256": "336948efb7b470445dd2402af0ea16f1dcc1106e2c858fc5f07aba52f8c60b7b",
+      "fields": [
+        "GenreId",
+        "Name"
+      ]
+    },
+    {
+      "record": "Invoice",
+      "dbModel": "chinook",
+      "schema": "main",
+      "table": "Invoice",
+      "columnsPath": "demo-project-1/dbmodels/chinook/main/tables/Invoice/main.Invoice.columns.json",
+      "columnsSHA256": "b837f78f300aacc137860a26d2c89964233309e82648666988e5109ce56d3f5b",
+      "fields": [
+        "BillingAddress",
+        "BillingCity",
+        "BillingCountry",
+        "BillingPostalCode",
+        "BillingState",
+        "CustomerId",
+        "InvoiceDate",
+        "InvoiceId",
+        "Total"
+      ]
+    },
+    {
+      "record": "InvoiceLine",
+      "dbModel": "chinook",
+      "schema": "main",
+      "table": "InvoiceLine",
+      "columnsPath": "demo-project-1/dbmodels/chinook/main/tables/InvoiceLine/main.InvoiceLine.columns.json",
+      "columnsSHA256": "55da30dd41ee2f16c12cb836e48de23258049a6cef79ef15474f76b34d5916ce",
+      "fields": [
+        "InvoiceId",
+        "InvoiceLineId",
+        "Quantity",
+        "TrackId",
+        "UnitPrice"
+      ]
+    },
+    {
+      "record": "MediaType",
+      "dbModel": "chinook",
+      "schema": "main",
+      "table": "MediaType",
+      "columnsPath": "demo-project-1/dbmodels/chinook/main/tables/MediaType/main.MediaType.columns.json",
+      "columnsSHA256": "a0b96a69e6de71126af53b7f9b0eae85ee0a444b667042ff0ac2e5a2524f240f",
+      "fields": [
+        "MediaTypeId",
+        "Name"
+      ]
+    },
+    {
+      "record": "Playlist",
+      "dbModel": "chinook",
+      "schema": "main",
+      "table": "Playlist",
+      "columnsPath": "demo-project-1/dbmodels/chinook/main/tables/Playlist/main.Playlist.columns.json",
+      "columnsSHA256": "4522b619cf93c673504d2496369a809414bffb10602087cba2d7156dc0b55d58",
+      "fields": [
+        "Name",
+        "PlaylistId"
+      ]
+    },
+    {
+      "record": "PlaylistTrack",
+      "dbModel": "chinook",
+      "schema": "main",
+      "table": "PlaylistTrack",
+      "columnsPath": "demo-project-1/dbmodels/chinook/main/tables/PlaylistTrack/main.PlaylistTrack.columns.json",
+      "columnsSHA256": "e54be96a4a178f93e1af7fb152313bbfae62e1729eec4017869f1d96ccab08f3",
+      "fields": [
+        "PlaylistId",
+        "TrackId"
+      ]
+    },
+    {
+      "record": "Track",
+      "dbModel": "chinook",
+      "schema": "main",
+      "table": "Track",
+      "columnsPath": "demo-project-1/dbmodels/chinook/main/tables/Track/main.Track.columns.json",
+      "columnsSHA256": "e82adf054dd22772cbbb405c5fd0db0792a9b1e2398d040ef8d1a169ef1dff0a",
+      "fields": [
+        "AlbumId",
+        "Bytes",
+        "Composer",
+        "GenreId",
+        "MediaTypeId",
+        "Milliseconds",
+        "Name",
+        "TrackId",
+        "UnitPrice"
+      ]
+    }
+  ]
+}

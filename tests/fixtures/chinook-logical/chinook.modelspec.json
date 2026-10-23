@@ -1,0 +1,346 @@
+{
+  "modelspec": "1.0-draft-2",
+  "module": {
+    "id": "github.com/demo-db/chinook/model/chinook",
+    "name": "chinook",
+    "version": "0.1.0"
+  },
+  "records": {
+    "Artist": {
+      "key": [
+        "ArtistId"
+      ],
+      "fields": {
+        "ArtistId": {
+          "type": "int",
+          "required": true
+        },
+        "Name": {
+          "type": "string",
+          "max_len": 120
+        }
+      }
+    },
+    "Album": {
+      "key": [
+        "AlbumId"
+      ],
+      "fields": {
+        "AlbumId": {
+          "type": "int",
+          "required": true
+        },
+        "Title": {
+          "type": "string",
+          "required": true,
+          "max_len": 160
+        },
+        "ArtistId": {
+          "record": "Artist",
+          "required": true
+        }
+      }
+    },
+    "Track": {
+      "key": [
+        "TrackId"
+      ],
+      "fields": {
+        "TrackId": {
+          "type": "int",
+          "required": true
+        },
+        "Name": {
+          "type": "string",
+          "required": true,
+          "max_len": 200
+        },
+        "AlbumId": {
+          "record": "Album"
+        },
+        "MediaTypeId": {
+          "record": "MediaType",
+          "required": true
+        },
+        "GenreId": {
+          "record": "Genre"
+        },
+        "Composer": {
+          "type": "string",
+          "max_len": 220
+        },
+        "Milliseconds": {
+          "type": "int",
+          "required": true
+        },
+        "Bytes": {
+          "type": "int"
+        },
+        "UnitPrice": {
+          "type": "decimal",
+          "required": true
+        }
+      }
+    },
+    "Genre": {
+      "key": [
+        "GenreId"
+      ],
+      "fields": {
+        "GenreId": {
+          "type": "int",
+          "required": true
+        },
+        "Name": {
+          "type": "string",
+          "max_len": 120
+        }
+      }
+    },
+    "MediaType": {
+      "key": [
+        "MediaTypeId"
+      ],
+      "fields": {
+        "MediaTypeId": {
+          "type": "int",
+          "required": true
+        },
+        "Name": {
+          "type": "string",
+          "max_len": 120
+        }
+      }
+    },
+    "Playlist": {
+      "key": [
+        "PlaylistId"
+      ],
+      "fields": {
+        "PlaylistId": {
+          "type": "int",
+          "required": true
+        },
+        "Name": {
+          "type": "string",
+          "max_len": 120
+        }
+      }
+    },
+    "PlaylistTrack": {
+      "key": [
+        "PlaylistId",
+        "TrackId"
+      ],
+      "fields": {
+        "PlaylistId": {
+          "record": "Playlist",
+          "required": true
+        },
+        "TrackId": {
+          "record": "Track",
+          "required": true
+        }
+      }
+    },
+    "Customer": {
+      "key": [
+        "CustomerId"
+      ],
+      "fields": {
+        "CustomerId": {
+          "type": "int",
+          "required": true
+        },
+        "FirstName": {
+          "type": "string",
+          "required": true,
+          "max_len": 40
+        },
+        "LastName": {
+          "type": "string",
+          "required": true,
+          "max_len": 20
+        },
+        "Company": {
+          "type": "string",
+          "max_len": 80
+        },
+        "Address": {
+          "type": "string",
+          "max_len": 70
+        },
+        "City": {
+          "type": "string",
+          "max_len": 40
+        },
+        "State": {
+          "type": "string",
+          "max_len": 40
+        },
+        "Country": {
+          "type": "string",
+          "max_len": 40
+        },
+        "PostalCode": {
+          "type": "string",
+          "max_len": 10
+        },
+        "Phone": {
+          "type": "string",
+          "max_len": 24
+        },
+        "Fax": {
+          "type": "string",
+          "max_len": 24
+        },
+        "Email": {
+          "type": "string",
+          "required": true,
+          "max_len": 60,
+          "format": "email"
+        },
+        "SupportRepId": {
+          "record": "Employee"
+        }
+      }
+    },
+    "Employee": {
+      "key": [
+        "EmployeeId"
+      ],
+      "fields": {
+        "EmployeeId": {
+          "type": "int",
+          "required": true
+        },
+        "LastName": {
+          "type": "string",
+          "required": true,
+          "max_len": 20
+        },
+        "FirstName": {
+          "type": "string",
+          "required": true,
+          "max_len": 20
+        },
+        "Title": {
+          "type": "string",
+          "max_len": 30
+        },
+        "ReportsTo": {
+          "record": "Employee"
+        },
+        "BirthDate": {
+          "type": "datetime"
+        },
+        "HireDate": {
+          "type": "datetime"
+        },
+        "Address": {
+          "type": "string",
+          "max_len": 70
+        },
+        "City": {
+          "type": "string",
+          "max_len": 40
+        },
+        "State": {
+          "type": "string",
+          "max_len": 40
+        },
+        "Country": {
+          "type": "string",
+          "max_len": 40
+        },
+        "PostalCode": {
+          "type": "string",
+          "max_len": 10
+        },
+        "Phone": {
+          "type": "string",
+          "max_len": 24
+        },
+        "Fax": {
+          "type": "string",
+          "max_len": 24
+        },
+        "Email": {
+          "type": "string",
+          "max_len": 60,
+          "format": "email"
+        }
+      }
+    },
+    "Invoice": {
+      "key": [
+        "InvoiceId"
+      ],
+      "fields": {
+        "InvoiceId": {
+          "type": "int",
+          "required": true
+        },
+        "CustomerId": {
+          "record": "Customer",
+          "required": true
+        },
+        "InvoiceDate": {
+          "type": "datetime",
+          "required": true
+        },
+        "BillingAddress": {
+          "type": "string",
+          "max_len": 70
+        },
+        "BillingCity": {
+          "type": "string",
+          "max_len": 40
+        },
+        "BillingState": {
+          "type": "string",
+          "max_len": 40
+        },
+        "BillingCountry": {
+          "type": "string",
+          "max_len": 40
+        },
+        "BillingPostalCode": {
+          "type": "string",
+          "max_len": 10
+        },
+        "Total": {
+          "type": "decimal",
+          "required": true
+        }
+      }
+    },
+    "InvoiceLine": {
+      "key": [
+        "InvoiceLineId"
+      ],
+      "fields": {
+        "InvoiceLineId": {
+          "type": "int",
+          "required": true
+        },
+        "InvoiceId": {
+          "record": "Invoice",
+          "required": true
+        },
+        "TrackId": {
+          "record": "Track",
+          "required": true
+        },
+        "UnitPrice": {
+          "type": "decimal",
+          "required": true
+        },
+        "Quantity": {
+          "type": "int",
+          "required": true
+        }
+      }
+    }
+  }
+}

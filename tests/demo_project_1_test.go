@@ -14,7 +14,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/dal-go/dalgo/dtql"
+	"github.com/dal-go/dalgo/tugql"
 	"github.com/datatug/datatug-core/pkg/datatug"
 	"github.com/datatug/datatug-core/pkg/semantic"
 	"github.com/datatug/datatug-core/pkg/storage/filestore"
@@ -293,7 +293,7 @@ func TestDemoProject1_QueriesLoad(t *testing.T) {
 	}
 
 	wantTypes := map[string]datatug.QueryType{
-		"customer-invoices":           datatug.QueryTypeDTQL,
+		"customer-invoices":           datatug.QueryTypeTugQL,
 		"customer-purchases-by-genre": datatug.QueryTypeSQL,
 		"invoice-lines":               datatug.QueryTypeSQL,
 		"country-facts":               datatug.QueryTypeHTTP,
@@ -316,7 +316,7 @@ func TestDemoProject1_QueriesLoad(t *testing.T) {
 func TestDemoProject1_HostedCustomerPreview(t *testing.T) {
 	query, err := newStore(t).LoadQuery(context.Background(), "hosted/chinook-customer-preview")
 	require.NoError(t, err)
-	require.Equal(t, datatug.QueryTypeDTQL, query.Type)
+	require.Equal(t, datatug.QueryTypeTugQL, query.Type)
 	require.NotNil(t, query.Federation)
 	assert.Equal(t, "https://demodb.dev/ovdb", query.Federation.OVDBBaseURL)
 	require.Len(t, query.Federation.Tables, 1)
@@ -333,7 +333,7 @@ func TestDemoProject1_HostedCustomerPreview(t *testing.T) {
 
 // TestDemoProject1_StandaloneChinookBrowserBindings keeps the browser-ready
 // SQL allowlist limited to reviewed standalone SQLite examples. The separate
-// Northwind DTQL bindings name public OVDB sources; they do not claim that
+// Northwind TugQL bindings name public OVDB sources; they do not claim that
 // the DataTug app can execute or compose them yet.
 func TestDemoProject1_StandaloneChinookBrowserBindings(t *testing.T) {
 	allowed := map[string]string{
@@ -382,7 +382,7 @@ func TestDemoProject1_StandaloneChinookBrowserBindings(t *testing.T) {
 			if expectedConnection, ok := allowedTugQL[queryPath]; ok {
 				assert.Equal(t, strings.TrimPrefix(queryPath, "demodb/"), metadata.ID, path)
 				assert.Equal(t, expectedConnection, metadata.ConnectionID, path)
-				assert.Equal(t, "DTQL", metadata.Type, path)
+				assert.Equal(t, "TugQL", metadata.Type, path)
 				continue
 			}
 			assert.Equal(t, allowed["demodb/"+strings.TrimSuffix(filepath.Base(path), ".query.json")], metadata.ConnectionID, path)
@@ -399,6 +399,58 @@ func TestDemoProject1_StandaloneChinookBrowserBindings(t *testing.T) {
 	}
 }
 
+// Every TugQL body declares its representation in its filename. Load every body
+// through the tagged Core reader and parse only the explicitly selected format.
+func TestDemoProject1_TugQLBodyRepresentations(t *testing.T) {
+	root := filepath.Join(projectDir, "queries")
+	counts := map[bool]int{}
+	err := filepath.WalkDir(root, func(path string, entry os.DirEntry, walkErr error) error {
+		if walkErr != nil {
+			return walkErr
+		}
+		if entry.IsDir() {
+			return nil
+		}
+		require.False(t, strings.HasSuffix(path, ".query.dtql"), path)
+		structured := strings.HasSuffix(path, ".query.tugql.yaml")
+		if !structured && !strings.HasSuffix(path, ".query.tugql") {
+			return nil
+		}
+		relative, err := filepath.Rel(root, path)
+		require.NoError(t, err)
+		suffix := ".query.tugql"
+		if structured {
+			suffix += ".yaml"
+		}
+		id := filepath.ToSlash(strings.TrimSuffix(relative, suffix))
+		query := loadQueries(t, newStore(t), id)[0]
+		require.Equal(t, datatug.QueryTypeTugQL, query.Type, id)
+		require.Equal(t, structured, query.StructuredBody, id)
+		body, err := os.ReadFile(path)
+		require.NoError(t, err)
+		require.Equal(t, string(body), query.Text, id)
+		metadata, err := os.ReadFile(filepath.Join(root, filepath.FromSlash(id)+".query.json"))
+		require.NoError(t, err)
+		var sidecar map[string]json.RawMessage
+		require.NoError(t, json.Unmarshal(metadata, &sidecar))
+		require.Equal(t, `"TugQL"`, string(sidecar["type"]), id)
+		require.NotContains(t, sidecar, "structuredBody", id)
+		if structured {
+			_, err = tugql.Deserialize(body)
+			require.NoError(t, err, id)
+		} else {
+			document, diagnostics := tugql.ParseTugQL(query.Text)
+			require.Empty(t, diagnostics, id)
+			require.NotNil(t, document.Tree, id)
+		}
+		counts[structured]++
+		return nil
+	})
+	require.NoError(t, err)
+	require.Equal(t, 21, counts[true], "structured YAML bodies")
+	require.Equal(t, 6, counts[false], "text bodies")
+}
+
 func TestDemoProject1_NorthwindShowcaseQueriesLoadAndDeserialize(t *testing.T) {
 	for _, tc := range []struct {
 		id, connectionID string
@@ -413,9 +465,10 @@ func TestDemoProject1_NorthwindShowcaseQueriesLoadAndDeserialize(t *testing.T) {
 			assert.Equal(t, tc.id, metadata.ID)
 			assert.Equal(t, tc.connectionID, metadata.ConnectionID)
 			query := loadQueries(t, newStore(t), "demodb/"+tc.id)[0]
-			require.Equal(t, datatug.QueryTypeDTQL, query.Type)
-			_, err := dtql.Deserialize([]byte(query.Text))
-			require.NoError(t, err, "saved structured DTQL must deserialize")
+			require.Equal(t, datatug.QueryTypeTugQL, query.Type)
+			require.True(t, query.StructuredBody)
+			_, err := tugql.Deserialize([]byte(query.Text))
+			require.NoError(t, err, "saved structured TugQL must deserialize")
 		})
 	}
 }
@@ -423,7 +476,7 @@ func TestDemoProject1_NorthwindShowcaseQueriesLoadAndDeserialize(t *testing.T) {
 func TestDemoProject1_ChinookCustomerInvoiceJoinStarter(t *testing.T) {
 	metadata := readQueryMetadata(t, "demodb/chinook-customer-invoice-join")
 	assert.Equal(t, "chinook-customer-invoice-join", metadata.ID)
-	assert.Equal(t, "DTQL", metadata.Type)
+	assert.Equal(t, "TugQL", metadata.Type)
 	assert.Equal(t, "chinook-sqlite", metadata.ConnectionID)
 	assert.Contains(t, strings.ToLower(metadata.Purpose), "browser")
 	require.Len(t, metadata.RelationshipBindings, 1)
@@ -440,7 +493,7 @@ func TestDemoProject1_ChinookCustomerInvoiceJoinStarter(t *testing.T) {
 	assert.Equal(t, "CustomerId", metadata.RelationshipBindings[0].Pairs[0].FromField)
 	assert.Equal(t, "CustomerId", metadata.RelationshipBindings[0].Pairs[0].ToField)
 
-	source, err := os.ReadFile(filepath.Join(projectDir, "queries", "demodb", "chinook-customer-invoice-join.query.dtql"))
+	source, err := os.ReadFile(filepath.Join(projectDir, "queries", "demodb", "chinook-customer-invoice-join.query.tugql"))
 	require.NoError(t, err)
 	text := string(source)
 	for _, expected := range []string{
@@ -514,7 +567,7 @@ func TestDemoProject1_ChinookInvoiceCompareStarterResolves(t *testing.T) {
 	metadata := readQueryMetadata(t, "demodb/"+queryID)
 	assert.Equal(t, queryID, metadata.ID)
 	assert.Equal(t, "Chinook Invoice Comparison", metadata.Title)
-	assert.Equal(t, "DTQL", metadata.Type)
+	assert.Equal(t, "TugQL", metadata.Type)
 	assert.Equal(t, "chinook-sqlite", metadata.ConnectionID)
 	assert.Contains(t, strings.ToLower(metadata.Purpose), "synthetic candidate")
 	assert.Contains(t, strings.ToLower(metadata.Purpose), "page-memory")
@@ -533,41 +586,41 @@ func TestDemoProject1_ChinookInvoiceCompareStarterResolves(t *testing.T) {
 	queries := loadQueries(t, newStore(t), "demodb/"+queryID)
 	require.Len(t, queries, 1)
 	query := queries[0]
-	assert.Equal(t, datatug.QueryTypeDTQL, query.Type)
+	assert.Equal(t, datatug.QueryTypeTugQL, query.Type)
 	assert.Contains(t, query.Text, "@CustomerId integer required")
 	assert.NotContains(t, strings.ToLower(query.Text), " default ", "CustomerId has no default")
-	document, parseDiagnostics := dtql.ParseTugQL(query.Text)
+	document, parseDiagnostics := tugql.ParseTugQL(query.Text)
 	require.Empty(t, parseDiagnostics, "comparison starter TugQL must parse")
 	require.NotNil(t, document.Tree)
 
-	resolved, resolveDiagnostics := dtql.ResolveTugQL(document, dtql.TugQLResolveContext{
-		AuthorizedSchemas: []dtql.TugQLAuthorizedSchema{{
+	resolved, resolveDiagnostics := tugql.ResolveTugQL(document, tugql.TugQLResolveContext{
+		AuthorizedSchemas: []tugql.TugQLAuthorizedSchema{{
 			Database: "chinook",
 			Schema:   "main",
 			Version:  fixtureSchemaVersion,
-			Tables: []dtql.TugQLTable{
-				{Name: "Invoice", Fields: []dtql.TugQLField{
+			Tables: []tugql.TugQLTable{
+				{Name: "Invoice", Fields: []tugql.TugQLField{
 					{Name: "InvoiceId", Type: "integer", Authorized: true},
 					{Name: "CustomerId", Type: "integer", Authorized: true},
 					{Name: "InvoiceDate", Type: "datetime", Authorized: true},
 				}},
-				{Name: "Customer", Fields: []dtql.TugQLField{
+				{Name: "Customer", Fields: []tugql.TugQLField{
 					{Name: "CustomerId", Type: "integer", Authorized: true},
 					{Name: "FirstName", Type: "string", Authorized: true},
 				}},
 			},
 		}},
-		Bindings: []dtql.TugQLBinding{{Name: "CustomerId", Set: true, Value: int64(1)}},
+		Bindings: []tugql.TugQLBinding{{Name: "CustomerId", Set: true, Value: int64(1)}},
 	})
 	require.Empty(t, resolveDiagnostics, "comparison starter must resolve using the declared Invoice-Customer schema")
 	assert.Equal(t, fixtureSchemaVersion, resolved.SchemaVersion)
 	require.Len(t, resolved.Columns, 2)
 	assert.Equal(t, "InvoiceId", resolved.Columns[0].Name)
 	assert.Equal(t, "integer", resolved.Columns[0].Type)
-	assert.Equal(t, []dtql.TugQLOutputLineage{{Source: "i", Field: "InvoiceId"}}, resolved.Columns[0].Lineage)
+	assert.Equal(t, []tugql.TugQLOutputLineage{{Source: "i", Field: "InvoiceId"}}, resolved.Columns[0].Lineage)
 	assert.Equal(t, "InvoiceDate", resolved.Columns[1].Name)
 	assert.Equal(t, "datetime", resolved.Columns[1].Type)
-	assert.Equal(t, []dtql.TugQLOutputLineage{{Source: "i", Field: "InvoiceDate"}}, resolved.Columns[1].Lineage)
+	assert.Equal(t, []tugql.TugQLOutputLineage{{Source: "i", Field: "InvoiceDate"}}, resolved.Columns[1].Lineage)
 
 	data, err := os.ReadFile(filepath.Join(projectDir, "queries", "demodb", queryID+".query.json"))
 	require.NoError(t, err)
@@ -600,11 +653,11 @@ func TestDemoProject1_ChinookInvoiceCompareStarterResolves(t *testing.T) {
 func TestDemoProject1_ChinookInvoiceAuthorStarter(t *testing.T) {
 	metadata := readQueryMetadata(t, "demodb/chinook-invoice-author")
 	assert.Equal(t, "chinook-invoice-author", metadata.ID)
-	assert.Equal(t, "DTQL", metadata.Type)
+	assert.Equal(t, "TugQL", metadata.Type)
 	assert.Equal(t, "chinook-sqlite", metadata.ConnectionID)
 	assert.Empty(t, metadata.Parameters, "TugQL declares its visible typed parameter in the source")
 
-	source, err := os.ReadFile(filepath.Join(projectDir, "queries", "demodb", "chinook-invoice-author.query.dtql"))
+	source, err := os.ReadFile(filepath.Join(projectDir, "queries", "demodb", "chinook-invoice-author.query.tugql"))
 	require.NoError(t, err)
 	assert.Contains(t, string(source), "@CustomerId integer required")
 	assert.Contains(t, string(source), "where i.CustomerId = @CustomerId")
@@ -616,11 +669,11 @@ func TestDemoProject1_ChinookInvoiceAuthorStarter(t *testing.T) {
 func TestDemoProject1_ChinookCustomerInvoiceCountStarter(t *testing.T) {
 	metadata := readQueryMetadata(t, "demodb/chinook-customer-invoice-count")
 	assert.Equal(t, "chinook-customer-invoice-count", metadata.ID)
-	assert.Equal(t, "DTQL", metadata.Type)
+	assert.Equal(t, "TugQL", metadata.Type)
 	assert.Equal(t, "chinook-sqlite", metadata.ConnectionID)
 	assert.Empty(t, metadata.Parameters, "TugQL declares its visible typed parameter in the source")
 
-	source, err := os.ReadFile(filepath.Join(projectDir, "queries", "demodb", "chinook-customer-invoice-count.query.dtql"))
+	source, err := os.ReadFile(filepath.Join(projectDir, "queries", "demodb", "chinook-customer-invoice-count.query.tugql"))
 	require.NoError(t, err)
 	text := string(source)
 	assert.Contains(t, text, "@CustomerId integer required")
@@ -637,7 +690,7 @@ func TestDemoProject1_ChinookCustomerCountsCTE(t *testing.T) {
 	metadata := readQueryMetadata(t, "demodb/"+queryID)
 	assert.Equal(t, queryID, metadata.ID)
 	assert.Equal(t, "Chinook Customer Counts CTE", metadata.Title)
-	assert.Equal(t, "DTQL", metadata.Type)
+	assert.Equal(t, "TugQL", metadata.Type)
 	assert.Equal(t, "chinook-sqlite", metadata.ConnectionID)
 	assert.Empty(t, metadata.Parameters, "TugQL declares the visible typed parameter in the source")
 	assert.Empty(t, metadata.RelationshipBindings, "the explicit join from a CTE export has no physical relationship binding")
@@ -668,7 +721,7 @@ func TestDemoProject1_ChinookCustomerCountsCTE(t *testing.T) {
 	store := newStore(t)
 	query, err := store.LoadQuery(context.Background(), "demodb/"+queryID)
 	require.NoError(t, err)
-	assert.Equal(t, datatug.QueryTypeDTQL, query.Type)
+	assert.Equal(t, datatug.QueryTypeTugQL, query.Type)
 
 	var definition struct {
 		Recordsets []struct {
@@ -705,7 +758,7 @@ func TestDemoProject1_ChinookCustomerCountsGraphResolves(t *testing.T) {
 	metadata := readQueryMetadata(t, "demodb/"+queryID)
 	assert.Equal(t, queryID, metadata.ID)
 	assert.Equal(t, "Chinook Customer Counts Graph", metadata.Title)
-	assert.Equal(t, "DTQL", metadata.Type)
+	assert.Equal(t, "TugQL", metadata.Type)
 	assert.Equal(t, "chinook-sqlite", metadata.ConnectionID)
 	assert.Empty(t, metadata.Parameters, "TugQL declares the visible typed parameter in the source")
 	assert.Empty(t, metadata.RelationshipBindings, "the CTE-to-CTE join has no physical relationship binding")
@@ -713,22 +766,22 @@ func TestDemoProject1_ChinookCustomerCountsGraphResolves(t *testing.T) {
 	queries := loadQueries(t, newStore(t), "demodb/"+queryID)
 	require.Len(t, queries, 1)
 	query := queries[0]
-	require.Equal(t, datatug.QueryTypeDTQL, query.Type)
-	document, parseDiagnostics := dtql.ParseTugQL(query.Text)
+	require.Equal(t, datatug.QueryTypeTugQL, query.Type)
+	document, parseDiagnostics := tugql.ParseTugQL(query.Text)
 	require.Empty(t, parseDiagnostics, "maintained graph TugQL must parse")
 	require.NotNil(t, document.Tree)
 
 	const fixtureSchemaVersion = "7651ba378ac2fcd0dfc3c66fb101f7a7eed3ba39a612ec642b96e20702061f15"
-	resolved, resolveDiagnostics := dtql.ResolveTugQL(document, dtql.TugQLResolveContext{
-		AuthorizedSchemas: []dtql.TugQLAuthorizedSchema{{
+	resolved, resolveDiagnostics := tugql.ResolveTugQL(document, tugql.TugQLResolveContext{
+		AuthorizedSchemas: []tugql.TugQLAuthorizedSchema{{
 			Database: "chinook",
 			Schema:   "main",
 			Version:  fixtureSchemaVersion,
-			Tables: []dtql.TugQLTable{
-				{Name: "Invoice", Fields: []dtql.TugQLField{
+			Tables: []tugql.TugQLTable{
+				{Name: "Invoice", Fields: []tugql.TugQLField{
 					{Name: "CustomerId", Type: "integer", Authorized: true},
 				}},
-				{Name: "Customer", Fields: []dtql.TugQLField{
+				{Name: "Customer", Fields: []tugql.TugQLField{
 					{Name: "CustomerId", Type: "integer", Authorized: true},
 					{Name: "FirstName", Type: "string", Authorized: true},
 					{Name: "LastName", Type: "string", Authorized: true},
@@ -736,7 +789,7 @@ func TestDemoProject1_ChinookCustomerCountsGraphResolves(t *testing.T) {
 				}},
 			},
 		}},
-		Bindings: []dtql.TugQLBinding{{Name: "CustomerId", Set: true, Value: int64(1)}},
+		Bindings: []tugql.TugQLBinding{{Name: "CustomerId", Set: true, Value: int64(1)}},
 	})
 	require.Empty(t, resolveDiagnostics, "maintained graph must resolve against the admitted Chinook physical schema")
 	assert.Equal(t, fixtureSchemaVersion, resolved.SchemaVersion)
@@ -744,13 +797,13 @@ func TestDemoProject1_ChinookCustomerCountsGraphResolves(t *testing.T) {
 	require.Len(t, resolved.Columns, 5)
 	wantColumns := []struct {
 		name, typ string
-		lineage   []dtql.TugQLOutputLineage
+		lineage   []tugql.TugQLOutputLineage
 	}{
-		{"CustomerId", "integer", []dtql.TugQLOutputLineage{{Source: "i", Field: "CustomerId"}}},
+		{"CustomerId", "integer", []tugql.TugQLOutputLineage{{Source: "i", Field: "CustomerId"}}},
 		{"InvoiceCount", "integer", nil},
-		{"FirstName", "string", []dtql.TugQLOutputLineage{{Source: "c", Field: "FirstName"}}},
-		{"LastName", "string", []dtql.TugQLOutputLineage{{Source: "c", Field: "LastName"}}},
-		{"Email", "string", []dtql.TugQLOutputLineage{{Source: "c", Field: "Email"}}},
+		{"FirstName", "string", []tugql.TugQLOutputLineage{{Source: "c", Field: "FirstName"}}},
+		{"LastName", "string", []tugql.TugQLOutputLineage{{Source: "c", Field: "LastName"}}},
+		{"Email", "string", []tugql.TugQLOutputLineage{{Source: "c", Field: "Email"}}},
 	}
 	for i, want := range wantColumns {
 		got := resolved.Columns[i]
@@ -911,7 +964,7 @@ func TestDemoProject1_ApplicableQueries(t *testing.T) {
 	queries := loadQueries(t, store, "customers/customer-invoices", "customers/customer-purchases-by-genre", "invoices/invoice-lines")
 	customerInvoices, customerPurchasesByGenre, invoiceLines := queries[0], queries[1], queries[2]
 
-	assert.Equal(t, datatug.QueryTypeDTQL, customerInvoices.Type, "customer-invoices must have been converted to DTQL")
+	assert.Equal(t, datatug.QueryTypeTugQL, customerInvoices.Type, "customer-invoices must have been converted to TugQL")
 
 	available := []semantic.SemanticValue{
 		{Entity: "ChinookCustomer", Field: "ID", Value: 5, Source: "chinook", Collection: "Customer", Column: "CustomerId", Provenance: semantic.Declared},
