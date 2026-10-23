@@ -2,7 +2,7 @@
   "createdAt": "2026-10-18T19:08:20Z",
   "id": "chinook-billing-server",
   "title": "Chinook customer billing · read-only server",
-  "type": "DTQL",
+  "type": "TugQL",
   "recordsets": [
     {
       "columns": [
@@ -33,7 +33,7 @@
       ]
     }
   ],
-  "purpose": "Read-only DTQL executed by ovdb.demodb.dev. The browser displays the bounded server result without downloading a SQLite fixture.",
+  "purpose": "Read-only TugQL executed by ovdb.demodb.dev. The browser displays the bounded server result without downloading a SQLite fixture.",
   "federation": {
     "ovdbBaseUrl": "https://ovdb.demodb.dev",
     "expectedServerIdentity": {

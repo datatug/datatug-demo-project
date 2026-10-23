@@ -7,7 +7,7 @@ order: `orders-by-month-country`, `northwind-shipping-countries`,
 The independent-source card starts with one source before adding the second.
 Tutorial actions do not edit the saved project.
 
-The normal board and tutorial execute read-only server DTQL. The existing
+The normal board and tutorial execute read-only server TugQL. The existing
 Northwind shipping sources use `ovdb.demodb.dev`; customer comparisons use
 `cloud.openvaultdb.com` through the normal direct OVDB dispatcher.
 They do not download SQLite fixtures. The existing browser SQL examples remain
@@ -15,7 +15,7 @@ available as explicit saved queries; `/demo/sqlite` provides the editable local
 clone journey.
 
 The race binds `demodb/northwind-orders-full-sqlite`, the exact published
-14-field DTQL projection of all 830 Northwind Orders. Despite the historical
+14-field TugQL projection of all 830 Northwind Orders. Despite the historical
 query ID, execution happens on the server. The browser derives 23 monthly
 shipping-country frames from the complete result. The country bar binds
 `demodb/northwind-shipping-country-count-sqlite`, the exact published aggregate

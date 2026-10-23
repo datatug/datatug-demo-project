@@ -187,7 +187,7 @@ test('hosted BigQuery editions are verified and require a user-owned execution p
 });
 
 
-test('showcase charts use exact admitted server DTQL and inspector uses explicit server definitions', () => {
+test('showcase charts use exact admitted server TugQL and inspector uses explicit server definitions', () => {
   const board = read('boards/showcase/board.json');
   const race = board.rows[0].cards[0].widget;
   const bars = board.rows[1].cards[0].widget;
@@ -221,9 +221,9 @@ test('showcase charts use exact admitted server DTQL and inspector uses explicit
   ]) {
     const query = read(`queries/demodb/${id}.query.json`);
     assert.equal(query.id, id);
-    assert.equal(query.type, 'DTQL');
+    assert.equal(query.type, 'TugQL');
     assert.equal(query.recordsets[0].columns.length, columns);
-    assert.equal(createHash('sha256').update(readFileSync(resolve(project, `queries/demodb/${id}.query.dtql`))).digest('hex'), sha256);
+    assert.equal(createHash('sha256').update(readFileSync(resolve(project, `queries/demodb/${id}.query.tugql.yaml`))).digest('hex'), sha256);
   }
   for (const [id, database, tables, columns] of [
     ['northwind-orders-server', 'northwind', ['Orders'], 14],
@@ -232,7 +232,7 @@ test('showcase charts use exact admitted server DTQL and inspector uses explicit
   ]) {
     const query = read(`queries/demodb/${id}.query.json`);
     assert.equal(query.id, id);
-    assert.equal(query.type, 'DTQL');
+    assert.equal(query.type, 'TugQL');
     assert.equal(query.connectionId, undefined, 'server queries cannot fall back to a browser fixture connection');
     assert.equal(query.federation.ovdbBaseUrl, 'https://ovdb.demodb.dev');
     if (id === 'chinook-billing-server') {
@@ -245,10 +245,10 @@ test('showcase charts use exact admitted server DTQL and inspector uses explicit
     assert.deepEqual(query.federation.tables.map((table) => table.database), tables.map(() => database));
     assert.deepEqual(query.federation.tables.map((table) => table.name), tables);
     assert.equal(query.recordsets[0].columns.length, columns);
-    const dtql = readFileSync(resolve(project, `queries/demodb/${id}.query.dtql`), 'utf8');
-    assert.match(dtql, new RegExp(`database: ${database}`));
-    assert.match(dtql, /alias:/);
-    assert.doesNotMatch(dtql, /\b(?:INSERT|UPDATE|DELETE|ATTACH|PRAGMA)\b/i);
+    const tugql = readFileSync(resolve(project, `queries/demodb/${id}.query.tugql.yaml`), 'utf8');
+    assert.match(tugql, new RegExp(`database: ${database}`));
+    assert.match(tugql, /alias:/);
+    assert.doesNotMatch(tugql, /\b(?:INSERT|UPDATE|DELETE|ATTACH|PRAGMA)\b/i);
   }
 });
 
@@ -262,7 +262,7 @@ test('customer queries bind the provider identity to their selected base without
   ];
   for (const [id, baseUrl] of bindings) {
     const query = read(`queries/${id}.query.json`);
-    assert.equal(query.type, 'DTQL', id);
+    assert.equal(query.type, 'TugQL', id);
     assert.equal(query.federation.ovdbBaseUrl, baseUrl, id);
     assert.deepEqual(query.federation.expectedServerIdentity, {
       baseUrl, serverId: 'https://demodb.dev/ovdb',
@@ -277,7 +277,7 @@ test('customer queries bind the provider identity to their selected base without
 test('shared-country comparison executes one qualified server plan with distinct customer-record counts', () => {
   const query = read('queries/demodb/customer-country-comparison-server.query.json');
   assert.equal(query.id, 'customer-country-comparison-server');
-  assert.equal(query.type, 'DTQL');
+  assert.equal(query.type, 'TugQL');
   assert.equal(query.connectionId, undefined, 'comparison cannot fall back to a browser fixture');
   assert.equal(query.federation.ovdbBaseUrl, 'https://cloud.openvaultdb.com');
   assert.equal(query.federation.bounds, undefined, 'comparison is a whole server query, not bounded client scans');
@@ -295,15 +295,15 @@ test('shared-country comparison executes one qualified server plan with distinct
   assert.match(query.purpose, /UK\/United Kingdom/);
   assert.match(query.purpose, /null countries/);
   assert.match(query.purpose, /only one sample/);
-  const dtql = readFileSync(resolve(project, 'queries/demodb/customer-country-comparison-server.query.dtql'), 'utf8');
-  assert.match(dtql, /database: northwind/);
-  assert.match(dtql, /database: chinook/);
-  assert.match(dtql, /field: Country, source: n.*op: '=='.*field: Country, source: c/);
-  assert.match(dtql, /groupBy: \[\{field: Country, source: n\}\]/);
-  assert.match(dtql, /function: count, distinct: true, args: \[\{field: CustomerID, source: n\}\]/);
-  assert.match(dtql, /function: count, distinct: true, args: \[\{field: CustomerId, source: c\}\]/);
-  assert.match(dtql, /limit: 100\s*$/);
-  assert.doesNotMatch(dtql, /\b(?:INSERT|UPDATE|DELETE|ATTACH|PRAGMA)\b/i);
+  const tugql = readFileSync(resolve(project, 'queries/demodb/customer-country-comparison-server.query.tugql.yaml'), 'utf8');
+  assert.match(tugql, /database: northwind/);
+  assert.match(tugql, /database: chinook/);
+  assert.match(tugql, /field: Country, source: n.*op: '=='.*field: Country, source: c/);
+  assert.match(tugql, /groupBy: \[\{field: Country, source: n\}\]/);
+  assert.match(tugql, /function: count, distinct: true, args: \[\{field: CustomerID, source: n\}\]/);
+  assert.match(tugql, /function: count, distinct: true, args: \[\{field: CustomerId, source: c\}\]/);
+  assert.match(tugql, /limit: 100\s*$/);
+  assert.doesNotMatch(tugql, /\b(?:INSERT|UPDATE|DELETE|ATTACH|PRAGMA)\b/i);
 });
 
 test('explicit optional browser SQL definitions retain their pinned fixtures', () => {
