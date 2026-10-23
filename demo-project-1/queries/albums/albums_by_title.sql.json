@@ -1,6 +1,7 @@
 {
   "createdAt": "2021-03-22T22:49:58Z",
   "title": "Albums by title",
+  "connectionId": "chinook-sqlite",
   "parameters": [
     {
       "id": "AlbumId",

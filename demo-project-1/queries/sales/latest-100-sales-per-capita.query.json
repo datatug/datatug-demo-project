@@ -3,7 +3,7 @@
   "id": "latest-100-sales-per-capita",
   "title": "Sales per capita from latest 100 invoices",
   "type": "TugQL",
-  "purpose": "Join the latest 100 invoices to country population across two databases, then show total sales and sales per capita.",
+  "purpose": "Join the latest 100 invoices to country population across two databases, then show total sales and sales per capita. Local-only demo: it reads the orders and countries fixtures from an OVDB server on your own computer (see the README), so it runs from a DataTug app you run locally, not from datatug.app.",
   "federation": {
     "ovdbBaseUrl": "http://127.0.0.1:50501",
     "tables": [

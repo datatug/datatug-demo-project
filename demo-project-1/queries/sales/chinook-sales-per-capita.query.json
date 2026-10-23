@@ -3,9 +3,14 @@
   "id": "chinook-sales-per-capita",
   "title": "Chinook sales per capita by country",
   "type": "TugQL",
-  "purpose": "Which countries buy the most music relative to their population? Chinook invoices, country alias, World Bank population.",
+  "purpose": "Which countries buy the most music relative to their population? Chinook invoices (public OVDB) joined to the country alias table and the latest World Bank population from Countries, an inGitDB database the browser reads straight from GitHub (ingitdb/geo-ingitdb). The CLI runs the same query against the local environment's catalogs (scripts/run-hero-demo.sh). Population: World Bank SP.POP.TOTL, CC BY 4.0.",
   "federation": {
-    "ovdbBaseUrl": "http://127.0.0.1:50501",
+    "ovdbBaseUrl": "https://cloud.openvaultdb.com",
+    "expectedServerIdentity": {
+      "baseUrl": "https://cloud.openvaultdb.com",
+      "serverId": "https://demodb.dev/ovdb"
+    },
+    "ingitdbSources": [{ "database": "geo", "descriptor": "https://raw.githubusercontent.com/datatug/datatug-demo-project/50ed33afd0aee803588b186a2a09b36760a7c99e/demo-project-1/fixtures/ovdb/geo-github.ovdb.yaml" }],
     "tables": [
       {"name": "Invoice", "database": "chinook", "fields": ["BillingCountry", "Total"]},
       {"name": "country_aliases", "database": "geo", "fields": ["alias", "country"]},
