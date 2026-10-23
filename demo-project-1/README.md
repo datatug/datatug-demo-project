@@ -213,7 +213,7 @@ datatug query run --project demo-project-1 --query sales/chinook-sales-per-capit
   [fixtures/ovdb/geo.ovdb.yaml](fixtures/ovdb/geo.ovdb.yaml). The script starts that
   server and cross-checks it against the CLI result (Ireland's population must match);
   to serve it by hand:
-  `ovdb serve --addr 127.0.0.1:50501 --manifest demo-project-1/fixtures/ovdb/chinook.ovdb.yaml --manifest demo-project-1/fixtures/ovdb/geo.ovdb.yaml --cors http://127.0.0.1:4200`.
+  `ovdb serve --addr 127.0.0.1:50501 --manifest demo-project-1/fixtures/ovdb/chinook.ovdb.yaml --manifest demo-project-1/fixtures/ovdb/geo.ovdb.yaml`.
 - **Why an alias table.** Chinook spells countries by name, some differently from
   GeoNames ("USA", "Czech Republic", "Netherlands"). `country_aliases` maps each of
   the 24 Chinook spellings to a country, with `source` provenance; it is data, not

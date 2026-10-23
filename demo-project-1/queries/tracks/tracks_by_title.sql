@@ -11,5 +11,5 @@ INNER JOIN Genre AS g ON g.GenreId = t.GenreId
 WHERE t.GenreId = IFNULL(t.GenreId, t.GenreId)
   AND t.AlbumId = IFNULL(@AlbumId, t.AlbumId)
   AND al.ArtistId = IFNULL(@ArtistId, al.ArtistId)
-ORDER BY Title
+ORDER BY Title, t.TrackId
 LIMIT 500

@@ -22,8 +22,8 @@
       "columns": [
         {"name": "country", "type": "string"},
         {"name": "totalSales", "type": "number"},
-        {"name": "population", "type": "number"},
-        {"name": "populationYear", "type": "number"},
+        {"name": "population", "type": "integer"},
+        {"name": "populationYear", "type": "integer"},
         {"name": "salesPerMillion", "type": "number"}
       ]
     }
