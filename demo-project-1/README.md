@@ -111,7 +111,7 @@ ovdb serve --addr 127.0.0.1:50501 \
 ```
 
 Use the actual DataTug web origin for `--cors`. Stop the temporary server with
-Ctrl-C. The browser sends paged DTQL directly to OVDB. OVDB captures each
+Ctrl-C. The browser sends paged TugQL directly to OVDB. OVDB captures each
 source result before serving its first page, and the browser releases the
 capture after the last page or cancellation. It stages ID and JSON data
 in a temporary IndexedDB database, and joins and calculates inside a Web
@@ -131,9 +131,9 @@ same sentence with one action, **See the source**.
 
 | Query | Joins | Shows |
 |---|---|---|
-| [`reference/chinook-customers-per-million`](queries/reference/chinook-customers-per-million.query.dtql) | Chinook `Customer` (OVDB) → `country_aliases` → `population_wb` | customers per million people, highest first |
-| [`reference/countries-currency-population`](queries/reference/countries-currency-population.query.dtql) | `countries` → `population_wb`, both from GitHub | every country's ISO code, capital, currency and population, largest first; no server at all |
-| [`reference/northwind-customer-countries`](queries/reference/northwind-customer-countries.query.dtql) | Northwind `Customers` (OVDB) → `country_aliases` → `countries` and `population_wb` | each country's ISO code, currency and population; Canada, home of order 11045's customer, is `CAD` |
+| [`reference/chinook-customers-per-million`](queries/reference/chinook-customers-per-million.query.tugql.yaml) | Chinook `Customer` (OVDB) → `country_aliases` → `population_wb` | customers per million people, highest first |
+| [`reference/countries-currency-population`](queries/reference/countries-currency-population.query.tugql.yaml) | `countries` → `population_wb`, both from GitHub | every country's ISO code, capital, currency and population, largest first; no server at all |
+| [`reference/northwind-customer-countries`](queries/reference/northwind-customer-countries.query.tugql.yaml) | Northwind `Customers` (OVDB) → `country_aliases` → `countries` and `population_wb` | each country's ISO code, currency and population; Canada, home of order 11045's customer, is `CAD` |
 
 - **Descriptor.** [fixtures/ovdb/geo-github.ovdb.yaml](fixtures/ovdb/geo-github.ovdb.yaml) is an
   `ovdb-manifest/draft-1` with `storage.engine: ingitdb`, the GitHub repository, a pinned commit and
@@ -243,7 +243,7 @@ What the hero demo does for real, and what it does not:
 
 - **Real:** every number. Chinook invoices (the pinned SQLite file), the committed World
   Bank snapshot and the alias table are read, joined and aggregated by the DataTug CLI's
-  federated DTQL executor; the same inputs always give the same rows. No AI is involved
+  federated TugQL executor; the same inputs always give the same rows. No AI is involved
   and no value is mocked.
 - **Verified by automated tests:** the saved query over the real pinned Chinook file
   (the Go executor, in CI) and over invented invoices (always); the snapshot's shape and
@@ -255,11 +255,11 @@ What the hero demo does for real, and what it does not:
   federated queries with `runFederatedQuery` (datatug-apps) over `@dalgo/core`. Run
   against this OVDB in Node (with `fake-indexeddb` standing in for the browser's
   IndexedDB), the full query fails while parsing: `unsupported orderBy[0] key binary`,
-  because the TypeScript DTQL parser accepts only `{field, source, desc}` order keys and
+  because the TypeScript TugQL parser accepts only `{field, source, desc}` order keys and
   not the expression `orderBy` the Go executor supports. With the `orderBy` removed, the
   same executor returns the same 24 countries and values as the CLI (differences below
   2e-13 after sorting). The smallest fix is in dalgo-js: accept an expression in
-  `parseOrders` (`src/dtql.ts`) and evaluate it where orders are applied (`stableOrder`
+  `parseOrders` (`src/tugql.ts`) and evaluate it where orders are applied (`stableOrder`
   and the streaming sort in `src/join.ts`). Until then the saved query runs through the CLI,
   not the browser.
 - **Not simulated or replaced:** nothing is faked, but the AI-chat journey around it

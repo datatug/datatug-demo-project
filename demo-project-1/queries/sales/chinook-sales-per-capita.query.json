@@ -2,7 +2,7 @@
   "createdAt": "2026-10-02T10:18:28Z",
   "id": "chinook-sales-per-capita",
   "title": "Chinook sales per capita by country",
-  "type": "DTQL",
+  "type": "TugQL",
   "purpose": "Which countries buy the most music relative to their population? Chinook invoices, country alias, World Bank population.",
   "federation": {
     "ovdbBaseUrl": "http://127.0.0.1:50501",

@@ -2,7 +2,7 @@
   "createdAt": "2026-10-16T12:10:47Z",
   "id": "northwind-shipping-country-count-sqlite",
   "title": "Northwind SQLite orders by shipping country",
-  "type": "DTQL",
+  "type": "TugQL",
   "connectionId": "northwind-sqlite",
   "purpose": "Count Northwind orders by shipping country on the public SQLite-backed DemoDB endpoint. This independently executed result can be composed beside the PostgreSQL edition; it is not a federated query.",
   "recordsets": [

@@ -2,7 +2,7 @@
   "createdAt": "2026-10-23T09:00:00Z",
   "id": "countries-currency-population",
   "title": "Countries: currency and population",
-  "type": "DTQL",
+  "type": "TugQL",
   "purpose": "Act 4, Add the world. Every country's ISO code, capital, currency and latest World Bank population from Countries, an inGitDB database the browser reads straight from GitHub (ingitdb/geo-ingitdb), with no server in between. Country data: GeoNames, CC BY 4.0; population: World Bank SP.POP.TOTL, CC BY 4.0.",
   "federation": {
     "ovdbBaseUrl": "https://cloud.openvaultdb.com",

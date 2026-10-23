@@ -93,7 +93,10 @@ func TestNativeDemoMeaningsAndExactSavedQueryUses(t *testing.T) {
 			data, err := os.ReadFile(path + ".json")
 			require.NoError(t, err)
 			require.NoError(t, json.Unmarshal(data, &query))
-			body, err := os.ReadFile(path + "." + strings.ToLower(query.Type))
+			body, err := os.ReadFile(path + "." + strings.ToLower(query.Type) + ".yaml")
+			if os.IsNotExist(err) {
+				body, err = os.ReadFile(path + "." + strings.ToLower(query.Type))
+			}
 			require.NoError(t, err)
 			// Same tuple and exact sidecar bytes as semanticQueryHash. Encode
 			// without Go's optional HTML escapes to match JSON.stringify.

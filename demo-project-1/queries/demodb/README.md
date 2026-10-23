@@ -17,16 +17,16 @@ fixture. The remaining examples have no browser SQL binding yet. Open a
 linked SQL file in a SQLite client and edit a filter or `LIMIT` to continue
 those investigations.
 
-The saved [Invoice Author](chinook-invoice-author.query.dtql) and
-[Customer Invoice Count](chinook-customer-invoice-count.query.dtql) queries are
+The saved [Invoice Author](chinook-invoice-author.query.tugql) and
+[Customer Invoice Count](chinook-customer-invoice-count.query.tugql) queries are
 TugQL examples for the same pinned fixture. They bind a required customer ID;
 the grouped count example also uses a bounded integer `HAVING` threshold.
-The [Chinook Invoice Comparison](chinook-invoice-compare.query.dtql) query is
+The [Chinook Invoice Comparison](chinook-invoice-compare.query.tugql) query is
 a bounded Invoice-to-Customer starter for comparing the same CustomerId against
 the pinned baseline and a synthetic candidate in Compare. It projects only
 InvoiceId and the authored InvoiceDate text; comparison evidence is held in the
 page session and is not persisted as a durable result.
-The [Customer Counts CTE](chinook-customer-count-cte.query.dtql) keeps that
+The [Customer Counts CTE](chinook-customer-count-cte.query.tugql) keeps that
 grouped count inside a nonrecursive CTE, joins its exported customer key to
 `Customer` with an explicit `ON`, and bounds the CTE's output groups and final
 rows. Its inner `LIMIT` follows `GROUP BY` and `HAVING`, so it does not cap the
@@ -51,7 +51,7 @@ preview or Run. Restoring the maintained query returned the expected row again
 [38086445571](https://github.com/datatug/datatug-apps/actions/runs/38086445571)
 passed all required checks at the exact merge head.
 
-The maintained [Customer Counts Graph](chinook-customer-count-graph.query.dtql)
+The maintained [Customer Counts Graph](chinook-customer-count-graph.query.tugql)
 uses three nonrecursive CTEs: an Invoice count, a grouped-count filter, and an
 independent bounded Customer projection. Its root joins the two derived integer
 keys and returns the same five typed columns. [Open the query in Code](https://datatug.app/project/github.com/datatug/datatug-demo-project/tree/HEAD/demo-project-1/-/query/chinook-customer-count-graph?id=chinook-customer-count-graph&editor=text&env=local)
@@ -128,7 +128,7 @@ The verifier opens inputs read-only, checks their catalogue SHA-256 values, and
 compares every returned row with the checked-in result snapshot. It needs only
 Python's standard library. No database files are copied into this project.
 
-The saved [Chinook PostgreSQL artist-track query](chinook-postgresql-artist-tracks.query.dtql)
+The saved [Chinook PostgreSQL artist-track query](chinook-postgresql-artist-tracks.query.tugql.yaml)
 joins the hosted PostgreSQL `Artist`, `Album`, and `Track` tables, counts tracks
 and sums playtime per artist, and shows the ten artists with the most tracks.
 It scans all rows of each source before aggregating (the matching pinned SQLite
@@ -138,8 +138,8 @@ of showing partial totals. A read-only check of the hosted PostgreSQL
 `chinook` schema on 2026-10-07 found Iron Maiden first with 213 tracks totaling
 71,844,745 ms. That observed result is a live-source check, not an immutable
 source pin. A separate
-[PostgreSQL and SQLite genre query](chinook-postgresql-genres.query.dtql)
-shows names from both editions side by side. These are DTQL examples for the
+[PostgreSQL and SQLite genre query](chinook-postgresql-genres.query.tugql.yaml)
+shows names from both editions side by side. These are TugQL examples for the
 browser federation runner, distinct from the standalone SQLite SQL examples
 below. The public PostgreSQL endpoint is available through the QA and UAT
 connections in the shared catalogue and is served read-only by the public

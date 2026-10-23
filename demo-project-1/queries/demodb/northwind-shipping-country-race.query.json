@@ -2,7 +2,7 @@
   "createdAt": "2026-10-16T12:10:47Z",
   "id": "northwind-shipping-country-race",
   "title": "Northwind shipping country order timeline",
-  "type": "DTQL",
+  "type": "TugQL",
   "connectionId": "northwind-postgresql",
   "purpose": "Return every Northwind order date and shipping country with its stable OrderID for a paused monthly order-count race. The chart derives month and counts from the returned orders; this source does not provide precomputed race frames.",
   "recordsets": [

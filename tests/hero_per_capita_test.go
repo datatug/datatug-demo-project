@@ -18,7 +18,7 @@ import (
 )
 
 // The hero question - "Which countries buy the most music relative to their
-// population?" - is the saved DTQL query sales/chinook-sales-per-capita. It
+// population?" - is the saved TugQL query sales/chinook-sales-per-capita. It
 // joins three sources (Chinook Invoice -> geo country_aliases -> geo
 // population_wb) with no AI involved, so its result is a pure function of the
 // committed geo snapshot (demo-project-1/data/geo) and the pinned Chinook file.
@@ -69,7 +69,7 @@ func snapshotPopulation(t *testing.T) map[string]int64 {
 	t.Helper()
 	executor := secureread.NewExecutor(secureread.Session{Unrestricted: true})
 	read := func(collection string) []map[string]any {
-		result, err := executor.RunDTQL(context.Background(), geoSourceURL(t), []byte("from: {name: "+collection+"}\n"), nil)
+		result, err := executor.RunTugQL(context.Background(), geoSourceURL(t), []byte("from: {name: "+collection+"}\n"), nil)
 		require.NoError(t, err)
 		rows := make([]map[string]any, 0, len(result.Rows))
 		for _, row := range result.Rows {
@@ -123,7 +123,7 @@ func heroRows(t *testing.T, chinookPath string) ([]string, map[string]map[string
 	require.NotEmpty(t, query.Text)
 
 	executor := secureread.NewExecutor(secureread.Session{Unrestricted: true})
-	result, err := executor.RunFederatedDTQL(context.Background(), []byte(query.Text), map[string]string{
+	result, err := executor.RunFederatedTugQL(context.Background(), []byte(query.Text), map[string]string{
 		"chinook": "sqlite://" + chinookPath,
 		"geo":     geoSourceURL(t),
 	}, nil)
@@ -145,7 +145,7 @@ func TestGeoSnapshotPinned(t *testing.T) {
 	executor := secureread.NewExecutor(secureread.Session{Unrestricted: true})
 	run := func(t *testing.T, collection string) map[string]map[string]any {
 		t.Helper()
-		result, err := executor.RunDTQL(context.Background(), geoSourceURL(t), []byte("from: {name: "+collection+"}\n"), nil)
+		result, err := executor.RunTugQL(context.Background(), geoSourceURL(t), []byte("from: {name: "+collection+"}\n"), nil)
 		require.NoError(t, err)
 		rows := make(map[string]map[string]any, len(result.Rows))
 		for _, row := range result.Rows {

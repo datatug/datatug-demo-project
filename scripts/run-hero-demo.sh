@@ -7,7 +7,7 @@
 #   -> sales per million people
 #
 # What is on the query path, exactly:
-#   * The DataTug CLI runs the saved DTQL query sales/chinook-sales-per-capita and
+#   * The DataTug CLI runs the saved TugQL query sales/chinook-sales-per-capita and
 #     reads the `local` environment's catalogs DIRECTLY: the derived Chinook SQLite
 #     file and the vendored inGitDB directory data/geo. OpenVaultDB (OVDB) is NOT
 #     on the CLI's path.

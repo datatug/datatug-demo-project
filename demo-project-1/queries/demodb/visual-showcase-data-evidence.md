@@ -83,11 +83,11 @@ succeeded. These are public OVDB executions, not DataTug app executions.
 
 | Saved query | Endpoint | Result |
 | --- | --- | --- |
-| [`northwind-shipping-country-count-sqlite.query.dtql`](northwind-shipping-country-count-sqlite.query.dtql) | `https://demodb.dev/ovdb/v1/databases/northwind/dtql` | 21 country rows, complete, source `northwind/Orders` |
-| [`northwind-shipping-country-count-postgresql.query.dtql`](northwind-shipping-country-count-postgresql.query.dtql) | `https://cloud.openvaultdb.com/v1/databases/northwind-postgresql/dtql` | 21 country rows, complete, source `northwind-postgresql/pg1_AAAACW5vcnRod2luZAAAAAZPcmRlcnM` |
+| [`northwind-shipping-country-count-sqlite.query.tugql.yaml`](northwind-shipping-country-count-sqlite.query.tugql.yaml) | `https://demodb.dev/ovdb/v1/databases/northwind/tugql` | 21 country rows, complete, source `northwind/Orders` |
+| [`northwind-shipping-country-count-postgresql.query.tugql.yaml`](northwind-shipping-country-count-postgresql.query.tugql.yaml) | `https://cloud.openvaultdb.com/v1/databases/northwind-postgresql/tugql` | 21 country rows, complete, source `northwind-postgresql/pg1_AAAACW5vcnRod2luZAAAAAZPcmRlcnM` |
 
 From the repository root, execute all three saved query bodies as
-JSON-wrapped DTQL. The checker verifies HTTP 200, `complete=true`, 21
+JSON-wrapped TugQL. The checker verifies HTTP 200, `complete=true`, 21
 distinct ordered countries, integer order counts, one expected execution
 source per response, and exact mapped-row parity for the two aggregates.
 It also verifies the 830-row PostgreSQL race input:
@@ -113,7 +113,7 @@ select `ShipCountry` and `count(*) as orders`, sort by country, and limit to
 that point in time. It does not prove federation, a visual comparison, or browser
 composition.
 
-The [race input](northwind-shipping-country-race.query.dtql) selects
+The [race input](northwind-shipping-country-race.query.tugql.yaml) selects
 `OrderID`, `OrderDate`, and `ShipCountry` from Northwind PostgreSQL, orders by
 date and ID, and limits to 1000. The pinned local SQLite fixture and a live
 PostgreSQL execution both returned 830 rows. The live execution was HTTP 200,
@@ -143,7 +143,7 @@ these frames are measurements for validation, not saved synthetic data.
 The orchestrating agent reported 103 June 2022 grouped `OrderDate`/
 `TerritoryID` rows from the public AdventureWorks endpoint and 5,404 grouped
 day/territory rows for a full 35-month input. The exact derivation and
-responses have not been committed, so both numbers are provisional. The DTQL
+responses have not been committed, so both numbers are provisional. The TugQL
 server's reported maximum `limit` is 1000. A static saved QueryDef has no
 complete deterministic paging contract, so no full-series AdventureWorks
 showcase QueryDef is added.
@@ -160,7 +160,7 @@ authority. PostgreSQL remains listed in `QA`/`UAT`. The DataTug app still
 needs independently admitted runtime bindings for each source before the Add
 Source step can promise executable cards in one dashboard.
 
-The browser must execute these source-bound DTQL definitions, preserve source
+The browser must execute these source-bound TugQL definitions, preserve source
 identity and `orders` units on each result, and expose errors/incomplete
 responses. Only after an observed app run may UI copy claim working
 cross-source composition. The country-count pair involves two source
