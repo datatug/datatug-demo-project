@@ -146,9 +146,11 @@ source pin. A separate
 [PostgreSQL and SQLite genre query](chinook-postgresql-genres.query.tugql.yaml)
 shows names from both editions side by side. These are TugQL examples for the
 browser federation runner, distinct from the standalone SQLite SQL examples
-below. The PostgreSQL editions are served read-only by the public OpenVaultDB
-server (`cloud.openvaultdb.com`), so the shared connection catalogue offers the
-Chinook PostgreSQL Run link.
+below. The public PostgreSQL endpoint is available through the QA and UAT
+connections in the shared catalogue and is served read-only by the public
+OpenVaultDB server (`cloud.openvaultdb.com`). Its read-only DataTug browser
+query path has been verified against the hosted edition, so the catalogue
+offers the Chinook PostgreSQL Run link.
 
 ## Chinook
 
