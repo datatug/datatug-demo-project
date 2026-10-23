@@ -161,6 +161,12 @@ needs it.
 - **[SpecScore](https://specscore.md)** is the open Markdown format we write DataTug's specs in,
   including the specification of this demo's story and its acceptance criteria.
 
+## Scheduled Watch demonstration
+
+[Watch the existing order 11045 investigation](docs/watch-11045.md) with three
+native runners, independent user subscriptions, durable history and an optional
+actual-coordinator browser journey. The helper extends private fixture copies.
+
 ## Data and licences
 
 - This repository's own files, including the synthetic Shipping data, logs and carrier responses,
