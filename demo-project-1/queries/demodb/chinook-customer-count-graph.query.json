@@ -2,7 +2,7 @@
   "createdAt": "2026-10-10T20:20:44Z",
   "id": "chinook-customer-count-graph",
   "title": "Chinook Customer Counts Graph",
-  "type": "DTQL",
+  "type": "TugQL",
   "connectionId": "chinook-sqlite",
   "purpose": "Maintained bounded multi-CTE TugQL example for the pinned Chinook SQLite fixture. It counts invoices for one required CustomerId, filters the grouped count through a second CTE, projects Customer fields through an independent branch, then joins the derived integer keys.",
   "recordsets": [

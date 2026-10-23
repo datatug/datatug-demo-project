@@ -27,15 +27,15 @@ SOURCES = (
         "sqlite",
         "northwind",
         "Orders",
-        "https://demodb.dev/ovdb/v1/databases/northwind/dtql",
-        "northwind-shipping-country-count-sqlite.query.dtql",
+        "https://demodb.dev/ovdb/v1/databases/northwind/tugql",
+        "northwind-shipping-country-count-sqlite.query.tugql.yaml",
     ),
     (
         "postgresql",
         "northwind-postgresql",
         PG_COLLECTION,
-        "https://cloud.openvaultdb.com/v1/databases/northwind-postgresql/dtql",
-        "northwind-shipping-country-count-postgresql.query.dtql",
+        "https://cloud.openvaultdb.com/v1/databases/northwind-postgresql/tugql",
+        "northwind-shipping-country-count-postgresql.query.tugql.yaml",
     ),
 )
 
@@ -209,8 +209,8 @@ def main():
         raise ValueError(f"Northwind aggregate sums to {total} orders, expected 830")
     if results["sqlite"][1]["mappedRowsSha256"] != EXPECTED_MAPPED_SHA256:
         raise ValueError("Northwind mapped rows differ from the verified 2026-10-16 baseline")
-    race_url = "https://cloud.openvaultdb.com/v1/databases/northwind-postgresql/dtql"
-    race_query = (QUERIES / "northwind-shipping-country-race.query.dtql").read_text(encoding="utf-8")
+    race_url = "https://cloud.openvaultdb.com/v1/databases/northwind-postgresql/tugql"
+    race_query = (QUERIES / "northwind-shipping-country-race.query.tugql.yaml").read_text(encoding="utf-8")
     race_raw = args.race_response.read_bytes() if args.race_response else fetch(race_url, race_query)
     race_receipt = verify_race(race_raw)
     race_receipt["endpoint"] = race_url

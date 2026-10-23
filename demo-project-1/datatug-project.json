@@ -46,5 +46,27 @@
       "id": "UAT"
     }
   ],
-  "connectionCatalog": "connections/demo-db.json"
+  "connectionCatalog": "connections/demo-db.json",
+  "dataModels": {
+    "version": 1,
+    "references": [
+      {
+        "id": "chinook-v1",
+        "address": "modelspec://github.com/demo-db/chinook/chinook",
+        "commit": "3e7bb316d8a438eb7e5930067997a4e4543a275c"
+      }
+    ],
+    "catalogBindings": [
+      {
+        "environment": "local",
+        "catalog": "chinook-local",
+        "reference": "chinook-v1"
+      },
+      {
+        "environment": "prod",
+        "catalog": "chinook-prod",
+        "reference": "chinook-v1"
+      }
+    ]
+  }
 }

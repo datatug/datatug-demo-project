@@ -92,7 +92,7 @@ can sit inside an existing repository without conflicts.
 
 | Folder | What it holds |
 |---|---|
-| [`queries/`](demo-project-1/queries) | saved SQL, DTQL and HTTP queries: Northwind customers and orders, the shipping investigation, Chinook, reference lookups and hosted DemoDB datasets |
+| [`queries/`](demo-project-1/queries) | saved SQL, TugQL and HTTP queries: Northwind customers and orders, the shipping investigation, Chinook, reference lookups and hosted DemoDB datasets |
 | [`boards/`](demo-project-1/boards) | dashboards: the shipping timeline, timings and readiness heatmap; Northwind operations; the "Orders in motion" showcase |
 | [`cards/`](demo-project-1/cards) | record cards shown beside a selected cell, such as the Customer card above |
 | [`checks/`](demo-project-1/checks) | business-process checks, such as "was the shipping request received?" and "was a carrier assigned?" |

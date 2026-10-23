@@ -3,13 +3,13 @@
   "bindings": [
     {
       "query": "customers/customer-invoices",
-      "queryHash": "6a0b28cf717193bf96e3968fd47f9da2d701da156fdec103f3e4f7f0baf928ae",
+      "queryHash": "aa9ac43d5d07f367acfb711bc035909c58823865f858c1cbe2ab67bb43dcf5dd",
       "parameter": "CustomerId",
       "meaning": "chinook-customer-id"
     },
     {
       "query": "customers/customer-invoices",
-      "queryHash": "6a0b28cf717193bf96e3968fd47f9da2d701da156fdec103f3e4f7f0baf928ae",
+      "queryHash": "aa9ac43d5d07f367acfb711bc035909c58823865f858c1cbe2ab67bb43dcf5dd",
       "column": {
         "recordset": 0,
         "name": "InvoiceId"
@@ -18,7 +18,7 @@
     },
     {
       "query": "customers/customer-invoices",
-      "queryHash": "6a0b28cf717193bf96e3968fd47f9da2d701da156fdec103f3e4f7f0baf928ae",
+      "queryHash": "aa9ac43d5d07f367acfb711bc035909c58823865f858c1cbe2ab67bb43dcf5dd",
       "column": {
         "recordset": 0,
         "name": "Total"

@@ -83,8 +83,8 @@ succeeded. These are public OVDB executions, not DataTug app executions.
 
 | Saved query | Endpoint | Result |
 | --- | --- | --- |
-| [`northwind-shipping-country-count-sqlite.query.dtql`](northwind-shipping-country-count-sqlite.query.dtql) | `https://demodb.dev/ovdb/v1/databases/northwind/dtql` | 21 country rows, complete, source `northwind/Orders` |
-| [`northwind-shipping-country-count-postgresql.query.dtql`](northwind-shipping-country-count-postgresql.query.dtql) | `https://cloud.openvaultdb.com/v1/databases/northwind-postgresql/dtql` | 21 country rows, complete, source `northwind-postgresql/pg1_AAAACW5vcnRod2luZAAAAAZPcmRlcnM` |
+| [`northwind-shipping-country-count-sqlite.query.tugql.yaml`](northwind-shipping-country-count-sqlite.query.tugql.yaml) | `https://demodb.dev/ovdb/v1/databases/northwind/dtql` | 21 country rows, complete, source `northwind/Orders` |
+| [`northwind-shipping-country-count-postgresql.query.tugql.yaml`](northwind-shipping-country-count-postgresql.query.tugql.yaml) | `https://cloud.openvaultdb.com/v1/databases/northwind-postgresql/dtql` | 21 country rows, complete, source `northwind-postgresql/pg1_AAAACW5vcnRod2luZAAAAAZPcmRlcnM` |
 
 From the repository root, execute all three saved query bodies as
 JSON-wrapped DTQL. The checker verifies HTTP 200, `complete=true`, 21
@@ -113,7 +113,7 @@ select `ShipCountry` and `count(*) as orders`, sort by country, and limit to
 that point in time. It does not prove federation, a visual comparison, or browser
 composition.
 
-The [race input](northwind-shipping-country-race.query.dtql) selects
+The [race input](northwind-shipping-country-race.query.tugql.yaml) selects
 `OrderID`, `OrderDate`, and `ShipCountry` from Northwind PostgreSQL, orders by
 date and ID, and limits to 1000. The pinned local SQLite fixture and a live
 PostgreSQL execution both returned 830 rows. The live execution was HTTP 200,
