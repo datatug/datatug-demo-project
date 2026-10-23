@@ -35,6 +35,60 @@
       ],
       "columns": [
         {
+          "name": "TrackId",
+          "type": "integer"
+        },
+        {
+          "name": "Name",
+          "type": "string"
+        },
+        {
+          "name": "AlbumId",
+          "type": "integer",
+          "hideIf": {
+            "parameters": [
+              "AlbumId"
+            ]
+          }
+        },
+        {
+          "name": "MediaTypeId",
+          "type": "integer"
+        },
+        {
+          "name": "GenreId",
+          "type": "integer"
+        },
+        {
+          "name": "Composer",
+          "type": "string"
+        },
+        {
+          "name": "Milliseconds",
+          "type": "integer"
+        },
+        {
+          "name": "Bytes",
+          "type": "integer"
+        },
+        {
+          "name": "UnitPrice",
+          "type": "number"
+        },
+        {
+          "name": "GenreName",
+          "type": "string"
+        },
+        {
+          "name": "AlbumTitle",
+          "type": "string",
+          "hideIf": {
+            "parameters": [
+              "AlbumId"
+            ]
+          }
+        },
+        {
           "name": "ArtistId",
           "type": "integer",
           "hideIf": {
@@ -49,24 +103,6 @@
           "hideIf": {
             "parameters": [
               "ArtistId"
-            ]
-          }
-        },
-        {
-          "name": "AlbumId",
-          "type": "integer",
-          "hideIf": {
-            "parameters": [
-              "AlbumId"
-            ]
-          }
-        },
-        {
-          "name": "AlbumTitle",
-          "type": "string",
-          "hideIf": {
-            "parameters": [
-              "AlbumId"
             ]
           }
         }

@@ -12,3 +12,4 @@ WHERE t.GenreId = IFNULL(t.GenreId, t.GenreId)
   AND t.AlbumId = IFNULL(@AlbumId, t.AlbumId)
   AND al.ArtistId = IFNULL(@ArtistId, al.ArtistId)
 ORDER BY Title
+LIMIT 500

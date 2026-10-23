@@ -26,7 +26,19 @@
     {
       "columns": [
         {
+          "id": "AlbumId",
+          "name": "AlbumId",
+          "type": "integer"
+        },
+        {
+          "id": "AlbumTitle",
+          "name": "AlbumTitle",
+          "type": "string"
+        },
+        {
           "id": "ArtistId",
+          "name": "ArtistId",
+          "type": "integer",
           "hideIf": {
             "parameters": [
               "ArtistId"
@@ -35,11 +47,23 @@
         },
         {
           "id": "ArtistName",
+          "name": "ArtistName",
+          "type": "string",
           "hideIf": {
             "parameters": [
               "ArtistId"
             ]
           }
+        },
+        {
+          "id": "TracksCount",
+          "name": "TracksCount",
+          "type": "integer"
+        },
+        {
+          "id": "GenresCount",
+          "name": "GenresCount",
+          "type": "integer"
         }
       ]
     }
