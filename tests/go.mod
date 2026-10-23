@@ -5,7 +5,7 @@ go 1.27.0
 require (
 	github.com/dal-go/dalgo v0.95.1
 	github.com/datatug/datatug-cli v0.51.8
-	github.com/datatug/datatug-core v0.71.0
+	github.com/datatug/datatug-core v0.75.0
 	github.com/stretchr/testify v1.12.1
 	modernc.org/sqlite v1.59.0
 )
