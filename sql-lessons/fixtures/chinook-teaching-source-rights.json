@@ -13,8 +13,8 @@
       },
       "declarationScope": "database",
       "declaredAt": {
-        "serverId": "https://github.com/demo-db/chinook",
-        "databaseId": "chinook"
+        "serverId": "https://github.com/datatug/datatug-apps",
+        "databaseId": "chinook-teaching"
       },
       "evidenceOrigin": "publisher-verified",
       "pins": [
