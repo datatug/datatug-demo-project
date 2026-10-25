@@ -1,0 +1,42 @@
+{
+  "format": "datatug-sql-lessons-contract/v1",
+  "projectFolder": "sql-lessons",
+  "connectionId": "chinook-teaching-sqlite",
+  "fixture": {
+    "url": "/assets/showcase/chinook-teaching.sqlite",
+    "sha256": "8e1310b50a75d2f014d02336082b70e417536d918213492daad93a795058e32e",
+    "bytes": 12288
+  },
+  "sourceRights": {
+    "url": "/assets/showcase/chinook-teaching-source-rights.json",
+    "sha256": "75069b724560be2aed318f1aa5b4f146f1582077f5ccbfcc5c2acd46c42e80d3",
+    "bytes": 2283
+  },
+  "inputSql": {
+    "role": "input",
+    "repository": "https://github.com/datatug/websites",
+    "revision": "8805c6fbb0596741e6e1de1607eb315d3556219d",
+    "path": "apps/app/public/static/learn/chinook-teaching.sql",
+    "sha256": "ede6e06f708ffa9b18acd9185e4a1155ea81ffd63050d96fdb0e715eda4bb4ea",
+    "bytes": 3461
+  },
+  "upstreamProvider": {
+    "role": "provider",
+    "repository": "https://github.com/demo-db/chinook",
+    "revision": "85ad3b4d4014dd5a6ee506410beee99771801811",
+    "path": "artifacts/data/chinook.sqlite",
+    "sha256": "7651ba378ac2fcd0dfc3c66fb101f7a7eed3ba39a612ec642b96e20702061f15",
+    "bytes": 1007616
+  },
+  "population": {
+    "Customer": 4,
+    "Invoice": 21
+  },
+  "fullConnectionId": "chinook-sqlite",
+  "queryLink": {
+    "text": "q",
+    "type": "queryType",
+    "requiredType": "sql",
+    "autoRun": "run=1"
+  }
+}
