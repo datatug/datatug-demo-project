@@ -1,5 +1,4 @@
 {
-  "createdAt": "2026-10-22T07:41:22Z",
   "id": "customer",
   "title": "Customer",
   "description": "A Northwind customer: profile and recent orders. Shown beside a cell that means Customer.ID (Northwind CustomerID text code) and beside Orders.CustomerID.",

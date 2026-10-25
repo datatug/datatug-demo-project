@@ -1,5 +1,4 @@
 {
-  "createdAt": "2026-10-22T18:41:46Z",
   "id": "shipping-readiness-comparison",
   "title": "Shipping readiness comparison",
   "description": "Route and assignment readiness for an order beside a comparison order, per attempt and under the current configuration. Synthetic shipping training data. Not yet admitted inside a hosted Incident or Case, which accepts only the single order_id input.",
