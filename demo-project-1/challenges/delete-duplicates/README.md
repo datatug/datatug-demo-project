@@ -12,10 +12,12 @@ This folder holds both the internal fixture-suite index and the public revision
 - `suite.json` remains the internal index (`publicManifest: false`). It records
   fixture hashes/bytes, expected tables, reference/mutation receipts and the
   synthetic-data declaration. It is not a published manifest.
-- `fixtures/*.sqlite` are the immutable pinned inputs. The manifest pins each
-  fixture by SHA-256 and byte length, not by its conventional relative path.
-  Other declaring projects may spell the same convention differently; fixture
-  bytes are the identity.
+- `fixtures/*.db` are the immutable pinned inputs. Their names follow the
+  accepted Core fixture convention `challenges/<challengeId>/fixtures/<fixtureId>.db`
+  (`challenge.FixtureAssetPath` at
+  `github.com/datatug/datatug-core@0f250aa`). The manifest pins each fixture by
+  SHA-256 and byte length; fixture bytes are the identity, and other declaring
+  projects may spell the path differently.
 
 The data is synthetic. No real customer record, source database, log or
 production snapshot was sampled, copied or snapshotted. The invented emails,
@@ -84,15 +86,15 @@ deterministic generated variants.
 
 | Fixture | Purpose | Expected surviving ids |
 |---|---|---|
-| `fixtures/basic.sqlite` | basic duplicate pairs and one unique row | `2, 3, 5` |
-| `fixtures/no-duplicates.sqlite` | no duplicate groups, including singleton `NULL` and `''` | `1, 2, 4, 6, 9` |
-| `fixtures/multi-group.sqlite` | multiple groups, including groups of three and four | `2, 3, 5, 8, 25` |
-| `fixtures/nonsequential-created-at.sqlite` | nonsequential ids and insertion order; earlier `created_at` on higher ids | `2, 3, 7, 41` |
-| `fixtures/null-empty.sqlite` | three-member `NULL` group, three-member empty-string group, distinct `'NULL'` | `1, 2, 4, 5` |
-| `fixtures/case-whitespace.sqlite` | case, leading/trailing space and inner space are distinct | `2, 3, 5, 6, 11, 12, 13, 14` |
-| `fixtures/generated-variant-01.sqlite` | fixed-seed generated mix | computed in `suite.json` |
-| `fixtures/generated-variant-02.sqlite` | fixed-seed generated mix | computed in `suite.json` |
-| `fixtures/generated-variant-03.sqlite` | fixed-seed generated mix | computed in `suite.json` |
+| `fixtures/basic.db` | basic duplicate pairs and one unique row | `2, 3, 5` |
+| `fixtures/no-duplicates.db` | no duplicate groups, including singleton `NULL` and `''` | `1, 2, 4, 6, 9` |
+| `fixtures/multi-group.db` | multiple groups, including groups of three and four | `2, 3, 5, 8, 25` |
+| `fixtures/nonsequential-created-at.db` | nonsequential ids and insertion order; earlier `created_at` on higher ids | `2, 3, 7, 41` |
+| `fixtures/null-empty.db` | three-member `NULL` group, three-member empty-string group, distinct `'NULL'` | `1, 2, 4, 5` |
+| `fixtures/case-whitespace.db` | case, leading/trailing space and inner space are distinct | `2, 3, 5, 6, 11, 12, 13, 14` |
+| `fixtures/generated-variant-01.db` | fixed-seed generated mix | computed in `suite.json` |
+| `fixtures/generated-variant-02.db` | fixed-seed generated mix | computed in `suite.json` |
+| `fixtures/generated-variant-03.db` | fixed-seed generated mix | computed in `suite.json` |
 
 Every fixture has an unrelated `unrelated_records` table with rows that must
 stay byte-for-byte equivalent after a submission. Generated variants use the
@@ -180,7 +182,7 @@ regeneration so its recorded tool hash stays valid.
 
 Every solution runs through `sqlite3.Connection.backup()` into a new in-memory
 database from a read-only `mode=ro&immutable=1` source connection. Tests hash the
-committed files before and after the run; the source `.sqlite` files are never
+committed files before and after the run; the source `.db` files are never
 opened for writing and no solution is executed against a committed file.
 
 The Python reference/mutation harness compares final table data, column names and

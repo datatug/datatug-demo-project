@@ -368,7 +368,7 @@ def _unrelated(prefix: str, count: int):
 AUTHORED_FIXTURE_SPECS = [
     {
         "id": "basic",
-        "filename": "basic.sqlite",
+        "filename": "basic.db",
         "label": "Basic duplicate groups",
         "purpose": (
             "Two exact duplicate pairs and one unique email. The earliest created_at "
@@ -392,7 +392,7 @@ AUTHORED_FIXTURE_SPECS = [
     },
     {
         "id": "no-duplicates",
-        "filename": "no-duplicates.sqlite",
+        "filename": "no-duplicates.db",
         "label": "No duplicate groups",
         "purpose": (
             "Unique emails plus one NULL and one empty string. A correct statement "
@@ -415,7 +415,7 @@ AUTHORED_FIXTURE_SPECS = [
     },
     {
         "id": "multi-group",
-        "filename": "multi-group.sqlite",
+        "filename": "multi-group.db",
         "label": "Multiple groups including three-plus members",
         "purpose": (
             "Four duplicate groups, two of them with three or more members, plus a "
@@ -447,7 +447,7 @@ AUTHORED_FIXTURE_SPECS = [
     },
     {
         "id": "nonsequential-created-at",
-        "filename": "nonsequential-created-at.sqlite",
+        "filename": "nonsequential-created-at.db",
         "label": "Nonsequential ids where created_at disagrees with id",
         "purpose": (
             "Every duplicate group has its earliest created_at on a higher id. The "
@@ -476,7 +476,7 @@ AUTHORED_FIXTURE_SPECS = [
     },
     {
         "id": "null-empty",
-        "filename": "null-empty.sqlite",
+        "filename": "null-empty.db",
         "label": "NULL and empty-string duplicate groups",
         "purpose": (
             "A three-member NULL group, a three-member empty-string group and the "
@@ -505,7 +505,7 @@ AUTHORED_FIXTURE_SPECS = [
     },
     {
         "id": "case-whitespace",
-        "filename": "case-whitespace.sqlite",
+        "filename": "case-whitespace.db",
         "label": "Case and whitespace distinctions",
         "purpose": (
             "Exact duplicates coexist with case-only and whitespace-only variants that "
@@ -595,7 +595,7 @@ def generated_fixture_spec(variant: int) -> dict:
     unrelated_count = rng.randint(2, 4)
     return {
         "id": f"generated-variant-{variant + 1:02d}",
-        "filename": f"generated-variant-{variant + 1:02d}.sqlite",
+        "filename": f"generated-variant-{variant + 1:02d}.db",
         "label": f"Deterministic generated variant {variant + 1}",
         "purpose": (
             "A fixed-seed generated mix of duplicate groups, NULL, empty string, "
@@ -1495,7 +1495,7 @@ def regenerate_suite(suite_dir: Path = DEFAULT_SUITE_DIR) -> dict:
         expected_names = {
             Path(fixture["relativePath"]).name for fixture in index["fixtures"]
         }
-        for existing in fixtures_dir.glob("*.sqlite"):
+        for existing in fixtures_dir.glob("*.db"):
             if existing.name not in expected_names:
                 existing.unlink()
         for fixture in index["fixtures"]:

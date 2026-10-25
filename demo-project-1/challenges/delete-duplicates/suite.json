@@ -3,7 +3,7 @@
     "byteStabilityNote": "Committed SQLite bytes are authoritative. SQLite embeds its library version in the database header, so normal verification checks committed SHA-256 and semantics instead of regenerating bytes. Run regenerate explicitly after an intentional fixture or builder change.",
     "pythonVersion": "3.14.7",
     "regenerationCommand": "python3 scripts/delete-duplicates-fixtures.py regenerate",
-    "sha256": "290601000587d706980a2ec0ab4683c533e084b677e93d270281a874ad315d02",
+    "sha256": "44956be5affbf1e41c38ae688fd05ada6f37052b2d8140ac6a75d83e7f38b801",
     "sqliteVersion": "3.53.4",
     "sqliteVersionInfo": [
       3,
@@ -218,7 +218,7 @@
         "unrelated-records"
       ],
       "purpose": "Two exact duplicate pairs and one unique email. The earliest created_at in the first pair belongs to the higher id.",
-      "relativePath": "fixtures/basic.sqlite",
+      "relativePath": "fixtures/basic.db",
       "sha256": "74b2eb32b7f91a528e30d145eb253ad778e03517523a789a39308df2e3dae93c",
       "unrelated": {
         "columns": [
@@ -369,7 +369,7 @@
         "unrelated-records"
       ],
       "purpose": "Unique emails plus one NULL and one empty string. A correct statement must be a no-op.",
-      "relativePath": "fixtures/no-duplicates.sqlite",
+      "relativePath": "fixtures/no-duplicates.db",
       "sha256": "eac560957d32da9bc3dfee7074d0df004d6d9ffe73bce1e263a0324915746f56",
       "unrelated": {
         "columns": [
@@ -574,7 +574,7 @@
         "unrelated-records"
       ],
       "purpose": "Four duplicate groups, two of them with three or more members, plus a unique row. Several groups have an earlier timestamp on a higher id.",
-      "relativePath": "fixtures/multi-group.sqlite",
+      "relativePath": "fixtures/multi-group.db",
       "sha256": "e831d7da684bd5be7799af17441d13449df9612dd8fef98757cee1bc76780a14",
       "unrelated": {
         "columns": [
@@ -745,7 +745,7 @@
         "unrelated-records"
       ],
       "purpose": "Every duplicate group has its earliest created_at on a higher id. The insertion order is unrelated to id order, exposing timestamp-versus-id retention ambiguity.",
-      "relativePath": "fixtures/nonsequential-created-at.sqlite",
+      "relativePath": "fixtures/nonsequential-created-at.db",
       "sha256": "cb9c82521e0780c35cc36a71dfacf83711ff48611692b8c08895feba5434c9ac",
       "unrelated": {
         "columns": [
@@ -911,7 +911,7 @@
         "unrelated-records"
       ],
       "purpose": "A three-member NULL group, a three-member empty-string group and the string 'NULL' as a distinct value. Plain equality leaves the NULL group undeduplicated.",
-      "relativePath": "fixtures/null-empty.sqlite",
+      "relativePath": "fixtures/null-empty.db",
       "sha256": "ff6390ca19f6e9a87db44da08646056199e159e5f87bfbec560f87911a560eda",
       "unrelated": {
         "columns": [
@@ -1115,7 +1115,7 @@
         "unrelated-records"
       ],
       "purpose": "Exact duplicates coexist with case-only and whitespace-only variants that must survive as separate email groups. A lower/trim collapse deletes rows the BINARY rule keeps.",
-      "relativePath": "fixtures/case-whitespace.sqlite",
+      "relativePath": "fixtures/case-whitespace.db",
       "sha256": "da7998bd59a0af4a1d2eef3d8da1ba204f37902cc9cfd63bbfa79240e95e16a0",
       "unrelated": {
         "columns": [
@@ -1430,7 +1430,7 @@
         "unrelated-records"
       ],
       "purpose": "A fixed-seed generated mix of duplicate groups, NULL, empty string, case/whitespace variants, nonsequential ids, timestamp ambiguity and unrelated rows.",
-      "relativePath": "fixtures/generated-variant-01.sqlite",
+      "relativePath": "fixtures/generated-variant-01.db",
       "sha256": "7f733f9254fcd19a56156dc423ba50c5b4f338b0a6e8ed661e0fa772e6f62fa2",
       "unrelated": {
         "columns": [
@@ -1733,7 +1733,7 @@
         "unrelated-records"
       ],
       "purpose": "A fixed-seed generated mix of duplicate groups, NULL, empty string, case/whitespace variants, nonsequential ids, timestamp ambiguity and unrelated rows.",
-      "relativePath": "fixtures/generated-variant-02.sqlite",
+      "relativePath": "fixtures/generated-variant-02.db",
       "sha256": "0e428ba96f95ba052fd41eae54aec1cd65a1a7561f4945b392f3440ef9ef9313",
       "unrelated": {
         "columns": [
@@ -2036,7 +2036,7 @@
         "unrelated-records"
       ],
       "purpose": "A fixed-seed generated mix of duplicate groups, NULL, empty string, case/whitespace variants, nonsequential ids, timestamp ambiguity and unrelated rows.",
-      "relativePath": "fixtures/generated-variant-03.sqlite",
+      "relativePath": "fixtures/generated-variant-03.db",
       "sha256": "49f82c4c8ed16766eaf24571936fcbf1aadabda46f3a727fd46643b1f46ac862",
       "unrelated": {
         "columns": [
