@@ -1,0 +1,17 @@
+{
+  "createdAt": "2026-10-25T00:00:00Z",
+  "id": "duplicate-emails",
+  "purpose": "QA saved training query. It returns one row per exact duplicate customer email. It is executed only against the challenge's pinned fixture bytes by the challenge runtime.",
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "email",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "title": "Duplicate customer emails",
+  "type": "SQL"
+}
