@@ -1,0 +1,307 @@
+{
+  "allowedOperation": "read",
+  "challengeId": "qa-mixed-answer-kinds",
+  "dialect": "sqlite",
+  "difficulty": "intermediate",
+  "engine": {
+    "package": "@sqlite.org/sqlite-wasm",
+    "sqliteVersion": "3.54.1",
+    "version": "3.54.1-build1"
+  },
+  "fixtureSuite": {
+    "fixtures": [
+      {
+        "bytes": 12288,
+        "id": "broken",
+        "label": "Broken QA fixture: byte-for-byte copy of the synthetic duplicate-customer fixture",
+        "runs": 1,
+        "sha256": "74b2eb32b7f91a528e30d145eb253ad778e03517523a789a39308df2e3dae93c"
+      },
+      {
+        "bytes": 12288,
+        "id": "repaired",
+        "label": "Repaired QA fixture: byte-for-byte copy of the synthetic no-duplicates fixture",
+        "runs": 1,
+        "sha256": "eac560957d32da9bc3dfee7074d0df004d6d9ffe73bce1e263a0324915746f56"
+      }
+    ],
+    "id": "qa-mixed-answer-kinds-v1"
+  },
+  "gradingVersion": "challenge-grading-v1",
+  "hints": [
+    {
+      "id": "hint-1",
+      "text": "For the SQL part, group customers by exact email and keep groups with more than one row. The repaired fixture has no such group."
+    },
+    {
+      "id": "hint-2",
+      "text": "For the structured part, choose the root cause that describes duplicate rows and the remediation that deduplicates before it constrains the exact email value."
+    },
+    {
+      "id": "hint-3",
+      "text": "For the Check part, author the expectation explicitly: id no-duplicate-emails, scope set, kind row-count, severity critical, and expected integer value 0."
+    },
+    {
+      "id": "hint-4",
+      "text": "Choose check/duplicate-emails. check/always-empty returns zero rows on both fixtures, so it passes the repaired case but cannot satisfy the broken fixture's required fail outcome."
+    },
+    {
+      "id": "hint-5",
+      "text": "All three parts are required. Correct SQL alone is incomplete until the structured selection and Check definition also pass."
+    }
+  ],
+  "objective": "QA fixture coverage for all three answer kinds in one timing=required challenge. The SQL part reports duplicate email groups; the closed structured part names the root cause and remediation; the Check-definition part selects a saved training query and supplies a learner-authored typed set-scoped row-count expectation. The broken fixture must fail the Check and the repaired fixture must pass it. All required parts must pass: a correct SQL answer with a wrong or missing non-SQL answer remains incomplete.",
+  "parts": [
+    {
+      "answerKind": "sql",
+      "id": "duplicate-groups",
+      "required": true,
+      "sql": {
+        "cases": [
+          {
+            "fixture": "broken",
+            "oracle": {
+              "columns": [
+                {
+                  "name": "email",
+                  "type": "string"
+                },
+                {
+                  "name": "duplicate_count",
+                  "type": "integer"
+                }
+              ],
+              "kind": "result",
+              "ordering": "unordered",
+              "rows": [
+                [
+                  {
+                    "type": "string",
+                    "value": "ada@example.com"
+                  },
+                  {
+                    "type": "integer",
+                    "value": "2"
+                  }
+                ],
+                [
+                  {
+                    "type": "string",
+                    "value": "bob@example.com"
+                  },
+                  {
+                    "type": "integer",
+                    "value": "2"
+                  }
+                ]
+              ]
+            }
+          },
+          {
+            "fixture": "repaired",
+            "oracle": {
+              "columns": [
+                {
+                  "name": "email",
+                  "type": "string"
+                },
+                {
+                  "name": "duplicate_count",
+                  "type": "integer"
+                }
+              ],
+              "kind": "result",
+              "ordering": "unordered",
+              "rows": []
+            }
+          }
+        ]
+      },
+      "title": "Report duplicate email groups"
+    },
+    {
+      "answerKind": "structured",
+      "id": "diagnosis",
+      "required": true,
+      "structured": {
+        "expected": {
+          "selections": {
+            "remediation": [
+              "deduplicate-then-constrain"
+            ],
+            "root-cause": [
+              "duplicate-email-rows"
+            ]
+          }
+        },
+        "fields": [
+          {
+            "cardinality": "single",
+            "id": "root-cause",
+            "label": "Root cause",
+            "options": [
+              {
+                "id": "duplicate-email-rows",
+                "label": "Duplicate customer rows for one exact email"
+              },
+              {
+                "id": "missing-unique-index",
+                "label": "Only a missing unique index"
+              },
+              {
+                "id": "wrong-database",
+                "label": "The wrong database was opened"
+              }
+            ],
+            "required": true
+          },
+          {
+            "cardinality": "multi",
+            "id": "remediation",
+            "label": "Remediation",
+            "maxSelections": 2,
+            "minSelections": 1,
+            "options": [
+              {
+                "id": "deduplicate-then-constrain",
+                "label": "Deduplicate, then constrain exact email values"
+              },
+              {
+                "id": "drop-customer-table",
+                "label": "Drop the customer table"
+              },
+              {
+                "id": "ignore-duplicates",
+                "label": "Ignore duplicate rows"
+              }
+            ],
+            "required": true
+          }
+        ]
+      },
+      "title": "Select the closed diagnosis and remediation"
+    },
+    {
+      "answerKind": "check-definition",
+      "checkDefinition": {
+        "cases": [
+          {
+            "expectedOutcome": "fail",
+            "fixture": "broken"
+          },
+          {
+            "expectedOutcome": "pass",
+            "fixture": "repaired"
+          }
+        ],
+        "expectation": {
+          "expected": {
+            "type": "integer",
+            "value": "0"
+          },
+          "id": "no-duplicate-emails",
+          "kind": "row-count",
+          "scope": "set",
+          "severity": "critical"
+        },
+        "queryIds": [
+          "check/duplicate-emails",
+          "check/always-empty"
+        ]
+      },
+      "id": "recurrence-check",
+      "required": true,
+      "title": "Author a Check definition for recurring duplicates"
+    }
+  ],
+  "referenceSolutions": [
+    {
+      "answer": {
+        "sql": "SELECT email, COUNT(*) AS duplicate_count\nFROM customers\nGROUP BY email\nHAVING COUNT(*) > 1\nORDER BY email\n"
+      },
+      "partId": "duplicate-groups"
+    },
+    {
+      "answer": {
+        "structured": {
+          "selections": {
+            "remediation": [
+              "deduplicate-then-constrain"
+            ],
+            "root-cause": [
+              "duplicate-email-rows"
+            ]
+          }
+        }
+      },
+      "partId": "diagnosis"
+    },
+    {
+      "answer": {
+        "checkDefinition": {
+          "expectation": {
+            "expected": {
+              "type": "integer",
+              "value": "0"
+            },
+            "id": "no-duplicate-emails",
+            "kind": "row-count",
+            "scope": "set",
+            "severity": "critical"
+          },
+          "queryId": "check/duplicate-emails"
+        }
+      },
+      "partId": "recurrence-check"
+    }
+  ],
+  "revision": 1,
+  "schemaVersion": 1,
+  "timing": "required",
+  "title": "QA mixed answer kinds: SQL, structured and Check definition",
+  "visibleSchema": {
+    "tables": [
+      {
+        "columns": [
+          {
+            "name": "id",
+            "primaryKey": true,
+            "type": "integer"
+          },
+          {
+            "collation": "BINARY",
+            "name": "email",
+            "type": "string"
+          },
+          {
+            "name": "created_at",
+            "notNull": true,
+            "type": "string"
+          }
+        ],
+        "name": "customers"
+      },
+      {
+        "columns": [
+          {
+            "name": "id",
+            "primaryKey": true,
+            "type": "integer"
+          },
+          {
+            "collation": "BINARY",
+            "name": "code",
+            "notNull": true,
+            "type": "string"
+          },
+          {
+            "name": "note",
+            "notNull": true,
+            "type": "string"
+          }
+        ],
+        "name": "unrelated_records"
+      }
+    ]
+  }
+}
