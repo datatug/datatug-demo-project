@@ -1,0 +1,3266 @@
+{
+  "builder": {
+    "byteStabilityNote": "Committed SQLite bytes are authoritative. SQLite embeds its library version in the database header, so normal verification checks committed SHA-256 and semantics instead of regenerating bytes. Run regenerate explicitly after an intentional fixture or builder change.",
+    "pythonVersion": "3.14.7",
+    "regenerationCommand": "python3 scripts/delete-duplicates-fixtures.py regenerate",
+    "sha256": "dfaed1c5e568e736ce796d4702b49b3f8df097ea52ab757f2554f54d806c0529",
+    "sqliteVersion": "3.53.4",
+    "sqliteVersionInfo": [
+      3,
+      53,
+      4
+    ],
+    "tool": "scripts/delete-duplicates-fixtures.py",
+    "verificationCommand": "python3 scripts/delete-duplicates-fixtures.py verify"
+  },
+  "challengeId": "delete-duplicates",
+  "coverage": {
+    "basic-duplicates": [
+      "basic",
+      "generated-variant-01",
+      "generated-variant-02",
+      "generated-variant-03"
+    ],
+    "case-sensitive-email": [
+      "case-whitespace",
+      "generated-variant-01",
+      "generated-variant-02",
+      "generated-variant-03"
+    ],
+    "created-at-not-retention-rule": [
+      "generated-variant-01",
+      "generated-variant-02",
+      "generated-variant-03",
+      "nonsequential-created-at"
+    ],
+    "earliest-timestamp-higher-id": [
+      "basic",
+      "generated-variant-01",
+      "generated-variant-02",
+      "generated-variant-03",
+      "multi-group",
+      "nonsequential-created-at"
+    ],
+    "empty-string-duplicate-group": [
+      "generated-variant-01",
+      "generated-variant-02",
+      "generated-variant-03",
+      "null-empty"
+    ],
+    "exact-binary-equality": [
+      "case-whitespace",
+      "generated-variant-01",
+      "generated-variant-02",
+      "generated-variant-03"
+    ],
+    "generated-fixed-seed": [
+      "generated-variant-01",
+      "generated-variant-02",
+      "generated-variant-03"
+    ],
+    "multiple-groups": [
+      "basic",
+      "case-whitespace",
+      "generated-variant-01",
+      "generated-variant-02",
+      "generated-variant-03",
+      "multi-group",
+      "nonsequential-created-at",
+      "null-empty"
+    ],
+    "no-duplicates": [
+      "no-duplicates"
+    ],
+    "nonsequential-ids": [
+      "generated-variant-01",
+      "generated-variant-02",
+      "generated-variant-03",
+      "multi-group",
+      "nonsequential-created-at"
+    ],
+    "nonsequential-insertion-order": [
+      "generated-variant-01",
+      "generated-variant-02",
+      "generated-variant-03",
+      "nonsequential-created-at"
+    ],
+    "null-duplicate-group": [
+      "generated-variant-01",
+      "generated-variant-02",
+      "generated-variant-03",
+      "null-empty"
+    ],
+    "null-vs-empty-distinct": [
+      "generated-variant-01",
+      "generated-variant-02",
+      "generated-variant-03",
+      "no-duplicates",
+      "null-empty"
+    ],
+    "three-plus-member-group": [
+      "generated-variant-01",
+      "generated-variant-02",
+      "generated-variant-03",
+      "multi-group"
+    ],
+    "unrelated-records": [
+      "basic",
+      "case-whitespace",
+      "generated-variant-01",
+      "generated-variant-02",
+      "generated-variant-03",
+      "multi-group",
+      "no-duplicates",
+      "nonsequential-created-at",
+      "null-empty"
+    ],
+    "whitespace-sensitive-email": [
+      "case-whitespace",
+      "generated-variant-01",
+      "generated-variant-02",
+      "generated-variant-03"
+    ]
+  },
+  "dataDeclaration": {
+    "classification": "synthetic",
+    "license": "CC0-1.0",
+    "sourceData": "none",
+    "statement": "All customer identities, email values, timestamps, IDs and unrelated records are synthetic and invented for this exercise. No real customer record, source database, log or production snapshot was sampled, copied or snapshotted."
+  },
+  "fixtures": [
+    {
+      "bytes": 12288,
+      "expected": {
+        "columns": [
+          {
+            "declaredType": "INTEGER",
+            "name": "id",
+            "notNull": false,
+            "primaryKey": true
+          },
+          {
+            "collation": "BINARY",
+            "declaredType": "TEXT",
+            "name": "email",
+            "notNull": false,
+            "primaryKey": false
+          },
+          {
+            "declaredType": "TEXT",
+            "name": "created_at",
+            "notNull": true,
+            "primaryKey": false
+          }
+        ],
+        "rowCount": 3,
+        "rows": [
+          [
+            2,
+            "bob@example.com",
+            "2024-02-01T09:00:00Z"
+          ],
+          [
+            3,
+            "ada@example.com",
+            "2024-01-03T09:00:00Z"
+          ],
+          [
+            5,
+            "cy@example.com",
+            "2024-03-01T09:00:00Z"
+          ]
+        ],
+        "table": "customers"
+      },
+      "generator": {
+        "kind": "authored"
+      },
+      "id": "basic",
+      "initialRows": [
+        [
+          2,
+          "bob@example.com",
+          "2024-02-01T09:00:00Z"
+        ],
+        [
+          3,
+          "ada@example.com",
+          "2024-01-03T09:00:00Z"
+        ],
+        [
+          5,
+          "cy@example.com",
+          "2024-03-01T09:00:00Z"
+        ],
+        [
+          7,
+          "bob@example.com",
+          "2024-02-02T09:00:00Z"
+        ],
+        [
+          10,
+          "ada@example.com",
+          "2024-01-01T09:00:00Z"
+        ]
+      ],
+      "insertionOrder": [
+        10,
+        3,
+        2,
+        7,
+        5
+      ],
+      "label": "Basic duplicate groups",
+      "properties": [
+        "basic-duplicates",
+        "multiple-groups",
+        "earliest-timestamp-higher-id",
+        "unrelated-records"
+      ],
+      "purpose": "Two exact duplicate pairs and one unique email. The earliest created_at in the first pair belongs to the higher id.",
+      "relativePath": "fixtures/basic.sqlite",
+      "sha256": "74b2eb32b7f91a528e30d145eb253ad778e03517523a789a39308df2e3dae93c",
+      "unrelated": {
+        "columns": [
+          {
+            "declaredType": "INTEGER",
+            "name": "id",
+            "notNull": false,
+            "primaryKey": true
+          },
+          {
+            "collation": "BINARY",
+            "declaredType": "TEXT",
+            "name": "code",
+            "notNull": true,
+            "primaryKey": false
+          },
+          {
+            "declaredType": "TEXT",
+            "name": "note",
+            "notNull": true,
+            "primaryKey": false
+          }
+        ],
+        "expectedRows": [
+          [
+            1,
+            "SKU-BASIC-1",
+            "Synthetic unrelated row 1 for BASIC; must survive deduplication."
+          ],
+          [
+            2,
+            "SKU-BASIC-2",
+            "Synthetic unrelated row 2 for BASIC; must survive deduplication."
+          ]
+        ],
+        "initialRows": [
+          [
+            1,
+            "SKU-BASIC-1",
+            "Synthetic unrelated row 1 for BASIC; must survive deduplication."
+          ],
+          [
+            2,
+            "SKU-BASIC-2",
+            "Synthetic unrelated row 2 for BASIC; must survive deduplication."
+          ]
+        ],
+        "rowCount": 2,
+        "table": "unrelated_records"
+      }
+    },
+    {
+      "bytes": 12288,
+      "expected": {
+        "columns": [
+          {
+            "declaredType": "INTEGER",
+            "name": "id",
+            "notNull": false,
+            "primaryKey": true
+          },
+          {
+            "collation": "BINARY",
+            "declaredType": "TEXT",
+            "name": "email",
+            "notNull": false,
+            "primaryKey": false
+          },
+          {
+            "declaredType": "TEXT",
+            "name": "created_at",
+            "notNull": true,
+            "primaryKey": false
+          }
+        ],
+        "rowCount": 5,
+        "rows": [
+          [
+            1,
+            "fay@example.com",
+            "2024-01-03T00:00:00Z"
+          ],
+          [
+            2,
+            "",
+            "2024-01-05T00:00:00Z"
+          ],
+          [
+            4,
+            "eli@example.com",
+            "2024-01-02T00:00:00Z"
+          ],
+          [
+            6,
+            null,
+            "2024-01-04T00:00:00Z"
+          ],
+          [
+            9,
+            "dana@example.com",
+            "2024-01-01T00:00:00Z"
+          ]
+        ],
+        "table": "customers"
+      },
+      "generator": {
+        "kind": "authored"
+      },
+      "id": "no-duplicates",
+      "initialRows": [
+        [
+          1,
+          "fay@example.com",
+          "2024-01-03T00:00:00Z"
+        ],
+        [
+          2,
+          "",
+          "2024-01-05T00:00:00Z"
+        ],
+        [
+          4,
+          "eli@example.com",
+          "2024-01-02T00:00:00Z"
+        ],
+        [
+          6,
+          null,
+          "2024-01-04T00:00:00Z"
+        ],
+        [
+          9,
+          "dana@example.com",
+          "2024-01-01T00:00:00Z"
+        ]
+      ],
+      "insertionOrder": [
+        9,
+        4,
+        1,
+        6,
+        2
+      ],
+      "label": "No duplicate groups",
+      "properties": [
+        "no-duplicates",
+        "null-vs-empty-distinct",
+        "unrelated-records"
+      ],
+      "purpose": "Unique emails plus one NULL and one empty string. A correct statement must be a no-op.",
+      "relativePath": "fixtures/no-duplicates.sqlite",
+      "sha256": "eac560957d32da9bc3dfee7074d0df004d6d9ffe73bce1e263a0324915746f56",
+      "unrelated": {
+        "columns": [
+          {
+            "declaredType": "INTEGER",
+            "name": "id",
+            "notNull": false,
+            "primaryKey": true
+          },
+          {
+            "collation": "BINARY",
+            "declaredType": "TEXT",
+            "name": "code",
+            "notNull": true,
+            "primaryKey": false
+          },
+          {
+            "declaredType": "TEXT",
+            "name": "note",
+            "notNull": true,
+            "primaryKey": false
+          }
+        ],
+        "expectedRows": [
+          [
+            1,
+            "SKU-NO-DUPLICATES-1",
+            "Synthetic unrelated row 1 for NO-DUPLICATES; must survive deduplication."
+          ],
+          [
+            2,
+            "SKU-NO-DUPLICATES-2",
+            "Synthetic unrelated row 2 for NO-DUPLICATES; must survive deduplication."
+          ],
+          [
+            3,
+            "SKU-NO-DUPLICATES-3",
+            "Synthetic unrelated row 3 for NO-DUPLICATES; must survive deduplication."
+          ]
+        ],
+        "initialRows": [
+          [
+            1,
+            "SKU-NO-DUPLICATES-1",
+            "Synthetic unrelated row 1 for NO-DUPLICATES; must survive deduplication."
+          ],
+          [
+            2,
+            "SKU-NO-DUPLICATES-2",
+            "Synthetic unrelated row 2 for NO-DUPLICATES; must survive deduplication."
+          ],
+          [
+            3,
+            "SKU-NO-DUPLICATES-3",
+            "Synthetic unrelated row 3 for NO-DUPLICATES; must survive deduplication."
+          ]
+        ],
+        "rowCount": 3,
+        "table": "unrelated_records"
+      }
+    },
+    {
+      "bytes": 12288,
+      "expected": {
+        "columns": [
+          {
+            "declaredType": "INTEGER",
+            "name": "id",
+            "notNull": false,
+            "primaryKey": true
+          },
+          {
+            "collation": "BINARY",
+            "declaredType": "TEXT",
+            "name": "email",
+            "notNull": false,
+            "primaryKey": false
+          },
+          {
+            "declaredType": "TEXT",
+            "name": "created_at",
+            "notNull": true,
+            "primaryKey": false
+          }
+        ],
+        "rowCount": 5,
+        "rows": [
+          [
+            2,
+            "group-c@example.com",
+            "2024-05-04T00:00:00Z"
+          ],
+          [
+            3,
+            "group-a@example.com",
+            "2024-02-02T00:00:00Z"
+          ],
+          [
+            5,
+            "group-d@example.com",
+            "2024-06-01T00:00:00Z"
+          ],
+          [
+            8,
+            "group-b@example.com",
+            "2024-04-04T00:00:00Z"
+          ],
+          [
+            25,
+            "unique@example.com",
+            "2024-07-07T00:00:00Z"
+          ]
+        ],
+        "table": "customers"
+      },
+      "generator": {
+        "kind": "authored"
+      },
+      "id": "multi-group",
+      "initialRows": [
+        [
+          2,
+          "group-c@example.com",
+          "2024-05-04T00:00:00Z"
+        ],
+        [
+          3,
+          "group-a@example.com",
+          "2024-02-02T00:00:00Z"
+        ],
+        [
+          5,
+          "group-d@example.com",
+          "2024-06-01T00:00:00Z"
+        ],
+        [
+          7,
+          "group-c@example.com",
+          "2024-05-02T00:00:00Z"
+        ],
+        [
+          8,
+          "group-b@example.com",
+          "2024-04-04T00:00:00Z"
+        ],
+        [
+          11,
+          "group-d@example.com",
+          "2024-06-02T00:00:00Z"
+        ],
+        [
+          12,
+          "group-b@example.com",
+          "2024-04-03T00:00:00Z"
+        ],
+        [
+          14,
+          "group-a@example.com",
+          "2024-03-03T00:00:00Z"
+        ],
+        [
+          19,
+          "group-c@example.com",
+          "2024-05-03T00:00:00Z"
+        ],
+        [
+          20,
+          "group-a@example.com",
+          "2024-01-01T00:00:00Z"
+        ],
+        [
+          25,
+          "unique@example.com",
+          "2024-07-07T00:00:00Z"
+        ],
+        [
+          30,
+          "group-c@example.com",
+          "2024-05-01T00:00:00Z"
+        ]
+      ],
+      "insertionOrder": [
+        30,
+        11,
+        3,
+        19,
+        8,
+        25,
+        14,
+        2,
+        12,
+        20,
+        7,
+        5
+      ],
+      "label": "Multiple groups including three-plus members",
+      "properties": [
+        "multiple-groups",
+        "three-plus-member-group",
+        "nonsequential-ids",
+        "earliest-timestamp-higher-id",
+        "unrelated-records"
+      ],
+      "purpose": "Four duplicate groups, two of them with three or more members, plus a unique row. Several groups have an earlier timestamp on a higher id.",
+      "relativePath": "fixtures/multi-group.sqlite",
+      "sha256": "e831d7da684bd5be7799af17441d13449df9612dd8fef98757cee1bc76780a14",
+      "unrelated": {
+        "columns": [
+          {
+            "declaredType": "INTEGER",
+            "name": "id",
+            "notNull": false,
+            "primaryKey": true
+          },
+          {
+            "collation": "BINARY",
+            "declaredType": "TEXT",
+            "name": "code",
+            "notNull": true,
+            "primaryKey": false
+          },
+          {
+            "declaredType": "TEXT",
+            "name": "note",
+            "notNull": true,
+            "primaryKey": false
+          }
+        ],
+        "expectedRows": [
+          [
+            1,
+            "SKU-MULTI-1",
+            "Synthetic unrelated row 1 for MULTI; must survive deduplication."
+          ],
+          [
+            2,
+            "SKU-MULTI-2",
+            "Synthetic unrelated row 2 for MULTI; must survive deduplication."
+          ],
+          [
+            3,
+            "SKU-MULTI-3",
+            "Synthetic unrelated row 3 for MULTI; must survive deduplication."
+          ]
+        ],
+        "initialRows": [
+          [
+            1,
+            "SKU-MULTI-1",
+            "Synthetic unrelated row 1 for MULTI; must survive deduplication."
+          ],
+          [
+            2,
+            "SKU-MULTI-2",
+            "Synthetic unrelated row 2 for MULTI; must survive deduplication."
+          ],
+          [
+            3,
+            "SKU-MULTI-3",
+            "Synthetic unrelated row 3 for MULTI; must survive deduplication."
+          ]
+        ],
+        "rowCount": 3,
+        "table": "unrelated_records"
+      }
+    },
+    {
+      "bytes": 12288,
+      "expected": {
+        "columns": [
+          {
+            "declaredType": "INTEGER",
+            "name": "id",
+            "notNull": false,
+            "primaryKey": true
+          },
+          {
+            "collation": "BINARY",
+            "declaredType": "TEXT",
+            "name": "email",
+            "notNull": false,
+            "primaryKey": false
+          },
+          {
+            "declaredType": "TEXT",
+            "name": "created_at",
+            "notNull": true,
+            "primaryKey": false
+          }
+        ],
+        "rowCount": 4,
+        "rows": [
+          [
+            2,
+            "early@example.com",
+            "2024-09-01T00:00:00Z"
+          ],
+          [
+            3,
+            "later@example.com",
+            "2024-07-07T00:00:00Z"
+          ],
+          [
+            7,
+            "other@example.com",
+            "2024-08-01T00:00:00Z"
+          ],
+          [
+            41,
+            "unique@example.com",
+            "2024-02-02T00:00:00Z"
+          ]
+        ],
+        "table": "customers"
+      },
+      "generator": {
+        "kind": "authored"
+      },
+      "id": "nonsequential-created-at",
+      "initialRows": [
+        [
+          2,
+          "early@example.com",
+          "2024-09-01T00:00:00Z"
+        ],
+        [
+          3,
+          "later@example.com",
+          "2024-07-07T00:00:00Z"
+        ],
+        [
+          7,
+          "other@example.com",
+          "2024-08-01T00:00:00Z"
+        ],
+        [
+          9,
+          "later@example.com",
+          "2024-03-03T00:00:00Z"
+        ],
+        [
+          41,
+          "unique@example.com",
+          "2024-02-02T00:00:00Z"
+        ],
+        [
+          50,
+          "other@example.com",
+          "2024-04-01T00:00:00Z"
+        ],
+        [
+          100,
+          "early@example.com",
+          "2024-01-01T00:00:00Z"
+        ]
+      ],
+      "insertionOrder": [
+        100,
+        50,
+        2,
+        41,
+        9,
+        7,
+        3
+      ],
+      "label": "Nonsequential ids where created_at disagrees with id",
+      "properties": [
+        "multiple-groups",
+        "nonsequential-ids",
+        "nonsequential-insertion-order",
+        "earliest-timestamp-higher-id",
+        "created-at-not-retention-rule",
+        "unrelated-records"
+      ],
+      "purpose": "Every duplicate group has its earliest created_at on a higher id. The insertion order is unrelated to id order, exposing timestamp-versus-id retention ambiguity.",
+      "relativePath": "fixtures/nonsequential-created-at.sqlite",
+      "sha256": "cb9c82521e0780c35cc36a71dfacf83711ff48611692b8c08895feba5434c9ac",
+      "unrelated": {
+        "columns": [
+          {
+            "declaredType": "INTEGER",
+            "name": "id",
+            "notNull": false,
+            "primaryKey": true
+          },
+          {
+            "collation": "BINARY",
+            "declaredType": "TEXT",
+            "name": "code",
+            "notNull": true,
+            "primaryKey": false
+          },
+          {
+            "declaredType": "TEXT",
+            "name": "note",
+            "notNull": true,
+            "primaryKey": false
+          }
+        ],
+        "expectedRows": [
+          [
+            1,
+            "SKU-NONSEQUENTIAL-1",
+            "Synthetic unrelated row 1 for NONSEQUENTIAL; must survive deduplication."
+          ],
+          [
+            2,
+            "SKU-NONSEQUENTIAL-2",
+            "Synthetic unrelated row 2 for NONSEQUENTIAL; must survive deduplication."
+          ]
+        ],
+        "initialRows": [
+          [
+            1,
+            "SKU-NONSEQUENTIAL-1",
+            "Synthetic unrelated row 1 for NONSEQUENTIAL; must survive deduplication."
+          ],
+          [
+            2,
+            "SKU-NONSEQUENTIAL-2",
+            "Synthetic unrelated row 2 for NONSEQUENTIAL; must survive deduplication."
+          ]
+        ],
+        "rowCount": 2,
+        "table": "unrelated_records"
+      }
+    },
+    {
+      "bytes": 12288,
+      "expected": {
+        "columns": [
+          {
+            "declaredType": "INTEGER",
+            "name": "id",
+            "notNull": false,
+            "primaryKey": true
+          },
+          {
+            "collation": "BINARY",
+            "declaredType": "TEXT",
+            "name": "email",
+            "notNull": false,
+            "primaryKey": false
+          },
+          {
+            "declaredType": "TEXT",
+            "name": "created_at",
+            "notNull": true,
+            "primaryKey": false
+          }
+        ],
+        "rowCount": 4,
+        "rows": [
+          [
+            1,
+            "NULL",
+            "2024-03-02T00:00:00Z"
+          ],
+          [
+            2,
+            "",
+            "2024-02-02T00:00:00Z"
+          ],
+          [
+            4,
+            null,
+            "2024-01-02T00:00:00Z"
+          ],
+          [
+            5,
+            "person@example.com",
+            "2024-03-01T00:00:00Z"
+          ]
+        ],
+        "table": "customers"
+      },
+      "generator": {
+        "kind": "authored"
+      },
+      "id": "null-empty",
+      "initialRows": [
+        [
+          1,
+          "NULL",
+          "2024-03-02T00:00:00Z"
+        ],
+        [
+          2,
+          "",
+          "2024-02-02T00:00:00Z"
+        ],
+        [
+          4,
+          null,
+          "2024-01-02T00:00:00Z"
+        ],
+        [
+          5,
+          "person@example.com",
+          "2024-03-01T00:00:00Z"
+        ],
+        [
+          7,
+          "",
+          "2024-02-01T00:00:00Z"
+        ],
+        [
+          9,
+          null,
+          "2024-01-01T00:00:00Z"
+        ],
+        [
+          12,
+          null,
+          "2024-01-03T00:00:00Z"
+        ],
+        [
+          15,
+          "",
+          "2024-02-03T00:00:00Z"
+        ]
+      ],
+      "insertionOrder": [
+        9,
+        7,
+        4,
+        2,
+        12,
+        5,
+        15,
+        1
+      ],
+      "label": "NULL and empty-string duplicate groups",
+      "properties": [
+        "multiple-groups",
+        "null-duplicate-group",
+        "empty-string-duplicate-group",
+        "null-vs-empty-distinct",
+        "unrelated-records"
+      ],
+      "purpose": "A three-member NULL group, a three-member empty-string group and the string 'NULL' as a distinct value. Plain equality leaves the NULL group undeduplicated.",
+      "relativePath": "fixtures/null-empty.sqlite",
+      "sha256": "ff6390ca19f6e9a87db44da08646056199e159e5f87bfbec560f87911a560eda",
+      "unrelated": {
+        "columns": [
+          {
+            "declaredType": "INTEGER",
+            "name": "id",
+            "notNull": false,
+            "primaryKey": true
+          },
+          {
+            "collation": "BINARY",
+            "declaredType": "TEXT",
+            "name": "code",
+            "notNull": true,
+            "primaryKey": false
+          },
+          {
+            "declaredType": "TEXT",
+            "name": "note",
+            "notNull": true,
+            "primaryKey": false
+          }
+        ],
+        "expectedRows": [
+          [
+            1,
+            "SKU-NULL-EMPTY-1",
+            "Synthetic unrelated row 1 for NULL-EMPTY; must survive deduplication."
+          ],
+          [
+            2,
+            "SKU-NULL-EMPTY-2",
+            "Synthetic unrelated row 2 for NULL-EMPTY; must survive deduplication."
+          ]
+        ],
+        "initialRows": [
+          [
+            1,
+            "SKU-NULL-EMPTY-1",
+            "Synthetic unrelated row 1 for NULL-EMPTY; must survive deduplication."
+          ],
+          [
+            2,
+            "SKU-NULL-EMPTY-2",
+            "Synthetic unrelated row 2 for NULL-EMPTY; must survive deduplication."
+          ]
+        ],
+        "rowCount": 2,
+        "table": "unrelated_records"
+      }
+    },
+    {
+      "bytes": 12288,
+      "expected": {
+        "columns": [
+          {
+            "declaredType": "INTEGER",
+            "name": "id",
+            "notNull": false,
+            "primaryKey": true
+          },
+          {
+            "collation": "BINARY",
+            "declaredType": "TEXT",
+            "name": "email",
+            "notNull": false,
+            "primaryKey": false
+          },
+          {
+            "declaredType": "TEXT",
+            "name": "created_at",
+            "notNull": true,
+            "primaryKey": false
+          }
+        ],
+        "rowCount": 8,
+        "rows": [
+          [
+            2,
+            "CASE@example.com",
+            "2024-01-04T00:00:00Z"
+          ],
+          [
+            3,
+            "case@example.com",
+            "2024-01-01T00:00:00Z"
+          ],
+          [
+            5,
+            "padded@example.com",
+            "2024-02-01T00:00:00Z"
+          ],
+          [
+            6,
+            "Case@Example.com",
+            "2024-01-03T00:00:00Z"
+          ],
+          [
+            11,
+            " padded@example.com",
+            "2024-02-03T00:00:00Z"
+          ],
+          [
+            12,
+            "padded@example.com ",
+            "2024-02-04T00:00:00Z"
+          ],
+          [
+            13,
+            "two  words@example.com",
+            "2024-03-03T00:00:00Z"
+          ],
+          [
+            14,
+            "two words@example.com",
+            "2024-03-01T00:00:00Z"
+          ]
+        ],
+        "table": "customers"
+      },
+      "generator": {
+        "kind": "authored"
+      },
+      "id": "case-whitespace",
+      "initialRows": [
+        [
+          2,
+          "CASE@example.com",
+          "2024-01-04T00:00:00Z"
+        ],
+        [
+          3,
+          "case@example.com",
+          "2024-01-01T00:00:00Z"
+        ],
+        [
+          5,
+          "padded@example.com",
+          "2024-02-01T00:00:00Z"
+        ],
+        [
+          6,
+          "Case@Example.com",
+          "2024-01-03T00:00:00Z"
+        ],
+        [
+          8,
+          "case@example.com",
+          "2024-01-02T00:00:00Z"
+        ],
+        [
+          9,
+          "padded@example.com",
+          "2024-02-02T00:00:00Z"
+        ],
+        [
+          11,
+          " padded@example.com",
+          "2024-02-03T00:00:00Z"
+        ],
+        [
+          12,
+          "padded@example.com ",
+          "2024-02-04T00:00:00Z"
+        ],
+        [
+          13,
+          "two  words@example.com",
+          "2024-03-03T00:00:00Z"
+        ],
+        [
+          14,
+          "two words@example.com",
+          "2024-03-01T00:00:00Z"
+        ],
+        [
+          15,
+          "two words@example.com",
+          "2024-03-02T00:00:00Z"
+        ]
+      ],
+      "insertionOrder": [
+        8,
+        11,
+        3,
+        15,
+        6,
+        12,
+        5,
+        2,
+        13,
+        9,
+        14
+      ],
+      "label": "Case and whitespace distinctions",
+      "properties": [
+        "multiple-groups",
+        "case-sensitive-email",
+        "whitespace-sensitive-email",
+        "exact-binary-equality",
+        "unrelated-records"
+      ],
+      "purpose": "Exact duplicates coexist with case-only and whitespace-only variants that must survive as separate email groups. A lower/trim collapse deletes rows the BINARY rule keeps.",
+      "relativePath": "fixtures/case-whitespace.sqlite",
+      "sha256": "da7998bd59a0af4a1d2eef3d8da1ba204f37902cc9cfd63bbfa79240e95e16a0",
+      "unrelated": {
+        "columns": [
+          {
+            "declaredType": "INTEGER",
+            "name": "id",
+            "notNull": false,
+            "primaryKey": true
+          },
+          {
+            "collation": "BINARY",
+            "declaredType": "TEXT",
+            "name": "code",
+            "notNull": true,
+            "primaryKey": false
+          },
+          {
+            "declaredType": "TEXT",
+            "name": "note",
+            "notNull": true,
+            "primaryKey": false
+          }
+        ],
+        "expectedRows": [
+          [
+            1,
+            "SKU-CASE-WHITESPACE-1",
+            "Synthetic unrelated row 1 for CASE-WHITESPACE; must survive deduplication."
+          ],
+          [
+            2,
+            "SKU-CASE-WHITESPACE-2",
+            "Synthetic unrelated row 2 for CASE-WHITESPACE; must survive deduplication."
+          ]
+        ],
+        "initialRows": [
+          [
+            1,
+            "SKU-CASE-WHITESPACE-1",
+            "Synthetic unrelated row 1 for CASE-WHITESPACE; must survive deduplication."
+          ],
+          [
+            2,
+            "SKU-CASE-WHITESPACE-2",
+            "Synthetic unrelated row 2 for CASE-WHITESPACE; must survive deduplication."
+          ]
+        ],
+        "rowCount": 2,
+        "table": "unrelated_records"
+      }
+    },
+    {
+      "bytes": 12288,
+      "expected": {
+        "columns": [
+          {
+            "declaredType": "INTEGER",
+            "name": "id",
+            "notNull": false,
+            "primaryKey": true
+          },
+          {
+            "collation": "BINARY",
+            "declaredType": "TEXT",
+            "name": "email",
+            "notNull": false,
+            "primaryKey": false
+          },
+          {
+            "declaredType": "TEXT",
+            "name": "created_at",
+            "notNull": true,
+            "primaryKey": false
+          }
+        ],
+        "rowCount": 13,
+        "rows": [
+          [
+            6,
+            "trim.v01@example.com",
+            "2025-03-14T13:00:00Z"
+          ],
+          [
+            9,
+            "trailing.v01@example.com ",
+            "2025-03-07T06:00:00Z"
+          ],
+          [
+            11,
+            "unique.v01@example.com",
+            "2025-03-13T12:00:00Z"
+          ],
+          [
+            12,
+            null,
+            "2025-03-02T01:00:00Z"
+          ],
+          [
+            26,
+            "Case.v01@Example.com",
+            "2025-03-06T05:00:00Z"
+          ],
+          [
+            56,
+            "beta.v01@example.com",
+            "2025-03-11T10:00:00Z"
+          ],
+          [
+            59,
+            "",
+            "2025-03-17T16:00:00Z"
+          ],
+          [
+            66,
+            "alpha.v01@example.com",
+            "2025-01-03T00:00:00Z"
+          ],
+          [
+            70,
+            " leading.v01@example.com",
+            "2025-03-21T20:00:00Z"
+          ],
+          [
+            83,
+            "gamma.v01@example.com",
+            "2025-03-23T22:00:00Z"
+          ],
+          [
+            100,
+            "case.v01@example.com",
+            "2025-03-18T17:00:00Z"
+          ],
+          [
+            108,
+            "NULL",
+            "2025-03-09T08:00:00Z"
+          ],
+          [
+            151,
+            "another.v01@example.com",
+            "2025-03-22T21:00:00Z"
+          ]
+        ],
+        "table": "customers"
+      },
+      "generator": {
+        "algorithm": "python-random-mt19937",
+        "kind": "fixed-seed",
+        "seed": 20261025,
+        "variant": 1,
+        "variantSeed": 20261025
+      },
+      "id": "generated-variant-01",
+      "initialRows": [
+        [
+          6,
+          "trim.v01@example.com",
+          "2025-03-14T13:00:00Z"
+        ],
+        [
+          9,
+          "trailing.v01@example.com ",
+          "2025-03-07T06:00:00Z"
+        ],
+        [
+          11,
+          "unique.v01@example.com",
+          "2025-03-13T12:00:00Z"
+        ],
+        [
+          12,
+          null,
+          "2025-03-02T01:00:00Z"
+        ],
+        [
+          16,
+          null,
+          "2025-03-05T04:00:00Z"
+        ],
+        [
+          26,
+          "Case.v01@Example.com",
+          "2025-03-06T05:00:00Z"
+        ],
+        [
+          56,
+          "beta.v01@example.com",
+          "2025-03-11T10:00:00Z"
+        ],
+        [
+          59,
+          "",
+          "2025-03-17T16:00:00Z"
+        ],
+        [
+          66,
+          "alpha.v01@example.com",
+          "2025-01-03T00:00:00Z"
+        ],
+        [
+          70,
+          " leading.v01@example.com",
+          "2025-03-21T20:00:00Z"
+        ],
+        [
+          83,
+          "gamma.v01@example.com",
+          "2025-03-23T22:00:00Z"
+        ],
+        [
+          84,
+          "beta.v01@example.com",
+          "2025-03-16T15:00:00Z"
+        ],
+        [
+          100,
+          "case.v01@example.com",
+          "2025-03-18T17:00:00Z"
+        ],
+        [
+          108,
+          "NULL",
+          "2025-03-09T08:00:00Z"
+        ],
+        [
+          119,
+          "case.v01@example.com",
+          "2025-03-20T19:00:00Z"
+        ],
+        [
+          121,
+          "gamma.v01@example.com",
+          "2025-03-10T09:00:00Z"
+        ],
+        [
+          127,
+          "alpha.v01@example.com",
+          "2025-01-02T00:00:00Z"
+        ],
+        [
+          140,
+          "alpha.v01@example.com",
+          "2025-01-01T00:00:00Z"
+        ],
+        [
+          149,
+          "beta.v01@example.com",
+          "2025-03-01T00:00:00Z"
+        ],
+        [
+          151,
+          "another.v01@example.com",
+          "2025-03-22T21:00:00Z"
+        ],
+        [
+          153,
+          "gamma.v01@example.com",
+          "2025-03-03T02:00:00Z"
+        ],
+        [
+          163,
+          "trim.v01@example.com",
+          "2025-03-04T03:00:00Z"
+        ],
+        [
+          176,
+          "",
+          "2025-03-15T14:00:00Z"
+        ]
+      ],
+      "insertionOrder": [
+        149,
+        11,
+        9,
+        119,
+        84,
+        6,
+        163,
+        151,
+        108,
+        100,
+        153,
+        26,
+        140,
+        56,
+        59,
+        83,
+        121,
+        127,
+        12,
+        70,
+        176,
+        16,
+        66
+      ],
+      "label": "Deterministic generated variant 1",
+      "properties": [
+        "basic-duplicates",
+        "multiple-groups",
+        "three-plus-member-group",
+        "null-duplicate-group",
+        "empty-string-duplicate-group",
+        "null-vs-empty-distinct",
+        "nonsequential-ids",
+        "nonsequential-insertion-order",
+        "earliest-timestamp-higher-id",
+        "created-at-not-retention-rule",
+        "case-sensitive-email",
+        "whitespace-sensitive-email",
+        "exact-binary-equality",
+        "generated-fixed-seed",
+        "unrelated-records"
+      ],
+      "purpose": "A fixed-seed generated mix of duplicate groups, NULL, empty string, case/whitespace variants, nonsequential ids, timestamp ambiguity and unrelated rows.",
+      "relativePath": "fixtures/generated-variant-01.sqlite",
+      "sha256": "7f733f9254fcd19a56156dc423ba50c5b4f338b0a6e8ed661e0fa772e6f62fa2",
+      "unrelated": {
+        "columns": [
+          {
+            "declaredType": "INTEGER",
+            "name": "id",
+            "notNull": false,
+            "primaryKey": true
+          },
+          {
+            "collation": "BINARY",
+            "declaredType": "TEXT",
+            "name": "code",
+            "notNull": true,
+            "primaryKey": false
+          },
+          {
+            "declaredType": "TEXT",
+            "name": "note",
+            "notNull": true,
+            "primaryKey": false
+          }
+        ],
+        "expectedRows": [
+          [
+            1,
+            "SKU-GENERATED-v01-1",
+            "Synthetic unrelated row 1 for GENERATED-v01; must survive deduplication."
+          ],
+          [
+            2,
+            "SKU-GENERATED-v01-2",
+            "Synthetic unrelated row 2 for GENERATED-v01; must survive deduplication."
+          ]
+        ],
+        "initialRows": [
+          [
+            1,
+            "SKU-GENERATED-v01-1",
+            "Synthetic unrelated row 1 for GENERATED-v01; must survive deduplication."
+          ],
+          [
+            2,
+            "SKU-GENERATED-v01-2",
+            "Synthetic unrelated row 2 for GENERATED-v01; must survive deduplication."
+          ]
+        ],
+        "rowCount": 2,
+        "table": "unrelated_records"
+      }
+    },
+    {
+      "bytes": 12288,
+      "expected": {
+        "columns": [
+          {
+            "declaredType": "INTEGER",
+            "name": "id",
+            "notNull": false,
+            "primaryKey": true
+          },
+          {
+            "collation": "BINARY",
+            "declaredType": "TEXT",
+            "name": "email",
+            "notNull": false,
+            "primaryKey": false
+          },
+          {
+            "declaredType": "TEXT",
+            "name": "created_at",
+            "notNull": true,
+            "primaryKey": false
+          }
+        ],
+        "rowCount": 13,
+        "rows": [
+          [
+            18,
+            "alpha.v02@example.com",
+            "2025-01-02T00:00:00Z"
+          ],
+          [
+            34,
+            " leading.v02@example.com",
+            "2025-03-04T03:00:00Z"
+          ],
+          [
+            38,
+            "trim.v02@example.com",
+            "2025-03-21T20:00:00Z"
+          ],
+          [
+            53,
+            "",
+            "2025-03-03T02:00:00Z"
+          ],
+          [
+            73,
+            "another.v02@example.com",
+            "2025-03-16T15:00:00Z"
+          ],
+          [
+            79,
+            "gamma.v02@example.com",
+            "2025-03-09T08:00:00Z"
+          ],
+          [
+            87,
+            "beta.v02@example.com",
+            "2025-03-18T17:00:00Z"
+          ],
+          [
+            96,
+            "case.v02@example.com",
+            "2025-03-20T19:00:00Z"
+          ],
+          [
+            101,
+            "Case.v02@Example.com",
+            "2025-03-13T12:00:00Z"
+          ],
+          [
+            105,
+            "unique.v02@example.com",
+            "2025-03-07T06:00:00Z"
+          ],
+          [
+            128,
+            null,
+            "2025-03-01T00:00:00Z"
+          ],
+          [
+            135,
+            "NULL",
+            "2025-03-12T11:00:00Z"
+          ],
+          [
+            193,
+            "trailing.v02@example.com ",
+            "2025-03-19T18:00:00Z"
+          ]
+        ],
+        "table": "customers"
+      },
+      "generator": {
+        "algorithm": "python-random-mt19937",
+        "kind": "fixed-seed",
+        "seed": 20261025,
+        "variant": 2,
+        "variantSeed": 20261026
+      },
+      "id": "generated-variant-02",
+      "initialRows": [
+        [
+          18,
+          "alpha.v02@example.com",
+          "2025-01-02T00:00:00Z"
+        ],
+        [
+          34,
+          " leading.v02@example.com",
+          "2025-03-04T03:00:00Z"
+        ],
+        [
+          38,
+          "trim.v02@example.com",
+          "2025-03-21T20:00:00Z"
+        ],
+        [
+          53,
+          "",
+          "2025-03-03T02:00:00Z"
+        ],
+        [
+          56,
+          "trim.v02@example.com",
+          "2025-03-10T09:00:00Z"
+        ],
+        [
+          73,
+          "another.v02@example.com",
+          "2025-03-16T15:00:00Z"
+        ],
+        [
+          79,
+          "gamma.v02@example.com",
+          "2025-03-09T08:00:00Z"
+        ],
+        [
+          83,
+          "",
+          "2025-03-15T14:00:00Z"
+        ],
+        [
+          87,
+          "beta.v02@example.com",
+          "2025-03-18T17:00:00Z"
+        ],
+        [
+          96,
+          "case.v02@example.com",
+          "2025-03-20T19:00:00Z"
+        ],
+        [
+          100,
+          "case.v02@example.com",
+          "2025-03-06T05:00:00Z"
+        ],
+        [
+          101,
+          "Case.v02@Example.com",
+          "2025-03-13T12:00:00Z"
+        ],
+        [
+          105,
+          "unique.v02@example.com",
+          "2025-03-07T06:00:00Z"
+        ],
+        [
+          111,
+          "gamma.v02@example.com",
+          "2025-03-14T13:00:00Z"
+        ],
+        [
+          128,
+          null,
+          "2025-03-01T00:00:00Z"
+        ],
+        [
+          135,
+          "NULL",
+          "2025-03-12T11:00:00Z"
+        ],
+        [
+          159,
+          "alpha.v02@example.com",
+          "2025-01-01T00:00:00Z"
+        ],
+        [
+          193,
+          "trailing.v02@example.com ",
+          "2025-03-19T18:00:00Z"
+        ],
+        [
+          194,
+          "beta.v02@example.com",
+          "2025-03-11T10:00:00Z"
+        ],
+        [
+          197,
+          null,
+          "2025-03-08T07:00:00Z"
+        ],
+        [
+          198,
+          "gamma.v02@example.com",
+          "2025-03-05T04:00:00Z"
+        ]
+      ],
+      "insertionOrder": [
+        105,
+        96,
+        198,
+        101,
+        159,
+        87,
+        197,
+        193,
+        18,
+        38,
+        79,
+        53,
+        128,
+        34,
+        100,
+        83,
+        135,
+        73,
+        56,
+        194,
+        111
+      ],
+      "label": "Deterministic generated variant 2",
+      "properties": [
+        "basic-duplicates",
+        "multiple-groups",
+        "three-plus-member-group",
+        "null-duplicate-group",
+        "empty-string-duplicate-group",
+        "null-vs-empty-distinct",
+        "nonsequential-ids",
+        "nonsequential-insertion-order",
+        "earliest-timestamp-higher-id",
+        "created-at-not-retention-rule",
+        "case-sensitive-email",
+        "whitespace-sensitive-email",
+        "exact-binary-equality",
+        "generated-fixed-seed",
+        "unrelated-records"
+      ],
+      "purpose": "A fixed-seed generated mix of duplicate groups, NULL, empty string, case/whitespace variants, nonsequential ids, timestamp ambiguity and unrelated rows.",
+      "relativePath": "fixtures/generated-variant-02.sqlite",
+      "sha256": "0e428ba96f95ba052fd41eae54aec1cd65a1a7561f4945b392f3440ef9ef9313",
+      "unrelated": {
+        "columns": [
+          {
+            "declaredType": "INTEGER",
+            "name": "id",
+            "notNull": false,
+            "primaryKey": true
+          },
+          {
+            "collation": "BINARY",
+            "declaredType": "TEXT",
+            "name": "code",
+            "notNull": true,
+            "primaryKey": false
+          },
+          {
+            "declaredType": "TEXT",
+            "name": "note",
+            "notNull": true,
+            "primaryKey": false
+          }
+        ],
+        "expectedRows": [
+          [
+            1,
+            "SKU-GENERATED-v02-1",
+            "Synthetic unrelated row 1 for GENERATED-v02; must survive deduplication."
+          ],
+          [
+            2,
+            "SKU-GENERATED-v02-2",
+            "Synthetic unrelated row 2 for GENERATED-v02; must survive deduplication."
+          ]
+        ],
+        "initialRows": [
+          [
+            1,
+            "SKU-GENERATED-v02-1",
+            "Synthetic unrelated row 1 for GENERATED-v02; must survive deduplication."
+          ],
+          [
+            2,
+            "SKU-GENERATED-v02-2",
+            "Synthetic unrelated row 2 for GENERATED-v02; must survive deduplication."
+          ]
+        ],
+        "rowCount": 2,
+        "table": "unrelated_records"
+      }
+    },
+    {
+      "bytes": 12288,
+      "expected": {
+        "columns": [
+          {
+            "declaredType": "INTEGER",
+            "name": "id",
+            "notNull": false,
+            "primaryKey": true
+          },
+          {
+            "collation": "BINARY",
+            "declaredType": "TEXT",
+            "name": "email",
+            "notNull": false,
+            "primaryKey": false
+          },
+          {
+            "declaredType": "TEXT",
+            "name": "created_at",
+            "notNull": true,
+            "primaryKey": false
+          }
+        ],
+        "rowCount": 13,
+        "rows": [
+          [
+            3,
+            "trim.v03@example.com",
+            "2025-03-13T12:00:00Z"
+          ],
+          [
+            23,
+            "unique.v03@example.com",
+            "2025-03-12T11:00:00Z"
+          ],
+          [
+            34,
+            "alpha.v03@example.com",
+            "2025-01-02T00:00:00Z"
+          ],
+          [
+            45,
+            "beta.v03@example.com",
+            "2025-03-03T02:00:00Z"
+          ],
+          [
+            52,
+            "",
+            "2025-03-04T03:00:00Z"
+          ],
+          [
+            55,
+            null,
+            "2025-03-16T15:00:00Z"
+          ],
+          [
+            66,
+            "gamma.v03@example.com",
+            "2025-03-01T00:00:00Z"
+          ],
+          [
+            67,
+            "trailing.v03@example.com ",
+            "2025-03-09T08:00:00Z"
+          ],
+          [
+            79,
+            "Case.v03@Example.com",
+            "2025-03-18T17:00:00Z"
+          ],
+          [
+            82,
+            "case.v03@example.com",
+            "2025-03-11T10:00:00Z"
+          ],
+          [
+            84,
+            " leading.v03@example.com",
+            "2025-03-06T05:00:00Z"
+          ],
+          [
+            145,
+            "NULL",
+            "2025-03-19T18:00:00Z"
+          ],
+          [
+            166,
+            "another.v03@example.com",
+            "2025-03-20T19:00:00Z"
+          ]
+        ],
+        "table": "customers"
+      },
+      "generator": {
+        "algorithm": "python-random-mt19937",
+        "kind": "fixed-seed",
+        "seed": 20261025,
+        "variant": 3,
+        "variantSeed": 20261027
+      },
+      "id": "generated-variant-03",
+      "initialRows": [
+        [
+          3,
+          "trim.v03@example.com",
+          "2025-03-13T12:00:00Z"
+        ],
+        [
+          23,
+          "unique.v03@example.com",
+          "2025-03-12T11:00:00Z"
+        ],
+        [
+          31,
+          "trim.v03@example.com",
+          "2025-03-14T13:00:00Z"
+        ],
+        [
+          34,
+          "alpha.v03@example.com",
+          "2025-01-02T00:00:00Z"
+        ],
+        [
+          45,
+          "beta.v03@example.com",
+          "2025-03-03T02:00:00Z"
+        ],
+        [
+          52,
+          "",
+          "2025-03-04T03:00:00Z"
+        ],
+        [
+          55,
+          null,
+          "2025-03-16T15:00:00Z"
+        ],
+        [
+          66,
+          "gamma.v03@example.com",
+          "2025-03-01T00:00:00Z"
+        ],
+        [
+          67,
+          "trailing.v03@example.com ",
+          "2025-03-09T08:00:00Z"
+        ],
+        [
+          69,
+          "beta.v03@example.com",
+          "2025-03-17T16:00:00Z"
+        ],
+        [
+          79,
+          "Case.v03@Example.com",
+          "2025-03-18T17:00:00Z"
+        ],
+        [
+          82,
+          "case.v03@example.com",
+          "2025-03-11T10:00:00Z"
+        ],
+        [
+          84,
+          " leading.v03@example.com",
+          "2025-03-06T05:00:00Z"
+        ],
+        [
+          95,
+          null,
+          "2025-03-10T09:00:00Z"
+        ],
+        [
+          99,
+          "",
+          "2025-03-02T01:00:00Z"
+        ],
+        [
+          105,
+          "gamma.v03@example.com",
+          "2025-03-07T06:00:00Z"
+        ],
+        [
+          125,
+          "case.v03@example.com",
+          "2025-03-05T04:00:00Z"
+        ],
+        [
+          139,
+          "gamma.v03@example.com",
+          "2025-03-21T20:00:00Z"
+        ],
+        [
+          145,
+          "NULL",
+          "2025-03-19T18:00:00Z"
+        ],
+        [
+          166,
+          "another.v03@example.com",
+          "2025-03-20T19:00:00Z"
+        ],
+        [
+          169,
+          "alpha.v03@example.com",
+          "2025-01-01T00:00:00Z"
+        ]
+      ],
+      "insertionOrder": [
+        66,
+        82,
+        169,
+        79,
+        52,
+        34,
+        55,
+        31,
+        99,
+        23,
+        69,
+        84,
+        166,
+        3,
+        145,
+        125,
+        95,
+        45,
+        67,
+        105,
+        139
+      ],
+      "label": "Deterministic generated variant 3",
+      "properties": [
+        "basic-duplicates",
+        "multiple-groups",
+        "three-plus-member-group",
+        "null-duplicate-group",
+        "empty-string-duplicate-group",
+        "null-vs-empty-distinct",
+        "nonsequential-ids",
+        "nonsequential-insertion-order",
+        "earliest-timestamp-higher-id",
+        "created-at-not-retention-rule",
+        "case-sensitive-email",
+        "whitespace-sensitive-email",
+        "exact-binary-equality",
+        "generated-fixed-seed",
+        "unrelated-records"
+      ],
+      "purpose": "A fixed-seed generated mix of duplicate groups, NULL, empty string, case/whitespace variants, nonsequential ids, timestamp ambiguity and unrelated rows.",
+      "relativePath": "fixtures/generated-variant-03.sqlite",
+      "sha256": "49f82c4c8ed16766eaf24571936fcbf1aadabda46f3a727fd46643b1f46ac862",
+      "unrelated": {
+        "columns": [
+          {
+            "declaredType": "INTEGER",
+            "name": "id",
+            "notNull": false,
+            "primaryKey": true
+          },
+          {
+            "collation": "BINARY",
+            "declaredType": "TEXT",
+            "name": "code",
+            "notNull": true,
+            "primaryKey": false
+          },
+          {
+            "declaredType": "TEXT",
+            "name": "note",
+            "notNull": true,
+            "primaryKey": false
+          }
+        ],
+        "expectedRows": [
+          [
+            1,
+            "SKU-GENERATED-v03-1",
+            "Synthetic unrelated row 1 for GENERATED-v03; must survive deduplication."
+          ],
+          [
+            2,
+            "SKU-GENERATED-v03-2",
+            "Synthetic unrelated row 2 for GENERATED-v03; must survive deduplication."
+          ],
+          [
+            3,
+            "SKU-GENERATED-v03-3",
+            "Synthetic unrelated row 3 for GENERATED-v03; must survive deduplication."
+          ],
+          [
+            4,
+            "SKU-GENERATED-v03-4",
+            "Synthetic unrelated row 4 for GENERATED-v03; must survive deduplication."
+          ]
+        ],
+        "initialRows": [
+          [
+            1,
+            "SKU-GENERATED-v03-1",
+            "Synthetic unrelated row 1 for GENERATED-v03; must survive deduplication."
+          ],
+          [
+            2,
+            "SKU-GENERATED-v03-2",
+            "Synthetic unrelated row 2 for GENERATED-v03; must survive deduplication."
+          ],
+          [
+            3,
+            "SKU-GENERATED-v03-3",
+            "Synthetic unrelated row 3 for GENERATED-v03; must survive deduplication."
+          ],
+          [
+            4,
+            "SKU-GENERATED-v03-4",
+            "Synthetic unrelated row 4 for GENERATED-v03; must survive deduplication."
+          ]
+        ],
+        "rowCount": 4,
+        "table": "unrelated_records"
+      }
+    }
+  ],
+  "format": "datatug.internal.challenge-fixture-suite/v1",
+  "generatedSeed": 20261025,
+  "generatedVariantCount": 3,
+  "kind": "internal-fixture-suite-index",
+  "mutations": [
+    {
+      "description": "Delete every customer row instead of deduplicating.",
+      "id": "delete-all",
+      "sql": "DELETE FROM customers;\n"
+    },
+    {
+      "description": "Invert the id comparison and keep the highest id per email group.",
+      "id": "keep-highest-id",
+      "sql": "DELETE FROM customers\nWHERE EXISTS (\n    SELECT 1\n    FROM customers AS keeper\n    WHERE keeper.email IS customers.email COLLATE BINARY\n      AND keeper.id > customers.id\n);\n"
+    },
+    {
+      "description": "Treat created_at as the retention rule and keep the earliest timestamp. The nonsequential fixture has an earlier timestamp on a higher id.",
+      "id": "keep-earliest-created-at",
+      "sql": "DELETE FROM customers\nWHERE EXISTS (\n    SELECT 1\n    FROM customers AS keeper\n    WHERE keeper.email IS customers.email COLLATE BINARY\n      AND keeper.created_at < customers.created_at\n);\n"
+    },
+    {
+      "description": "Use plain equality instead of NULL-safe IS, so the NULL duplicate group is never deduplicated.",
+      "id": "ignore-null-group-equality",
+      "sql": "DELETE FROM customers\nWHERE EXISTS (\n    SELECT 1\n    FROM customers AS keeper\n    WHERE keeper.email = customers.email COLLATE BINARY\n      AND keeper.id < customers.id\n);\n"
+    },
+    {
+      "description": "Collapse case and surrounding whitespace before comparing emails, which is not the declared exact BINARY rule.",
+      "id": "case-trim-collapse",
+      "sql": "DELETE FROM customers\nWHERE EXISTS (\n    SELECT 1\n    FROM customers AS keeper\n    WHERE keeper.email IS NOT NULL\n      AND customers.email IS NOT NULL\n      AND lower(trim(keeper.email)) = lower(trim(customers.email))\n      AND keeper.id < customers.id\n);\n"
+    },
+    {
+      "description": "Delete only the highest-id row among all duplicated emails, leaving every other duplicate in place.",
+      "id": "delete-one-duplicate",
+      "sql": "DELETE FROM customers\nWHERE id = (\n    SELECT MAX(candidate.id)\n    FROM customers AS candidate\n    WHERE EXISTS (\n        SELECT 1\n        FROM customers AS other\n        WHERE other.email IS candidate.email COLLATE BINARY\n          AND other.id <> candidate.id\n    )\n);\n"
+    },
+    {
+      "description": "Apply the correct customer deduplication but also delete the unrelated table. The unrelated rows prove collateral writes are graded.",
+      "id": "collateral-unrelated-delete",
+      "sql": "DELETE FROM customers\nWHERE EXISTS (\n    SELECT 1\n    FROM customers AS keeper\n    WHERE keeper.email IS customers.email COLLATE BINARY\n      AND keeper.id < customers.id\n);\n\nDELETE FROM unrelated_records;\n"
+    }
+  ],
+  "publicManifest": false,
+  "publicManifestNote": "Internal fixture-suite index only. The Core-owned public Challenge revision manifest wire schema is intentionally not invented here.",
+  "receipts": {
+    "mutation": {
+      "case-trim-collapse": {
+        "basic": {
+          "result": "pass"
+        },
+        "case-whitespace": {
+          "expectedRowCount": 8,
+          "missingIds": [
+            3,
+            6,
+            11,
+            12
+          ],
+          "result": "fail",
+          "rowCount": 4,
+          "violations": [
+            "customers.expected-survivor-missing",
+            "customers.row-count-mismatch"
+          ]
+        },
+        "generated-variant-01": {
+          "duplicateEmails": [
+            null
+          ],
+          "missingIds": [
+            100
+          ],
+          "result": "fail",
+          "unexpectedIds": [
+            16
+          ],
+          "violations": [
+            "customers.expected-survivor-missing",
+            "customers.unexpected-survivor-present",
+            "customers.duplicate-email-group-remaining"
+          ]
+        },
+        "generated-variant-02": {
+          "duplicateEmails": [
+            null
+          ],
+          "missingIds": [
+            101
+          ],
+          "result": "fail",
+          "unexpectedIds": [
+            197
+          ],
+          "violations": [
+            "customers.expected-survivor-missing",
+            "customers.unexpected-survivor-present",
+            "customers.duplicate-email-group-remaining"
+          ]
+        },
+        "generated-variant-03": {
+          "duplicateEmails": [
+            null
+          ],
+          "missingIds": [
+            82
+          ],
+          "result": "fail",
+          "unexpectedIds": [
+            95
+          ],
+          "violations": [
+            "customers.expected-survivor-missing",
+            "customers.unexpected-survivor-present",
+            "customers.duplicate-email-group-remaining"
+          ]
+        },
+        "multi-group": {
+          "result": "pass"
+        },
+        "no-duplicates": {
+          "result": "pass"
+        },
+        "nonsequential-created-at": {
+          "result": "pass"
+        },
+        "null-empty": {
+          "duplicateEmails": [
+            null
+          ],
+          "expectedRowCount": 4,
+          "result": "fail",
+          "rowCount": 6,
+          "unexpectedIds": [
+            9,
+            12
+          ],
+          "violations": [
+            "customers.unexpected-survivor-present",
+            "customers.row-count-mismatch",
+            "customers.duplicate-email-group-remaining"
+          ]
+        }
+      },
+      "collateral-unrelated-delete": {
+        "basic": {
+          "result": "fail",
+          "violations": [
+            "unrelated.rows-changed"
+          ]
+        },
+        "case-whitespace": {
+          "result": "fail",
+          "violations": [
+            "unrelated.rows-changed"
+          ]
+        },
+        "generated-variant-01": {
+          "result": "fail",
+          "violations": [
+            "unrelated.rows-changed"
+          ]
+        },
+        "generated-variant-02": {
+          "result": "fail",
+          "violations": [
+            "unrelated.rows-changed"
+          ]
+        },
+        "generated-variant-03": {
+          "result": "fail",
+          "violations": [
+            "unrelated.rows-changed"
+          ]
+        },
+        "multi-group": {
+          "result": "fail",
+          "violations": [
+            "unrelated.rows-changed"
+          ]
+        },
+        "no-duplicates": {
+          "result": "fail",
+          "violations": [
+            "unrelated.rows-changed"
+          ]
+        },
+        "nonsequential-created-at": {
+          "result": "fail",
+          "violations": [
+            "unrelated.rows-changed"
+          ]
+        },
+        "null-empty": {
+          "result": "fail",
+          "violations": [
+            "unrelated.rows-changed"
+          ]
+        }
+      },
+      "delete-all": {
+        "basic": {
+          "expectedRowCount": 3,
+          "missingIds": [
+            2,
+            3,
+            5
+          ],
+          "result": "fail",
+          "rowCount": 0,
+          "violations": [
+            "customers.expected-survivor-missing",
+            "customers.row-count-mismatch"
+          ]
+        },
+        "case-whitespace": {
+          "expectedRowCount": 8,
+          "missingIds": [
+            2,
+            3,
+            5,
+            6,
+            11,
+            12,
+            13,
+            14
+          ],
+          "result": "fail",
+          "rowCount": 0,
+          "violations": [
+            "customers.expected-survivor-missing",
+            "customers.row-count-mismatch"
+          ]
+        },
+        "generated-variant-01": {
+          "expectedRowCount": 13,
+          "missingIds": [
+            6,
+            9,
+            11,
+            12,
+            26,
+            56,
+            59,
+            66,
+            70,
+            83,
+            100,
+            108,
+            151
+          ],
+          "result": "fail",
+          "rowCount": 0,
+          "violations": [
+            "customers.expected-survivor-missing",
+            "customers.row-count-mismatch"
+          ]
+        },
+        "generated-variant-02": {
+          "expectedRowCount": 13,
+          "missingIds": [
+            18,
+            34,
+            38,
+            53,
+            73,
+            79,
+            87,
+            96,
+            101,
+            105,
+            128,
+            135,
+            193
+          ],
+          "result": "fail",
+          "rowCount": 0,
+          "violations": [
+            "customers.expected-survivor-missing",
+            "customers.row-count-mismatch"
+          ]
+        },
+        "generated-variant-03": {
+          "expectedRowCount": 13,
+          "missingIds": [
+            3,
+            23,
+            34,
+            45,
+            52,
+            55,
+            66,
+            67,
+            79,
+            82,
+            84,
+            145,
+            166
+          ],
+          "result": "fail",
+          "rowCount": 0,
+          "violations": [
+            "customers.expected-survivor-missing",
+            "customers.row-count-mismatch"
+          ]
+        },
+        "multi-group": {
+          "expectedRowCount": 5,
+          "missingIds": [
+            2,
+            3,
+            5,
+            8,
+            25
+          ],
+          "result": "fail",
+          "rowCount": 0,
+          "violations": [
+            "customers.expected-survivor-missing",
+            "customers.row-count-mismatch"
+          ]
+        },
+        "no-duplicates": {
+          "expectedRowCount": 5,
+          "missingIds": [
+            1,
+            2,
+            4,
+            6,
+            9
+          ],
+          "result": "fail",
+          "rowCount": 0,
+          "violations": [
+            "customers.expected-survivor-missing",
+            "customers.row-count-mismatch"
+          ]
+        },
+        "nonsequential-created-at": {
+          "expectedRowCount": 4,
+          "missingIds": [
+            2,
+            3,
+            7,
+            41
+          ],
+          "result": "fail",
+          "rowCount": 0,
+          "violations": [
+            "customers.expected-survivor-missing",
+            "customers.row-count-mismatch"
+          ]
+        },
+        "null-empty": {
+          "expectedRowCount": 4,
+          "missingIds": [
+            1,
+            2,
+            4,
+            5
+          ],
+          "result": "fail",
+          "rowCount": 0,
+          "violations": [
+            "customers.expected-survivor-missing",
+            "customers.row-count-mismatch"
+          ]
+        }
+      },
+      "delete-one-duplicate": {
+        "basic": {
+          "duplicateEmails": [
+            "bob@example.com"
+          ],
+          "expectedRowCount": 3,
+          "result": "fail",
+          "rowCount": 4,
+          "unexpectedIds": [
+            7
+          ],
+          "violations": [
+            "customers.unexpected-survivor-present",
+            "customers.row-count-mismatch",
+            "customers.duplicate-email-group-remaining"
+          ]
+        },
+        "case-whitespace": {
+          "duplicateEmails": [
+            "case@example.com",
+            "padded@example.com"
+          ],
+          "expectedRowCount": 8,
+          "result": "fail",
+          "rowCount": 10,
+          "unexpectedIds": [
+            8,
+            9
+          ],
+          "violations": [
+            "customers.unexpected-survivor-present",
+            "customers.row-count-mismatch",
+            "customers.duplicate-email-group-remaining"
+          ]
+        },
+        "generated-variant-01": {
+          "duplicateEmails": [
+            null,
+            "alpha.v01@example.com",
+            "beta.v01@example.com",
+            "case.v01@example.com",
+            "gamma.v01@example.com",
+            "trim.v01@example.com"
+          ],
+          "expectedRowCount": 13,
+          "result": "fail",
+          "rowCount": 22,
+          "unexpectedIds": [
+            16,
+            84,
+            119,
+            121,
+            127,
+            140,
+            149,
+            153,
+            163
+          ],
+          "violations": [
+            "customers.unexpected-survivor-present",
+            "customers.row-count-mismatch",
+            "customers.duplicate-email-group-remaining"
+          ]
+        },
+        "generated-variant-02": {
+          "duplicateEmails": [
+            null,
+            "",
+            "alpha.v02@example.com",
+            "beta.v02@example.com",
+            "case.v02@example.com",
+            "gamma.v02@example.com",
+            "trim.v02@example.com"
+          ],
+          "expectedRowCount": 13,
+          "result": "fail",
+          "rowCount": 20,
+          "unexpectedIds": [
+            56,
+            83,
+            100,
+            111,
+            159,
+            194,
+            197
+          ],
+          "violations": [
+            "customers.unexpected-survivor-present",
+            "customers.row-count-mismatch",
+            "customers.duplicate-email-group-remaining"
+          ]
+        },
+        "generated-variant-03": {
+          "duplicateEmails": [
+            null,
+            "",
+            "beta.v03@example.com",
+            "case.v03@example.com",
+            "gamma.v03@example.com",
+            "trim.v03@example.com"
+          ],
+          "expectedRowCount": 13,
+          "result": "fail",
+          "rowCount": 20,
+          "unexpectedIds": [
+            31,
+            69,
+            95,
+            99,
+            105,
+            125,
+            139
+          ],
+          "violations": [
+            "customers.unexpected-survivor-present",
+            "customers.row-count-mismatch",
+            "customers.duplicate-email-group-remaining"
+          ]
+        },
+        "multi-group": {
+          "duplicateEmails": [
+            "group-a@example.com",
+            "group-b@example.com",
+            "group-c@example.com",
+            "group-d@example.com"
+          ],
+          "expectedRowCount": 5,
+          "result": "fail",
+          "rowCount": 11,
+          "unexpectedIds": [
+            7,
+            11,
+            12,
+            14,
+            19,
+            20
+          ],
+          "violations": [
+            "customers.unexpected-survivor-present",
+            "customers.row-count-mismatch",
+            "customers.duplicate-email-group-remaining"
+          ]
+        },
+        "no-duplicates": {
+          "result": "pass"
+        },
+        "nonsequential-created-at": {
+          "duplicateEmails": [
+            "later@example.com",
+            "other@example.com"
+          ],
+          "expectedRowCount": 4,
+          "result": "fail",
+          "rowCount": 6,
+          "unexpectedIds": [
+            9,
+            50
+          ],
+          "violations": [
+            "customers.unexpected-survivor-present",
+            "customers.row-count-mismatch",
+            "customers.duplicate-email-group-remaining"
+          ]
+        },
+        "null-empty": {
+          "duplicateEmails": [
+            null,
+            ""
+          ],
+          "expectedRowCount": 4,
+          "result": "fail",
+          "rowCount": 7,
+          "unexpectedIds": [
+            7,
+            9,
+            12
+          ],
+          "violations": [
+            "customers.unexpected-survivor-present",
+            "customers.row-count-mismatch",
+            "customers.duplicate-email-group-remaining"
+          ]
+        }
+      },
+      "ignore-null-group-equality": {
+        "basic": {
+          "result": "pass"
+        },
+        "case-whitespace": {
+          "result": "pass"
+        },
+        "generated-variant-01": {
+          "duplicateEmails": [
+            null
+          ],
+          "expectedRowCount": 13,
+          "result": "fail",
+          "rowCount": 14,
+          "unexpectedIds": [
+            16
+          ],
+          "violations": [
+            "customers.unexpected-survivor-present",
+            "customers.row-count-mismatch",
+            "customers.duplicate-email-group-remaining"
+          ]
+        },
+        "generated-variant-02": {
+          "duplicateEmails": [
+            null
+          ],
+          "expectedRowCount": 13,
+          "result": "fail",
+          "rowCount": 14,
+          "unexpectedIds": [
+            197
+          ],
+          "violations": [
+            "customers.unexpected-survivor-present",
+            "customers.row-count-mismatch",
+            "customers.duplicate-email-group-remaining"
+          ]
+        },
+        "generated-variant-03": {
+          "duplicateEmails": [
+            null
+          ],
+          "expectedRowCount": 13,
+          "result": "fail",
+          "rowCount": 14,
+          "unexpectedIds": [
+            95
+          ],
+          "violations": [
+            "customers.unexpected-survivor-present",
+            "customers.row-count-mismatch",
+            "customers.duplicate-email-group-remaining"
+          ]
+        },
+        "multi-group": {
+          "result": "pass"
+        },
+        "no-duplicates": {
+          "result": "pass"
+        },
+        "nonsequential-created-at": {
+          "result": "pass"
+        },
+        "null-empty": {
+          "duplicateEmails": [
+            null
+          ],
+          "expectedRowCount": 4,
+          "result": "fail",
+          "rowCount": 6,
+          "unexpectedIds": [
+            9,
+            12
+          ],
+          "violations": [
+            "customers.unexpected-survivor-present",
+            "customers.row-count-mismatch",
+            "customers.duplicate-email-group-remaining"
+          ]
+        }
+      },
+      "keep-earliest-created-at": {
+        "basic": {
+          "missingIds": [
+            3
+          ],
+          "result": "fail",
+          "unexpectedIds": [
+            10
+          ],
+          "violations": [
+            "customers.expected-survivor-missing",
+            "customers.unexpected-survivor-present"
+          ]
+        },
+        "case-whitespace": {
+          "result": "pass"
+        },
+        "generated-variant-01": {
+          "missingIds": [
+            6,
+            56,
+            59,
+            66,
+            83
+          ],
+          "result": "fail",
+          "unexpectedIds": [
+            140,
+            149,
+            153,
+            163,
+            176
+          ],
+          "violations": [
+            "customers.expected-survivor-missing",
+            "customers.unexpected-survivor-present"
+          ]
+        },
+        "generated-variant-02": {
+          "missingIds": [
+            18,
+            38,
+            79,
+            87,
+            96
+          ],
+          "result": "fail",
+          "unexpectedIds": [
+            56,
+            100,
+            159,
+            194,
+            198
+          ],
+          "violations": [
+            "customers.expected-survivor-missing",
+            "customers.unexpected-survivor-present"
+          ]
+        },
+        "generated-variant-03": {
+          "missingIds": [
+            34,
+            52,
+            55,
+            82
+          ],
+          "result": "fail",
+          "unexpectedIds": [
+            95,
+            99,
+            125,
+            169
+          ],
+          "violations": [
+            "customers.expected-survivor-missing",
+            "customers.unexpected-survivor-present"
+          ]
+        },
+        "multi-group": {
+          "missingIds": [
+            2,
+            3,
+            8
+          ],
+          "result": "fail",
+          "unexpectedIds": [
+            12,
+            20,
+            30
+          ],
+          "violations": [
+            "customers.expected-survivor-missing",
+            "customers.unexpected-survivor-present"
+          ]
+        },
+        "no-duplicates": {
+          "result": "pass"
+        },
+        "nonsequential-created-at": {
+          "missingIds": [
+            2,
+            3,
+            7
+          ],
+          "result": "fail",
+          "unexpectedIds": [
+            9,
+            50,
+            100
+          ],
+          "violations": [
+            "customers.expected-survivor-missing",
+            "customers.unexpected-survivor-present"
+          ]
+        },
+        "null-empty": {
+          "missingIds": [
+            2,
+            4
+          ],
+          "result": "fail",
+          "unexpectedIds": [
+            7,
+            9
+          ],
+          "violations": [
+            "customers.expected-survivor-missing",
+            "customers.unexpected-survivor-present"
+          ]
+        }
+      },
+      "keep-highest-id": {
+        "basic": {
+          "missingIds": [
+            2,
+            3
+          ],
+          "result": "fail",
+          "unexpectedIds": [
+            7,
+            10
+          ],
+          "violations": [
+            "customers.expected-survivor-missing",
+            "customers.unexpected-survivor-present"
+          ]
+        },
+        "case-whitespace": {
+          "missingIds": [
+            3,
+            5,
+            14
+          ],
+          "result": "fail",
+          "unexpectedIds": [
+            8,
+            9,
+            15
+          ],
+          "violations": [
+            "customers.expected-survivor-missing",
+            "customers.unexpected-survivor-present"
+          ]
+        },
+        "generated-variant-01": {
+          "missingIds": [
+            6,
+            12,
+            56,
+            59,
+            66,
+            83,
+            100
+          ],
+          "result": "fail",
+          "unexpectedIds": [
+            16,
+            119,
+            140,
+            149,
+            153,
+            163,
+            176
+          ],
+          "violations": [
+            "customers.expected-survivor-missing",
+            "customers.unexpected-survivor-present"
+          ]
+        },
+        "generated-variant-02": {
+          "missingIds": [
+            18,
+            38,
+            53,
+            79,
+            87,
+            96,
+            128
+          ],
+          "result": "fail",
+          "unexpectedIds": [
+            56,
+            83,
+            100,
+            159,
+            194,
+            197,
+            198
+          ],
+          "violations": [
+            "customers.expected-survivor-missing",
+            "customers.unexpected-survivor-present"
+          ]
+        },
+        "generated-variant-03": {
+          "missingIds": [
+            3,
+            34,
+            45,
+            52,
+            55,
+            66,
+            82
+          ],
+          "result": "fail",
+          "unexpectedIds": [
+            31,
+            69,
+            95,
+            99,
+            125,
+            139,
+            169
+          ],
+          "violations": [
+            "customers.expected-survivor-missing",
+            "customers.unexpected-survivor-present"
+          ]
+        },
+        "multi-group": {
+          "missingIds": [
+            2,
+            3,
+            5,
+            8
+          ],
+          "result": "fail",
+          "unexpectedIds": [
+            11,
+            12,
+            20,
+            30
+          ],
+          "violations": [
+            "customers.expected-survivor-missing",
+            "customers.unexpected-survivor-present"
+          ]
+        },
+        "no-duplicates": {
+          "result": "pass"
+        },
+        "nonsequential-created-at": {
+          "missingIds": [
+            2,
+            3,
+            7
+          ],
+          "result": "fail",
+          "unexpectedIds": [
+            9,
+            50,
+            100
+          ],
+          "violations": [
+            "customers.expected-survivor-missing",
+            "customers.unexpected-survivor-present"
+          ]
+        },
+        "null-empty": {
+          "missingIds": [
+            2,
+            4
+          ],
+          "result": "fail",
+          "unexpectedIds": [
+            12,
+            15
+          ],
+          "violations": [
+            "customers.expected-survivor-missing",
+            "customers.unexpected-survivor-present"
+          ]
+        }
+      }
+    },
+    "reference": {
+      "grouped-min-lowest-id": {
+        "basic": {
+          "idempotent": true,
+          "result": "pass"
+        },
+        "case-whitespace": {
+          "idempotent": true,
+          "result": "pass"
+        },
+        "generated-variant-01": {
+          "idempotent": true,
+          "result": "pass"
+        },
+        "generated-variant-02": {
+          "idempotent": true,
+          "result": "pass"
+        },
+        "generated-variant-03": {
+          "idempotent": true,
+          "result": "pass"
+        },
+        "multi-group": {
+          "idempotent": true,
+          "result": "pass"
+        },
+        "no-duplicates": {
+          "idempotent": true,
+          "result": "pass"
+        },
+        "nonsequential-created-at": {
+          "idempotent": true,
+          "result": "pass"
+        },
+        "null-empty": {
+          "idempotent": true,
+          "result": "pass"
+        }
+      },
+      "null-safe-exists-lowest-id": {
+        "basic": {
+          "idempotent": true,
+          "result": "pass"
+        },
+        "case-whitespace": {
+          "idempotent": true,
+          "result": "pass"
+        },
+        "generated-variant-01": {
+          "idempotent": true,
+          "result": "pass"
+        },
+        "generated-variant-02": {
+          "idempotent": true,
+          "result": "pass"
+        },
+        "generated-variant-03": {
+          "idempotent": true,
+          "result": "pass"
+        },
+        "multi-group": {
+          "idempotent": true,
+          "result": "pass"
+        },
+        "no-duplicates": {
+          "idempotent": true,
+          "result": "pass"
+        },
+        "nonsequential-created-at": {
+          "idempotent": true,
+          "result": "pass"
+        },
+        "null-empty": {
+          "idempotent": true,
+          "result": "pass"
+        }
+      },
+      "window-ranked-lowest-id": {
+        "basic": {
+          "idempotent": true,
+          "result": "pass"
+        },
+        "case-whitespace": {
+          "idempotent": true,
+          "result": "pass"
+        },
+        "generated-variant-01": {
+          "idempotent": true,
+          "result": "pass"
+        },
+        "generated-variant-02": {
+          "idempotent": true,
+          "result": "pass"
+        },
+        "generated-variant-03": {
+          "idempotent": true,
+          "result": "pass"
+        },
+        "multi-group": {
+          "idempotent": true,
+          "result": "pass"
+        },
+        "no-duplicates": {
+          "idempotent": true,
+          "result": "pass"
+        },
+        "nonsequential-created-at": {
+          "idempotent": true,
+          "result": "pass"
+        },
+        "null-empty": {
+          "idempotent": true,
+          "result": "pass"
+        }
+      }
+    },
+    "summary": {
+      "fixtures": 9,
+      "mutationCases": 7,
+      "mutationChecks": 63,
+      "referenceChecks": 27,
+      "referencePasses": 27,
+      "referenceSolutions": 3,
+      "rejectedMutationCases": 7,
+      "rejectedMutations": [
+        "delete-all",
+        "keep-highest-id",
+        "keep-earliest-created-at",
+        "ignore-null-group-equality",
+        "case-trim-collapse",
+        "delete-one-duplicate",
+        "collateral-unrelated-delete"
+      ],
+      "undetectedMutations": []
+    }
+  },
+  "references": [
+    {
+      "description": "Delete every row that has a lower-id row in the same exact BINARY email group. IS keeps NULL as one group.",
+      "id": "null-safe-exists-lowest-id",
+      "sql": "DELETE FROM customers\nWHERE EXISTS (\n    SELECT 1\n    FROM customers AS keeper\n    WHERE keeper.email IS customers.email COLLATE BINARY\n      AND keeper.id < customers.id\n);\n"
+    },
+    {
+      "description": "Group by the email column (BINARY collation) and keep the minimum numeric id in each group, including the NULL group.",
+      "id": "grouped-min-lowest-id",
+      "sql": "DELETE FROM customers\nWHERE id NOT IN (\n    SELECT MIN(id)\n    FROM customers\n    GROUP BY email\n);\n"
+    },
+    {
+      "description": "Rank rows within each email group by id and delete every rank above one. This is a window-function alternative to the grouped MIN formulation.",
+      "id": "window-ranked-lowest-id",
+      "sql": "DELETE FROM customers\nWHERE id IN (\n    SELECT id\n    FROM (\n        SELECT id,\n               ROW_NUMBER() OVER (PARTITION BY email ORDER BY id) AS duplicate_rank\n        FROM customers\n    ) AS ranked\n    WHERE duplicate_rank > 1\n);\n"
+    }
+  ],
+  "retentionRule": {
+    "grouping": "email using SQLite BINARY equality",
+    "idempotency": "Applying a correct deduplication statement twice must leave the same once-correct final state.",
+    "oracleOrder": [
+      "id",
+      "email",
+      "created_at"
+    ],
+    "statement": "Keep the row with the lowest numeric id for each exact email value. NULL is one duplicate group. Case, leading/trailing whitespace and inner whitespace are significant. Unrelated tables must be unchanged.",
+    "survivor": "MIN(id) per exact email group",
+    "tieBreaker": "not applicable: id is the unique integer primary key",
+    "unrelatedTable": "unrelated_records"
+  },
+  "schema": {
+    "engine": "sqlite",
+    "sql": "CREATE TABLE customers (\n    id INTEGER PRIMARY KEY,\n    email TEXT COLLATE BINARY,\n    created_at TEXT NOT NULL\n);\n\nCREATE TABLE unrelated_records (\n    id INTEGER PRIMARY KEY,\n    code TEXT COLLATE BINARY NOT NULL,\n    note TEXT NOT NULL\n);\n",
+    "tables": [
+      {
+        "columns": [
+          {
+            "declaredType": "INTEGER",
+            "name": "id",
+            "notNull": false,
+            "primaryKey": true
+          },
+          {
+            "collation": "BINARY",
+            "declaredType": "TEXT",
+            "name": "email",
+            "notNull": false,
+            "primaryKey": false
+          },
+          {
+            "declaredType": "TEXT",
+            "name": "created_at",
+            "notNull": true,
+            "primaryKey": false
+          }
+        ],
+        "name": "customers"
+      },
+      {
+        "columns": [
+          {
+            "declaredType": "INTEGER",
+            "name": "id",
+            "notNull": false,
+            "primaryKey": true
+          },
+          {
+            "collation": "BINARY",
+            "declaredType": "TEXT",
+            "name": "code",
+            "notNull": true,
+            "primaryKey": false
+          },
+          {
+            "declaredType": "TEXT",
+            "name": "note",
+            "notNull": true,
+            "primaryKey": false
+          }
+        ],
+        "name": "unrelated_records"
+      }
+    ]
+  },
+  "status": "internal-unpublished",
+  "synthetic": true,
+  "verification": {
+    "command": "python3 scripts/delete-duplicates-fixtures.py verify",
+    "unittest": "python3 -m unittest discover -s tests -p 'test_delete_duplicates_fixtures.py' -v"
+  }
+}
