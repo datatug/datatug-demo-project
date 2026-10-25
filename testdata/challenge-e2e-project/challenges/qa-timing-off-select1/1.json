@@ -1,0 +1,125 @@
+{
+  "allowedOperation": "read",
+  "challengeId": "qa-timing-off-select1",
+  "dialect": "sqlite",
+  "difficulty": "intro",
+  "engine": {
+    "package": "@sqlite.org/sqlite-wasm",
+    "sqliteVersion": "3.54.1",
+    "version": "3.54.1-build1"
+  },
+  "fixtureSuite": {
+    "fixtures": [
+      {
+        "bytes": 12288,
+        "id": "basic",
+        "label": "QA read fixture: byte-for-byte copy of the synthetic delete-duplicates basic fixture",
+        "runs": 1,
+        "sha256": "74b2eb32b7f91a528e30d145eb253ad778e03517523a789a39308df2e3dae93c"
+      }
+    ],
+    "id": "qa-timing-off-select1-v1"
+  },
+  "gradingVersion": "challenge-grading-v1",
+  "hints": [
+    {
+      "id": "hint-1",
+      "text": "Use a read-only SELECT that returns the literal integer 1."
+    },
+    {
+      "id": "hint-2",
+      "text": "The fixture is ready immediately, so no Start timed step applies."
+    }
+  ],
+  "objective": "QA fixture coverage for timing=off. Return exactly one row containing the integer value 1 from the pinned fixture. No timer is recorded. The fixture tables are unrelated to this read probe; the answer is the literal required by the oracle.",
+  "parts": [
+    {
+      "answerKind": "sql",
+      "id": "select-one",
+      "required": true,
+      "sql": {
+        "cases": [
+          {
+            "fixture": "basic",
+            "oracle": {
+              "columns": [
+                {
+                  "name": "value",
+                  "type": "integer"
+                }
+              ],
+              "kind": "result",
+              "ordering": "unordered",
+              "rows": [
+                [
+                  {
+                    "type": "integer",
+                    "value": "1"
+                  }
+                ]
+              ]
+            }
+          }
+        ]
+      },
+      "title": "Return the integer 1"
+    }
+  ],
+  "referenceSolutions": [
+    {
+      "answer": {
+        "sql": "SELECT 1 AS value\n"
+      },
+      "partId": "select-one"
+    }
+  ],
+  "revision": 1,
+  "schemaVersion": 1,
+  "timing": "off",
+  "title": "QA timing off: read the literal value",
+  "visibleSchema": {
+    "tables": [
+      {
+        "columns": [
+          {
+            "name": "id",
+            "primaryKey": true,
+            "type": "integer"
+          },
+          {
+            "collation": "BINARY",
+            "name": "email",
+            "type": "string"
+          },
+          {
+            "name": "created_at",
+            "notNull": true,
+            "type": "string"
+          }
+        ],
+        "name": "customers"
+      },
+      {
+        "columns": [
+          {
+            "name": "id",
+            "primaryKey": true,
+            "type": "integer"
+          },
+          {
+            "collation": "BINARY",
+            "name": "code",
+            "notNull": true,
+            "type": "string"
+          },
+          {
+            "name": "note",
+            "notNull": true,
+            "type": "string"
+          }
+        ],
+        "name": "unrelated_records"
+      }
+    ]
+  }
+}

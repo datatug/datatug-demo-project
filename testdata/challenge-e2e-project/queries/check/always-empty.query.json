@@ -1,0 +1,17 @@
+{
+  "createdAt": "2026-10-25T00:00:00Z",
+  "id": "always-empty",
+  "purpose": "QA negative control. It deliberately returns no rows on every fixture, so a Check using it cannot satisfy the broken fixture's required fail outcome.",
+  "recordsets": [
+    {
+      "columns": [
+        {
+          "name": "email",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "title": "Always-empty control query",
+  "type": "SQL"
+}

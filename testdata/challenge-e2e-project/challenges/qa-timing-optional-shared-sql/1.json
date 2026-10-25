@@ -1,0 +1,162 @@
+{
+  "allowedOperation": "read",
+  "challengeId": "qa-timing-optional-shared-sql",
+  "dialect": "sqlite",
+  "difficulty": "intro",
+  "engine": {
+    "package": "@sqlite.org/sqlite-wasm",
+    "sqliteVersion": "3.54.1",
+    "version": "3.54.1-build1"
+  },
+  "fixtureSuite": {
+    "fixtures": [
+      {
+        "bytes": 12288,
+        "id": "basic",
+        "label": "QA shared read fixture: byte-for-byte copy of the synthetic delete-duplicates basic fixture",
+        "runs": 1,
+        "sha256": "74b2eb32b7f91a528e30d145eb253ad778e03517523a789a39308df2e3dae93c"
+      }
+    ],
+    "id": "qa-timing-optional-v1"
+  },
+  "gradingVersion": "challenge-grading-v1",
+  "hints": [
+    {
+      "id": "hint-1",
+      "text": "Both parts are required and each part has its own SQL answer."
+    },
+    {
+      "id": "hint-2",
+      "text": "One shared SELECT cannot pass both parts: the first oracle requires 1 and the second requires 2."
+    }
+  ],
+  "objective": "QA fixture coverage for timing=optional. Two independent required read parts run against the same pinned fixture. The first must return the integer 1 and the second must return the integer 2. The attempt mode is chosen before solving and cannot change during the attempt.",
+  "parts": [
+    {
+      "answerKind": "sql",
+      "id": "value-one",
+      "required": true,
+      "sql": {
+        "cases": [
+          {
+            "fixture": "basic",
+            "oracle": {
+              "columns": [
+                {
+                  "name": "value",
+                  "type": "integer"
+                }
+              ],
+              "kind": "result",
+              "ordering": "unordered",
+              "rows": [
+                [
+                  {
+                    "type": "integer",
+                    "value": "1"
+                  }
+                ]
+              ]
+            }
+          }
+        ]
+      },
+      "title": "Return the integer 1"
+    },
+    {
+      "answerKind": "sql",
+      "id": "value-two",
+      "required": true,
+      "sql": {
+        "cases": [
+          {
+            "fixture": "basic",
+            "oracle": {
+              "columns": [
+                {
+                  "name": "value",
+                  "type": "integer"
+                }
+              ],
+              "kind": "result",
+              "ordering": "unordered",
+              "rows": [
+                [
+                  {
+                    "type": "integer",
+                    "value": "2"
+                  }
+                ]
+              ]
+            }
+          }
+        ]
+      },
+      "title": "Return the integer 2"
+    }
+  ],
+  "referenceSolutions": [
+    {
+      "answer": {
+        "sql": "SELECT 1 AS value\n"
+      },
+      "partId": "value-one"
+    },
+    {
+      "answer": {
+        "sql": "SELECT 2 AS value\n"
+      },
+      "partId": "value-two"
+    }
+  ],
+  "revision": 1,
+  "schemaVersion": 1,
+  "timing": "optional",
+  "title": "QA timing optional: two independent read oracles",
+  "visibleSchema": {
+    "tables": [
+      {
+        "columns": [
+          {
+            "name": "id",
+            "primaryKey": true,
+            "type": "integer"
+          },
+          {
+            "collation": "BINARY",
+            "name": "email",
+            "type": "string"
+          },
+          {
+            "name": "created_at",
+            "notNull": true,
+            "type": "string"
+          }
+        ],
+        "name": "customers"
+      },
+      {
+        "columns": [
+          {
+            "name": "id",
+            "primaryKey": true,
+            "type": "integer"
+          },
+          {
+            "collation": "BINARY",
+            "name": "code",
+            "notNull": true,
+            "type": "string"
+          },
+          {
+            "name": "note",
+            "notNull": true,
+            "type": "string"
+          }
+        ],
+        "name": "unrelated_records"
+      }
+    ]
+  }
+}
