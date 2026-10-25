@@ -1,4 +1,5 @@
 {
+  "createdAt": "2026-10-22T08:01:00Z",
   "id": "order-row",
   "title": "Order",
   "description": "A data card: shows the selected Orders row as it was supplied, with no query of its own.",
