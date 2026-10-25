@@ -389,3 +389,6 @@ with tempfile.TemporaryDirectory() as directory:
 assert calls == ['fulfillment_events', 'carrier_events']
 `], { cwd: root });
 });
+
+// Same existing catalogue CI lane; teaching checks require no Apps/website checkout.
+import './test-sql-lessons.mjs';
