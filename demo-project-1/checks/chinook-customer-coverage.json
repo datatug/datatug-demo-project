@@ -1,4 +1,5 @@
 {
+  "createdAt": "2026-10-15T23:10:40Z",
   "id": "chinook-customer-coverage",
   "title": "Chinook customer coverage",
   "description": "The pinned Chinook snapshot contains 59 customers. Verify that the complete customer inventory still matches this baseline.",

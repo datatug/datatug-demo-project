@@ -1,4 +1,5 @@
 {
+  "createdAt": "2026-10-15T23:10:40Z",
   "id": "chinook-customer-coverage-failure",
   "title": "Chinook customer coverage \u2014 intentional failure",
   "description": "Deliberately expects 60 customers instead of 59. Run this example to inspect a real failed Validator and its expected versus observed counts.",
