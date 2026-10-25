@@ -8,13 +8,27 @@ import hashlib
 import importlib.util
 import json
 from pathlib import Path
+import shutil
 import tempfile
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 SUITE_DIR = ROOT / "demo-project-1/challenges/delete-duplicates"
 INDEX_PATH = SUITE_DIR / "suite.json"
+MANIFEST_PATH = SUITE_DIR / "1.json"
 TOOL_PATH = ROOT / "scripts/delete-duplicates-fixtures.py"
+
+EXPECTED_FIXTURE_IDS = [
+    "basic",
+    "no-duplicates",
+    "multi-group",
+    "nonsequential-created-at",
+    "null-empty",
+    "case-whitespace",
+    "generated-variant-01",
+    "generated-variant-02",
+    "generated-variant-03",
+]
 
 _spec = importlib.util.spec_from_file_location("delete_duplicates_fixtures", TOOL_PATH)
 tool = importlib.util.module_from_spec(_spec)
@@ -65,6 +79,18 @@ def _groups(rows):
     return groups
 
 
+def _cell_value(cell):
+    if cell["type"] == "null":
+        assert cell["value"] is None
+        return None
+    if cell["type"] == "integer":
+        assert isinstance(cell["value"], str)
+        return int(cell["value"])
+    assert cell["type"] == "string"
+    assert isinstance(cell["value"], str)
+    return cell["value"]
+
+
 class DeleteDuplicatesFixtureSuiteTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -73,6 +99,8 @@ class DeleteDuplicatesFixtureSuiteTest(unittest.TestCase):
             raise AssertionError(cls.report["errors"])
         cls.index = json.loads(INDEX_PATH.read_text())
         cls.fixtures = {fixture["id"]: fixture for fixture in cls.index["fixtures"]}
+        cls.manifest = json.loads(MANIFEST_PATH.read_text())
+        cls.manifest_text = MANIFEST_PATH.read_text()
 
     def test_internal_index_pins_hashes_bytes_columns_and_synthetic_status(self):
         index = self.index
@@ -376,6 +404,207 @@ class DeleteDuplicatesFixtureSuiteTest(unittest.TestCase):
             len(self.index["mutations"]), summary["rejectedMutationCases"]
         )
 
+    def test_public_manifest_is_the_checked_closed_core_revision(self):
+        manifest = self.manifest
+        self.assertEqual(
+            {
+                "schemaVersion",
+                "gradingVersion",
+                "challengeId",
+                "revision",
+                "title",
+                "objective",
+                "difficulty",
+                "dialect",
+                "allowedOperation",
+                "timing",
+                "engine",
+                "fixtureSuite",
+                "visibleSchema",
+                "parts",
+                "hints",
+                "referenceSolutions",
+            },
+            set(manifest),
+        )
+        self.assertEqual(1, manifest["schemaVersion"])
+        self.assertEqual("challenge-grading-v1", manifest["gradingVersion"])
+        self.assertEqual("delete-duplicates", manifest["challengeId"])
+        self.assertEqual(1, manifest["revision"])
+        self.assertEqual("Delete duplicate customers", manifest["title"])
+        self.assertEqual("intro", manifest["difficulty"])
+        self.assertEqual("sqlite", manifest["dialect"])
+        self.assertEqual("write", manifest["allowedOperation"])
+        self.assertEqual("optional", manifest["timing"])
+        self.assertEqual(
+            {
+                "package": "@sqlite.org/sqlite-wasm",
+                "version": "3.54.1-build1",
+                "sqliteVersion": "3.54.1",
+            },
+            manifest["engine"],
+        )
+        self.assertEqual(
+            ["customers", "unrelated_records"],
+            [table["name"] for table in manifest["visibleSchema"]["tables"]],
+        )
+        self.assertEqual(9, len(manifest["fixtureSuite"]["fixtures"]))
+        self.assertEqual(1, len(manifest["parts"]))
+        self.assertEqual(
+            tool.public_manifest_text(self.index), self.manifest_text
+        )
+        self.assertEqual(tool.build_public_manifest(self.index), manifest)
+
+    def test_public_manifest_pins_every_case_and_typed_expected_table(self):
+        manifest = self.manifest
+        pins = manifest["fixtureSuite"]["fixtures"]
+        self.assertEqual(
+            EXPECTED_FIXTURE_IDS, [fixture["id"] for fixture in pins]
+        )
+        for pin in pins:
+            with self.subTest(fixture=pin["id"]):
+                self.assertEqual(
+                    {"id", "label", "sha256", "bytes", "runs"}, set(pin)
+                )
+                self.assertEqual(2, pin["runs"])
+                source = self.fixtures[pin["id"]]
+                self.assertEqual(source["sha256"], pin["sha256"])
+                self.assertEqual(source["bytes"], pin["bytes"])
+                self.assertEqual(source["label"], pin["label"])
+
+        part = manifest["parts"][0]
+        self.assertEqual("delete-duplicates", part["id"])
+        self.assertTrue(part["required"])
+        self.assertEqual("sql", part["answerKind"])
+        cases = part["sql"]["cases"]
+        self.assertEqual(
+            EXPECTED_FIXTURE_IDS, [case["fixture"] for case in cases]
+        )
+        self.assertEqual(len(EXPECTED_FIXTURE_IDS), len(cases))
+
+        for case in cases:
+            fixture = self.fixtures[case["fixture"]]
+            with self.subTest(fixture=case["fixture"]):
+                oracle = case["oracle"]
+                self.assertEqual(
+                    {"kind", "tables", "invariants"}, set(oracle)
+                )
+                self.assertEqual("final-state", oracle["kind"])
+                self.assertEqual(
+                    ["customers", "unrelated_records"],
+                    [table["name"] for table in oracle["tables"]],
+                )
+                tables = {table["name"]: table for table in oracle["tables"]}
+                self.assertEqual(
+                    ["id", "email", "created_at"],
+                    [column["name"] for column in tables["customers"]["columns"]],
+                )
+                self.assertEqual(
+                    ["id", "code", "note"],
+                    [
+                        column["name"]
+                        for column in tables["unrelated_records"]["columns"]
+                    ],
+                )
+                for table in oracle["tables"]:
+                    for row in table["rows"]:
+                        for column, cell in zip(table["columns"], row):
+                            if cell["type"] == "null":
+                                self.assertIsNone(cell["value"])
+                                continue
+                            if cell["type"] == "integer":
+                                self.assertEqual("integer", column["type"])
+                                self.assertIs(type(cell["value"]), str)
+                                self.assertRegex(
+                                    cell["value"], r"^(0|-?[1-9][0-9]*)$"
+                                )
+                            elif cell["type"] == "string":
+                                self.assertEqual("string", column["type"])
+                                self.assertIs(type(cell["value"]), str)
+                            else:
+                                self.fail(cell["type"])
+
+                self.assertEqual(
+                    [tuple(row) for row in fixture["expected"]["rows"]],
+                    [
+                        tuple(_cell_value(cell) for cell in row)
+                        for row in tables["customers"]["rows"]
+                    ],
+                )
+                self.assertEqual(
+                    [tuple(row) for row in fixture["unrelated"]["expectedRows"]],
+                    [
+                        tuple(_cell_value(cell) for cell in row)
+                        for row in tables["unrelated_records"]["rows"]
+                    ],
+                )
+                self.assertEqual(
+                    [tool.MANIFEST_INVARIANT],
+                    oracle["invariants"],
+                )
+
+    def test_public_manifest_hints_and_reference_are_assisted_only(self):
+        manifest = self.manifest
+        self.assertEqual(
+            [hint["id"] for hint in tool.MANIFEST_HINTS],
+            [hint["id"] for hint in manifest["hints"]],
+        )
+        self.assertEqual(
+            [hint["text"] for hint in tool.MANIFEST_HINTS],
+            [hint["text"] for hint in manifest["hints"]],
+        )
+        for hint in manifest["hints"]:
+            self.assertLessEqual(len(hint["text"]), 1000)
+            self.assertNotIn("DELETE FROM", hint["text"].upper())
+
+        references = manifest["referenceSolutions"]
+        self.assertEqual(1, len(references))
+        self.assertEqual("delete-duplicates", references[0]["partId"])
+        self.assertEqual({"sql"}, set(references[0]["answer"]))
+        self.assertEqual(
+            tool.MANIFEST_REFERENCE_SQL, references[0]["answer"]["sql"]
+        )
+        self.assertIn(
+            "IS customers.email COLLATE BINARY",
+            references[0]["answer"]["sql"],
+        )
+        self.assertIn("keeper.id < customers.id", references[0]["answer"]["sql"])
+
+    def test_verify_refuses_changed_manifest_or_fixture_hash(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            copied = Path(tmp) / "delete-duplicates"
+            shutil.copytree(SUITE_DIR, copied)
+            self.assertTrue(tool.verify_suite(copied)["ok"])
+
+            manifest_path = copied / tool.MANIFEST_FILENAME
+            original_manifest = manifest_path.read_text()
+            manifest_path.write_text(
+                original_manifest.replace(
+                    '"revision": 1', '"revision": 2', 1
+                )
+            )
+            report = tool.verify_suite(copied)
+            self.assertFalse(report["ok"])
+            self.assertTrue(
+                any(
+                    "checked public manifest differs" in error
+                    for error in report["errors"]
+                ),
+                report["errors"],
+            )
+
+            manifest_path.write_text(original_manifest)
+            fixture_path = copied / self.fixtures["basic"]["relativePath"]
+            fixture_bytes = fixture_path.read_bytes()
+            fixture_path.write_bytes(fixture_bytes + b"\0")
+            report = tool.verify_suite(copied)
+            self.assertFalse(report["ok"])
+            self.assertTrue(
+                any("SHA-256" in error for error in report["errors"]),
+                report["errors"],
+            )
+            self.assertEqual(fixture_bytes, fixture_path.read_bytes()[:-1])
+
     def test_generator_is_deterministic_and_reproduces_committed_semantics(self):
         with tempfile.TemporaryDirectory() as tmp:
             first = Path(tmp) / "first"
@@ -405,6 +634,18 @@ class DeleteDuplicatesFixtureSuiteTest(unittest.TestCase):
             self.assertEqual(first_index["references"], self.index["references"])
             self.assertEqual(first_index["mutations"], self.index["mutations"])
             self.assertEqual(first_index["coverage"], self.index["coverage"])
+
+            first_manifest = tool.build_public_manifest(first_index)
+            second_manifest = tool.build_public_manifest(second_index)
+            self.assertEqual(first_manifest, second_manifest)
+            self.assertEqual(first_manifest, self.manifest)
+            self.assertEqual(
+                tool.public_manifest_text(first_index),
+                tool.public_manifest_text(second_index),
+            )
+            self.assertEqual(
+                tool.public_manifest_text(first_index), self.manifest_text
+            )
 
 
 if __name__ == "__main__":

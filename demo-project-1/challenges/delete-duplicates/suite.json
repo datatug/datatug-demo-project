@@ -3,7 +3,7 @@
     "byteStabilityNote": "Committed SQLite bytes are authoritative. SQLite embeds its library version in the database header, so normal verification checks committed SHA-256 and semantics instead of regenerating bytes. Run regenerate explicitly after an intentional fixture or builder change.",
     "pythonVersion": "3.14.7",
     "regenerationCommand": "python3 scripts/delete-duplicates-fixtures.py regenerate",
-    "sha256": "dfaed1c5e568e736ce796d4702b49b3f8df097ea52ab757f2554f54d806c0529",
+    "sha256": "290601000587d706980a2ec0ab4683c533e084b677e93d270281a874ad315d02",
     "sqliteVersion": "3.53.4",
     "sqliteVersionInfo": [
       3,
@@ -2151,7 +2151,7 @@
     }
   ],
   "publicManifest": false,
-  "publicManifestNote": "Internal fixture-suite index only. The Core-owned public Challenge revision manifest wire schema is intentionally not invented here.",
+  "publicManifestNote": "Internal fixture-suite index only (publicManifest=false). The checked public revision is generated separately at 1.json using the accepted Core contract; this internal index is not itself a published manifest.",
   "receipts": {
     "mutation": {
       "case-trim-collapse": {

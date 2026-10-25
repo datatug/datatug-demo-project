@@ -1,12 +1,21 @@
-# Delete duplicates challenge fixture suite (internal)
+# Delete duplicates challenge
 
-This folder is the internal, unpublished fixture set for the standalone
-delete-duplicates exercise. It is **not** the public Challenge revision
-manifest. The Core-owned manifest wire schema and the published
-`challenges/<id>/<revision>.json` asset are intentionally not defined here; the
-parent implementation integrates that contract after it settles. `suite.json`
-is the internal source of truth that can be translated into the public manifest
-when its schema is ready.
+This folder holds both the internal fixture-suite index and the public revision
+1 manifest for the standalone delete-duplicates exercise.
+
+- `1.json` is the immutable public revision at the declaring project's generic
+  asset path `challenges/delete-duplicates/1.json`. Its wire shape is the
+  accepted Core contract at
+  `github.com/datatug/datatug-core@0f250aa pkg/challenge` (`schemaVersion: 1`,
+  `gradingVersion: challenge-grading-v1`). It has no latest alias, discovery
+  registration or UI-specific fields.
+- `suite.json` remains the internal index (`publicManifest: false`). It records
+  fixture hashes/bytes, expected tables, reference/mutation receipts and the
+  synthetic-data declaration. It is not a published manifest.
+- `fixtures/*.sqlite` are the immutable pinned inputs. The manifest pins each
+  fixture by SHA-256 and byte length, not by its conventional relative path.
+  Other declaring projects may spell the same convention differently; fixture
+  bytes are the identity.
 
 The data is synthetic. No real customer record, source database, log or
 production snapshot was sampled, copied or snapshotted. The invented emails,
@@ -40,6 +49,33 @@ own key) and keeps `MIN(id)`. The SQL references and every mutation are checked
 against the committed expected rows, not against SQL spelling. The oracle order
 is `(id, email, created_at)` ascending by `id`; unrelated rows are compared the
 same way.
+
+## Public revision manifest
+
+`1.json` declares one required SQL part, `delete-duplicates`, with one
+`final-state` case per pinned fixture. Every case compares both
+`customers(id, email, created_at)` and
+`unrelated_records(id, code, note)` exactly, so missing survivors, retained
+duplicates and collateral writes all fail. Each case also declares the
+`keep-lowest-id` `group-min` invariant over `customers.email` with `id` as the
+retention column. The invariant explains a violated lowest-id rule while the
+expected table remains the answer key.
+
+Integer cells use the API contract's typed union
+(`{"type":"integer","value":"2"}`), not JSON numeric cells. String and NULL
+cells use the same union. Exact SQL spelling is never graded.
+
+The manifest pins the approved browser engine
+`@sqlite.org/sqlite-wasm` `3.54.1-build1` (SQLite `3.54.1`). That pin is
+independent of the fixture builder's Python SQLite version recorded in
+`suite.json`; committed fixture bytes remain the authority.
+
+Hints are progressive and explicit. The single reference solution is an
+assisted answer: revealing it must tag the attempt as assisted and must not by
+itself award completion. The accepted Core contract permits at most one
+reference answer per part, so revision 1 pins the canonical NULL-safe `EXISTS`
+formulation; the grouped `MIN` and window alternatives remain verified internal
+generator receipts rather than additional wire answers.
 
 ## Fixtures
 
@@ -116,25 +152,40 @@ contents, so a row-count-only check cannot pass them.
 Run from the repository root:
 
 ```sh
-# Trusted normal check: hashes + semantics; never rewrites committed fixtures.
+# Trusted normal check: hashes + semantics + the checked public manifest.
+# It never rewrites fixtures or the manifest.
 python3 scripts/delete-duplicates-fixtures.py verify
 
-# Focused unit tests, including the mutation matrix and generator determinism.
+# Focused unit tests, including the mutation matrix, manifest wire checks and
+# deterministic generation.
 python3 -m unittest discover -s tests -p 'test_delete_duplicates_fixtures.py' -v
 
 # Explicit regeneration only after an intentional fixture or builder change.
+# The same command rewrites suite.json and 1.json from verified fixtures.
 python3 scripts/delete-duplicates-fixtures.py regenerate
 ```
+
+Normal `verify` refuses a changed fixture hash and also refuses a checked
+`1.json` that differs from the trusted generator's deterministic output. Editing
+the manifest by hand is not a supported path: the explicit regeneration command
+is the only writer. No verification run silently regenerates anything.
 
 The suite was generated with SQLite **3.53.4** and Python **3.14.7**. SQLite
 embeds its library version in the database header, so committed fixture bytes are
 authoritative: ordinary verification checks the committed SHA-256 and semantic
 answers and does not require byte-for-byte regeneration on another SQLite
-version. Regeneration is explicit and records the builder's SQLite/Python
-versions and tool SHA-256 in `suite.json`. Any edit to the trusted tool requires
-an explicit regeneration so its recorded tool hash stays valid.
+version. Regeneration records the builder's SQLite/Python versions and tool
+SHA-256 in `suite.json`. Any edit to the trusted tool requires an explicit
+regeneration so its recorded tool hash stays valid.
 
 Every solution runs through `sqlite3.Connection.backup()` into a new in-memory
 database from a read-only `mode=ro&immutable=1` source connection. Tests hash the
 committed files before and after the run; the source `.sqlite` files are never
 opened for writing and no solution is executed against a committed file.
+
+The Python reference/mutation harness compares final table data, column names and
+typed values, not the SQLite schema text or the browser runtime. It is a trusted
+generator/verification tool, never a learner SQL service, and it does not expose
+an execution endpoint. Python fixture validation is also not browser acceptance:
+it does not prove the guided UI, worker isolation, limits, timing or the
+Chromium/Firefox/WebKit journey required by the feature specification.

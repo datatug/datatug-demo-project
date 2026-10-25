@@ -1,0 +1,1950 @@
+{
+  "allowedOperation": "write",
+  "challengeId": "delete-duplicates",
+  "dialect": "sqlite",
+  "difficulty": "intro",
+  "engine": {
+    "package": "@sqlite.org/sqlite-wasm",
+    "sqliteVersion": "3.54.1",
+    "version": "3.54.1-build1"
+  },
+  "fixtureSuite": {
+    "fixtures": [
+      {
+        "bytes": 12288,
+        "id": "basic",
+        "label": "Basic duplicate groups",
+        "runs": 2,
+        "sha256": "74b2eb32b7f91a528e30d145eb253ad778e03517523a789a39308df2e3dae93c"
+      },
+      {
+        "bytes": 12288,
+        "id": "no-duplicates",
+        "label": "No duplicate groups",
+        "runs": 2,
+        "sha256": "eac560957d32da9bc3dfee7074d0df004d6d9ffe73bce1e263a0324915746f56"
+      },
+      {
+        "bytes": 12288,
+        "id": "multi-group",
+        "label": "Multiple groups including three-plus members",
+        "runs": 2,
+        "sha256": "e831d7da684bd5be7799af17441d13449df9612dd8fef98757cee1bc76780a14"
+      },
+      {
+        "bytes": 12288,
+        "id": "nonsequential-created-at",
+        "label": "Nonsequential ids where created_at disagrees with id",
+        "runs": 2,
+        "sha256": "cb9c82521e0780c35cc36a71dfacf83711ff48611692b8c08895feba5434c9ac"
+      },
+      {
+        "bytes": 12288,
+        "id": "null-empty",
+        "label": "NULL and empty-string duplicate groups",
+        "runs": 2,
+        "sha256": "ff6390ca19f6e9a87db44da08646056199e159e5f87bfbec560f87911a560eda"
+      },
+      {
+        "bytes": 12288,
+        "id": "case-whitespace",
+        "label": "Case and whitespace distinctions",
+        "runs": 2,
+        "sha256": "da7998bd59a0af4a1d2eef3d8da1ba204f37902cc9cfd63bbfa79240e95e16a0"
+      },
+      {
+        "bytes": 12288,
+        "id": "generated-variant-01",
+        "label": "Deterministic generated variant 1",
+        "runs": 2,
+        "sha256": "7f733f9254fcd19a56156dc423ba50c5b4f338b0a6e8ed661e0fa772e6f62fa2"
+      },
+      {
+        "bytes": 12288,
+        "id": "generated-variant-02",
+        "label": "Deterministic generated variant 2",
+        "runs": 2,
+        "sha256": "0e428ba96f95ba052fd41eae54aec1cd65a1a7561f4945b392f3440ef9ef9313"
+      },
+      {
+        "bytes": 12288,
+        "id": "generated-variant-03",
+        "label": "Deterministic generated variant 3",
+        "runs": 2,
+        "sha256": "49f82c4c8ed16766eaf24571936fcbf1aadabda46f3a727fd46643b1f46ac862"
+      }
+    ],
+    "id": "delete-duplicates-v1"
+  },
+  "gradingVersion": "challenge-grading-v1",
+  "hints": [
+    {
+      "id": "hint-1",
+      "text": "Find the email values that occur more than once. Compare the exact stored text: case, leading or trailing spaces and inner spaces all make different values, and NULL is one group."
+    },
+    {
+      "id": "hint-2",
+      "text": "The survivor is the row with the lowest numeric id, not the earliest created_at and not the most recently created row."
+    },
+    {
+      "id": "hint-3",
+      "text": "Do not lowercase or trim the email. SQLite BINARY equality is the declared grouping, so a case or whitespace collapse deletes rows that must remain."
+    },
+    {
+      "id": "hint-4",
+      "text": "Delete a row only when another row in the same exact email group has a lower id. The statement must be safe to apply twice and must not touch unrelated_records."
+    }
+  ],
+  "objective": "Delete duplicate customer rows while preserving the lowest numeric id for each exact email value. BINARY equality is significant, so case and whitespace differences remain separate groups and NULL is one group. created_at is evidence only, and unrelated_records must survive unchanged.",
+  "parts": [
+    {
+      "answerKind": "sql",
+      "id": "delete-duplicates",
+      "required": true,
+      "sql": {
+        "cases": [
+          {
+            "fixture": "basic",
+            "oracle": {
+              "invariants": [
+                {
+                  "column": "id",
+                  "description": "Preserve the lowest numeric id per exact BINARY email value; NULL is one group and created_at is not the retention rule.",
+                  "groupBy": [
+                    "email"
+                  ],
+                  "id": "keep-lowest-id",
+                  "kind": "group-min",
+                  "table": "customers"
+                }
+              ],
+              "kind": "final-state",
+              "tables": [
+                {
+                  "columns": [
+                    {
+                      "name": "id",
+                      "type": "integer"
+                    },
+                    {
+                      "name": "email",
+                      "type": "string"
+                    },
+                    {
+                      "name": "created_at",
+                      "type": "string"
+                    }
+                  ],
+                  "name": "customers",
+                  "rows": [
+                    [
+                      {
+                        "type": "integer",
+                        "value": "2"
+                      },
+                      {
+                        "type": "string",
+                        "value": "bob@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2024-02-01T09:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "3"
+                      },
+                      {
+                        "type": "string",
+                        "value": "ada@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2024-01-03T09:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "5"
+                      },
+                      {
+                        "type": "string",
+                        "value": "cy@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2024-03-01T09:00:00Z"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "columns": [
+                    {
+                      "name": "id",
+                      "type": "integer"
+                    },
+                    {
+                      "name": "code",
+                      "type": "string"
+                    },
+                    {
+                      "name": "note",
+                      "type": "string"
+                    }
+                  ],
+                  "name": "unrelated_records",
+                  "rows": [
+                    [
+                      {
+                        "type": "integer",
+                        "value": "1"
+                      },
+                      {
+                        "type": "string",
+                        "value": "SKU-BASIC-1"
+                      },
+                      {
+                        "type": "string",
+                        "value": "Synthetic unrelated row 1 for BASIC; must survive deduplication."
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "2"
+                      },
+                      {
+                        "type": "string",
+                        "value": "SKU-BASIC-2"
+                      },
+                      {
+                        "type": "string",
+                        "value": "Synthetic unrelated row 2 for BASIC; must survive deduplication."
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "fixture": "no-duplicates",
+            "oracle": {
+              "invariants": [
+                {
+                  "column": "id",
+                  "description": "Preserve the lowest numeric id per exact BINARY email value; NULL is one group and created_at is not the retention rule.",
+                  "groupBy": [
+                    "email"
+                  ],
+                  "id": "keep-lowest-id",
+                  "kind": "group-min",
+                  "table": "customers"
+                }
+              ],
+              "kind": "final-state",
+              "tables": [
+                {
+                  "columns": [
+                    {
+                      "name": "id",
+                      "type": "integer"
+                    },
+                    {
+                      "name": "email",
+                      "type": "string"
+                    },
+                    {
+                      "name": "created_at",
+                      "type": "string"
+                    }
+                  ],
+                  "name": "customers",
+                  "rows": [
+                    [
+                      {
+                        "type": "integer",
+                        "value": "1"
+                      },
+                      {
+                        "type": "string",
+                        "value": "fay@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2024-01-03T00:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "2"
+                      },
+                      {
+                        "type": "string",
+                        "value": ""
+                      },
+                      {
+                        "type": "string",
+                        "value": "2024-01-05T00:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "4"
+                      },
+                      {
+                        "type": "string",
+                        "value": "eli@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2024-01-02T00:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "6"
+                      },
+                      {
+                        "type": "null",
+                        "value": null
+                      },
+                      {
+                        "type": "string",
+                        "value": "2024-01-04T00:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "9"
+                      },
+                      {
+                        "type": "string",
+                        "value": "dana@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2024-01-01T00:00:00Z"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "columns": [
+                    {
+                      "name": "id",
+                      "type": "integer"
+                    },
+                    {
+                      "name": "code",
+                      "type": "string"
+                    },
+                    {
+                      "name": "note",
+                      "type": "string"
+                    }
+                  ],
+                  "name": "unrelated_records",
+                  "rows": [
+                    [
+                      {
+                        "type": "integer",
+                        "value": "1"
+                      },
+                      {
+                        "type": "string",
+                        "value": "SKU-NO-DUPLICATES-1"
+                      },
+                      {
+                        "type": "string",
+                        "value": "Synthetic unrelated row 1 for NO-DUPLICATES; must survive deduplication."
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "2"
+                      },
+                      {
+                        "type": "string",
+                        "value": "SKU-NO-DUPLICATES-2"
+                      },
+                      {
+                        "type": "string",
+                        "value": "Synthetic unrelated row 2 for NO-DUPLICATES; must survive deduplication."
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "3"
+                      },
+                      {
+                        "type": "string",
+                        "value": "SKU-NO-DUPLICATES-3"
+                      },
+                      {
+                        "type": "string",
+                        "value": "Synthetic unrelated row 3 for NO-DUPLICATES; must survive deduplication."
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "fixture": "multi-group",
+            "oracle": {
+              "invariants": [
+                {
+                  "column": "id",
+                  "description": "Preserve the lowest numeric id per exact BINARY email value; NULL is one group and created_at is not the retention rule.",
+                  "groupBy": [
+                    "email"
+                  ],
+                  "id": "keep-lowest-id",
+                  "kind": "group-min",
+                  "table": "customers"
+                }
+              ],
+              "kind": "final-state",
+              "tables": [
+                {
+                  "columns": [
+                    {
+                      "name": "id",
+                      "type": "integer"
+                    },
+                    {
+                      "name": "email",
+                      "type": "string"
+                    },
+                    {
+                      "name": "created_at",
+                      "type": "string"
+                    }
+                  ],
+                  "name": "customers",
+                  "rows": [
+                    [
+                      {
+                        "type": "integer",
+                        "value": "2"
+                      },
+                      {
+                        "type": "string",
+                        "value": "group-c@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2024-05-04T00:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "3"
+                      },
+                      {
+                        "type": "string",
+                        "value": "group-a@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2024-02-02T00:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "5"
+                      },
+                      {
+                        "type": "string",
+                        "value": "group-d@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2024-06-01T00:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "8"
+                      },
+                      {
+                        "type": "string",
+                        "value": "group-b@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2024-04-04T00:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "25"
+                      },
+                      {
+                        "type": "string",
+                        "value": "unique@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2024-07-07T00:00:00Z"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "columns": [
+                    {
+                      "name": "id",
+                      "type": "integer"
+                    },
+                    {
+                      "name": "code",
+                      "type": "string"
+                    },
+                    {
+                      "name": "note",
+                      "type": "string"
+                    }
+                  ],
+                  "name": "unrelated_records",
+                  "rows": [
+                    [
+                      {
+                        "type": "integer",
+                        "value": "1"
+                      },
+                      {
+                        "type": "string",
+                        "value": "SKU-MULTI-1"
+                      },
+                      {
+                        "type": "string",
+                        "value": "Synthetic unrelated row 1 for MULTI; must survive deduplication."
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "2"
+                      },
+                      {
+                        "type": "string",
+                        "value": "SKU-MULTI-2"
+                      },
+                      {
+                        "type": "string",
+                        "value": "Synthetic unrelated row 2 for MULTI; must survive deduplication."
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "3"
+                      },
+                      {
+                        "type": "string",
+                        "value": "SKU-MULTI-3"
+                      },
+                      {
+                        "type": "string",
+                        "value": "Synthetic unrelated row 3 for MULTI; must survive deduplication."
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "fixture": "nonsequential-created-at",
+            "oracle": {
+              "invariants": [
+                {
+                  "column": "id",
+                  "description": "Preserve the lowest numeric id per exact BINARY email value; NULL is one group and created_at is not the retention rule.",
+                  "groupBy": [
+                    "email"
+                  ],
+                  "id": "keep-lowest-id",
+                  "kind": "group-min",
+                  "table": "customers"
+                }
+              ],
+              "kind": "final-state",
+              "tables": [
+                {
+                  "columns": [
+                    {
+                      "name": "id",
+                      "type": "integer"
+                    },
+                    {
+                      "name": "email",
+                      "type": "string"
+                    },
+                    {
+                      "name": "created_at",
+                      "type": "string"
+                    }
+                  ],
+                  "name": "customers",
+                  "rows": [
+                    [
+                      {
+                        "type": "integer",
+                        "value": "2"
+                      },
+                      {
+                        "type": "string",
+                        "value": "early@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2024-09-01T00:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "3"
+                      },
+                      {
+                        "type": "string",
+                        "value": "later@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2024-07-07T00:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "7"
+                      },
+                      {
+                        "type": "string",
+                        "value": "other@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2024-08-01T00:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "41"
+                      },
+                      {
+                        "type": "string",
+                        "value": "unique@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2024-02-02T00:00:00Z"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "columns": [
+                    {
+                      "name": "id",
+                      "type": "integer"
+                    },
+                    {
+                      "name": "code",
+                      "type": "string"
+                    },
+                    {
+                      "name": "note",
+                      "type": "string"
+                    }
+                  ],
+                  "name": "unrelated_records",
+                  "rows": [
+                    [
+                      {
+                        "type": "integer",
+                        "value": "1"
+                      },
+                      {
+                        "type": "string",
+                        "value": "SKU-NONSEQUENTIAL-1"
+                      },
+                      {
+                        "type": "string",
+                        "value": "Synthetic unrelated row 1 for NONSEQUENTIAL; must survive deduplication."
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "2"
+                      },
+                      {
+                        "type": "string",
+                        "value": "SKU-NONSEQUENTIAL-2"
+                      },
+                      {
+                        "type": "string",
+                        "value": "Synthetic unrelated row 2 for NONSEQUENTIAL; must survive deduplication."
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "fixture": "null-empty",
+            "oracle": {
+              "invariants": [
+                {
+                  "column": "id",
+                  "description": "Preserve the lowest numeric id per exact BINARY email value; NULL is one group and created_at is not the retention rule.",
+                  "groupBy": [
+                    "email"
+                  ],
+                  "id": "keep-lowest-id",
+                  "kind": "group-min",
+                  "table": "customers"
+                }
+              ],
+              "kind": "final-state",
+              "tables": [
+                {
+                  "columns": [
+                    {
+                      "name": "id",
+                      "type": "integer"
+                    },
+                    {
+                      "name": "email",
+                      "type": "string"
+                    },
+                    {
+                      "name": "created_at",
+                      "type": "string"
+                    }
+                  ],
+                  "name": "customers",
+                  "rows": [
+                    [
+                      {
+                        "type": "integer",
+                        "value": "1"
+                      },
+                      {
+                        "type": "string",
+                        "value": "NULL"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2024-03-02T00:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "2"
+                      },
+                      {
+                        "type": "string",
+                        "value": ""
+                      },
+                      {
+                        "type": "string",
+                        "value": "2024-02-02T00:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "4"
+                      },
+                      {
+                        "type": "null",
+                        "value": null
+                      },
+                      {
+                        "type": "string",
+                        "value": "2024-01-02T00:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "5"
+                      },
+                      {
+                        "type": "string",
+                        "value": "person@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2024-03-01T00:00:00Z"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "columns": [
+                    {
+                      "name": "id",
+                      "type": "integer"
+                    },
+                    {
+                      "name": "code",
+                      "type": "string"
+                    },
+                    {
+                      "name": "note",
+                      "type": "string"
+                    }
+                  ],
+                  "name": "unrelated_records",
+                  "rows": [
+                    [
+                      {
+                        "type": "integer",
+                        "value": "1"
+                      },
+                      {
+                        "type": "string",
+                        "value": "SKU-NULL-EMPTY-1"
+                      },
+                      {
+                        "type": "string",
+                        "value": "Synthetic unrelated row 1 for NULL-EMPTY; must survive deduplication."
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "2"
+                      },
+                      {
+                        "type": "string",
+                        "value": "SKU-NULL-EMPTY-2"
+                      },
+                      {
+                        "type": "string",
+                        "value": "Synthetic unrelated row 2 for NULL-EMPTY; must survive deduplication."
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "fixture": "case-whitespace",
+            "oracle": {
+              "invariants": [
+                {
+                  "column": "id",
+                  "description": "Preserve the lowest numeric id per exact BINARY email value; NULL is one group and created_at is not the retention rule.",
+                  "groupBy": [
+                    "email"
+                  ],
+                  "id": "keep-lowest-id",
+                  "kind": "group-min",
+                  "table": "customers"
+                }
+              ],
+              "kind": "final-state",
+              "tables": [
+                {
+                  "columns": [
+                    {
+                      "name": "id",
+                      "type": "integer"
+                    },
+                    {
+                      "name": "email",
+                      "type": "string"
+                    },
+                    {
+                      "name": "created_at",
+                      "type": "string"
+                    }
+                  ],
+                  "name": "customers",
+                  "rows": [
+                    [
+                      {
+                        "type": "integer",
+                        "value": "2"
+                      },
+                      {
+                        "type": "string",
+                        "value": "CASE@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2024-01-04T00:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "3"
+                      },
+                      {
+                        "type": "string",
+                        "value": "case@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2024-01-01T00:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "5"
+                      },
+                      {
+                        "type": "string",
+                        "value": "padded@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2024-02-01T00:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "6"
+                      },
+                      {
+                        "type": "string",
+                        "value": "Case@Example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2024-01-03T00:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "11"
+                      },
+                      {
+                        "type": "string",
+                        "value": " padded@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2024-02-03T00:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "12"
+                      },
+                      {
+                        "type": "string",
+                        "value": "padded@example.com "
+                      },
+                      {
+                        "type": "string",
+                        "value": "2024-02-04T00:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "13"
+                      },
+                      {
+                        "type": "string",
+                        "value": "two  words@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2024-03-03T00:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "14"
+                      },
+                      {
+                        "type": "string",
+                        "value": "two words@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2024-03-01T00:00:00Z"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "columns": [
+                    {
+                      "name": "id",
+                      "type": "integer"
+                    },
+                    {
+                      "name": "code",
+                      "type": "string"
+                    },
+                    {
+                      "name": "note",
+                      "type": "string"
+                    }
+                  ],
+                  "name": "unrelated_records",
+                  "rows": [
+                    [
+                      {
+                        "type": "integer",
+                        "value": "1"
+                      },
+                      {
+                        "type": "string",
+                        "value": "SKU-CASE-WHITESPACE-1"
+                      },
+                      {
+                        "type": "string",
+                        "value": "Synthetic unrelated row 1 for CASE-WHITESPACE; must survive deduplication."
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "2"
+                      },
+                      {
+                        "type": "string",
+                        "value": "SKU-CASE-WHITESPACE-2"
+                      },
+                      {
+                        "type": "string",
+                        "value": "Synthetic unrelated row 2 for CASE-WHITESPACE; must survive deduplication."
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "fixture": "generated-variant-01",
+            "oracle": {
+              "invariants": [
+                {
+                  "column": "id",
+                  "description": "Preserve the lowest numeric id per exact BINARY email value; NULL is one group and created_at is not the retention rule.",
+                  "groupBy": [
+                    "email"
+                  ],
+                  "id": "keep-lowest-id",
+                  "kind": "group-min",
+                  "table": "customers"
+                }
+              ],
+              "kind": "final-state",
+              "tables": [
+                {
+                  "columns": [
+                    {
+                      "name": "id",
+                      "type": "integer"
+                    },
+                    {
+                      "name": "email",
+                      "type": "string"
+                    },
+                    {
+                      "name": "created_at",
+                      "type": "string"
+                    }
+                  ],
+                  "name": "customers",
+                  "rows": [
+                    [
+                      {
+                        "type": "integer",
+                        "value": "6"
+                      },
+                      {
+                        "type": "string",
+                        "value": "trim.v01@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2025-03-14T13:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "9"
+                      },
+                      {
+                        "type": "string",
+                        "value": "trailing.v01@example.com "
+                      },
+                      {
+                        "type": "string",
+                        "value": "2025-03-07T06:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "11"
+                      },
+                      {
+                        "type": "string",
+                        "value": "unique.v01@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2025-03-13T12:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "12"
+                      },
+                      {
+                        "type": "null",
+                        "value": null
+                      },
+                      {
+                        "type": "string",
+                        "value": "2025-03-02T01:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "26"
+                      },
+                      {
+                        "type": "string",
+                        "value": "Case.v01@Example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2025-03-06T05:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "56"
+                      },
+                      {
+                        "type": "string",
+                        "value": "beta.v01@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2025-03-11T10:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "59"
+                      },
+                      {
+                        "type": "string",
+                        "value": ""
+                      },
+                      {
+                        "type": "string",
+                        "value": "2025-03-17T16:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "66"
+                      },
+                      {
+                        "type": "string",
+                        "value": "alpha.v01@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2025-01-03T00:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "70"
+                      },
+                      {
+                        "type": "string",
+                        "value": " leading.v01@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2025-03-21T20:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "83"
+                      },
+                      {
+                        "type": "string",
+                        "value": "gamma.v01@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2025-03-23T22:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "100"
+                      },
+                      {
+                        "type": "string",
+                        "value": "case.v01@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2025-03-18T17:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "108"
+                      },
+                      {
+                        "type": "string",
+                        "value": "NULL"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2025-03-09T08:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "151"
+                      },
+                      {
+                        "type": "string",
+                        "value": "another.v01@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2025-03-22T21:00:00Z"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "columns": [
+                    {
+                      "name": "id",
+                      "type": "integer"
+                    },
+                    {
+                      "name": "code",
+                      "type": "string"
+                    },
+                    {
+                      "name": "note",
+                      "type": "string"
+                    }
+                  ],
+                  "name": "unrelated_records",
+                  "rows": [
+                    [
+                      {
+                        "type": "integer",
+                        "value": "1"
+                      },
+                      {
+                        "type": "string",
+                        "value": "SKU-GENERATED-v01-1"
+                      },
+                      {
+                        "type": "string",
+                        "value": "Synthetic unrelated row 1 for GENERATED-v01; must survive deduplication."
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "2"
+                      },
+                      {
+                        "type": "string",
+                        "value": "SKU-GENERATED-v01-2"
+                      },
+                      {
+                        "type": "string",
+                        "value": "Synthetic unrelated row 2 for GENERATED-v01; must survive deduplication."
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "fixture": "generated-variant-02",
+            "oracle": {
+              "invariants": [
+                {
+                  "column": "id",
+                  "description": "Preserve the lowest numeric id per exact BINARY email value; NULL is one group and created_at is not the retention rule.",
+                  "groupBy": [
+                    "email"
+                  ],
+                  "id": "keep-lowest-id",
+                  "kind": "group-min",
+                  "table": "customers"
+                }
+              ],
+              "kind": "final-state",
+              "tables": [
+                {
+                  "columns": [
+                    {
+                      "name": "id",
+                      "type": "integer"
+                    },
+                    {
+                      "name": "email",
+                      "type": "string"
+                    },
+                    {
+                      "name": "created_at",
+                      "type": "string"
+                    }
+                  ],
+                  "name": "customers",
+                  "rows": [
+                    [
+                      {
+                        "type": "integer",
+                        "value": "18"
+                      },
+                      {
+                        "type": "string",
+                        "value": "alpha.v02@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2025-01-02T00:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "34"
+                      },
+                      {
+                        "type": "string",
+                        "value": " leading.v02@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2025-03-04T03:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "38"
+                      },
+                      {
+                        "type": "string",
+                        "value": "trim.v02@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2025-03-21T20:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "53"
+                      },
+                      {
+                        "type": "string",
+                        "value": ""
+                      },
+                      {
+                        "type": "string",
+                        "value": "2025-03-03T02:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "73"
+                      },
+                      {
+                        "type": "string",
+                        "value": "another.v02@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2025-03-16T15:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "79"
+                      },
+                      {
+                        "type": "string",
+                        "value": "gamma.v02@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2025-03-09T08:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "87"
+                      },
+                      {
+                        "type": "string",
+                        "value": "beta.v02@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2025-03-18T17:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "96"
+                      },
+                      {
+                        "type": "string",
+                        "value": "case.v02@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2025-03-20T19:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "101"
+                      },
+                      {
+                        "type": "string",
+                        "value": "Case.v02@Example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2025-03-13T12:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "105"
+                      },
+                      {
+                        "type": "string",
+                        "value": "unique.v02@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2025-03-07T06:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "128"
+                      },
+                      {
+                        "type": "null",
+                        "value": null
+                      },
+                      {
+                        "type": "string",
+                        "value": "2025-03-01T00:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "135"
+                      },
+                      {
+                        "type": "string",
+                        "value": "NULL"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2025-03-12T11:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "193"
+                      },
+                      {
+                        "type": "string",
+                        "value": "trailing.v02@example.com "
+                      },
+                      {
+                        "type": "string",
+                        "value": "2025-03-19T18:00:00Z"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "columns": [
+                    {
+                      "name": "id",
+                      "type": "integer"
+                    },
+                    {
+                      "name": "code",
+                      "type": "string"
+                    },
+                    {
+                      "name": "note",
+                      "type": "string"
+                    }
+                  ],
+                  "name": "unrelated_records",
+                  "rows": [
+                    [
+                      {
+                        "type": "integer",
+                        "value": "1"
+                      },
+                      {
+                        "type": "string",
+                        "value": "SKU-GENERATED-v02-1"
+                      },
+                      {
+                        "type": "string",
+                        "value": "Synthetic unrelated row 1 for GENERATED-v02; must survive deduplication."
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "2"
+                      },
+                      {
+                        "type": "string",
+                        "value": "SKU-GENERATED-v02-2"
+                      },
+                      {
+                        "type": "string",
+                        "value": "Synthetic unrelated row 2 for GENERATED-v02; must survive deduplication."
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "fixture": "generated-variant-03",
+            "oracle": {
+              "invariants": [
+                {
+                  "column": "id",
+                  "description": "Preserve the lowest numeric id per exact BINARY email value; NULL is one group and created_at is not the retention rule.",
+                  "groupBy": [
+                    "email"
+                  ],
+                  "id": "keep-lowest-id",
+                  "kind": "group-min",
+                  "table": "customers"
+                }
+              ],
+              "kind": "final-state",
+              "tables": [
+                {
+                  "columns": [
+                    {
+                      "name": "id",
+                      "type": "integer"
+                    },
+                    {
+                      "name": "email",
+                      "type": "string"
+                    },
+                    {
+                      "name": "created_at",
+                      "type": "string"
+                    }
+                  ],
+                  "name": "customers",
+                  "rows": [
+                    [
+                      {
+                        "type": "integer",
+                        "value": "3"
+                      },
+                      {
+                        "type": "string",
+                        "value": "trim.v03@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2025-03-13T12:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "23"
+                      },
+                      {
+                        "type": "string",
+                        "value": "unique.v03@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2025-03-12T11:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "34"
+                      },
+                      {
+                        "type": "string",
+                        "value": "alpha.v03@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2025-01-02T00:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "45"
+                      },
+                      {
+                        "type": "string",
+                        "value": "beta.v03@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2025-03-03T02:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "52"
+                      },
+                      {
+                        "type": "string",
+                        "value": ""
+                      },
+                      {
+                        "type": "string",
+                        "value": "2025-03-04T03:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "55"
+                      },
+                      {
+                        "type": "null",
+                        "value": null
+                      },
+                      {
+                        "type": "string",
+                        "value": "2025-03-16T15:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "66"
+                      },
+                      {
+                        "type": "string",
+                        "value": "gamma.v03@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2025-03-01T00:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "67"
+                      },
+                      {
+                        "type": "string",
+                        "value": "trailing.v03@example.com "
+                      },
+                      {
+                        "type": "string",
+                        "value": "2025-03-09T08:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "79"
+                      },
+                      {
+                        "type": "string",
+                        "value": "Case.v03@Example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2025-03-18T17:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "82"
+                      },
+                      {
+                        "type": "string",
+                        "value": "case.v03@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2025-03-11T10:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "84"
+                      },
+                      {
+                        "type": "string",
+                        "value": " leading.v03@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2025-03-06T05:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "145"
+                      },
+                      {
+                        "type": "string",
+                        "value": "NULL"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2025-03-19T18:00:00Z"
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "166"
+                      },
+                      {
+                        "type": "string",
+                        "value": "another.v03@example.com"
+                      },
+                      {
+                        "type": "string",
+                        "value": "2025-03-20T19:00:00Z"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "columns": [
+                    {
+                      "name": "id",
+                      "type": "integer"
+                    },
+                    {
+                      "name": "code",
+                      "type": "string"
+                    },
+                    {
+                      "name": "note",
+                      "type": "string"
+                    }
+                  ],
+                  "name": "unrelated_records",
+                  "rows": [
+                    [
+                      {
+                        "type": "integer",
+                        "value": "1"
+                      },
+                      {
+                        "type": "string",
+                        "value": "SKU-GENERATED-v03-1"
+                      },
+                      {
+                        "type": "string",
+                        "value": "Synthetic unrelated row 1 for GENERATED-v03; must survive deduplication."
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "2"
+                      },
+                      {
+                        "type": "string",
+                        "value": "SKU-GENERATED-v03-2"
+                      },
+                      {
+                        "type": "string",
+                        "value": "Synthetic unrelated row 2 for GENERATED-v03; must survive deduplication."
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "3"
+                      },
+                      {
+                        "type": "string",
+                        "value": "SKU-GENERATED-v03-3"
+                      },
+                      {
+                        "type": "string",
+                        "value": "Synthetic unrelated row 3 for GENERATED-v03; must survive deduplication."
+                      }
+                    ],
+                    [
+                      {
+                        "type": "integer",
+                        "value": "4"
+                      },
+                      {
+                        "type": "string",
+                        "value": "SKU-GENERATED-v03-4"
+                      },
+                      {
+                        "type": "string",
+                        "value": "Synthetic unrelated row 4 for GENERATED-v03; must survive deduplication."
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "title": "Delete duplicate customer rows"
+    }
+  ],
+  "referenceSolutions": [
+    {
+      "answer": {
+        "sql": "DELETE FROM customers\nWHERE EXISTS (\n    SELECT 1\n    FROM customers AS keeper\n    WHERE keeper.email IS customers.email COLLATE BINARY\n      AND keeper.id < customers.id\n);\n"
+      },
+      "partId": "delete-duplicates"
+    }
+  ],
+  "revision": 1,
+  "schemaVersion": 1,
+  "timing": "optional",
+  "title": "Delete duplicate customers",
+  "visibleSchema": {
+    "tables": [
+      {
+        "columns": [
+          {
+            "name": "id",
+            "primaryKey": true,
+            "type": "integer"
+          },
+          {
+            "collation": "BINARY",
+            "name": "email",
+            "type": "string"
+          },
+          {
+            "name": "created_at",
+            "notNull": true,
+            "type": "string"
+          }
+        ],
+        "name": "customers"
+      },
+      {
+        "columns": [
+          {
+            "name": "id",
+            "primaryKey": true,
+            "type": "integer"
+          },
+          {
+            "collation": "BINARY",
+            "name": "code",
+            "notNull": true,
+            "type": "string"
+          },
+          {
+            "name": "note",
+            "notNull": true,
+            "type": "string"
+          }
+        ],
+        "name": "unrelated_records"
+      }
+    ]
+  }
+}

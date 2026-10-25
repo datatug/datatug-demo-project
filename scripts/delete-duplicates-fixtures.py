@@ -8,8 +8,15 @@ in-memory copy. It never rewrites a committed fixture. Regeneration is an
 explicit action and may change bytes when SQLite's own library version changes,
 because SQLite embeds its library version in the database header.
 
-This is an internal fixture-suite index, not the public Challenge revision
-manifest. The Core-owned public wire schema is deliberately not invented here.
+The internal index records fixture bytes and oracle receipts. The same trusted
+tool also emits the checked public revision manifest,
+`challenges/delete-duplicates/1.json`, from those verified fixtures. The
+manifest wire shape comes from the accepted Core contract
+`github.com/datatug/datatug-core@0f250aa pkg/challenge`, not from this tool.
+The Python checks validate fixture semantics only; they do not establish
+browser acceptance of the challenge. Reference and mutation SQL runs only
+against disposable in-memory copies for fixture verification; this tool is not
+a learner SQL service and exposes no execution endpoint.
 """
 from __future__ import annotations
 
@@ -31,12 +38,81 @@ from urllib.parse import quote
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_SUITE_DIR = ROOT / "demo-project-1/challenges/delete-duplicates"
 INDEX_FILENAME = "suite.json"
+MANIFEST_FILENAME = "1.json"
 
 FORMAT = "datatug.internal.challenge-fixture-suite/v1"
 KIND = "internal-fixture-suite-index"
 CHALLENGE_ID = "delete-duplicates"
 GENERATED_SEED = 20261025
 GENERATED_VARIANTS = 3
+
+# The public revision wire shape is owned by Core. This tool only populates the
+# accepted closed schema; it must never add fields of its own.
+MANIFEST_SCHEMA_VERSION = 1
+MANIFEST_GRADING_VERSION = "challenge-grading-v1"
+MANIFEST_REVISION = 1
+MANIFEST_TITLE = "Delete duplicate customers"
+MANIFEST_OBJECTIVE = (
+    "Delete duplicate customer rows while preserving the lowest numeric id for "
+    "each exact email value. BINARY equality is significant, so case and "
+    "whitespace differences remain separate groups and NULL is one group. "
+    "created_at is evidence only, and unrelated_records must survive unchanged."
+)
+MANIFEST_DIFFICULTY = "intro"
+MANIFEST_TIMING = "optional"
+MANIFEST_FIXTURE_SUITE_ID = "delete-duplicates-v1"
+MANIFEST_PART_ID = "delete-duplicates"
+MANIFEST_PART_TITLE = "Delete duplicate customer rows"
+MANIFEST_ENGINE = {
+    "package": "@sqlite.org/sqlite-wasm",
+    "version": "3.54.1-build1",
+    "sqliteVersion": "3.54.1",
+}
+MANIFEST_INVARIANT = {
+    "id": "keep-lowest-id",
+    "kind": "group-min",
+    "table": "customers",
+    "groupBy": ["email"],
+    "column": "id",
+    "description": (
+        "Preserve the lowest numeric id per exact BINARY email value; NULL is "
+        "one group and created_at is not the retention rule."
+    ),
+}
+MANIFEST_HINTS = [
+    {
+        "id": "hint-1",
+        "text": (
+            "Find the email values that occur more than once. Compare the exact "
+            "stored text: case, leading or trailing spaces and inner spaces all "
+            "make different values, and NULL is one group."
+        ),
+    },
+    {
+        "id": "hint-2",
+        "text": (
+            "The survivor is the row with the lowest numeric id, not the earliest "
+            "created_at and not the most recently created row."
+        ),
+    },
+    {
+        "id": "hint-3",
+        "text": (
+            "Do not lowercase or trim the email. SQLite BINARY equality is the "
+            "declared grouping, so a case or whitespace collapse deletes rows that "
+            "must remain."
+        ),
+    },
+    {
+        "id": "hint-4",
+        "text": (
+            "Delete a row only when another row in the same exact email group has a "
+            "lower id. The statement must be safe to apply twice and must not touch "
+            "unrelated_records."
+        ),
+    },
+]
+
 
 SCHEMA_SQL = """CREATE TABLE customers (
     id INTEGER PRIMARY KEY,
@@ -168,6 +244,11 @@ WHERE id IN (
 """,
     },
 ]
+
+# The Core contract permits at most one reference answer per part. Revision 1
+# therefore pins the canonical NULL-safe EXISTS formulation; the other verified
+# formulations remain internal generator receipts, not additional wire answers.
+MANIFEST_REFERENCE_SQL = REFERENCE_SOLUTIONS[0]["sql"]
 
 MUTATION_SOLUTIONS = [
     {
@@ -911,6 +992,186 @@ def _fixture_entry(spec: dict, path: Path) -> dict:
     }
 
 
+_WIRE_COLUMN_TYPES = {
+    "INTEGER": "integer",
+    "TEXT": "string",
+}
+
+
+def _wire_column_type(column: dict) -> str:
+    declared = str(column.get("declaredType", ""))
+    try:
+        return _WIRE_COLUMN_TYPES[declared.upper()]
+    except KeyError as exc:
+        raise ValueError(f"unsupported fixture column type {declared!r}") from exc
+
+
+def _typed_cell(value):
+    """Encode one SQLite cell using the Core typed-value wire union."""
+    if value is None:
+        return {"type": "null", "value": None}
+    if type(value) is int:
+        # Integer cells are canonical decimal strings, not JSON numbers.
+        return {"type": "integer", "value": str(value)}
+    if type(value) is str:
+        return {"type": "string", "value": value}
+    raise TypeError(f"unsupported typed cell {value!r}")
+
+
+def _expectation_columns(columns: list[dict]) -> list[dict]:
+    return [
+        {"name": column["name"], "type": _wire_column_type(column)}
+        for column in columns
+    ]
+
+
+def _table_expectation(name: str, columns: list[dict], rows) -> dict:
+    return {
+        "name": name,
+        "columns": _expectation_columns(columns),
+        "rows": [[_typed_cell(value) for value in row] for row in rows],
+    }
+
+
+def _visible_column(column: dict) -> dict:
+    visible = {"name": column["name"], "type": _wire_column_type(column)}
+    if column.get("primaryKey"):
+        visible["primaryKey"] = True
+    if column.get("notNull"):
+        visible["notNull"] = True
+    if column.get("collation"):
+        visible["collation"] = column["collation"]
+    return visible
+
+
+def _visible_schema() -> dict:
+    return {
+        "tables": [
+            {
+                "name": table["name"],
+                "columns": [_visible_column(column) for column in table["columns"]],
+            }
+            for table in SCHEMA_TABLES
+        ]
+    }
+
+
+def build_public_manifest(index: dict) -> dict:
+    """Build the closed Core manifest from a verified internal suite index."""
+    fixtures = index["fixtures"]
+    cases = []
+    for fixture in fixtures:
+        cases.append(
+            {
+                "fixture": fixture["id"],
+                "oracle": {
+                    "kind": "final-state",
+                    "tables": [
+                        _table_expectation(
+                            fixture["expected"]["table"],
+                            fixture["expected"]["columns"],
+                            fixture["expected"]["rows"],
+                        ),
+                        _table_expectation(
+                            fixture["unrelated"]["table"],
+                            fixture["unrelated"]["columns"],
+                            fixture["unrelated"]["expectedRows"],
+                        ),
+                    ],
+                    "invariants": [
+                        {
+                            **MANIFEST_INVARIANT,
+                            "groupBy": list(MANIFEST_INVARIANT["groupBy"]),
+                        }
+                    ],
+                },
+            }
+        )
+    return {
+        "schemaVersion": MANIFEST_SCHEMA_VERSION,
+        "gradingVersion": MANIFEST_GRADING_VERSION,
+        "challengeId": index["challengeId"],
+        "revision": MANIFEST_REVISION,
+        "title": MANIFEST_TITLE,
+        "objective": MANIFEST_OBJECTIVE,
+        "difficulty": MANIFEST_DIFFICULTY,
+        "dialect": "sqlite",
+        "allowedOperation": "write",
+        "timing": MANIFEST_TIMING,
+        "engine": dict(MANIFEST_ENGINE),
+        "fixtureSuite": {
+            "id": MANIFEST_FIXTURE_SUITE_ID,
+            "fixtures": [
+                {
+                    "id": fixture["id"],
+                    "label": fixture["label"],
+                    "sha256": fixture["sha256"],
+                    "bytes": fixture["bytes"],
+                    "runs": 2,
+                }
+                for fixture in fixtures
+            ],
+        },
+        "visibleSchema": _visible_schema(),
+        "parts": [
+            {
+                "id": MANIFEST_PART_ID,
+                "title": MANIFEST_PART_TITLE,
+                "required": True,
+                "answerKind": "sql",
+                "sql": {"cases": cases},
+            }
+        ],
+        "hints": [{**hint} for hint in MANIFEST_HINTS],
+        "referenceSolutions": [
+            {
+                "partId": MANIFEST_PART_ID,
+                "answer": {"sql": MANIFEST_REFERENCE_SQL},
+            }
+        ],
+    }
+
+
+def public_manifest_text(index: dict) -> str:
+    """Canonical deterministic bytes for the checked public revision manifest."""
+    return (
+        json.dumps(
+            build_public_manifest(index),
+            indent=2,
+            sort_keys=True,
+            ensure_ascii=False,
+        )
+        + "\n"
+    )
+
+
+def _write_public_manifest(output_dir: Path, index: dict) -> Path:
+    path = Path(output_dir) / MANIFEST_FILENAME
+    temporary = path.with_name(path.name + ".tmp")
+    temporary.write_text(public_manifest_text(index), encoding="utf-8")
+    os.replace(temporary, path)
+    return path
+
+
+def verify_public_manifest(suite_dir: Path, index: dict) -> list[str]:
+    """Refuse a missing or changed checked manifest; never regenerate it here."""
+    path = Path(suite_dir) / MANIFEST_FILENAME
+    try:
+        checked = path.read_text(encoding="utf-8")
+    except Exception as exc:
+        return [f"cannot read checked public manifest {path}: {exc}"]
+    try:
+        expected = public_manifest_text(index)
+    except Exception as exc:
+        return [f"cannot build expected public manifest: {exc}"]
+    if checked != expected:
+        return [
+            "checked public manifest differs from the trusted generator; "
+            "run the explicit regenerate command instead of editing it by hand"
+        ]
+    return []
+
+
 def _builder_metadata() -> dict:
     tool_path = Path(__file__).resolve()
     try:
@@ -952,8 +1213,9 @@ def build_index(output_dir: Path) -> dict:
         "status": "internal-unpublished",
         "publicManifest": False,
         "publicManifestNote": (
-            "Internal fixture-suite index only. The Core-owned public Challenge "
-            "revision manifest wire schema is intentionally not invented here."
+            "Internal fixture-suite index only (publicManifest=false). The checked "
+            "public revision is generated separately at 1.json using the accepted "
+            "Core contract; this internal index is not itself a published manifest."
         ),
         "synthetic": True,
         "dataDeclaration": {
@@ -1201,11 +1463,18 @@ def verify_suite(suite_dir: Path = DEFAULT_SUITE_DIR) -> dict:
             "fixtureCount": 0,
             "referenceCount": 0,
             "mutationCount": 0,
+            "manifestPath": str(suite_dir / MANIFEST_FILENAME),
             "summary": {},
             "referenceMatrix": {},
             "mutationMatrix": {},
         }
-    return verify_index(suite_dir, index)
+    report = verify_index(suite_dir, index)
+    manifest_errors = verify_public_manifest(suite_dir, index)
+    report["errors"].extend(manifest_errors)
+    report["manifestPath"] = str(suite_dir / MANIFEST_FILENAME)
+    report["manifestOk"] = not manifest_errors
+    report["ok"] = not report["errors"]
+    return report
 
 
 def _atomic_copy(source: Path, destination: Path) -> None:
@@ -1237,6 +1506,7 @@ def regenerate_suite(suite_dir: Path = DEFAULT_SUITE_DIR) -> dict:
         temporary_index = suite_dir / (INDEX_FILENAME + ".tmp")
         temporary_index.write_text(index_text)
         os.replace(temporary_index, suite_dir / INDEX_FILENAME)
+        _write_public_manifest(suite_dir, index)
     report = verify_suite(suite_dir)
     if not report["ok"]:
         raise RuntimeError(
@@ -1263,6 +1533,8 @@ def _print_report(report: dict, *, regenerated: bool = False) -> None:
             "  rejected mutation cases: "
             f"{summary.get('rejectedMutationCases')}/{summary.get('mutationCases')}"
         )
+    if report.get("manifestPath"):
+        print(f"  public manifest: {report['manifestPath']}")
     print(
         "  runtime: SQLite "
         f"{report['runtime']['sqliteVersion']} / Python "
