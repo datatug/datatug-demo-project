@@ -1,4 +1,5 @@
 {
+  "createdAt": "2026-10-15T23:28:30Z",
   "id": "chinook-customer-coverage-walkthrough",
   "title": "Investigate Chinook customer coverage",
   "description": "A manual guide: inspect the complete Chinook customer inventory, then run the saved coverage Check against the pinned browser SQLite snapshot. This Scenario does not create or update a Case.",
