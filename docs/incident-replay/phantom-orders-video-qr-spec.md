@@ -25,8 +25,9 @@ evidence, challenges or answers.
   duplicate. It narrows the investigation; it does not prove when the defect
   was introduced.
 - **Config-dependent cause.** Only the complete package's reviewed configuration
-  diff supports the causal claim. The absent-configuration variant must answer
-  with insufficient evidence and an unknown deployment rather than a cause.
+  diff supports the causal claim. The absent-configuration variant must state
+  the uncertainty rather than assert a cause, and its deployment stays
+  unconfirmed.
 
 ## Playback and checkpoint rules
 
@@ -122,8 +123,8 @@ contents so that reading the companion cannot replace solving the challenge.
   package actually supplies the configuration evidence.
 - **Debrief, complete package:** the diff and both repeated-request traces
   support the missing safeguard, leading into prevention. **Debrief,
-  absent-config variant:** the team records insufficient evidence and an unknown
-  deployment instead of asserting a cause. Explicit Next follows.
+  absent-config variant:** the team records the uncertainty and leaves the
+  deployment unconfirmed instead of asserting a cause. Explicit Next follows.
 
 ### 6. prevention — 06:00–07:30
 
