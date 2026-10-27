@@ -227,7 +227,13 @@ test('showcase charts use exact admitted server TugQL and inspector uses explici
   assert.deepEqual(tabs[0].widget.data.sql.presentationFilter, { selectionId: 'customer-country', column: 'ShipCountry' });
   assert.equal(race.data.sources[0].queryId, 'demodb/northwind-orders-full-sqlite');
   assert.equal(bars.data.sources[0].queryId, 'demodb/northwind-shipping-country-count-sqlite');
-  assert.deepEqual(tabs.map((tab) => tab.widget.data.sql.queryId), [
+  assert.deepEqual(tabs.map((tab) => {
+    if (tab.widget.name === 'SQL') return tab.widget.data.sql.queryId;
+    assert.equal(tab.widget.name, 'chart');
+    assert.equal(tab.widget.data.defaultView, 'grid', 'source rows remain the initial view');
+    assert.equal(tab.widget.data.sources.length, 1);
+    return tab.widget.data.sources[0].queryId;
+  }), [
     'demodb/northwind-orders-full-sqlite', 'demodb/northwind-country-counts-server',
     'demodb/customer-country-comparison-server', 'demodb/chinook-billing-server',
   ]);

@@ -1,7 +1,11 @@
 {
   "id": "board1",
   "title": "Chinook customer insights",
-  "tags": ["chinook", "sales", "customers"],
+  "tags": [
+    "chinook",
+    "sales",
+    "customers"
+  ],
   "access": "public",
   "rows": [
     {
@@ -11,10 +15,22 @@
           "title": "Top customer spend",
           "cols": 6,
           "widget": {
-            "name": "SQL",
+            "name": "chart",
             "data": {
-              "title": "Open this saved Chinook SQLite query and run it in your browser.",
-              "sql": { "queryId": "demodb/chinook-top-customer-spend" }
+              "title": "Top customer spend \u00b7 amounts in cents",
+              "sources": [
+                {
+                  "id": "top-customer-spend-rows",
+                  "queryId": "demodb/chinook-top-customer-spend"
+                }
+              ],
+              "chart": {
+                "type": "bar",
+                "categoryColumn": "CustomerName",
+                "valueColumn": "TotalCents",
+                "unit": "cents"
+              },
+              "defaultView": "grid"
             }
           }
         },
@@ -23,10 +39,22 @@
           "title": "Playlist composition",
           "cols": 6,
           "widget": {
-            "name": "SQL",
+            "name": "chart",
             "data": {
-              "title": "Explore a second saved Chinook SQLite query with browser execution.",
-              "sql": { "queryId": "demodb/chinook-playlist-composition" }
+              "title": "Tracks per playlist ID \u00b7 names are available in Source rows",
+              "sources": [
+                {
+                  "id": "playlist-composition-rows",
+                  "queryId": "demodb/chinook-playlist-composition"
+                }
+              ],
+              "chart": {
+                "type": "bar",
+                "categoryColumn": "PlaylistId",
+                "valueColumn": "TrackCount",
+                "unit": "tracks"
+              },
+              "defaultView": "grid"
             }
           }
         }

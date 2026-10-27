@@ -1,7 +1,11 @@
 {
   "id": "northwind",
   "title": "Northwind operations",
-  "tags": ["northwind", "sales", "operations"],
+  "tags": [
+    "northwind",
+    "sales",
+    "operations"
+  ],
   "access": "public",
   "rows": [
     {
@@ -11,10 +15,33 @@
           "title": "Reorder watchlist",
           "cols": 6,
           "widget": {
-            "name": "SQL",
+            "name": "chart",
             "data": {
-              "title": "Products at or below their reorder level. Runs in your browser on the public Northwind SQLite file.",
-              "sql": { "queryId": "demodb/northwind-reorder-watchlist" }
+              "title": "Stock against reorder level \u00b7 public Northwind SQLite",
+              "sources": [
+                {
+                  "id": "reorder-watchlist-rows",
+                  "queryId": "demodb/northwind-reorder-watchlist"
+                }
+              ],
+              "chart": {
+                "type": "bar",
+                "categoryColumn": "ProductName",
+                "unit": "units",
+                "series": [
+                  {
+                    "id": "in-stock",
+                    "title": "In stock",
+                    "valueColumn": "UnitsInStock"
+                  },
+                  {
+                    "id": "reorder-level",
+                    "title": "Reorder level",
+                    "valueColumn": "ReorderLevel"
+                  }
+                ]
+              },
+              "defaultView": "grid"
             }
           }
         },
@@ -23,10 +50,22 @@
           "title": "Top customer orders",
           "cols": 6,
           "widget": {
-            "name": "SQL",
+            "name": "chart",
             "data": {
-              "title": "Customers by sales. Runs in your browser on the public Northwind SQLite file.",
-              "sql": { "queryId": "demodb/northwind-top-customer-orders" }
+              "title": "Top customer sales \u00b7 amounts in cents",
+              "sources": [
+                {
+                  "id": "top-customer-orders-rows",
+                  "queryId": "demodb/northwind-top-customer-orders"
+                }
+              ],
+              "chart": {
+                "type": "bar",
+                "categoryColumn": "CompanyName",
+                "valueColumn": "SalesCents",
+                "unit": "cents"
+              },
+              "defaultView": "grid"
             }
           }
         }

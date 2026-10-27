@@ -16,7 +16,7 @@
     },
     {
       "id": "showcase",
-      "title": "Orders in motion · DataTug visual showcase"
+      "title": "Orders in motion \u00b7 DataTug visual showcase"
     }
   ],
   "dbModels": [
@@ -68,5 +68,61 @@
         "reference": "chinook-v1"
       }
     ]
-  }
+  },
+  "databases": [
+    {
+      "id": "chinook-postgresql",
+      "title": "Chinook \u00b7 PostgreSQL",
+      "connectionId": "chinook-postgresql",
+      "ovdb": {
+        "baseUrl": "https://cloud.openvaultdb.com",
+        "databaseId": "chinook-postgresql"
+      }
+    },
+    {
+      "id": "northwind-postgresql",
+      "title": "Northwind \u00b7 PostgreSQL",
+      "connectionId": "northwind-postgresql",
+      "ovdb": {
+        "baseUrl": "https://cloud.openvaultdb.com",
+        "databaseId": "northwind-postgresql"
+      }
+    },
+    {
+      "id": "pubs-postgresql",
+      "title": "Pubs \u00b7 PostgreSQL",
+      "connectionId": "pubs-postgresql",
+      "ovdb": {
+        "baseUrl": "https://cloud.openvaultdb.com",
+        "databaseId": "pubs-postgresql"
+      }
+    },
+    {
+      "id": "sakila-postgresql",
+      "title": "Sakila \u00b7 PostgreSQL",
+      "connectionId": "sakila-postgresql",
+      "ovdb": {
+        "baseUrl": "https://cloud.openvaultdb.com",
+        "databaseId": "sakila-postgresql"
+      }
+    },
+    {
+      "id": "adventureworks-postgresql",
+      "title": "Adventureworks \u00b7 PostgreSQL",
+      "connectionId": "adventureworks-postgresql",
+      "ovdb": {
+        "baseUrl": "https://cloud.openvaultdb.com",
+        "databaseId": "adventureworks-postgresql"
+      }
+    },
+    {
+      "id": "employees-postgresql",
+      "title": "Employees \u00b7 PostgreSQL",
+      "connectionId": "employees-postgresql",
+      "ovdb": {
+        "baseUrl": "https://cloud.openvaultdb.com",
+        "databaseId": "employees-postgresql"
+      }
+    }
+  ]
 }
