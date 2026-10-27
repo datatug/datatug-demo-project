@@ -666,15 +666,11 @@
   "incidents": [
     {
       "id": "incident-0042",
-      "title": "Duplicate charges after retry handler deployment",
-      "description": "Synthetic incident for The Phantom Orders training. Successful retries produced duplicate charges; the scenario and all evidence are fictional.",
+      "title": "Reported repeated charges",
+      "description": "Synthetic incident for The Phantom Orders training. Customers reported repeated charges in this fictional scenario; the cause is still under investigation and all evidence is fictional.",
       "status": "investigating",
       "evidenceIds": [
-        "config-pay-17",
-        "trace-r2",
-        "trace-r4",
-        "payment-ledger",
-        "duplicate-cohort"
+        "payment-ledger"
       ]
     }
   ],

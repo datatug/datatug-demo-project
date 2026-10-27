@@ -1721,13 +1721,13 @@ def _cases() -> list[dict[str, Any]]:
 def _incident(incident_id: str = "incident-0042", evidence_ids: Sequence[str] | None = None) -> dict[str, Any]:
     return {
         "id": incident_id,
-        "title": "Duplicate charges after retry handler deployment",
+        "title": "Reported repeated charges",
         "description": (
-            "Synthetic incident for The Phantom Orders training. Successful retries produced duplicate charges; "
-            "the scenario and all evidence are fictional."
+            "Synthetic incident for The Phantom Orders training. Customers reported repeated charges in this "
+            "fictional scenario; the cause is still under investigation and all evidence is fictional."
         ),
         "status": "investigating",
-        "evidenceIds": list(evidence_ids or ["config-pay-17", "trace-r2", "trace-r4", "payment-ledger", "duplicate-cohort"]),
+        "evidenceIds": list(evidence_ids or ["payment-ledger"]),
     }
 
 
@@ -2237,10 +2237,26 @@ def build_declaration(package_ref: dict[str, Any], narrative_bytes: bytes) -> by
                         "done": {"kind": "route-reached"},
                     },
                     {
+                        "id": f"{chapter_id}-debrief",
+                        "kind": "scripted-dialogue",
+                        "segmentId": f"{chapter_id}-debrief",
+                        "title": "Investigate with the team, then debrief",
+                        "why": (
+                            "Read the fictional setup from the people on the case, open the pinned challenge in the "
+                            "real editor, and wait for a validated pass before the debrief continues."
+                        ),
+                        "modes": ["guided"],
+                        "target": {"kind": "none"},
+                        "done": {"kind": "dialogue-finished"},
+                    },
+                    {
                         "id": f"{chapter_id}-solve",
                         "kind": "challenge",
                         "title": "Solve the pinned challenge",
-                        "why": "Write and submit the required SQL and typed answers in the real challenge editor.",
+                        "why": (
+                            "Write and submit the required SQL and typed answers in the real challenge editor. "
+                            "A validated whole-challenge pass also lets the guided debrief continue."
+                        ),
                         "target": {
                             "kind": "challenge",
                             "challengeId": chapter_id,
@@ -2255,16 +2271,6 @@ def build_declaration(package_ref: dict[str, Any], narrative_bytes: bytes) -> by
                                 }
                             ],
                         },
-                    },
-                    {
-                        "id": f"{chapter_id}-debrief",
-                        "kind": "scripted-dialogue",
-                        "segmentId": f"{chapter_id}-debrief",
-                        "title": "Debrief the evidence",
-                        "why": "Read the fictional context, open the challenge, and wait for a validated pass.",
-                        "modes": ["guided"],
-                        "target": {"kind": "none"},
-                        "done": {"kind": "dialogue-finished"},
                     },
                 ],
             }

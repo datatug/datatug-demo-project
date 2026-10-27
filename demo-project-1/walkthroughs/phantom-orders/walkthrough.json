@@ -8,8 +8,8 @@
     "id": "phantom-orders",
     "revision": 1,
     "path": "training/phantom-orders/1/package.json",
-    "sha256": "566f82e1d35ef2c064b13b433a181c7a12c2db83e5b45ebc3aa43b32c125962e",
-    "bytes": 25803
+    "sha256": "37ee91f02a8faf3e6f24debe9a74d0059866f79210f5887aed362a846bae9fb5",
+    "bytes": 25729
   },
   "narrative": {
     "path": "walkthroughs/phantom-orders/narrative.json",
@@ -37,8 +37,8 @@
               "id": "phantom-orders",
               "revision": 1,
               "path": "training/phantom-orders/1/package.json",
-              "sha256": "566f82e1d35ef2c064b13b433a181c7a12c2db83e5b45ebc3aa43b32c125962e",
-              "bytes": 25803
+              "sha256": "37ee91f02a8faf3e6f24debe9a74d0059866f79210f5887aed362a846bae9fb5",
+              "bytes": 25729
             }
           },
           "done": {
@@ -46,10 +46,26 @@
           }
         },
         {
+          "id": "duplicate-payments-debrief",
+          "kind": "scripted-dialogue",
+          "segmentId": "duplicate-payments-debrief",
+          "title": "Investigate with the team, then debrief",
+          "why": "Read the fictional setup from the people on the case, open the pinned challenge in the real editor, and wait for a validated pass before the debrief continues.",
+          "modes": [
+            "guided"
+          ],
+          "target": {
+            "kind": "none"
+          },
+          "done": {
+            "kind": "dialogue-finished"
+          }
+        },
+        {
           "id": "duplicate-payments-solve",
           "kind": "challenge",
           "title": "Solve the pinned challenge",
-          "why": "Write and submit the required SQL and typed answers in the real challenge editor.",
+          "why": "Write and submit the required SQL and typed answers in the real challenge editor. A validated whole-challenge pass also lets the guided debrief continue.",
           "target": {
             "kind": "challenge",
             "challengeId": "duplicate-payments",
@@ -63,22 +79,6 @@
                 "completion": "whole-challenge"
               }
             ]
-          }
-        },
-        {
-          "id": "duplicate-payments-debrief",
-          "kind": "scripted-dialogue",
-          "segmentId": "duplicate-payments-debrief",
-          "title": "Debrief the evidence",
-          "why": "Read the fictional context, open the challenge, and wait for a validated pass.",
-          "modes": [
-            "guided"
-          ],
-          "target": {
-            "kind": "none"
-          },
-          "done": {
-            "kind": "dialogue-finished"
           }
         }
       ]
@@ -103,8 +103,8 @@
               "id": "phantom-orders",
               "revision": 1,
               "path": "training/phantom-orders/1/package.json",
-              "sha256": "566f82e1d35ef2c064b13b433a181c7a12c2db83e5b45ebc3aa43b32c125962e",
-              "bytes": 25803
+              "sha256": "37ee91f02a8faf3e6f24debe9a74d0059866f79210f5887aed362a846bae9fb5",
+              "bytes": 25729
             }
           },
           "done": {
@@ -112,10 +112,26 @@
           }
         },
         {
+          "id": "payment-impact-debrief",
+          "kind": "scripted-dialogue",
+          "segmentId": "payment-impact-debrief",
+          "title": "Investigate with the team, then debrief",
+          "why": "Read the fictional setup from the people on the case, open the pinned challenge in the real editor, and wait for a validated pass before the debrief continues.",
+          "modes": [
+            "guided"
+          ],
+          "target": {
+            "kind": "none"
+          },
+          "done": {
+            "kind": "dialogue-finished"
+          }
+        },
+        {
           "id": "payment-impact-solve",
           "kind": "challenge",
           "title": "Solve the pinned challenge",
-          "why": "Write and submit the required SQL and typed answers in the real challenge editor.",
+          "why": "Write and submit the required SQL and typed answers in the real challenge editor. A validated whole-challenge pass also lets the guided debrief continue.",
           "target": {
             "kind": "challenge",
             "challengeId": "payment-impact",
@@ -129,22 +145,6 @@
                 "completion": "whole-challenge"
               }
             ]
-          }
-        },
-        {
-          "id": "payment-impact-debrief",
-          "kind": "scripted-dialogue",
-          "segmentId": "payment-impact-debrief",
-          "title": "Debrief the evidence",
-          "why": "Read the fictional context, open the challenge, and wait for a validated pass.",
-          "modes": [
-            "guided"
-          ],
-          "target": {
-            "kind": "none"
-          },
-          "done": {
-            "kind": "dialogue-finished"
           }
         }
       ]
@@ -169,8 +169,8 @@
               "id": "phantom-orders",
               "revision": 1,
               "path": "training/phantom-orders/1/package.json",
-              "sha256": "566f82e1d35ef2c064b13b433a181c7a12c2db83e5b45ebc3aa43b32c125962e",
-              "bytes": 25803
+              "sha256": "37ee91f02a8faf3e6f24debe9a74d0059866f79210f5887aed362a846bae9fb5",
+              "bytes": 25729
             }
           },
           "done": {
@@ -178,10 +178,26 @@
           }
         },
         {
+          "id": "failure-window-debrief",
+          "kind": "scripted-dialogue",
+          "segmentId": "failure-window-debrief",
+          "title": "Investigate with the team, then debrief",
+          "why": "Read the fictional setup from the people on the case, open the pinned challenge in the real editor, and wait for a validated pass before the debrief continues.",
+          "modes": [
+            "guided"
+          ],
+          "target": {
+            "kind": "none"
+          },
+          "done": {
+            "kind": "dialogue-finished"
+          }
+        },
+        {
           "id": "failure-window-solve",
           "kind": "challenge",
           "title": "Solve the pinned challenge",
-          "why": "Write and submit the required SQL and typed answers in the real challenge editor.",
+          "why": "Write and submit the required SQL and typed answers in the real challenge editor. A validated whole-challenge pass also lets the guided debrief continue.",
           "target": {
             "kind": "challenge",
             "challengeId": "failure-window",
@@ -195,22 +211,6 @@
                 "completion": "whole-challenge"
               }
             ]
-          }
-        },
-        {
-          "id": "failure-window-debrief",
-          "kind": "scripted-dialogue",
-          "segmentId": "failure-window-debrief",
-          "title": "Debrief the evidence",
-          "why": "Read the fictional context, open the challenge, and wait for a validated pass.",
-          "modes": [
-            "guided"
-          ],
-          "target": {
-            "kind": "none"
-          },
-          "done": {
-            "kind": "dialogue-finished"
           }
         }
       ]
@@ -235,8 +235,8 @@
               "id": "phantom-orders",
               "revision": 1,
               "path": "training/phantom-orders/1/package.json",
-              "sha256": "566f82e1d35ef2c064b13b433a181c7a12c2db83e5b45ebc3aa43b32c125962e",
-              "bytes": 25803
+              "sha256": "37ee91f02a8faf3e6f24debe9a74d0059866f79210f5887aed362a846bae9fb5",
+              "bytes": 25729
             }
           },
           "done": {
@@ -244,10 +244,26 @@
           }
         },
         {
+          "id": "retry-evidence-debrief",
+          "kind": "scripted-dialogue",
+          "segmentId": "retry-evidence-debrief",
+          "title": "Investigate with the team, then debrief",
+          "why": "Read the fictional setup from the people on the case, open the pinned challenge in the real editor, and wait for a validated pass before the debrief continues.",
+          "modes": [
+            "guided"
+          ],
+          "target": {
+            "kind": "none"
+          },
+          "done": {
+            "kind": "dialogue-finished"
+          }
+        },
+        {
           "id": "retry-evidence-solve",
           "kind": "challenge",
           "title": "Solve the pinned challenge",
-          "why": "Write and submit the required SQL and typed answers in the real challenge editor.",
+          "why": "Write and submit the required SQL and typed answers in the real challenge editor. A validated whole-challenge pass also lets the guided debrief continue.",
           "target": {
             "kind": "challenge",
             "challengeId": "retry-evidence",
@@ -261,22 +277,6 @@
                 "completion": "whole-challenge"
               }
             ]
-          }
-        },
-        {
-          "id": "retry-evidence-debrief",
-          "kind": "scripted-dialogue",
-          "segmentId": "retry-evidence-debrief",
-          "title": "Debrief the evidence",
-          "why": "Read the fictional context, open the challenge, and wait for a validated pass.",
-          "modes": [
-            "guided"
-          ],
-          "target": {
-            "kind": "none"
-          },
-          "done": {
-            "kind": "dialogue-finished"
           }
         }
       ]
@@ -301,8 +301,8 @@
               "id": "phantom-orders",
               "revision": 1,
               "path": "training/phantom-orders/1/package.json",
-              "sha256": "566f82e1d35ef2c064b13b433a181c7a12c2db83e5b45ebc3aa43b32c125962e",
-              "bytes": 25803
+              "sha256": "37ee91f02a8faf3e6f24debe9a74d0059866f79210f5887aed362a846bae9fb5",
+              "bytes": 25729
             }
           },
           "done": {
@@ -310,10 +310,26 @@
           }
         },
         {
+          "id": "root-cause-debrief",
+          "kind": "scripted-dialogue",
+          "segmentId": "root-cause-debrief",
+          "title": "Investigate with the team, then debrief",
+          "why": "Read the fictional setup from the people on the case, open the pinned challenge in the real editor, and wait for a validated pass before the debrief continues.",
+          "modes": [
+            "guided"
+          ],
+          "target": {
+            "kind": "none"
+          },
+          "done": {
+            "kind": "dialogue-finished"
+          }
+        },
+        {
           "id": "root-cause-solve",
           "kind": "challenge",
           "title": "Solve the pinned challenge",
-          "why": "Write and submit the required SQL and typed answers in the real challenge editor.",
+          "why": "Write and submit the required SQL and typed answers in the real challenge editor. A validated whole-challenge pass also lets the guided debrief continue.",
           "target": {
             "kind": "challenge",
             "challengeId": "root-cause",
@@ -327,22 +343,6 @@
                 "completion": "whole-challenge"
               }
             ]
-          }
-        },
-        {
-          "id": "root-cause-debrief",
-          "kind": "scripted-dialogue",
-          "segmentId": "root-cause-debrief",
-          "title": "Debrief the evidence",
-          "why": "Read the fictional context, open the challenge, and wait for a validated pass.",
-          "modes": [
-            "guided"
-          ],
-          "target": {
-            "kind": "none"
-          },
-          "done": {
-            "kind": "dialogue-finished"
           }
         }
       ]
@@ -367,8 +367,8 @@
               "id": "phantom-orders",
               "revision": 1,
               "path": "training/phantom-orders/1/package.json",
-              "sha256": "566f82e1d35ef2c064b13b433a181c7a12c2db83e5b45ebc3aa43b32c125962e",
-              "bytes": 25803
+              "sha256": "37ee91f02a8faf3e6f24debe9a74d0059866f79210f5887aed362a846bae9fb5",
+              "bytes": 25729
             }
           },
           "done": {
@@ -376,10 +376,26 @@
           }
         },
         {
+          "id": "prevention-debrief",
+          "kind": "scripted-dialogue",
+          "segmentId": "prevention-debrief",
+          "title": "Investigate with the team, then debrief",
+          "why": "Read the fictional setup from the people on the case, open the pinned challenge in the real editor, and wait for a validated pass before the debrief continues.",
+          "modes": [
+            "guided"
+          ],
+          "target": {
+            "kind": "none"
+          },
+          "done": {
+            "kind": "dialogue-finished"
+          }
+        },
+        {
           "id": "prevention-solve",
           "kind": "challenge",
           "title": "Solve the pinned challenge",
-          "why": "Write and submit the required SQL and typed answers in the real challenge editor.",
+          "why": "Write and submit the required SQL and typed answers in the real challenge editor. A validated whole-challenge pass also lets the guided debrief continue.",
           "target": {
             "kind": "challenge",
             "challengeId": "prevention",
@@ -393,22 +409,6 @@
                 "completion": "whole-challenge"
               }
             ]
-          }
-        },
-        {
-          "id": "prevention-debrief",
-          "kind": "scripted-dialogue",
-          "segmentId": "prevention-debrief",
-          "title": "Debrief the evidence",
-          "why": "Read the fictional context, open the challenge, and wait for a validated pass.",
-          "modes": [
-            "guided"
-          ],
-          "target": {
-            "kind": "none"
-          },
-          "done": {
-            "kind": "dialogue-finished"
           }
         }
       ]

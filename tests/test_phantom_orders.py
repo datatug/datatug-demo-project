@@ -11,8 +11,10 @@ import hashlib
 import importlib.util
 import json
 from pathlib import Path
+import re
 import tempfile
 import unittest
+from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 TOOL_PATH = ROOT / "scripts/phantom-orders.py"
@@ -426,6 +428,237 @@ class PhantomOrdersContentTest(unittest.TestCase):
                 self.assertIn("challenge.await_validation", event_types)
         message_keys = {event["payload"]["messageKey"] for event in self.sidecar["events"] if event["type"] == "chat.message"}
         self.assertTrue(message_keys.issubset(self.catalogue["messages"].keys()))
+
+    def test_guided_mode_starts_with_the_existing_dialogue_then_the_exact_challenge(self):
+        self.assertEqual(
+            [
+                "duplicate-payments",
+                "payment-impact",
+                "failure-window",
+                "retry-evidence",
+                "root-cause",
+                "prevention",
+            ],
+            [chapter["id"] for chapter in self.declaration["chapters"]],
+        )
+        for chapter in self.declaration["chapters"]:
+            chapter_id = chapter["id"]
+            with self.subTest(chapter=chapter_id):
+                self.assertEqual(
+                    [
+                        f"{chapter_id}-case",
+                        f"{chapter_id}-debrief",
+                        f"{chapter_id}-solve",
+                    ],
+                    [step["id"] for step in chapter["steps"]],
+                )
+
+                # A step with no declared modes applies to both modes.
+                def applies(step, mode):
+                    modes = step.get("modes", [])
+                    return not modes or mode in modes
+
+                guided = [
+                    step for step in chapter["steps"] if applies(step, "guided")
+                ]
+                self.assertEqual(
+                    ["scripted-dialogue", "challenge"],
+                    [step["kind"] for step in guided],
+                )
+                dialogue, challenge = guided
+                self.assertEqual(f"{chapter_id}-debrief", dialogue["id"])
+                self.assertEqual(f"{chapter_id}-debrief", dialogue["segmentId"])
+                self.assertEqual(["guided"], dialogue["modes"])
+                self.assertEqual({"kind": "none"}, dialogue["target"])
+                self.assertEqual({"kind": "dialogue-finished"}, dialogue["done"])
+                self.assertIn("investigat", dialogue["title"].lower())
+                self.assertIn("validated pass", dialogue["why"])
+
+                # The challenge step keeps its stable ID, target and whole-challenge
+                # checkpoint even though guided mode now reaches it after the dialogue.
+                self.assertEqual(f"{chapter_id}-solve", challenge["id"])
+                self.assertEqual(
+                    {
+                        "kind": "challenge",
+                        "challengeId": chapter_id,
+                        "revision": 1,
+                    },
+                    challenge["target"],
+                )
+                self.assertEqual(
+                    {
+                        "kind": "challenge-passed",
+                        "checkpoints": [
+                            {
+                                "id": f"{chapter_id}-result",
+                                "completion": "whole-challenge",
+                            }
+                        ],
+                    },
+                    challenge["done"],
+                )
+
+                explore = [
+                    step for step in chapter["steps"] if applies(step, "explore")
+                ]
+                self.assertEqual(
+                    ["standard", "challenge"],
+                    [step["kind"] for step in explore],
+                )
+                self.assertEqual(f"{chapter_id}-case", explore[0]["id"])
+                self.assertEqual(
+                    {"kind": "training-case", "manifestCaseId": chapter_id},
+                    {
+                        key: explore[0]["target"][key]
+                        for key in ("kind", "manifestCaseId")
+                    },
+                )
+
+    def test_shared_incident_does_not_leak_later_evidence_into_the_first_case(self):
+        incident = next(
+            item
+            for item in self.package["incidents"]
+            if item["id"] == "incident-0042"
+        )
+        self.assertEqual("investigating", incident["status"])
+        self.assertEqual(["payment-ledger"], incident["evidenceIds"])
+        incident_text = f"{incident['title']} {incident['description']}".lower()
+        for forbidden in (
+            "pay-17",
+            "retry handler",
+            "idempotency",
+            "duplicate cohort",
+            "config-pay-17",
+            "trace-r2",
+            "trace-r4",
+        ):
+            with self.subTest(forbidden=forbidden):
+                self.assertNotIn(forbidden, incident_text)
+        self.assertIn("fictional", incident_text)
+        self.assertIn("reported repeated charges", incident_text)
+
+        first_case = next(
+            case for case in self.package["cases"] if case["id"] == "duplicate-payments"
+        )
+        first_case_evidence = set(first_case["evidenceIds"])
+        for finding in first_case["findings"]:
+            first_case_evidence.update(finding.get("evidenceRefs", []))
+        closure = first_case_evidence | set(incident["evidenceIds"])
+        self.assertEqual(
+            {"support-reports", "payment-ledger", "orders-ledger"},
+            closure,
+        )
+        for later in (
+            "config-pay-17",
+            "deployment-timeline",
+            "trace-r1",
+            "trace-r2",
+            "trace-r3",
+            "trace-r4",
+            "retry-events",
+            "duplicate-orders",
+            "duplicate-cohort",
+            "duplicate-minutes",
+            "prevention-fixtures",
+        ):
+            with self.subTest(later=later):
+                self.assertNotIn(later, closure)
+        finding_text = " ".join(
+            finding["text"] for finding in first_case["findings"]
+        ).lower()
+        for forbidden in ("root cause", "root-cause", "pay-17", "idempotency", "cohort"):
+            with self.subTest(finding_forbidden=forbidden):
+                self.assertNotIn(forbidden, finding_text)
+
+        # Later cases keep their own stage-specific evidence, including the
+        # configuration diff and traces where the approved stage needs them.
+        later_evidence = {
+            case["id"]: set(case["evidenceIds"]) for case in self.package["cases"]
+        }
+        self.assertIn("config-pay-17", later_evidence["root-cause"])
+        self.assertIn("trace-r2", later_evidence["root-cause"])
+        self.assertIn("trace-r4", later_evidence["root-cause"])
+        self.assertIn("config-pay-17", later_evidence["prevention"])
+        self.assertIn("trace-r2", later_evidence["retry-evidence"])
+
+        # The absent-config variant remains leakage-free.
+        variant_root = (
+            ROOT
+            / "demo-project-1/training/phantom-orders/1/variants/absent-config"
+        )
+        variant_package = json.loads((variant_root / "package.json").read_bytes())
+        variant_incident = variant_package["incidents"][0]
+        self.assertEqual(["trace-r2", "trace-r4"], variant_incident["evidenceIds"])
+        self.assertNotIn("config-pay-17", json.dumps(variant_incident))
+        self.assertNotIn("payment-ledger", json.dumps(variant_incident))
+
+    def test_video_ranges_and_qr_payloads_are_revision_pinned_aliases(self):
+        document = ROOT / "docs/incident-replay/phantom-orders-video-qr-spec.md"
+        self.assertTrue(document.is_file())
+        text = document.read_text(encoding="utf-8")
+
+        rows = []
+        for line in text.splitlines():
+            if not line.startswith("|"):
+                continue
+            cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and re.fullmatch(r"[0-9]+", cells[0]):
+                rows.append(cells)
+        expected = [
+            ("duplicate-payments", "00:00–01:00"),
+            ("payment-impact", "01:00–02:10"),
+            ("failure-window", "02:10–03:20"),
+            ("retry-evidence", "03:20–04:40"),
+            ("root-cause", "04:40–06:00"),
+            ("prevention", "06:00–07:30"),
+        ]
+        self.assertEqual([(row[1], row[2]) for row in rows], expected)
+        self.assertEqual(
+            [chapter["id"] for chapter in self.declaration["chapters"]],
+            [chapter_id for chapter_id, _ in expected],
+        )
+
+        for (chapter_id, _), row in zip(expected, rows):
+            exact = (
+                f"https://datatug.app/stories/phantom-orders/v/1/cases/{chapter_id}"
+            )
+            with self.subTest(chapter=chapter_id):
+                self.assertEqual(exact, row[3])
+                self.assertEqual(exact, row[4])
+                for payload in (row[3], row[4]):
+                    parsed = urlsplit(payload)
+                    self.assertEqual("https", parsed.scheme)
+                    self.assertEqual("datatug.app", parsed.netloc)
+                    self.assertEqual(
+                        f"/stories/phantom-orders/v/1/cases/{chapter_id}",
+                        parsed.path,
+                    )
+                    self.assertEqual("", parsed.query)
+                    self.assertEqual("", parsed.fragment)
+                    self.assertNotIn("?", payload)
+
+        lowered = text.lower()
+        self.assertIn("synthetic", lowered)
+        self.assertIn("utc", lowered)
+        self.assertIn("cents", lowered)
+        self.assertIn("pause", lowered)
+        self.assertIn("themselves", lowered)
+        self.assertIn("no passive credit", lowered)
+        for forbidden in ("main/cases", "master/cases", "youtube.com", "youtu.be"):
+            with self.subTest(forbidden=forbidden):
+                self.assertNotIn(forbidden, lowered)
+        # The companion may describe the challenge, but must not reveal the
+        # reference result values or the configuration answer.
+        for answer in (
+            "1002",
+            "1004",
+            "11000",
+            "10:01:03",
+            "idempotency_enabled",
+            "pay-17",
+        ):
+            with self.subTest(answer=answer):
+                self.assertNotIn(answer, text)
 
 
 if __name__ == "__main__":
