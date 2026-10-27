@@ -18,7 +18,7 @@ jobs:
     if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}
     permissions:
       contents: write # declared by the reusable workflow's (disabled) tagging job
-    uses: strongo/cicd/.github/workflows/workflow.yml@v1.22.1
+    uses: strongo/cicd/.github/workflows/workflow.yml@v1.24.0
     with:
       working_directory: tests
       disable-version-bumping: true
