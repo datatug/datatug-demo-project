@@ -1,0 +1,345 @@
+{
+  "schemaVersion": 1,
+  "gradingVersion": "challenge-grading-v1",
+  "challengeId": "prevention",
+  "revision": 1,
+  "title": "Prevent recurrence",
+  "objective": "Write the affected-order query and prove a zero-row Check on broken, repaired and mutated fixtures.",
+  "difficulty": "intermediate",
+  "dialect": "sqlite",
+  "allowedOperation": "read",
+  "timing": "off",
+  "engine": {
+    "package": "@sqlite.org/sqlite-wasm",
+    "version": "3.54.1-build1",
+    "sqliteVersion": "3.54.1"
+  },
+  "fixtureSuite": {
+    "id": "phantom-orders-prevention",
+    "fixtures": [
+      {
+        "id": "base",
+        "label": "Base fictional incident data",
+        "sha256": "3f2a1cca52450799af270d30bd2fd36dce73611e59cdb9381f7b60636def5891",
+        "bytes": 20480,
+        "runs": 1
+      },
+      {
+        "id": "repaired",
+        "label": "Repaired prevention fixture (second successes blocked)",
+        "sha256": "6b9fda3cbe87f581552422648fe78c0ceabaee93bee079f7ea33078cc55a6a0f",
+        "bytes": 20480,
+        "runs": 1
+      },
+      {
+        "id": "mutated",
+        "label": "Mutated prevention fixture with a different affected order",
+        "sha256": "a7ac06aaaadea5cc7b707672c85100f2d26ac655743b6e20acb17612ef47e4a1",
+        "bytes": 20480,
+        "runs": 1
+      }
+    ]
+  },
+  "visibleSchema": {
+    "tables": [
+      {
+        "name": "orders",
+        "columns": [
+          {
+            "name": "id",
+            "type": "integer",
+            "primaryKey": true
+          },
+          {
+            "name": "customer_id",
+            "type": "integer"
+          },
+          {
+            "name": "total_cents",
+            "type": "integer"
+          }
+        ]
+      },
+      {
+        "name": "payments",
+        "columns": [
+          {
+            "name": "id",
+            "type": "integer",
+            "primaryKey": true
+          },
+          {
+            "name": "order_id",
+            "type": "integer"
+          },
+          {
+            "name": "attempt_id",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "type": "string"
+          },
+          {
+            "name": "amount_cents",
+            "type": "integer"
+          },
+          {
+            "name": "created_at",
+            "type": "datetime"
+          }
+        ]
+      },
+      {
+        "name": "retry_events",
+        "columns": [
+          {
+            "name": "attempt_id",
+            "type": "string"
+          },
+          {
+            "name": "request_id",
+            "type": "string"
+          },
+          {
+            "name": "idempotency_key",
+            "type": "string"
+          },
+          {
+            "name": "outcome",
+            "type": "string"
+          },
+          {
+            "name": "created_at",
+            "type": "datetime"
+          }
+        ]
+      },
+      {
+        "name": "deployments",
+        "columns": [
+          {
+            "name": "version",
+            "type": "string"
+          },
+          {
+            "name": "deployed_at",
+            "type": "datetime"
+          },
+          {
+            "name": "idempotency_enabled",
+            "type": "integer"
+          }
+        ]
+      }
+    ]
+  },
+  "parts": [
+    {
+      "id": "affected-orders",
+      "title": "Affected order IDs",
+      "required": true,
+      "answerKind": "sql",
+      "sql": {
+        "cases": [
+          {
+            "fixture": "base",
+            "oracle": {
+              "kind": "result",
+              "columns": [
+                {
+                  "name": "order_id",
+                  "type": "integer"
+                }
+              ],
+              "rows": [
+                [
+                  {
+                    "type": "integer",
+                    "value": "1002"
+                  }
+                ],
+                [
+                  {
+                    "type": "integer",
+                    "value": "1004"
+                  }
+                ]
+              ],
+              "ordering": "unordered"
+            }
+          },
+          {
+            "fixture": "repaired",
+            "oracle": {
+              "kind": "result",
+              "columns": [
+                {
+                  "name": "order_id",
+                  "type": "integer"
+                }
+              ],
+              "rows": [],
+              "ordering": "unordered"
+            }
+          },
+          {
+            "fixture": "mutated",
+            "oracle": {
+              "kind": "result",
+              "columns": [
+                {
+                  "name": "order_id",
+                  "type": "integer"
+                }
+              ],
+              "rows": [
+                [
+                  {
+                    "type": "integer",
+                    "value": "1003"
+                  }
+                ]
+              ],
+              "ordering": "unordered"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "postmortem-citations",
+      "title": "Reviewed postmortem citations",
+      "required": true,
+      "answerKind": "structured",
+      "structured": {
+        "fields": [
+          {
+            "id": "postmortem-citations",
+            "label": "Cite the evidence required by the postmortem",
+            "cardinality": "multi",
+            "required": true,
+            "minSelections": 1,
+            "maxSelections": 4,
+            "options": [
+              {
+                "id": "config-pay-17",
+                "label": "Reviewed configuration diff for pay-17"
+              },
+              {
+                "id": "trace-r2",
+                "label": "Trace r2 (a2/a3 duplicate request)"
+              },
+              {
+                "id": "trace-r4",
+                "label": "Trace r4 (a6/a7 duplicate request)"
+              },
+              {
+                "id": "trace-r3",
+                "label": "Trace r3 (harmless recovered retry)"
+              }
+            ]
+          }
+        ],
+        "expected": {
+          "selections": {
+            "postmortem-citations": [
+              "config-pay-17",
+              "trace-r2",
+              "trace-r4"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "check",
+      "title": "Zero affected orders",
+      "required": true,
+      "answerKind": "check-definition",
+      "checkDefinition": {
+        "queryIds": [
+          "prevention/affected-orders"
+        ],
+        "expectation": {
+          "id": "zero-affected-orders",
+          "scope": "set",
+          "kind": "row-count",
+          "severity": "error",
+          "expected": {
+            "type": "integer",
+            "value": "0"
+          }
+        },
+        "cases": [
+          {
+            "fixture": "base",
+            "expectedOutcome": "fail"
+          },
+          {
+            "fixture": "repaired",
+            "expectedOutcome": "pass"
+          },
+          {
+            "fixture": "mutated",
+            "expectedOutcome": "fail"
+          }
+        ]
+      }
+    }
+  ],
+  "hints": [
+    {
+      "id": "zero-rows",
+      "text": "The Check should count affected orders and expect zero rows."
+    },
+    {
+      "id": "matrix",
+      "text": "Prove broken data fails, repaired data passes, and a different affected order still fails."
+    },
+    {
+      "id": "watch",
+      "text": "The Watch is an unsaved recommendation; training never activates a production monitor."
+    }
+  ],
+  "referenceSolutions": [
+    {
+      "partId": "affected-orders",
+      "answer": {
+        "sql": "SELECT order_id\nFROM payments\nWHERE status='succeeded'\nGROUP BY order_id\nHAVING COUNT(*)>1;\n"
+      }
+    },
+    {
+      "partId": "postmortem-citations",
+      "answer": {
+        "structured": {
+          "selections": {
+            "postmortem-citations": [
+              "config-pay-17",
+              "trace-r2",
+              "trace-r4"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "partId": "check",
+      "answer": {
+        "checkDefinition": {
+          "queryId": "prevention/affected-orders",
+          "expectation": {
+            "id": "zero-affected-orders",
+            "scope": "set",
+            "kind": "row-count",
+            "severity": "error",
+            "expected": {
+              "type": "integer",
+              "value": "0"
+            }
+          }
+        }
+      }
+    }
+  ]
+}

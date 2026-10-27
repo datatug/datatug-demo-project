@@ -1,0 +1,238 @@
+{
+  "columns": [
+    {
+      "name": "id",
+      "type": "integer"
+    },
+    {
+      "name": "order_id",
+      "type": "integer"
+    },
+    {
+      "name": "attempt_id",
+      "type": "string"
+    },
+    {
+      "name": "status",
+      "type": "string"
+    },
+    {
+      "name": "amount_cents",
+      "type": "integer"
+    },
+    {
+      "name": "created_at",
+      "type": "datetime"
+    }
+  ],
+  "rows": [
+    [
+      {
+        "type": "integer",
+        "value": "1"
+      },
+      {
+        "type": "integer",
+        "value": "1001"
+      },
+      {
+        "type": "string",
+        "value": "a1"
+      },
+      {
+        "type": "string",
+        "value": "succeeded"
+      },
+      {
+        "type": "integer",
+        "value": "5000"
+      },
+      {
+        "type": "datetime",
+        "value": "2026-01-12T09:58:00Z"
+      }
+    ],
+    [
+      {
+        "type": "integer",
+        "value": "2"
+      },
+      {
+        "type": "integer",
+        "value": "1002"
+      },
+      {
+        "type": "string",
+        "value": "a2"
+      },
+      {
+        "type": "string",
+        "value": "succeeded"
+      },
+      {
+        "type": "integer",
+        "value": "3000"
+      },
+      {
+        "type": "datetime",
+        "value": "2026-01-12T10:01:00Z"
+      }
+    ],
+    [
+      {
+        "type": "integer",
+        "value": "3"
+      },
+      {
+        "type": "integer",
+        "value": "1002"
+      },
+      {
+        "type": "string",
+        "value": "a3"
+      },
+      {
+        "type": "string",
+        "value": "succeeded"
+      },
+      {
+        "type": "integer",
+        "value": "3000"
+      },
+      {
+        "type": "datetime",
+        "value": "2026-01-12T10:01:03Z"
+      }
+    ],
+    [
+      {
+        "type": "integer",
+        "value": "4"
+      },
+      {
+        "type": "integer",
+        "value": "1003"
+      },
+      {
+        "type": "string",
+        "value": "a4"
+      },
+      {
+        "type": "string",
+        "value": "failed"
+      },
+      {
+        "type": "integer",
+        "value": "2000"
+      },
+      {
+        "type": "datetime",
+        "value": "2026-01-12T10:02:00Z"
+      }
+    ],
+    [
+      {
+        "type": "integer",
+        "value": "5"
+      },
+      {
+        "type": "integer",
+        "value": "1003"
+      },
+      {
+        "type": "string",
+        "value": "a5"
+      },
+      {
+        "type": "string",
+        "value": "succeeded"
+      },
+      {
+        "type": "integer",
+        "value": "2000"
+      },
+      {
+        "type": "datetime",
+        "value": "2026-01-12T10:02:05Z"
+      }
+    ],
+    [
+      {
+        "type": "integer",
+        "value": "6"
+      },
+      {
+        "type": "integer",
+        "value": "1004"
+      },
+      {
+        "type": "string",
+        "value": "a6"
+      },
+      {
+        "type": "string",
+        "value": "succeeded"
+      },
+      {
+        "type": "integer",
+        "value": "8000"
+      },
+      {
+        "type": "datetime",
+        "value": "2026-01-12T10:03:00Z"
+      }
+    ],
+    [
+      {
+        "type": "integer",
+        "value": "7"
+      },
+      {
+        "type": "integer",
+        "value": "1004"
+      },
+      {
+        "type": "string",
+        "value": "a7"
+      },
+      {
+        "type": "string",
+        "value": "succeeded"
+      },
+      {
+        "type": "integer",
+        "value": "8000"
+      },
+      {
+        "type": "datetime",
+        "value": "2026-01-12T10:03:02Z"
+      }
+    ],
+    [
+      {
+        "type": "integer",
+        "value": "8"
+      },
+      {
+        "type": "integer",
+        "value": "1004"
+      },
+      {
+        "type": "string",
+        "value": "a8"
+      },
+      {
+        "type": "string",
+        "value": "refunded"
+      },
+      {
+        "type": "integer",
+        "value": "8000"
+      },
+      {
+        "type": "datetime",
+        "value": "2026-01-12T10:05:00Z"
+      }
+    ]
+  ]
+}

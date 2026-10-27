@@ -1,0 +1,74 @@
+{
+  "columns": [
+    {
+      "name": "id",
+      "type": "integer"
+    },
+    {
+      "name": "customer_id",
+      "type": "integer"
+    },
+    {
+      "name": "total_cents",
+      "type": "integer"
+    }
+  ],
+  "rows": [
+    [
+      {
+        "type": "integer",
+        "value": "1001"
+      },
+      {
+        "type": "integer",
+        "value": "11"
+      },
+      {
+        "type": "integer",
+        "value": "5000"
+      }
+    ],
+    [
+      {
+        "type": "integer",
+        "value": "1002"
+      },
+      {
+        "type": "integer",
+        "value": "12"
+      },
+      {
+        "type": "integer",
+        "value": "3000"
+      }
+    ],
+    [
+      {
+        "type": "integer",
+        "value": "1003"
+      },
+      {
+        "type": "integer",
+        "value": "13"
+      },
+      {
+        "type": "integer",
+        "value": "2000"
+      }
+    ],
+    [
+      {
+        "type": "integer",
+        "value": "1004"
+      },
+      {
+        "type": "integer",
+        "value": "14"
+      },
+      {
+        "type": "integer",
+        "value": "8000"
+      }
+    ]
+  ]
+}

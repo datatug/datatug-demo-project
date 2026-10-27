@@ -1,0 +1,940 @@
+{
+  "schemaVersion": 1,
+  "scenarioId": "phantom-orders",
+  "revision": 1,
+  "locale": "en",
+  "fallbackLocale": "en",
+  "messageCatalogues": [
+    {
+      "locale": "en",
+      "path": "walkthroughs/phantom-orders/messages.en.json",
+      "sha256": "b5e28e26c44f07d96d70f7df07aeb06373a9ce57041dc68ead73270a6329f95c",
+      "bytes": 4002
+    }
+  ],
+  "chapterRefs": [
+    "duplicate-payments",
+    "payment-impact",
+    "failure-window",
+    "retry-evidence",
+    "root-cause",
+    "prevention"
+  ],
+  "actors": [
+    {
+      "id": "sarah",
+      "name": "Sarah"
+    },
+    {
+      "id": "maya",
+      "name": "Maya"
+    },
+    {
+      "id": "daniel",
+      "name": "Daniel"
+    },
+    {
+      "id": "incidentius",
+      "name": "Incidentius"
+    }
+  ],
+  "assets": [],
+  "segments": [
+    {
+      "id": "duplicate-payments-debrief",
+      "chapterId": "duplicate-payments",
+      "stepId": "duplicate-payments-debrief",
+      "eventIds": [
+        "ch1-open",
+        "ch1-focus",
+        "ch1-context-label",
+        "ch1-sarah",
+        "ch1-maya",
+        "ch1-daniel",
+        "ch1-prompt",
+        "ch1-await",
+        "ch1-success"
+      ],
+      "prerequisiteContextEventIds": []
+    },
+    {
+      "id": "payment-impact-debrief",
+      "chapterId": "payment-impact",
+      "stepId": "payment-impact-debrief",
+      "eventIds": [
+        "ch2-open",
+        "ch2-focus",
+        "ch2-context-label",
+        "ch2-sarah",
+        "ch2-maya",
+        "ch2-daniel",
+        "ch2-prompt",
+        "ch2-await",
+        "ch2-success"
+      ],
+      "prerequisiteContextEventIds": [
+        "ch1-success"
+      ]
+    },
+    {
+      "id": "failure-window-debrief",
+      "chapterId": "failure-window",
+      "stepId": "failure-window-debrief",
+      "eventIds": [
+        "ch3-open",
+        "ch3-focus",
+        "ch3-context-label",
+        "ch3-maya",
+        "ch3-daniel",
+        "ch3-sarah",
+        "ch3-prompt",
+        "ch3-await",
+        "ch3-success"
+      ],
+      "prerequisiteContextEventIds": [
+        "ch2-success"
+      ]
+    },
+    {
+      "id": "retry-evidence-debrief",
+      "chapterId": "retry-evidence",
+      "stepId": "retry-evidence-debrief",
+      "eventIds": [
+        "ch4-open",
+        "ch4-focus",
+        "ch4-context-label",
+        "ch4-daniel",
+        "ch4-maya",
+        "ch4-sarah",
+        "ch4-prompt",
+        "ch4-await",
+        "ch4-success"
+      ],
+      "prerequisiteContextEventIds": [
+        "ch3-success"
+      ]
+    },
+    {
+      "id": "root-cause-debrief",
+      "chapterId": "root-cause",
+      "stepId": "root-cause-debrief",
+      "eventIds": [
+        "ch5-open",
+        "ch5-focus",
+        "ch5-context-label",
+        "ch5-daniel",
+        "ch5-maya",
+        "ch5-sarah",
+        "ch5-prompt",
+        "ch5-await",
+        "ch5-success"
+      ],
+      "prerequisiteContextEventIds": [
+        "ch4-success"
+      ]
+    },
+    {
+      "id": "prevention-debrief",
+      "chapterId": "prevention",
+      "stepId": "prevention-debrief",
+      "eventIds": [
+        "ch6-open",
+        "ch6-focus",
+        "ch6-context-label",
+        "ch6-maya",
+        "ch6-daniel",
+        "ch6-sarah",
+        "ch6-prompt",
+        "ch6-await",
+        "ch6-check",
+        "ch6-proposal",
+        "ch6-incidentius-proposal",
+        "ch6-success",
+        "ch6-synthetic",
+        "ch6-postmortem"
+      ],
+      "prerequisiteContextEventIds": [
+        "ch5-success"
+      ]
+    }
+  ],
+  "events": [
+    {
+      "id": "ch1-open",
+      "chapterId": "duplicate-payments",
+      "type": "detective.open",
+      "payload": {
+        "manifestCaseId": "duplicate-payments"
+      }
+    },
+    {
+      "id": "ch1-focus",
+      "chapterId": "duplicate-payments",
+      "type": "camera.focus",
+      "payload": {
+        "targetId": "case-duplicate-payments"
+      }
+    },
+    {
+      "id": "ch1-context-label",
+      "chapterId": "duplicate-payments",
+      "type": "chat.message",
+      "payload": {
+        "actorId": "incidentius",
+        "messageKey": "ch1.incidentius.open",
+        "attachmentIds": []
+      },
+      "presentation": {
+        "delayBeforeMs": 0,
+        "pauseAfterMs": 700,
+        "typingSpeed": "fast",
+        "typingIndicator": true,
+        "transition": "fade"
+      }
+    },
+    {
+      "id": "ch1-sarah",
+      "chapterId": "duplicate-payments",
+      "type": "chat.message",
+      "payload": {
+        "actorId": "sarah",
+        "messageKey": "ch1.sarah.context",
+        "attachmentIds": []
+      },
+      "presentation": {
+        "delayBeforeMs": 0,
+        "pauseAfterMs": 700,
+        "typingSpeed": "natural",
+        "typingIndicator": true,
+        "transition": "fade"
+      }
+    },
+    {
+      "id": "ch1-maya",
+      "chapterId": "duplicate-payments",
+      "type": "chat.message",
+      "payload": {
+        "actorId": "maya",
+        "messageKey": "ch1.maya.context",
+        "attachmentIds": []
+      },
+      "presentation": {
+        "delayBeforeMs": 0,
+        "pauseAfterMs": 700,
+        "typingSpeed": "natural",
+        "typingIndicator": true,
+        "transition": "fade"
+      }
+    },
+    {
+      "id": "ch1-daniel",
+      "chapterId": "duplicate-payments",
+      "type": "chat.message",
+      "payload": {
+        "actorId": "daniel",
+        "messageKey": "ch1.daniel.context",
+        "attachmentIds": []
+      },
+      "presentation": {
+        "delayBeforeMs": 0,
+        "pauseAfterMs": 700,
+        "typingSpeed": "deliberate",
+        "typingIndicator": true,
+        "transition": "fade"
+      }
+    },
+    {
+      "id": "ch1-prompt",
+      "chapterId": "duplicate-payments",
+      "type": "challenge.prompt",
+      "payload": {
+        "stepId": "duplicate-payments-solve"
+      }
+    },
+    {
+      "id": "ch1-await",
+      "chapterId": "duplicate-payments",
+      "type": "challenge.await_validation",
+      "payload": {
+        "stepId": "duplicate-payments-solve",
+        "checkpointId": "duplicate-payments-result"
+      }
+    },
+    {
+      "id": "ch1-success",
+      "chapterId": "duplicate-payments",
+      "type": "chat.message",
+      "payload": {
+        "actorId": "maya",
+        "messageKey": "ch1.maya.success",
+        "attachmentIds": []
+      },
+      "presentation": {
+        "delayBeforeMs": 0,
+        "pauseAfterMs": 700,
+        "typingSpeed": "natural",
+        "typingIndicator": true,
+        "transition": "fade"
+      }
+    },
+    {
+      "id": "ch2-open",
+      "chapterId": "payment-impact",
+      "type": "detective.open",
+      "payload": {
+        "manifestCaseId": "payment-impact"
+      }
+    },
+    {
+      "id": "ch2-focus",
+      "chapterId": "payment-impact",
+      "type": "camera.focus",
+      "payload": {
+        "targetId": "case-payment-impact"
+      }
+    },
+    {
+      "id": "ch2-context-label",
+      "chapterId": "payment-impact",
+      "type": "chat.message",
+      "payload": {
+        "actorId": "incidentius",
+        "messageKey": "context.supplied",
+        "attachmentIds": []
+      },
+      "presentation": {
+        "delayBeforeMs": 0,
+        "pauseAfterMs": 700,
+        "typingSpeed": "fast",
+        "typingIndicator": true,
+        "transition": "fade"
+      }
+    },
+    {
+      "id": "ch2-sarah",
+      "chapterId": "payment-impact",
+      "type": "chat.message",
+      "payload": {
+        "actorId": "sarah",
+        "messageKey": "ch2.sarah.context",
+        "attachmentIds": []
+      },
+      "presentation": {
+        "delayBeforeMs": 0,
+        "pauseAfterMs": 700,
+        "typingSpeed": "natural",
+        "typingIndicator": true,
+        "transition": "fade"
+      }
+    },
+    {
+      "id": "ch2-maya",
+      "chapterId": "payment-impact",
+      "type": "chat.message",
+      "payload": {
+        "actorId": "maya",
+        "messageKey": "ch2.maya.context",
+        "attachmentIds": []
+      },
+      "presentation": {
+        "delayBeforeMs": 0,
+        "pauseAfterMs": 700,
+        "typingSpeed": "natural",
+        "typingIndicator": true,
+        "transition": "fade"
+      }
+    },
+    {
+      "id": "ch2-daniel",
+      "chapterId": "payment-impact",
+      "type": "chat.message",
+      "payload": {
+        "actorId": "daniel",
+        "messageKey": "ch2.daniel.context",
+        "attachmentIds": []
+      },
+      "presentation": {
+        "delayBeforeMs": 0,
+        "pauseAfterMs": 700,
+        "typingSpeed": "deliberate",
+        "typingIndicator": true,
+        "transition": "fade"
+      }
+    },
+    {
+      "id": "ch2-prompt",
+      "chapterId": "payment-impact",
+      "type": "challenge.prompt",
+      "payload": {
+        "stepId": "payment-impact-solve"
+      }
+    },
+    {
+      "id": "ch2-await",
+      "chapterId": "payment-impact",
+      "type": "challenge.await_validation",
+      "payload": {
+        "stepId": "payment-impact-solve",
+        "checkpointId": "payment-impact-result"
+      }
+    },
+    {
+      "id": "ch2-success",
+      "chapterId": "payment-impact",
+      "type": "chat.message",
+      "payload": {
+        "actorId": "sarah",
+        "messageKey": "ch2.sarah.success",
+        "attachmentIds": []
+      },
+      "presentation": {
+        "delayBeforeMs": 0,
+        "pauseAfterMs": 700,
+        "typingSpeed": "natural",
+        "typingIndicator": true,
+        "transition": "fade"
+      }
+    },
+    {
+      "id": "ch3-open",
+      "chapterId": "failure-window",
+      "type": "detective.open",
+      "payload": {
+        "manifestCaseId": "failure-window"
+      }
+    },
+    {
+      "id": "ch3-focus",
+      "chapterId": "failure-window",
+      "type": "camera.focus",
+      "payload": {
+        "targetId": "case-failure-window"
+      }
+    },
+    {
+      "id": "ch3-context-label",
+      "chapterId": "failure-window",
+      "type": "chat.message",
+      "payload": {
+        "actorId": "incidentius",
+        "messageKey": "context.supplied",
+        "attachmentIds": []
+      },
+      "presentation": {
+        "delayBeforeMs": 0,
+        "pauseAfterMs": 700,
+        "typingSpeed": "fast",
+        "typingIndicator": true,
+        "transition": "fade"
+      }
+    },
+    {
+      "id": "ch3-maya",
+      "chapterId": "failure-window",
+      "type": "chat.message",
+      "payload": {
+        "actorId": "maya",
+        "messageKey": "ch3.maya.context",
+        "attachmentIds": []
+      },
+      "presentation": {
+        "delayBeforeMs": 0,
+        "pauseAfterMs": 700,
+        "typingSpeed": "natural",
+        "typingIndicator": true,
+        "transition": "fade"
+      }
+    },
+    {
+      "id": "ch3-daniel",
+      "chapterId": "failure-window",
+      "type": "chat.message",
+      "payload": {
+        "actorId": "daniel",
+        "messageKey": "ch3.daniel.context",
+        "attachmentIds": []
+      },
+      "presentation": {
+        "delayBeforeMs": 0,
+        "pauseAfterMs": 700,
+        "typingSpeed": "deliberate",
+        "typingIndicator": true,
+        "transition": "fade"
+      }
+    },
+    {
+      "id": "ch3-sarah",
+      "chapterId": "failure-window",
+      "type": "chat.message",
+      "payload": {
+        "actorId": "sarah",
+        "messageKey": "ch3.sarah.context",
+        "attachmentIds": []
+      },
+      "presentation": {
+        "delayBeforeMs": 0,
+        "pauseAfterMs": 700,
+        "typingSpeed": "natural",
+        "typingIndicator": true,
+        "transition": "fade"
+      }
+    },
+    {
+      "id": "ch3-prompt",
+      "chapterId": "failure-window",
+      "type": "challenge.prompt",
+      "payload": {
+        "stepId": "failure-window-solve"
+      }
+    },
+    {
+      "id": "ch3-await",
+      "chapterId": "failure-window",
+      "type": "challenge.await_validation",
+      "payload": {
+        "stepId": "failure-window-solve",
+        "checkpointId": "failure-window-result"
+      }
+    },
+    {
+      "id": "ch3-success",
+      "chapterId": "failure-window",
+      "type": "chat.message",
+      "payload": {
+        "actorId": "daniel",
+        "messageKey": "ch3.daniel.success",
+        "attachmentIds": []
+      },
+      "presentation": {
+        "delayBeforeMs": 0,
+        "pauseAfterMs": 700,
+        "typingSpeed": "deliberate",
+        "typingIndicator": true,
+        "transition": "fade"
+      }
+    },
+    {
+      "id": "ch4-open",
+      "chapterId": "retry-evidence",
+      "type": "detective.open",
+      "payload": {
+        "manifestCaseId": "retry-evidence"
+      }
+    },
+    {
+      "id": "ch4-focus",
+      "chapterId": "retry-evidence",
+      "type": "camera.focus",
+      "payload": {
+        "targetId": "case-retry-evidence"
+      }
+    },
+    {
+      "id": "ch4-context-label",
+      "chapterId": "retry-evidence",
+      "type": "chat.message",
+      "payload": {
+        "actorId": "incidentius",
+        "messageKey": "context.supplied",
+        "attachmentIds": []
+      },
+      "presentation": {
+        "delayBeforeMs": 0,
+        "pauseAfterMs": 700,
+        "typingSpeed": "fast",
+        "typingIndicator": true,
+        "transition": "fade"
+      }
+    },
+    {
+      "id": "ch4-daniel",
+      "chapterId": "retry-evidence",
+      "type": "chat.message",
+      "payload": {
+        "actorId": "daniel",
+        "messageKey": "ch4.daniel.context",
+        "attachmentIds": []
+      },
+      "presentation": {
+        "delayBeforeMs": 0,
+        "pauseAfterMs": 700,
+        "typingSpeed": "deliberate",
+        "typingIndicator": true,
+        "transition": "fade"
+      }
+    },
+    {
+      "id": "ch4-maya",
+      "chapterId": "retry-evidence",
+      "type": "chat.message",
+      "payload": {
+        "actorId": "maya",
+        "messageKey": "ch4.maya.context",
+        "attachmentIds": []
+      },
+      "presentation": {
+        "delayBeforeMs": 0,
+        "pauseAfterMs": 700,
+        "typingSpeed": "natural",
+        "typingIndicator": true,
+        "transition": "fade"
+      }
+    },
+    {
+      "id": "ch4-sarah",
+      "chapterId": "retry-evidence",
+      "type": "chat.message",
+      "payload": {
+        "actorId": "sarah",
+        "messageKey": "ch4.sarah.context",
+        "attachmentIds": []
+      },
+      "presentation": {
+        "delayBeforeMs": 0,
+        "pauseAfterMs": 700,
+        "typingSpeed": "natural",
+        "typingIndicator": true,
+        "transition": "fade"
+      }
+    },
+    {
+      "id": "ch4-prompt",
+      "chapterId": "retry-evidence",
+      "type": "challenge.prompt",
+      "payload": {
+        "stepId": "retry-evidence-solve"
+      }
+    },
+    {
+      "id": "ch4-await",
+      "chapterId": "retry-evidence",
+      "type": "challenge.await_validation",
+      "payload": {
+        "stepId": "retry-evidence-solve",
+        "checkpointId": "retry-evidence-result"
+      }
+    },
+    {
+      "id": "ch4-success",
+      "chapterId": "retry-evidence",
+      "type": "chat.message",
+      "payload": {
+        "actorId": "maya",
+        "messageKey": "ch4.maya.success",
+        "attachmentIds": []
+      },
+      "presentation": {
+        "delayBeforeMs": 0,
+        "pauseAfterMs": 700,
+        "typingSpeed": "natural",
+        "typingIndicator": true,
+        "transition": "fade"
+      }
+    },
+    {
+      "id": "ch5-open",
+      "chapterId": "root-cause",
+      "type": "detective.open",
+      "payload": {
+        "manifestCaseId": "root-cause"
+      }
+    },
+    {
+      "id": "ch5-focus",
+      "chapterId": "root-cause",
+      "type": "camera.focus",
+      "payload": {
+        "targetId": "case-root-cause"
+      }
+    },
+    {
+      "id": "ch5-context-label",
+      "chapterId": "root-cause",
+      "type": "chat.message",
+      "payload": {
+        "actorId": "incidentius",
+        "messageKey": "context.supplied",
+        "attachmentIds": []
+      },
+      "presentation": {
+        "delayBeforeMs": 0,
+        "pauseAfterMs": 700,
+        "typingSpeed": "fast",
+        "typingIndicator": true,
+        "transition": "fade"
+      }
+    },
+    {
+      "id": "ch5-daniel",
+      "chapterId": "root-cause",
+      "type": "chat.message",
+      "payload": {
+        "actorId": "daniel",
+        "messageKey": "ch5.daniel.complete",
+        "attachmentIds": []
+      },
+      "presentation": {
+        "delayBeforeMs": 0,
+        "pauseAfterMs": 700,
+        "typingSpeed": "deliberate",
+        "typingIndicator": true,
+        "transition": "fade"
+      }
+    },
+    {
+      "id": "ch5-maya",
+      "chapterId": "root-cause",
+      "type": "chat.message",
+      "payload": {
+        "actorId": "maya",
+        "messageKey": "ch5.maya.context",
+        "attachmentIds": []
+      },
+      "presentation": {
+        "delayBeforeMs": 0,
+        "pauseAfterMs": 700,
+        "typingSpeed": "natural",
+        "typingIndicator": true,
+        "transition": "fade"
+      }
+    },
+    {
+      "id": "ch5-sarah",
+      "chapterId": "root-cause",
+      "type": "chat.message",
+      "payload": {
+        "actorId": "sarah",
+        "messageKey": "ch5.sarah.context",
+        "attachmentIds": []
+      },
+      "presentation": {
+        "delayBeforeMs": 0,
+        "pauseAfterMs": 700,
+        "typingSpeed": "natural",
+        "typingIndicator": true,
+        "transition": "fade"
+      }
+    },
+    {
+      "id": "ch5-prompt",
+      "chapterId": "root-cause",
+      "type": "challenge.prompt",
+      "payload": {
+        "stepId": "root-cause-solve"
+      }
+    },
+    {
+      "id": "ch5-await",
+      "chapterId": "root-cause",
+      "type": "challenge.await_validation",
+      "payload": {
+        "stepId": "root-cause-solve",
+        "checkpointId": "root-cause-result"
+      }
+    },
+    {
+      "id": "ch5-success",
+      "chapterId": "root-cause",
+      "type": "chat.message",
+      "payload": {
+        "actorId": "daniel",
+        "messageKey": "ch5.daniel.success.complete",
+        "attachmentIds": []
+      },
+      "presentation": {
+        "delayBeforeMs": 0,
+        "pauseAfterMs": 700,
+        "typingSpeed": "deliberate",
+        "typingIndicator": true,
+        "transition": "fade"
+      }
+    },
+    {
+      "id": "ch6-open",
+      "chapterId": "prevention",
+      "type": "detective.open",
+      "payload": {
+        "manifestCaseId": "prevention"
+      }
+    },
+    {
+      "id": "ch6-focus",
+      "chapterId": "prevention",
+      "type": "camera.focus",
+      "payload": {
+        "targetId": "case-prevention"
+      }
+    },
+    {
+      "id": "ch6-context-label",
+      "chapterId": "prevention",
+      "type": "chat.message",
+      "payload": {
+        "actorId": "incidentius",
+        "messageKey": "context.supplied",
+        "attachmentIds": []
+      },
+      "presentation": {
+        "delayBeforeMs": 0,
+        "pauseAfterMs": 700,
+        "typingSpeed": "fast",
+        "typingIndicator": true,
+        "transition": "fade"
+      }
+    },
+    {
+      "id": "ch6-maya",
+      "chapterId": "prevention",
+      "type": "chat.message",
+      "payload": {
+        "actorId": "maya",
+        "messageKey": "ch6.maya.context",
+        "attachmentIds": []
+      },
+      "presentation": {
+        "delayBeforeMs": 0,
+        "pauseAfterMs": 700,
+        "typingSpeed": "natural",
+        "typingIndicator": true,
+        "transition": "fade"
+      }
+    },
+    {
+      "id": "ch6-daniel",
+      "chapterId": "prevention",
+      "type": "chat.message",
+      "payload": {
+        "actorId": "daniel",
+        "messageKey": "ch6.daniel.context",
+        "attachmentIds": []
+      },
+      "presentation": {
+        "delayBeforeMs": 0,
+        "pauseAfterMs": 700,
+        "typingSpeed": "deliberate",
+        "typingIndicator": true,
+        "transition": "fade"
+      }
+    },
+    {
+      "id": "ch6-sarah",
+      "chapterId": "prevention",
+      "type": "chat.message",
+      "payload": {
+        "actorId": "sarah",
+        "messageKey": "ch6.sarah.context",
+        "attachmentIds": []
+      },
+      "presentation": {
+        "delayBeforeMs": 0,
+        "pauseAfterMs": 700,
+        "typingSpeed": "natural",
+        "typingIndicator": true,
+        "transition": "fade"
+      }
+    },
+    {
+      "id": "ch6-prompt",
+      "chapterId": "prevention",
+      "type": "challenge.prompt",
+      "payload": {
+        "stepId": "prevention-solve"
+      }
+    },
+    {
+      "id": "ch6-await",
+      "chapterId": "prevention",
+      "type": "challenge.await_validation",
+      "payload": {
+        "stepId": "prevention-solve",
+        "checkpointId": "prevention-result"
+      }
+    },
+    {
+      "id": "ch6-check",
+      "chapterId": "prevention",
+      "type": "check.run",
+      "payload": {
+        "checkId": "prevention-check",
+        "referenceOutcome": "passed",
+        "referenceAssisted": true
+      }
+    },
+    {
+      "id": "ch6-proposal",
+      "chapterId": "prevention",
+      "type": "postmortem.recommend",
+      "payload": {
+        "proposalId": "watch-proposal"
+      }
+    },
+    {
+      "id": "ch6-incidentius-proposal",
+      "chapterId": "prevention",
+      "type": "chat.message",
+      "payload": {
+        "actorId": "incidentius",
+        "messageKey": "ch6.incidentius.proposal",
+        "attachmentIds": []
+      },
+      "presentation": {
+        "delayBeforeMs": 0,
+        "pauseAfterMs": 700,
+        "typingSpeed": "fast",
+        "typingIndicator": true,
+        "transition": "fade"
+      }
+    },
+    {
+      "id": "ch6-success",
+      "chapterId": "prevention",
+      "type": "chat.message",
+      "payload": {
+        "actorId": "maya",
+        "messageKey": "ch6.maya.success",
+        "attachmentIds": []
+      },
+      "presentation": {
+        "delayBeforeMs": 0,
+        "pauseAfterMs": 700,
+        "typingSpeed": "natural",
+        "typingIndicator": true,
+        "transition": "fade"
+      }
+    },
+    {
+      "id": "ch6-synthetic",
+      "chapterId": "prevention",
+      "type": "chat.message",
+      "payload": {
+        "actorId": "incidentius",
+        "messageKey": "ch6.synthetic",
+        "attachmentIds": []
+      },
+      "presentation": {
+        "delayBeforeMs": 0,
+        "pauseAfterMs": 700,
+        "typingSpeed": "fast",
+        "typingIndicator": true,
+        "transition": "fade"
+      }
+    },
+    {
+      "id": "ch6-postmortem",
+      "chapterId": "prevention",
+      "type": "chat.message",
+      "payload": {
+        "actorId": "daniel",
+        "messageKey": "ch6.postmortem",
+        "attachmentIds": []
+      },
+      "presentation": {
+        "delayBeforeMs": 0,
+        "pauseAfterMs": 700,
+        "typingSpeed": "deliberate",
+        "typingIndicator": true,
+        "transition": "fade"
+      }
+    }
+  ]
+}

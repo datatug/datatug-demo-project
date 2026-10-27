@@ -1,0 +1,3 @@
+Synthetic support reports for training.
+Three customers contacted support about repeated charges.
+The reports may overlap; no order or payment identifiers are asserted here.

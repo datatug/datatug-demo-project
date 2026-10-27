@@ -1,0 +1,420 @@
+{
+  "schema": "datatug-walkthrough/2",
+  "id": "phantom-orders",
+  "version": 1,
+  "title": "The Phantom Orders",
+  "summary": "A six-chapter synthetic incident investigation about duplicate successful charges.",
+  "trainingPackage": {
+    "id": "phantom-orders",
+    "revision": 1,
+    "path": "training/phantom-orders/1/package.json",
+    "sha256": "566f82e1d35ef2c064b13b433a181c7a12c2db83e5b45ebc3aa43b32c125962e",
+    "bytes": 25803
+  },
+  "narrative": {
+    "path": "walkthroughs/phantom-orders/narrative.json",
+    "sha256": "960c5ee1512da1040a96c31791f2f39d356cb1d734039207a7c145091bbbc552",
+    "bytes": 22289
+  },
+  "chapters": [
+    {
+      "id": "duplicate-payments",
+      "title": "Find duplicate successful payments",
+      "why": "Training chapter find duplicate successful payments.",
+      "steps": [
+        {
+          "id": "duplicate-payments-case",
+          "kind": "standard",
+          "title": "Open the training case",
+          "why": "Inspect the declared fictional Case and its evidence before solving.",
+          "modes": [
+            "explore"
+          ],
+          "target": {
+            "kind": "training-case",
+            "manifestCaseId": "duplicate-payments",
+            "trainingPackage": {
+              "id": "phantom-orders",
+              "revision": 1,
+              "path": "training/phantom-orders/1/package.json",
+              "sha256": "566f82e1d35ef2c064b13b433a181c7a12c2db83e5b45ebc3aa43b32c125962e",
+              "bytes": 25803
+            }
+          },
+          "done": {
+            "kind": "route-reached"
+          }
+        },
+        {
+          "id": "duplicate-payments-solve",
+          "kind": "challenge",
+          "title": "Solve the pinned challenge",
+          "why": "Write and submit the required SQL and typed answers in the real challenge editor.",
+          "target": {
+            "kind": "challenge",
+            "challengeId": "duplicate-payments",
+            "revision": 1
+          },
+          "done": {
+            "kind": "challenge-passed",
+            "checkpoints": [
+              {
+                "id": "duplicate-payments-result",
+                "completion": "whole-challenge"
+              }
+            ]
+          }
+        },
+        {
+          "id": "duplicate-payments-debrief",
+          "kind": "scripted-dialogue",
+          "segmentId": "duplicate-payments-debrief",
+          "title": "Debrief the evidence",
+          "why": "Read the fictional context, open the challenge, and wait for a validated pass.",
+          "modes": [
+            "guided"
+          ],
+          "target": {
+            "kind": "none"
+          },
+          "done": {
+            "kind": "dialogue-finished"
+          }
+        }
+      ]
+    },
+    {
+      "id": "payment-impact",
+      "title": "Connect payments and orders",
+      "why": "Training chapter connect payments and orders.",
+      "steps": [
+        {
+          "id": "payment-impact-case",
+          "kind": "standard",
+          "title": "Open the training case",
+          "why": "Inspect the declared fictional Case and its evidence before solving.",
+          "modes": [
+            "explore"
+          ],
+          "target": {
+            "kind": "training-case",
+            "manifestCaseId": "payment-impact",
+            "trainingPackage": {
+              "id": "phantom-orders",
+              "revision": 1,
+              "path": "training/phantom-orders/1/package.json",
+              "sha256": "566f82e1d35ef2c064b13b433a181c7a12c2db83e5b45ebc3aa43b32c125962e",
+              "bytes": 25803
+            }
+          },
+          "done": {
+            "kind": "route-reached"
+          }
+        },
+        {
+          "id": "payment-impact-solve",
+          "kind": "challenge",
+          "title": "Solve the pinned challenge",
+          "why": "Write and submit the required SQL and typed answers in the real challenge editor.",
+          "target": {
+            "kind": "challenge",
+            "challengeId": "payment-impact",
+            "revision": 1
+          },
+          "done": {
+            "kind": "challenge-passed",
+            "checkpoints": [
+              {
+                "id": "payment-impact-result",
+                "completion": "whole-challenge"
+              }
+            ]
+          }
+        },
+        {
+          "id": "payment-impact-debrief",
+          "kind": "scripted-dialogue",
+          "segmentId": "payment-impact-debrief",
+          "title": "Debrief the evidence",
+          "why": "Read the fictional context, open the challenge, and wait for a validated pass.",
+          "modes": [
+            "guided"
+          ],
+          "target": {
+            "kind": "none"
+          },
+          "done": {
+            "kind": "dialogue-finished"
+          }
+        }
+      ]
+    },
+    {
+      "id": "failure-window",
+      "title": "Find when the bug began",
+      "why": "Training chapter find when the bug began.",
+      "steps": [
+        {
+          "id": "failure-window-case",
+          "kind": "standard",
+          "title": "Open the training case",
+          "why": "Inspect the declared fictional Case and its evidence before solving.",
+          "modes": [
+            "explore"
+          ],
+          "target": {
+            "kind": "training-case",
+            "manifestCaseId": "failure-window",
+            "trainingPackage": {
+              "id": "phantom-orders",
+              "revision": 1,
+              "path": "training/phantom-orders/1/package.json",
+              "sha256": "566f82e1d35ef2c064b13b433a181c7a12c2db83e5b45ebc3aa43b32c125962e",
+              "bytes": 25803
+            }
+          },
+          "done": {
+            "kind": "route-reached"
+          }
+        },
+        {
+          "id": "failure-window-solve",
+          "kind": "challenge",
+          "title": "Solve the pinned challenge",
+          "why": "Write and submit the required SQL and typed answers in the real challenge editor.",
+          "target": {
+            "kind": "challenge",
+            "challengeId": "failure-window",
+            "revision": 1
+          },
+          "done": {
+            "kind": "challenge-passed",
+            "checkpoints": [
+              {
+                "id": "failure-window-result",
+                "completion": "whole-challenge"
+              }
+            ]
+          }
+        },
+        {
+          "id": "failure-window-debrief",
+          "kind": "scripted-dialogue",
+          "segmentId": "failure-window-debrief",
+          "title": "Debrief the evidence",
+          "why": "Read the fictional context, open the challenge, and wait for a validated pass.",
+          "modes": [
+            "guided"
+          ],
+          "target": {
+            "kind": "none"
+          },
+          "done": {
+            "kind": "dialogue-finished"
+          }
+        }
+      ]
+    },
+    {
+      "id": "retry-evidence",
+      "title": "Investigate retries and logs",
+      "why": "Training chapter investigate retries and logs.",
+      "steps": [
+        {
+          "id": "retry-evidence-case",
+          "kind": "standard",
+          "title": "Open the training case",
+          "why": "Inspect the declared fictional Case and its evidence before solving.",
+          "modes": [
+            "explore"
+          ],
+          "target": {
+            "kind": "training-case",
+            "manifestCaseId": "retry-evidence",
+            "trainingPackage": {
+              "id": "phantom-orders",
+              "revision": 1,
+              "path": "training/phantom-orders/1/package.json",
+              "sha256": "566f82e1d35ef2c064b13b433a181c7a12c2db83e5b45ebc3aa43b32c125962e",
+              "bytes": 25803
+            }
+          },
+          "done": {
+            "kind": "route-reached"
+          }
+        },
+        {
+          "id": "retry-evidence-solve",
+          "kind": "challenge",
+          "title": "Solve the pinned challenge",
+          "why": "Write and submit the required SQL and typed answers in the real challenge editor.",
+          "target": {
+            "kind": "challenge",
+            "challengeId": "retry-evidence",
+            "revision": 1
+          },
+          "done": {
+            "kind": "challenge-passed",
+            "checkpoints": [
+              {
+                "id": "retry-evidence-result",
+                "completion": "whole-challenge"
+              }
+            ]
+          }
+        },
+        {
+          "id": "retry-evidence-debrief",
+          "kind": "scripted-dialogue",
+          "segmentId": "retry-evidence-debrief",
+          "title": "Debrief the evidence",
+          "why": "Read the fictional context, open the challenge, and wait for a validated pass.",
+          "modes": [
+            "guided"
+          ],
+          "target": {
+            "kind": "none"
+          },
+          "done": {
+            "kind": "dialogue-finished"
+          }
+        }
+      ]
+    },
+    {
+      "id": "root-cause",
+      "title": "Prove the root cause",
+      "why": "Training chapter prove the root cause.",
+      "steps": [
+        {
+          "id": "root-cause-case",
+          "kind": "standard",
+          "title": "Open the training case",
+          "why": "Inspect the declared fictional Case and its evidence before solving.",
+          "modes": [
+            "explore"
+          ],
+          "target": {
+            "kind": "training-case",
+            "manifestCaseId": "root-cause",
+            "trainingPackage": {
+              "id": "phantom-orders",
+              "revision": 1,
+              "path": "training/phantom-orders/1/package.json",
+              "sha256": "566f82e1d35ef2c064b13b433a181c7a12c2db83e5b45ebc3aa43b32c125962e",
+              "bytes": 25803
+            }
+          },
+          "done": {
+            "kind": "route-reached"
+          }
+        },
+        {
+          "id": "root-cause-solve",
+          "kind": "challenge",
+          "title": "Solve the pinned challenge",
+          "why": "Write and submit the required SQL and typed answers in the real challenge editor.",
+          "target": {
+            "kind": "challenge",
+            "challengeId": "root-cause",
+            "revision": 1
+          },
+          "done": {
+            "kind": "challenge-passed",
+            "checkpoints": [
+              {
+                "id": "root-cause-result",
+                "completion": "whole-challenge"
+              }
+            ]
+          }
+        },
+        {
+          "id": "root-cause-debrief",
+          "kind": "scripted-dialogue",
+          "segmentId": "root-cause-debrief",
+          "title": "Debrief the evidence",
+          "why": "Read the fictional context, open the challenge, and wait for a validated pass.",
+          "modes": [
+            "guided"
+          ],
+          "target": {
+            "kind": "none"
+          },
+          "done": {
+            "kind": "dialogue-finished"
+          }
+        }
+      ]
+    },
+    {
+      "id": "prevention",
+      "title": "Prevent recurrence",
+      "why": "Training chapter prevent recurrence.",
+      "steps": [
+        {
+          "id": "prevention-case",
+          "kind": "standard",
+          "title": "Open the training case",
+          "why": "Inspect the declared fictional Case and its evidence before solving.",
+          "modes": [
+            "explore"
+          ],
+          "target": {
+            "kind": "training-case",
+            "manifestCaseId": "prevention",
+            "trainingPackage": {
+              "id": "phantom-orders",
+              "revision": 1,
+              "path": "training/phantom-orders/1/package.json",
+              "sha256": "566f82e1d35ef2c064b13b433a181c7a12c2db83e5b45ebc3aa43b32c125962e",
+              "bytes": 25803
+            }
+          },
+          "done": {
+            "kind": "route-reached"
+          }
+        },
+        {
+          "id": "prevention-solve",
+          "kind": "challenge",
+          "title": "Solve the pinned challenge",
+          "why": "Write and submit the required SQL and typed answers in the real challenge editor.",
+          "target": {
+            "kind": "challenge",
+            "challengeId": "prevention",
+            "revision": 1
+          },
+          "done": {
+            "kind": "challenge-passed",
+            "checkpoints": [
+              {
+                "id": "prevention-result",
+                "completion": "whole-challenge"
+              }
+            ]
+          }
+        },
+        {
+          "id": "prevention-debrief",
+          "kind": "scripted-dialogue",
+          "segmentId": "prevention-debrief",
+          "title": "Debrief the evidence",
+          "why": "Read the fictional context, open the challenge, and wait for a validated pass.",
+          "modes": [
+            "guided"
+          ],
+          "target": {
+            "kind": "none"
+          },
+          "done": {
+            "kind": "dialogue-finished"
+          }
+        }
+      ]
+    }
+  ],
+  "finish": {
+    "index": true
+  }
+}

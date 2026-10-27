@@ -1,0 +1,6 @@
+Synthetic prevention fixtures for the training Check.
+Broken fixture: the frozen investigation data has two affected orders.
+Repaired fixture: the second successes for those orders are changed to blocked_duplicate.
+Mutated fixture: a different order is duplicated, so a hardcoded order id cannot pass.
+Expected Check: zero affected-order rows. Broken and mutated must fail; repaired must pass.
+No production data or production Watch is involved.

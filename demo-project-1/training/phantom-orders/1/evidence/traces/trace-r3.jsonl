@@ -1,0 +1,2 @@
+{"id":"trace-r3-1","at":"2026-01-12T10:02:00Z","actorId":"daniel","kind":"provider-failure","message":"Provider rejected attempt a4 for request r3."}
+{"id":"trace-r3-2","at":"2026-01-12T10:02:05Z","actorId":"daniel","kind":"provider-success","message":"Retry a5 succeeded once; request r3 produced one successful charge."}

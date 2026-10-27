@@ -1,0 +1,30 @@
+{
+  "id": "prevention-check",
+  "title": "Prevention: no duplicate successful charges",
+  "description": "Synthetic training Check. It returns affected orders and expects zero rows.",
+  "version": 1,
+  "inputs": [],
+  "steps": [
+    {
+      "id": "affected-orders",
+      "kind": "query",
+      "queryId": "prevention/affected-orders",
+      "validators": [
+        {
+          "id": "zero-affected-orders",
+          "scope": "set",
+          "kind": "row-count",
+          "severity": "error",
+          "expected": {
+            "type": "integer",
+            "value": "0"
+          }
+        }
+      ],
+      "onUnavailable": "block"
+    }
+  ],
+  "updatedAt": "2026-01-12T12:00:00Z",
+  "updatedBy": "maya",
+  "createdAt": "2026-01-12T11:00:00Z"
+}

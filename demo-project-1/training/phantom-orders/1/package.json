@@ -1,0 +1,943 @@
+{
+  "schema": "datatug-training-package/1",
+  "id": "phantom-orders",
+  "revision": 1,
+  "assets": [
+    {
+      "id": "fixture-base",
+      "kind": "challenge-fixture",
+      "mediaType": "application/vnd.sqlite3",
+      "path": "training/phantom-orders/1/fixtures/base.db",
+      "sha256": "3f2a1cca52450799af270d30bd2fd36dce73611e59cdb9381f7b60636def5891",
+      "bytes": 20480
+    },
+    {
+      "id": "fixture-reordered",
+      "kind": "challenge-fixture",
+      "mediaType": "application/vnd.sqlite3",
+      "path": "training/phantom-orders/1/fixtures/reordered.db",
+      "sha256": "a24318d8d7d948c93df3de110f0ef3cd8c0f9cbd8238c7ecaefc93f51894a835",
+      "bytes": 20480
+    },
+    {
+      "id": "fixture-extra-duplicate",
+      "kind": "challenge-fixture",
+      "mediaType": "application/vnd.sqlite3",
+      "path": "training/phantom-orders/1/fixtures/extra-duplicate.db",
+      "sha256": "17b09ada0fa3be13e47b6bf583d3bc86ddce6fda2dd4e98fdf4a14a829b2435f",
+      "bytes": 20480
+    },
+    {
+      "id": "fixture-failed-only",
+      "kind": "challenge-fixture",
+      "mediaType": "application/vnd.sqlite3",
+      "path": "training/phantom-orders/1/fixtures/failed-only.db",
+      "sha256": "10c26c048d233fee4239bb2af311325afad94d10f44827ca4bdd0fa91782ac44",
+      "bytes": 20480
+    },
+    {
+      "id": "fixture-ordinary-retry",
+      "kind": "challenge-fixture",
+      "mediaType": "application/vnd.sqlite3",
+      "path": "training/phantom-orders/1/fixtures/ordinary-retry.db",
+      "sha256": "11d8af81d7134e0d8ac4c21e6916b6f1af673dcb9777a8b86b65fe0b14f7de76",
+      "bytes": 20480
+    },
+    {
+      "id": "fixture-varied-amounts",
+      "kind": "challenge-fixture",
+      "mediaType": "application/vnd.sqlite3",
+      "path": "training/phantom-orders/1/fixtures/varied-amounts.db",
+      "sha256": "a20f09137a28bde851213b34f5a8ddba905ee4418fc6cad43d4bed789e554b29",
+      "bytes": 20480
+    },
+    {
+      "id": "fixture-repaired",
+      "kind": "challenge-fixture",
+      "mediaType": "application/vnd.sqlite3",
+      "path": "training/phantom-orders/1/fixtures/repaired.db",
+      "sha256": "6b9fda3cbe87f581552422648fe78c0ceabaee93bee079f7ea33078cc55a6a0f",
+      "bytes": 20480
+    },
+    {
+      "id": "fixture-mutated",
+      "kind": "challenge-fixture",
+      "mediaType": "application/vnd.sqlite3",
+      "path": "training/phantom-orders/1/fixtures/mutated.db",
+      "sha256": "a7ac06aaaadea5cc7b707672c85100f2d26ac655743b6e20acb17612ef47e4a1",
+      "bytes": 20480
+    },
+    {
+      "id": "manifest-duplicate-payments",
+      "kind": "challenge-manifest",
+      "mediaType": "application/json",
+      "path": "training/phantom-orders/1/challenges/duplicate-payments.json",
+      "sha256": "84b35b1c71ad4cc23307e8d206933c4735e4c4c532057c12330f8d81f4c0ea41",
+      "bytes": 11195
+    },
+    {
+      "id": "manifest-payment-impact",
+      "kind": "challenge-manifest",
+      "mediaType": "application/json",
+      "path": "training/phantom-orders/1/challenges/payment-impact.json",
+      "sha256": "4eba0cd6f4c2875641e884366c56d8c6c4fa9c3dc7217bb5d877ef0c5809fef6",
+      "bytes": 13318
+    },
+    {
+      "id": "manifest-failure-window",
+      "kind": "challenge-manifest",
+      "mediaType": "application/json",
+      "path": "training/phantom-orders/1/challenges/failure-window.json",
+      "sha256": "5e70d559198d395fe4cbc02dbe7e0ff08ce8b73f7f84c1e244b28c33d2a462a9",
+      "bytes": 9140
+    },
+    {
+      "id": "manifest-retry-evidence",
+      "kind": "challenge-manifest",
+      "mediaType": "application/json",
+      "path": "training/phantom-orders/1/challenges/retry-evidence.json",
+      "sha256": "7e765a80acbbd54f93fc3ecf1782da601f242fc17548436b3fc79603dd044b84",
+      "bytes": 10955
+    },
+    {
+      "id": "manifest-root-cause",
+      "kind": "challenge-manifest",
+      "mediaType": "application/json",
+      "path": "training/phantom-orders/1/challenges/root-cause.json",
+      "sha256": "15667a5c55731fcece1a42266a410b6d7ebcca831e651232b503af073bd60090",
+      "bytes": 11724
+    },
+    {
+      "id": "manifest-prevention",
+      "kind": "challenge-manifest",
+      "mediaType": "application/json",
+      "path": "training/phantom-orders/1/challenges/prevention.json",
+      "sha256": "3b11f6257b7dfaf27457e73af281029a364a93ef6f2283513a070991debcc031",
+      "bytes": 8342
+    },
+    {
+      "id": "payment-ledger",
+      "kind": "evidence-records",
+      "mediaType": "application/json",
+      "path": "training/phantom-orders/1/evidence/payment-ledger.json",
+      "sha256": "6f6682c9ee0f2131129a05b11ebc914b7d2670159f5553229eee07150d5f8f4f",
+      "bytes": 3891
+    },
+    {
+      "id": "orders-ledger",
+      "kind": "evidence-records",
+      "mediaType": "application/json",
+      "path": "training/phantom-orders/1/evidence/orders-ledger.json",
+      "sha256": "ae9c3a2b5f8fbcbd44815d57c4b4e9a5716b0f496f0d76a69024703ae2b40c00",
+      "bytes": 1083
+    },
+    {
+      "id": "retry-events",
+      "kind": "evidence-records",
+      "mediaType": "application/json",
+      "path": "training/phantom-orders/1/evidence/retry-events.json",
+      "sha256": "47fb022b1bff9ec16cb05269b1d2913694bb09820801f114fdcb47133894aa3b",
+      "bytes": 3293
+    },
+    {
+      "id": "deployment-timeline",
+      "kind": "evidence-records",
+      "mediaType": "application/json",
+      "path": "training/phantom-orders/1/evidence/deployment-timeline.json",
+      "sha256": "bc57b4851a26012f489666b0bcfb09ced1ff272c7f748dc466f38a4cc8eb9320",
+      "bytes": 702
+    },
+    {
+      "id": "duplicate-orders",
+      "kind": "evidence-records",
+      "mediaType": "application/json",
+      "path": "training/phantom-orders/1/evidence/duplicate-orders.json",
+      "sha256": "68b7183b2565aff96d091da5d263e1c43e52639721ab4de03a3172ebc814bbd8",
+      "bytes": 462
+    },
+    {
+      "id": "duplicate-cohort",
+      "kind": "evidence-records",
+      "mediaType": "application/json",
+      "path": "training/phantom-orders/1/evidence/duplicate-cohort.json",
+      "sha256": "895877fec05f45081073208d2287bf741a9205e4e2841688c9f61fbb90fb5af2",
+      "bytes": 450
+    },
+    {
+      "id": "duplicate-minutes",
+      "kind": "evidence-records",
+      "mediaType": "application/json",
+      "path": "training/phantom-orders/1/evidence/duplicate-minutes.json",
+      "sha256": "98c26d9277455802d8045b0cc3b224d6da14fa598d366c4449606ede96774f52",
+      "bytes": 492
+    },
+    {
+      "id": "support-reports",
+      "kind": "evidence-text",
+      "mediaType": "text/plain",
+      "path": "training/phantom-orders/1/evidence/support-reports.txt",
+      "sha256": "f72269680bed38314ebd4b7f320412318fcb9db3c667d66b9a90bc30df133c0c",
+      "bytes": 174
+    },
+    {
+      "id": "prevention-fixtures",
+      "kind": "evidence-text",
+      "mediaType": "text/plain",
+      "path": "training/phantom-orders/1/evidence/prevention-fixtures.txt",
+      "sha256": "7e6bbf1678306eacc4211a7e11bc458f147c98814dbe8df1a193890c229851f7",
+      "bytes": 446
+    },
+    {
+      "id": "config-pay-17",
+      "kind": "evidence-text",
+      "mediaType": "text/plain",
+      "path": "training/phantom-orders/1/evidence/config-pay-17.txt",
+      "sha256": "8f728c1d9483e788cb37473fdfafb1261a64fc0c363e3621d3e335e6b403c1a8",
+      "bytes": 444
+    },
+    {
+      "id": "trace-r1",
+      "kind": "evidence-log",
+      "mediaType": "application/x-ndjson",
+      "path": "training/phantom-orders/1/evidence/traces/trace-r1.jsonl",
+      "sha256": "9adf8bf5bc425fd5dcc5cf3ffa280deebd5bb9ef96e53a712c4000941d86f30b",
+      "bytes": 176
+    },
+    {
+      "id": "trace-r2",
+      "kind": "evidence-log",
+      "mediaType": "application/x-ndjson",
+      "path": "training/phantom-orders/1/evidence/traces/trace-r2.jsonl",
+      "sha256": "4a2b2f0bcd81585e1416f0f42a4c3721dbaad77583958b5023f1c6fe8b90cc74",
+      "bytes": 636
+    },
+    {
+      "id": "trace-r3",
+      "kind": "evidence-log",
+      "mediaType": "application/x-ndjson",
+      "path": "training/phantom-orders/1/evidence/traces/trace-r3.jsonl",
+      "sha256": "ca1414f5dd8a1dcc45b334c6621f4cb8143623ae7706ffcdef151bf71a6ef286",
+      "bytes": 323
+    },
+    {
+      "id": "trace-r4",
+      "kind": "evidence-log",
+      "mediaType": "application/x-ndjson",
+      "path": "training/phantom-orders/1/evidence/traces/trace-r4.jsonl",
+      "sha256": "2cd4a5fe7e35a41473c03a437011cf2c6b911e158874c9e95491e2c425e46122",
+      "bytes": 636
+    },
+    {
+      "id": "query-prevention-meta",
+      "kind": "query-metadata",
+      "mediaType": "application/json",
+      "path": "training/phantom-orders/1/queries/prevention-affected-orders.meta.json",
+      "sha256": "e7372985897738ff332ca6a5e51564e56b5e33373719024a98ab1b179cd8ce8c",
+      "bytes": 179
+    },
+    {
+      "id": "query-prevention-body",
+      "kind": "query-body-sql",
+      "mediaType": "application/sql",
+      "path": "training/phantom-orders/1/queries/prevention-affected-orders.sql",
+      "sha256": "03502aae186809cf9130ae63353a830fbc545a6e9c9d7cf2c3fb068adda0edf9",
+      "bytes": 92
+    },
+    {
+      "id": "check-prevention-definition",
+      "kind": "check-definition",
+      "mediaType": "application/json",
+      "path": "training/phantom-orders/1/checks/prevention-duplicate-charges.json",
+      "sha256": "9f1a7f0f11ab1ce8e7ca1c5593dfae45070681ce718811b5aa5a9eda85cd0e5e",
+      "bytes": 751
+    },
+    {
+      "id": "watch-recommendation",
+      "kind": "watch-recommendation",
+      "mediaType": "application/json",
+      "path": "training/phantom-orders/1/proposals/watch-recommendation.json",
+      "sha256": "ea83c05742875394593d577f858075393c01746750319ab17cedd7633674cda3",
+      "bytes": 350
+    }
+  ],
+  "fictionalActors": [
+    {
+      "id": "sarah",
+      "name": "Sarah"
+    },
+    {
+      "id": "maya",
+      "name": "Maya"
+    },
+    {
+      "id": "daniel",
+      "name": "Daniel"
+    },
+    {
+      "id": "incidentius",
+      "name": "Incidentius"
+    }
+  ],
+  "sources": [
+    {
+      "id": "phantom-fixture",
+      "fixtureAssetId": "fixture-base"
+    }
+  ],
+  "cases": [
+    {
+      "id": "duplicate-payments",
+      "title": "Duplicate successful payments",
+      "status": "active",
+      "context": {
+        "scenario": {
+          "type": "string",
+          "value": "INC-0042"
+        },
+        "synthetic": {
+          "type": "string",
+          "value": "true"
+        }
+      },
+      "incidentIds": [
+        "incident-0042"
+      ],
+      "evidenceIds": [
+        "support-reports",
+        "payment-ledger",
+        "orders-ledger"
+      ],
+      "findings": [
+        {
+          "id": "reports-overlap",
+          "text": "Three customers reported repeated charges; the reports may overlap.",
+          "status": "hypothesis",
+          "evidenceRefs": [
+            "support-reports"
+          ]
+        }
+      ],
+      "timeline": [
+        {
+          "id": "case1-evidence",
+          "at": "2026-01-12T11:00:00Z",
+          "actorId": "sarah",
+          "type": "evidence-revealed",
+          "ref": {
+            "kind": "evidence",
+            "id": "support-reports"
+          }
+        },
+        {
+          "id": "case1-finding",
+          "at": "2026-01-12T11:01:00Z",
+          "actorId": "maya",
+          "type": "finding-recorded",
+          "ref": {
+            "kind": "finding",
+            "id": "reports-overlap"
+          }
+        }
+      ]
+    },
+    {
+      "id": "payment-impact",
+      "title": "Payment impact",
+      "status": "active",
+      "context": {
+        "scenario": {
+          "type": "string",
+          "value": "INC-0042"
+        },
+        "synthetic": {
+          "type": "string",
+          "value": "true"
+        }
+      },
+      "incidentIds": [
+        "incident-0042"
+      ],
+      "evidenceIds": [
+        "duplicate-orders",
+        "payment-ledger",
+        "orders-ledger"
+      ],
+      "findings": [
+        {
+          "id": "duplicate-orders-known",
+          "text": "Orders 1002 and 1004 each have two successful charges in the frozen investigation data.",
+          "status": "confirmed",
+          "evidenceRefs": [
+            "duplicate-orders"
+          ]
+        }
+      ],
+      "timeline": [
+        {
+          "id": "case2-evidence",
+          "at": "2026-01-12T11:05:00Z",
+          "actorId": "maya",
+          "type": "evidence-revealed",
+          "ref": {
+            "kind": "evidence",
+            "id": "duplicate-orders"
+          }
+        },
+        {
+          "id": "case2-finding",
+          "at": "2026-01-12T11:06:00Z",
+          "actorId": "sarah",
+          "type": "finding-recorded",
+          "ref": {
+            "kind": "finding",
+            "id": "duplicate-orders-known"
+          }
+        }
+      ]
+    },
+    {
+      "id": "failure-window",
+      "title": "Failure window",
+      "status": "active",
+      "context": {
+        "scenario": {
+          "type": "string",
+          "value": "INC-0042"
+        },
+        "synthetic": {
+          "type": "string",
+          "value": "true"
+        }
+      },
+      "incidentIds": [
+        "incident-0042"
+      ],
+      "evidenceIds": [
+        "duplicate-orders",
+        "payment-ledger"
+      ],
+      "findings": [
+        {
+          "id": "first-charge-valid",
+          "text": "A first successful charge is not yet evidence of duplication; use the second success per order.",
+          "status": "hypothesis",
+          "evidenceRefs": [
+            "payment-ledger"
+          ]
+        }
+      ],
+      "timeline": [
+        {
+          "id": "case3-evidence",
+          "at": "2026-01-12T11:10:00Z",
+          "actorId": "maya",
+          "type": "evidence-revealed",
+          "ref": {
+            "kind": "evidence",
+            "id": "payment-ledger"
+          }
+        },
+        {
+          "id": "case3-finding",
+          "at": "2026-01-12T11:11:00Z",
+          "actorId": "daniel",
+          "type": "finding-recorded",
+          "ref": {
+            "kind": "finding",
+            "id": "first-charge-valid"
+          }
+        }
+      ]
+    },
+    {
+      "id": "retry-evidence",
+      "title": "Retry evidence",
+      "status": "active",
+      "context": {
+        "scenario": {
+          "type": "string",
+          "value": "INC-0042"
+        },
+        "synthetic": {
+          "type": "string",
+          "value": "true"
+        }
+      },
+      "incidentIds": [
+        "incident-0042"
+      ],
+      "evidenceIds": [
+        "retry-events",
+        "trace-r1",
+        "trace-r2",
+        "trace-r3",
+        "trace-r4",
+        "payment-ledger"
+      ],
+      "findings": [
+        {
+          "id": "correlate-by-request",
+          "text": "Provider traces include retries that must be correlated by request ID, not by amount.",
+          "status": "hypothesis",
+          "evidenceRefs": [
+            "retry-events",
+            "trace-r2",
+            "trace-r4"
+          ]
+        }
+      ],
+      "timeline": [
+        {
+          "id": "case4-evidence",
+          "at": "2026-01-12T11:15:00Z",
+          "actorId": "daniel",
+          "type": "evidence-revealed",
+          "ref": {
+            "kind": "evidence",
+            "id": "retry-events"
+          }
+        },
+        {
+          "id": "case4-finding",
+          "at": "2026-01-12T11:16:00Z",
+          "actorId": "maya",
+          "type": "finding-recorded",
+          "ref": {
+            "kind": "finding",
+            "id": "correlate-by-request"
+          }
+        }
+      ]
+    },
+    {
+      "id": "root-cause",
+      "title": "Root cause",
+      "status": "active",
+      "context": {
+        "scenario": {
+          "type": "string",
+          "value": "INC-0042"
+        },
+        "synthetic": {
+          "type": "string",
+          "value": "true"
+        }
+      },
+      "incidentIds": [
+        "incident-0042"
+      ],
+      "evidenceIds": [
+        "duplicate-cohort",
+        "duplicate-minutes",
+        "retry-events",
+        "trace-r2",
+        "trace-r4",
+        "trace-r3",
+        "config-pay-17",
+        "deployment-timeline"
+      ],
+      "findings": [
+        {
+          "id": "duplicate-request-cohort",
+          "text": "The duplicate request cohort is r2 and r4; r3 recovered a failure safely.",
+          "status": "confirmed",
+          "evidenceRefs": [
+            "duplicate-cohort",
+            "retry-events"
+          ]
+        },
+        {
+          "id": "second-success-minutes",
+          "text": "Second successes cluster at 10:01 and 10:03 in the frozen data.",
+          "status": "confirmed",
+          "evidenceRefs": [
+            "duplicate-minutes"
+          ]
+        },
+        {
+          "id": "reviewed-config-diff",
+          "text": "Release pay-17 disabled retry idempotency in the reviewed configuration diff.",
+          "status": "confirmed",
+          "evidenceRefs": [
+            "config-pay-17",
+            "deployment-timeline"
+          ]
+        }
+      ],
+      "timeline": [
+        {
+          "id": "case5-evidence",
+          "at": "2026-01-12T11:20:00Z",
+          "actorId": "daniel",
+          "type": "evidence-revealed",
+          "ref": {
+            "kind": "evidence",
+            "id": "config-pay-17"
+          }
+        },
+        {
+          "id": "case5-finding",
+          "at": "2026-01-12T11:21:00Z",
+          "actorId": "maya",
+          "type": "finding-recorded",
+          "ref": {
+            "kind": "finding",
+            "id": "duplicate-request-cohort"
+          }
+        },
+        {
+          "id": "case5-minutes",
+          "at": "2026-01-12T11:22:00Z",
+          "actorId": "daniel",
+          "type": "finding-recorded",
+          "ref": {
+            "kind": "finding",
+            "id": "second-success-minutes"
+          }
+        }
+      ]
+    },
+    {
+      "id": "prevention",
+      "title": "Prevention",
+      "status": "active",
+      "context": {
+        "scenario": {
+          "type": "string",
+          "value": "INC-0042"
+        },
+        "synthetic": {
+          "type": "string",
+          "value": "true"
+        }
+      },
+      "incidentIds": [
+        "incident-0042"
+      ],
+      "evidenceIds": [
+        "config-pay-17",
+        "trace-r2",
+        "trace-r4",
+        "duplicate-orders",
+        "prevention-fixtures"
+      ],
+      "findings": [
+        {
+          "id": "check-expectation",
+          "text": "The Check must return zero affected-order rows on repaired data.",
+          "status": "hypothesis",
+          "evidenceRefs": [
+            "prevention-fixtures"
+          ]
+        },
+        {
+          "id": "synthetic-validation",
+          "text": "Expected synthetic validation matrix: broken fails, repaired passes, mutated fails.",
+          "status": "hypothesis",
+          "evidenceRefs": [
+            "prevention-fixtures"
+          ]
+        }
+      ],
+      "timeline": [
+        {
+          "id": "case6-evidence",
+          "at": "2026-01-12T11:25:00Z",
+          "actorId": "maya",
+          "type": "evidence-revealed",
+          "ref": {
+            "kind": "evidence",
+            "id": "prevention-fixtures"
+          }
+        },
+        {
+          "id": "case6-finding",
+          "at": "2026-01-12T11:26:00Z",
+          "actorId": "daniel",
+          "type": "finding-recorded",
+          "ref": {
+            "kind": "finding",
+            "id": "synthetic-validation"
+          }
+        }
+      ]
+    }
+  ],
+  "incidents": [
+    {
+      "id": "incident-0042",
+      "title": "Duplicate charges after retry handler deployment",
+      "description": "Synthetic incident for The Phantom Orders training. Successful retries produced duplicate charges; the scenario and all evidence are fictional.",
+      "status": "investigating",
+      "evidenceIds": [
+        "config-pay-17",
+        "trace-r2",
+        "trace-r4",
+        "payment-ledger",
+        "duplicate-cohort"
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "id": "prevention-check",
+      "definitionAssetId": "check-prevention-definition"
+    }
+  ],
+  "queries": [
+    {
+      "id": "prevention/affected-orders",
+      "metadataAssetId": "query-prevention-meta",
+      "bodyAssetId": "query-prevention-body",
+      "sourceId": "phantom-fixture"
+    }
+  ],
+  "challenges": [
+    {
+      "id": "duplicate-payments",
+      "revision": 1,
+      "manifestAssetId": "manifest-duplicate-payments",
+      "fixtures": [
+        {
+          "fixtureId": "base",
+          "assetId": "fixture-base"
+        },
+        {
+          "fixtureId": "reordered",
+          "assetId": "fixture-reordered"
+        },
+        {
+          "fixtureId": "extra-duplicate",
+          "assetId": "fixture-extra-duplicate"
+        },
+        {
+          "fixtureId": "failed-only",
+          "assetId": "fixture-failed-only"
+        },
+        {
+          "fixtureId": "ordinary-retry",
+          "assetId": "fixture-ordinary-retry"
+        },
+        {
+          "fixtureId": "varied-amounts",
+          "assetId": "fixture-varied-amounts"
+        }
+      ]
+    },
+    {
+      "id": "payment-impact",
+      "revision": 1,
+      "manifestAssetId": "manifest-payment-impact",
+      "fixtures": [
+        {
+          "fixtureId": "base",
+          "assetId": "fixture-base"
+        },
+        {
+          "fixtureId": "reordered",
+          "assetId": "fixture-reordered"
+        },
+        {
+          "fixtureId": "extra-duplicate",
+          "assetId": "fixture-extra-duplicate"
+        },
+        {
+          "fixtureId": "failed-only",
+          "assetId": "fixture-failed-only"
+        },
+        {
+          "fixtureId": "ordinary-retry",
+          "assetId": "fixture-ordinary-retry"
+        },
+        {
+          "fixtureId": "varied-amounts",
+          "assetId": "fixture-varied-amounts"
+        }
+      ]
+    },
+    {
+      "id": "failure-window",
+      "revision": 1,
+      "manifestAssetId": "manifest-failure-window",
+      "fixtures": [
+        {
+          "fixtureId": "base",
+          "assetId": "fixture-base"
+        },
+        {
+          "fixtureId": "reordered",
+          "assetId": "fixture-reordered"
+        },
+        {
+          "fixtureId": "extra-duplicate",
+          "assetId": "fixture-extra-duplicate"
+        },
+        {
+          "fixtureId": "failed-only",
+          "assetId": "fixture-failed-only"
+        },
+        {
+          "fixtureId": "ordinary-retry",
+          "assetId": "fixture-ordinary-retry"
+        },
+        {
+          "fixtureId": "varied-amounts",
+          "assetId": "fixture-varied-amounts"
+        }
+      ]
+    },
+    {
+      "id": "retry-evidence",
+      "revision": 1,
+      "manifestAssetId": "manifest-retry-evidence",
+      "fixtures": [
+        {
+          "fixtureId": "base",
+          "assetId": "fixture-base"
+        },
+        {
+          "fixtureId": "reordered",
+          "assetId": "fixture-reordered"
+        },
+        {
+          "fixtureId": "failed-only",
+          "assetId": "fixture-failed-only"
+        },
+        {
+          "fixtureId": "ordinary-retry",
+          "assetId": "fixture-ordinary-retry"
+        },
+        {
+          "fixtureId": "varied-amounts",
+          "assetId": "fixture-varied-amounts"
+        }
+      ]
+    },
+    {
+      "id": "root-cause",
+      "revision": 1,
+      "manifestAssetId": "manifest-root-cause",
+      "fixtures": [
+        {
+          "fixtureId": "base",
+          "assetId": "fixture-base"
+        },
+        {
+          "fixtureId": "reordered",
+          "assetId": "fixture-reordered"
+        },
+        {
+          "fixtureId": "failed-only",
+          "assetId": "fixture-failed-only"
+        },
+        {
+          "fixtureId": "ordinary-retry",
+          "assetId": "fixture-ordinary-retry"
+        },
+        {
+          "fixtureId": "varied-amounts",
+          "assetId": "fixture-varied-amounts"
+        }
+      ]
+    },
+    {
+      "id": "prevention",
+      "revision": 1,
+      "manifestAssetId": "manifest-prevention",
+      "fixtures": [
+        {
+          "fixtureId": "base",
+          "assetId": "fixture-base"
+        },
+        {
+          "fixtureId": "repaired",
+          "assetId": "fixture-repaired"
+        },
+        {
+          "fixtureId": "mutated",
+          "assetId": "fixture-mutated"
+        }
+      ]
+    }
+  ],
+  "proposals": [
+    {
+      "id": "watch-proposal",
+      "kind": "watch",
+      "definitionId": "watch-recommendation",
+      "evidenceIds": [
+        "config-pay-17",
+        "trace-r2",
+        "trace-r4"
+      ],
+      "rationale": "Recommend a separately authorized owner review the zero-row Check as a future Watch; training never activates it."
+    }
+  ],
+  "presentationTargets": [
+    {
+      "id": "case-duplicate-payments",
+      "kind": "case",
+      "refId": "duplicate-payments"
+    },
+    {
+      "id": "case-payment-impact",
+      "kind": "case",
+      "refId": "payment-impact"
+    },
+    {
+      "id": "case-failure-window",
+      "kind": "case",
+      "refId": "failure-window"
+    },
+    {
+      "id": "case-retry-evidence",
+      "kind": "case",
+      "refId": "retry-evidence"
+    },
+    {
+      "id": "case-root-cause",
+      "kind": "case",
+      "refId": "root-cause"
+    },
+    {
+      "id": "case-prevention",
+      "kind": "case",
+      "refId": "prevention"
+    },
+    {
+      "id": "incident-0042",
+      "kind": "incident",
+      "refId": "incident-0042"
+    },
+    {
+      "id": "evidence-config-pay-17",
+      "kind": "evidence",
+      "refId": "config-pay-17"
+    },
+    {
+      "id": "evidence-trace-r2",
+      "kind": "evidence",
+      "refId": "trace-r2"
+    },
+    {
+      "id": "evidence-trace-r4",
+      "kind": "evidence",
+      "refId": "trace-r4"
+    },
+    {
+      "id": "evidence-trace-r3",
+      "kind": "evidence",
+      "refId": "trace-r3"
+    },
+    {
+      "id": "check-prevention",
+      "kind": "check",
+      "refId": "prevention-check"
+    },
+    {
+      "id": "proposal-watch",
+      "kind": "proposal",
+      "refId": "watch-proposal"
+    }
+  ]
+}

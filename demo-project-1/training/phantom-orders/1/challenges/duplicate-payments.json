@@ -1,0 +1,440 @@
+{
+  "schemaVersion": 1,
+  "gradingVersion": "challenge-grading-v1",
+  "challengeId": "duplicate-payments",
+  "revision": 1,
+  "title": "Find duplicate successful payments",
+  "objective": "Count only succeeded payments per order and keep orders with more than one success.",
+  "difficulty": "intermediate",
+  "dialect": "sqlite",
+  "allowedOperation": "read",
+  "timing": "off",
+  "engine": {
+    "package": "@sqlite.org/sqlite-wasm",
+    "version": "3.54.1-build1",
+    "sqliteVersion": "3.54.1"
+  },
+  "fixtureSuite": {
+    "id": "phantom-orders-duplicate-payments",
+    "fixtures": [
+      {
+        "id": "base",
+        "label": "Base fictional incident data",
+        "sha256": "3f2a1cca52450799af270d30bd2fd36dce73611e59cdb9381f7b60636def5891",
+        "bytes": 20480,
+        "runs": 1
+      },
+      {
+        "id": "reordered",
+        "label": "Reordered insertion and order/payment IDs",
+        "sha256": "a24318d8d7d948c93df3de110f0ef3cd8c0f9cbd8238c7ecaefc93f51894a835",
+        "bytes": 20480,
+        "runs": 1
+      },
+      {
+        "id": "extra-duplicate",
+        "label": "Additional duplicate order",
+        "sha256": "17b09ada0fa3be13e47b6bf583d3bc86ddce6fda2dd4e98fdf4a14a829b2435f",
+        "bytes": 20480,
+        "runs": 1
+      },
+      {
+        "id": "failed-only",
+        "label": "Failed-only order",
+        "sha256": "10c26c048d233fee4239bb2af311325afad94d10f44827ca4bdd0fa91782ac44",
+        "bytes": 20480,
+        "runs": 1
+      },
+      {
+        "id": "ordinary-retry",
+        "label": "Ordinary failed-then-success retry",
+        "sha256": "11d8af81d7134e0d8ac4c21e6916b6f1af673dcb9777a8b86b65fe0b14f7de76",
+        "bytes": 20480,
+        "runs": 1
+      },
+      {
+        "id": "varied-amounts",
+        "label": "Varied order and payment amounts",
+        "sha256": "a20f09137a28bde851213b34f5a8ddba905ee4418fc6cad43d4bed789e554b29",
+        "bytes": 20480,
+        "runs": 1
+      }
+    ]
+  },
+  "visibleSchema": {
+    "tables": [
+      {
+        "name": "orders",
+        "columns": [
+          {
+            "name": "id",
+            "type": "integer",
+            "primaryKey": true
+          },
+          {
+            "name": "customer_id",
+            "type": "integer"
+          },
+          {
+            "name": "total_cents",
+            "type": "integer"
+          }
+        ]
+      },
+      {
+        "name": "payments",
+        "columns": [
+          {
+            "name": "id",
+            "type": "integer",
+            "primaryKey": true
+          },
+          {
+            "name": "order_id",
+            "type": "integer"
+          },
+          {
+            "name": "attempt_id",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "type": "string"
+          },
+          {
+            "name": "amount_cents",
+            "type": "integer"
+          },
+          {
+            "name": "created_at",
+            "type": "datetime"
+          }
+        ]
+      },
+      {
+        "name": "retry_events",
+        "columns": [
+          {
+            "name": "attempt_id",
+            "type": "string"
+          },
+          {
+            "name": "request_id",
+            "type": "string"
+          },
+          {
+            "name": "idempotency_key",
+            "type": "string"
+          },
+          {
+            "name": "outcome",
+            "type": "string"
+          },
+          {
+            "name": "created_at",
+            "type": "datetime"
+          }
+        ]
+      },
+      {
+        "name": "deployments",
+        "columns": [
+          {
+            "name": "version",
+            "type": "string"
+          },
+          {
+            "name": "deployed_at",
+            "type": "datetime"
+          },
+          {
+            "name": "idempotency_enabled",
+            "type": "integer"
+          }
+        ]
+      }
+    ]
+  },
+  "parts": [
+    {
+      "id": "duplicate-payments",
+      "title": "Duplicate successful payment counts",
+      "required": true,
+      "answerKind": "sql",
+      "sql": {
+        "cases": [
+          {
+            "fixture": "base",
+            "oracle": {
+              "kind": "result",
+              "columns": [
+                {
+                  "name": "order_id",
+                  "type": "integer"
+                },
+                {
+                  "name": "successful_count",
+                  "type": "integer"
+                }
+              ],
+              "rows": [
+                [
+                  {
+                    "type": "integer",
+                    "value": "1002"
+                  },
+                  {
+                    "type": "integer",
+                    "value": "2"
+                  }
+                ],
+                [
+                  {
+                    "type": "integer",
+                    "value": "1004"
+                  },
+                  {
+                    "type": "integer",
+                    "value": "2"
+                  }
+                ]
+              ],
+              "ordering": "unordered"
+            }
+          },
+          {
+            "fixture": "reordered",
+            "oracle": {
+              "kind": "result",
+              "columns": [
+                {
+                  "name": "order_id",
+                  "type": "integer"
+                },
+                {
+                  "name": "successful_count",
+                  "type": "integer"
+                }
+              ],
+              "rows": [
+                [
+                  {
+                    "type": "integer",
+                    "value": "2002"
+                  },
+                  {
+                    "type": "integer",
+                    "value": "2"
+                  }
+                ],
+                [
+                  {
+                    "type": "integer",
+                    "value": "2004"
+                  },
+                  {
+                    "type": "integer",
+                    "value": "2"
+                  }
+                ]
+              ],
+              "ordering": "unordered"
+            }
+          },
+          {
+            "fixture": "extra-duplicate",
+            "oracle": {
+              "kind": "result",
+              "columns": [
+                {
+                  "name": "order_id",
+                  "type": "integer"
+                },
+                {
+                  "name": "successful_count",
+                  "type": "integer"
+                }
+              ],
+              "rows": [
+                [
+                  {
+                    "type": "integer",
+                    "value": "1002"
+                  },
+                  {
+                    "type": "integer",
+                    "value": "2"
+                  }
+                ],
+                [
+                  {
+                    "type": "integer",
+                    "value": "1004"
+                  },
+                  {
+                    "type": "integer",
+                    "value": "2"
+                  }
+                ],
+                [
+                  {
+                    "type": "integer",
+                    "value": "1005"
+                  },
+                  {
+                    "type": "integer",
+                    "value": "2"
+                  }
+                ]
+              ],
+              "ordering": "unordered"
+            }
+          },
+          {
+            "fixture": "failed-only",
+            "oracle": {
+              "kind": "result",
+              "columns": [
+                {
+                  "name": "order_id",
+                  "type": "integer"
+                },
+                {
+                  "name": "successful_count",
+                  "type": "integer"
+                }
+              ],
+              "rows": [
+                [
+                  {
+                    "type": "integer",
+                    "value": "1002"
+                  },
+                  {
+                    "type": "integer",
+                    "value": "2"
+                  }
+                ],
+                [
+                  {
+                    "type": "integer",
+                    "value": "1004"
+                  },
+                  {
+                    "type": "integer",
+                    "value": "2"
+                  }
+                ]
+              ],
+              "ordering": "unordered"
+            }
+          },
+          {
+            "fixture": "ordinary-retry",
+            "oracle": {
+              "kind": "result",
+              "columns": [
+                {
+                  "name": "order_id",
+                  "type": "integer"
+                },
+                {
+                  "name": "successful_count",
+                  "type": "integer"
+                }
+              ],
+              "rows": [
+                [
+                  {
+                    "type": "integer",
+                    "value": "1002"
+                  },
+                  {
+                    "type": "integer",
+                    "value": "2"
+                  }
+                ],
+                [
+                  {
+                    "type": "integer",
+                    "value": "1004"
+                  },
+                  {
+                    "type": "integer",
+                    "value": "2"
+                  }
+                ]
+              ],
+              "ordering": "unordered"
+            }
+          },
+          {
+            "fixture": "varied-amounts",
+            "oracle": {
+              "kind": "result",
+              "columns": [
+                {
+                  "name": "order_id",
+                  "type": "integer"
+                },
+                {
+                  "name": "successful_count",
+                  "type": "integer"
+                }
+              ],
+              "rows": [
+                [
+                  {
+                    "type": "integer",
+                    "value": "1002"
+                  },
+                  {
+                    "type": "integer",
+                    "value": "2"
+                  }
+                ],
+                [
+                  {
+                    "type": "integer",
+                    "value": "1004"
+                  },
+                  {
+                    "type": "integer",
+                    "value": "2"
+                  }
+                ]
+              ],
+              "ordering": "unordered"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "hints": [
+    {
+      "id": "filter-successes",
+      "text": "Filter to succeeded payment events first."
+    },
+    {
+      "id": "having-groups",
+      "text": "Use HAVING to keep only order groups with more than one success."
+    },
+    {
+      "id": "failed-retry",
+      "text": "A failed attempt followed by one success is a recovered retry, not a duplicate charge."
+    },
+    {
+      "id": "failure",
+      "text": "Check whether every counted row really represents a successful charge."
+    }
+  ],
+  "referenceSolutions": [
+    {
+      "partId": "duplicate-payments",
+      "answer": {
+        "sql": "SELECT order_id, COUNT(*) AS successful_count\nFROM payments\nWHERE status='succeeded'\nGROUP BY order_id\nHAVING COUNT(*)>1;\n"
+      }
+    }
+  ]
+}

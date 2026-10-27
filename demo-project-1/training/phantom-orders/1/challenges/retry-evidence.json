@@ -1,0 +1,437 @@
+{
+  "schemaVersion": 1,
+  "gradingVersion": "challenge-grading-v1",
+  "challengeId": "retry-evidence",
+  "revision": 1,
+  "title": "Investigate retries and logs",
+  "objective": "Correlate successful payments with request IDs and select the exact duplicate evidence pairs.",
+  "difficulty": "intermediate",
+  "dialect": "sqlite",
+  "allowedOperation": "read",
+  "timing": "off",
+  "engine": {
+    "package": "@sqlite.org/sqlite-wasm",
+    "version": "3.54.1-build1",
+    "sqliteVersion": "3.54.1"
+  },
+  "fixtureSuite": {
+    "id": "phantom-orders-retry-evidence",
+    "fixtures": [
+      {
+        "id": "base",
+        "label": "Base fictional incident data",
+        "sha256": "3f2a1cca52450799af270d30bd2fd36dce73611e59cdb9381f7b60636def5891",
+        "bytes": 20480,
+        "runs": 1
+      },
+      {
+        "id": "reordered",
+        "label": "Reordered insertion and order/payment IDs",
+        "sha256": "a24318d8d7d948c93df3de110f0ef3cd8c0f9cbd8238c7ecaefc93f51894a835",
+        "bytes": 20480,
+        "runs": 1
+      },
+      {
+        "id": "failed-only",
+        "label": "Failed-only order",
+        "sha256": "10c26c048d233fee4239bb2af311325afad94d10f44827ca4bdd0fa91782ac44",
+        "bytes": 20480,
+        "runs": 1
+      },
+      {
+        "id": "ordinary-retry",
+        "label": "Ordinary failed-then-success retry",
+        "sha256": "11d8af81d7134e0d8ac4c21e6916b6f1af673dcb9777a8b86b65fe0b14f7de76",
+        "bytes": 20480,
+        "runs": 1
+      },
+      {
+        "id": "varied-amounts",
+        "label": "Varied order and payment amounts",
+        "sha256": "a20f09137a28bde851213b34f5a8ddba905ee4418fc6cad43d4bed789e554b29",
+        "bytes": 20480,
+        "runs": 1
+      }
+    ]
+  },
+  "visibleSchema": {
+    "tables": [
+      {
+        "name": "orders",
+        "columns": [
+          {
+            "name": "id",
+            "type": "integer",
+            "primaryKey": true
+          },
+          {
+            "name": "customer_id",
+            "type": "integer"
+          },
+          {
+            "name": "total_cents",
+            "type": "integer"
+          }
+        ]
+      },
+      {
+        "name": "payments",
+        "columns": [
+          {
+            "name": "id",
+            "type": "integer",
+            "primaryKey": true
+          },
+          {
+            "name": "order_id",
+            "type": "integer"
+          },
+          {
+            "name": "attempt_id",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "type": "string"
+          },
+          {
+            "name": "amount_cents",
+            "type": "integer"
+          },
+          {
+            "name": "created_at",
+            "type": "datetime"
+          }
+        ]
+      },
+      {
+        "name": "retry_events",
+        "columns": [
+          {
+            "name": "attempt_id",
+            "type": "string"
+          },
+          {
+            "name": "request_id",
+            "type": "string"
+          },
+          {
+            "name": "idempotency_key",
+            "type": "string"
+          },
+          {
+            "name": "outcome",
+            "type": "string"
+          },
+          {
+            "name": "created_at",
+            "type": "datetime"
+          }
+        ]
+      },
+      {
+        "name": "deployments",
+        "columns": [
+          {
+            "name": "version",
+            "type": "string"
+          },
+          {
+            "name": "deployed_at",
+            "type": "datetime"
+          },
+          {
+            "name": "idempotency_enabled",
+            "type": "integer"
+          }
+        ]
+      }
+    ]
+  },
+  "parts": [
+    {
+      "id": "requests",
+      "title": "Duplicate request counts",
+      "required": true,
+      "answerKind": "sql",
+      "sql": {
+        "cases": [
+          {
+            "fixture": "base",
+            "oracle": {
+              "kind": "result",
+              "columns": [
+                {
+                  "name": "request_id",
+                  "type": "string"
+                },
+                {
+                  "name": "successes",
+                  "type": "integer"
+                }
+              ],
+              "rows": [
+                [
+                  {
+                    "type": "string",
+                    "value": "r2"
+                  },
+                  {
+                    "type": "integer",
+                    "value": "2"
+                  }
+                ],
+                [
+                  {
+                    "type": "string",
+                    "value": "r4"
+                  },
+                  {
+                    "type": "integer",
+                    "value": "2"
+                  }
+                ]
+              ],
+              "ordering": "unordered"
+            }
+          },
+          {
+            "fixture": "reordered",
+            "oracle": {
+              "kind": "result",
+              "columns": [
+                {
+                  "name": "request_id",
+                  "type": "string"
+                },
+                {
+                  "name": "successes",
+                  "type": "integer"
+                }
+              ],
+              "rows": [
+                [
+                  {
+                    "type": "string",
+                    "value": "r2"
+                  },
+                  {
+                    "type": "integer",
+                    "value": "2"
+                  }
+                ],
+                [
+                  {
+                    "type": "string",
+                    "value": "r4"
+                  },
+                  {
+                    "type": "integer",
+                    "value": "2"
+                  }
+                ]
+              ],
+              "ordering": "unordered"
+            }
+          },
+          {
+            "fixture": "failed-only",
+            "oracle": {
+              "kind": "result",
+              "columns": [
+                {
+                  "name": "request_id",
+                  "type": "string"
+                },
+                {
+                  "name": "successes",
+                  "type": "integer"
+                }
+              ],
+              "rows": [
+                [
+                  {
+                    "type": "string",
+                    "value": "r2"
+                  },
+                  {
+                    "type": "integer",
+                    "value": "2"
+                  }
+                ],
+                [
+                  {
+                    "type": "string",
+                    "value": "r4"
+                  },
+                  {
+                    "type": "integer",
+                    "value": "2"
+                  }
+                ]
+              ],
+              "ordering": "unordered"
+            }
+          },
+          {
+            "fixture": "ordinary-retry",
+            "oracle": {
+              "kind": "result",
+              "columns": [
+                {
+                  "name": "request_id",
+                  "type": "string"
+                },
+                {
+                  "name": "successes",
+                  "type": "integer"
+                }
+              ],
+              "rows": [
+                [
+                  {
+                    "type": "string",
+                    "value": "r2"
+                  },
+                  {
+                    "type": "integer",
+                    "value": "2"
+                  }
+                ],
+                [
+                  {
+                    "type": "string",
+                    "value": "r4"
+                  },
+                  {
+                    "type": "integer",
+                    "value": "2"
+                  }
+                ]
+              ],
+              "ordering": "unordered"
+            }
+          },
+          {
+            "fixture": "varied-amounts",
+            "oracle": {
+              "kind": "result",
+              "columns": [
+                {
+                  "name": "request_id",
+                  "type": "string"
+                },
+                {
+                  "name": "successes",
+                  "type": "integer"
+                }
+              ],
+              "rows": [
+                [
+                  {
+                    "type": "string",
+                    "value": "r2"
+                  },
+                  {
+                    "type": "integer",
+                    "value": "2"
+                  }
+                ],
+                [
+                  {
+                    "type": "string",
+                    "value": "r4"
+                  },
+                  {
+                    "type": "integer",
+                    "value": "2"
+                  }
+                ]
+              ],
+              "ordering": "unordered"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "requests-evidence",
+      "title": "Duplicate request evidence pairs",
+      "required": true,
+      "answerKind": "structured",
+      "structured": {
+        "fields": [
+          {
+            "id": "requests-evidence",
+            "label": "Select the exact duplicate request evidence pairs",
+            "cardinality": "multi",
+            "required": true,
+            "minSelections": 1,
+            "maxSelections": 4,
+            "options": [
+              {
+                "id": "trace-r2",
+                "label": "(r2, a2, a3, trace-r2)"
+              },
+              {
+                "id": "trace-r4",
+                "label": "(r4, a6, a7, trace-r4)"
+              },
+              {
+                "id": "trace-r3",
+                "label": "(r3, a4, a5, trace-r3)"
+              },
+              {
+                "id": "trace-r1",
+                "label": "(r1, a1, none, trace-r1)"
+              }
+            ]
+          }
+        ],
+        "expected": {
+          "selections": {
+            "requests-evidence": [
+              "trace-r2",
+              "trace-r4"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "hints": [
+    {
+      "id": "attempt-id",
+      "text": "Correlate retry_events to payments by attempt_id, then group by request_id."
+    },
+    {
+      "id": "harmless",
+      "text": "r3 has two attempts but only one successful payment; it is a recovered failure."
+    },
+    {
+      "id": "pairing",
+      "text": "Select the two duplicate request pairs and their matching trace attachments."
+    }
+  ],
+  "referenceSolutions": [
+    {
+      "partId": "requests",
+      "answer": {
+        "sql": "SELECT r.request_id,COUNT(*) AS successes\nFROM retry_events r\nJOIN payments p ON p.attempt_id=r.attempt_id\nWHERE p.status='succeeded'\nGROUP BY r.request_id\nHAVING COUNT(*)>1;\n"
+      }
+    },
+    {
+      "partId": "requests-evidence",
+      "answer": {
+        "structured": {
+          "selections": {
+            "requests-evidence": [
+              "trace-r2",
+              "trace-r4"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

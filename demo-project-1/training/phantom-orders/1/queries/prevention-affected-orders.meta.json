@@ -1,0 +1,7 @@
+{
+  "id": "prevention/affected-orders",
+  "title": "Affected orders with duplicate successful charges",
+  "type": "SQL",
+  "connectionId": "phantom-fixture",
+  "parameters": []
+}

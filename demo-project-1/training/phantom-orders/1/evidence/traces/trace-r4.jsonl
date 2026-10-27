@@ -1,0 +1,4 @@
+{"id":"trace-r4-1","at":"2026-01-12T10:02:59Z","actorId":"daniel","kind":"provider-success","message":"Provider accepted attempt a6 for request r4."}
+{"id":"trace-r4-2","at":"2026-01-12T10:03:00Z","actorId":"daniel","kind":"handler-timeout","message":"Handler timed out after provider success; the retry was scheduled."}
+{"id":"trace-r4-3","at":"2026-01-12T10:03:01Z","actorId":"daniel","kind":"provider-success","message":"Retry a7 reused request r4 without an idempotency key."}
+{"id":"trace-r4-4","at":"2026-01-12T10:03:02Z","actorId":"daniel","kind":"duplicate-charge","message":"Second successful charge recorded for order 1004."}

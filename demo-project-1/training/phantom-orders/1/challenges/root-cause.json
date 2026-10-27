@@ -1,0 +1,481 @@
+{
+  "schemaVersion": 1,
+  "gradingVersion": "challenge-grading-v1",
+  "challengeId": "root-cause",
+  "revision": 1,
+  "title": "Prove the root cause",
+  "objective": "Find the duplicate request cohort and distinguish the supported cause from correlation.",
+  "difficulty": "intermediate",
+  "dialect": "sqlite",
+  "allowedOperation": "read",
+  "timing": "off",
+  "engine": {
+    "package": "@sqlite.org/sqlite-wasm",
+    "version": "3.54.1-build1",
+    "sqliteVersion": "3.54.1"
+  },
+  "fixtureSuite": {
+    "id": "phantom-orders-root-cause",
+    "fixtures": [
+      {
+        "id": "base",
+        "label": "Base fictional incident data",
+        "sha256": "3f2a1cca52450799af270d30bd2fd36dce73611e59cdb9381f7b60636def5891",
+        "bytes": 20480,
+        "runs": 1
+      },
+      {
+        "id": "reordered",
+        "label": "Reordered insertion and order/payment IDs",
+        "sha256": "a24318d8d7d948c93df3de110f0ef3cd8c0f9cbd8238c7ecaefc93f51894a835",
+        "bytes": 20480,
+        "runs": 1
+      },
+      {
+        "id": "failed-only",
+        "label": "Failed-only order",
+        "sha256": "10c26c048d233fee4239bb2af311325afad94d10f44827ca4bdd0fa91782ac44",
+        "bytes": 20480,
+        "runs": 1
+      },
+      {
+        "id": "ordinary-retry",
+        "label": "Ordinary failed-then-success retry",
+        "sha256": "11d8af81d7134e0d8ac4c21e6916b6f1af673dcb9777a8b86b65fe0b14f7de76",
+        "bytes": 20480,
+        "runs": 1
+      },
+      {
+        "id": "varied-amounts",
+        "label": "Varied order and payment amounts",
+        "sha256": "a20f09137a28bde851213b34f5a8ddba905ee4418fc6cad43d4bed789e554b29",
+        "bytes": 20480,
+        "runs": 1
+      }
+    ]
+  },
+  "visibleSchema": {
+    "tables": [
+      {
+        "name": "orders",
+        "columns": [
+          {
+            "name": "id",
+            "type": "integer",
+            "primaryKey": true
+          },
+          {
+            "name": "customer_id",
+            "type": "integer"
+          },
+          {
+            "name": "total_cents",
+            "type": "integer"
+          }
+        ]
+      },
+      {
+        "name": "payments",
+        "columns": [
+          {
+            "name": "id",
+            "type": "integer",
+            "primaryKey": true
+          },
+          {
+            "name": "order_id",
+            "type": "integer"
+          },
+          {
+            "name": "attempt_id",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "type": "string"
+          },
+          {
+            "name": "amount_cents",
+            "type": "integer"
+          },
+          {
+            "name": "created_at",
+            "type": "datetime"
+          }
+        ]
+      },
+      {
+        "name": "retry_events",
+        "columns": [
+          {
+            "name": "attempt_id",
+            "type": "string"
+          },
+          {
+            "name": "request_id",
+            "type": "string"
+          },
+          {
+            "name": "idempotency_key",
+            "type": "string"
+          },
+          {
+            "name": "outcome",
+            "type": "string"
+          },
+          {
+            "name": "created_at",
+            "type": "datetime"
+          }
+        ]
+      },
+      {
+        "name": "deployments",
+        "columns": [
+          {
+            "name": "version",
+            "type": "string"
+          },
+          {
+            "name": "deployed_at",
+            "type": "datetime"
+          },
+          {
+            "name": "idempotency_enabled",
+            "type": "integer"
+          }
+        ]
+      }
+    ]
+  },
+  "parts": [
+    {
+      "id": "cohort",
+      "title": "Duplicate request cohort",
+      "required": true,
+      "answerKind": "sql",
+      "sql": {
+        "cases": [
+          {
+            "fixture": "base",
+            "oracle": {
+              "kind": "result",
+              "columns": [
+                {
+                  "name": "request_id",
+                  "type": "string"
+                }
+              ],
+              "rows": [
+                [
+                  {
+                    "type": "string",
+                    "value": "r2"
+                  }
+                ],
+                [
+                  {
+                    "type": "string",
+                    "value": "r4"
+                  }
+                ]
+              ],
+              "ordering": "unordered"
+            }
+          },
+          {
+            "fixture": "reordered",
+            "oracle": {
+              "kind": "result",
+              "columns": [
+                {
+                  "name": "request_id",
+                  "type": "string"
+                }
+              ],
+              "rows": [
+                [
+                  {
+                    "type": "string",
+                    "value": "r2"
+                  }
+                ],
+                [
+                  {
+                    "type": "string",
+                    "value": "r4"
+                  }
+                ]
+              ],
+              "ordering": "unordered"
+            }
+          },
+          {
+            "fixture": "failed-only",
+            "oracle": {
+              "kind": "result",
+              "columns": [
+                {
+                  "name": "request_id",
+                  "type": "string"
+                }
+              ],
+              "rows": [
+                [
+                  {
+                    "type": "string",
+                    "value": "r2"
+                  }
+                ],
+                [
+                  {
+                    "type": "string",
+                    "value": "r4"
+                  }
+                ]
+              ],
+              "ordering": "unordered"
+            }
+          },
+          {
+            "fixture": "ordinary-retry",
+            "oracle": {
+              "kind": "result",
+              "columns": [
+                {
+                  "name": "request_id",
+                  "type": "string"
+                }
+              ],
+              "rows": [
+                [
+                  {
+                    "type": "string",
+                    "value": "r2"
+                  }
+                ],
+                [
+                  {
+                    "type": "string",
+                    "value": "r4"
+                  }
+                ]
+              ],
+              "ordering": "unordered"
+            }
+          },
+          {
+            "fixture": "varied-amounts",
+            "oracle": {
+              "kind": "result",
+              "columns": [
+                {
+                  "name": "request_id",
+                  "type": "string"
+                }
+              ],
+              "rows": [
+                [
+                  {
+                    "type": "string",
+                    "value": "r2"
+                  }
+                ],
+                [
+                  {
+                    "type": "string",
+                    "value": "r4"
+                  }
+                ]
+              ],
+              "ordering": "unordered"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "cause",
+      "title": "Supported cause",
+      "required": true,
+      "answerKind": "structured",
+      "structured": {
+        "fields": [
+          {
+            "id": "cause",
+            "label": "Cause",
+            "cardinality": "single",
+            "required": true,
+            "options": [
+              {
+                "id": "missing-retry-idempotency",
+                "label": "Missing retry idempotency safeguard"
+              },
+              {
+                "id": "provider-double-send",
+                "label": "Provider double-send"
+              },
+              {
+                "id": "insufficient-evidence",
+                "label": "Insufficient evidence"
+              }
+            ]
+          }
+        ],
+        "expected": {
+          "selections": {
+            "cause": [
+              "missing-retry-idempotency"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "deployment",
+      "title": "Implicated deployment",
+      "required": true,
+      "answerKind": "structured",
+      "structured": {
+        "fields": [
+          {
+            "id": "deployment",
+            "label": "Deployment",
+            "cardinality": "single",
+            "required": true,
+            "options": [
+              {
+                "id": "pay-16",
+                "label": "Release pay-16"
+              },
+              {
+                "id": "pay-17",
+                "label": "Release pay-17"
+              },
+              {
+                "id": "unknown",
+                "label": "Unknown"
+              }
+            ]
+          }
+        ],
+        "expected": {
+          "selections": {
+            "deployment": [
+              "pay-17"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "citations",
+      "title": "Evidence citations",
+      "required": true,
+      "answerKind": "structured",
+      "structured": {
+        "fields": [
+          {
+            "id": "citations",
+            "label": "Citations",
+            "cardinality": "multi",
+            "required": true,
+            "minSelections": 2,
+            "maxSelections": 4,
+            "options": [
+              {
+                "id": "config-pay-17",
+                "label": "Reviewed configuration diff for pay-17"
+              },
+              {
+                "id": "trace-r2",
+                "label": "Trace r2 (a2/a3 duplicate request)"
+              },
+              {
+                "id": "trace-r4",
+                "label": "Trace r4 (a6/a7 duplicate request)"
+              },
+              {
+                "id": "trace-r3",
+                "label": "Trace r3 (harmless recovered retry)"
+              },
+              {
+                "id": "trace-r1",
+                "label": "Trace r1 (single successful charge)"
+              }
+            ]
+          }
+        ],
+        "expected": {
+          "selections": {
+            "citations": [
+              "config-pay-17",
+              "trace-r2",
+              "trace-r4"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "hints": [
+    {
+      "id": "null-keys",
+      "text": "The duplicate request cohort is the set with NULL idempotency keys and more than one success."
+    },
+    {
+      "id": "correlation",
+      "text": "Deployment proximity alone is correlation; the reviewed diff and both traces are required."
+    },
+    {
+      "id": "refute",
+      "text": "Ask what evidence would refute the explanation, and do not treat a4's failure as the cause."
+    }
+  ],
+  "referenceSolutions": [
+    {
+      "partId": "cohort",
+      "answer": {
+        "sql": "WITH duplicate_requests AS (\n  SELECT r.request_id\n  FROM retry_events r\n  JOIN payments p ON p.attempt_id=r.attempt_id\n  WHERE p.status='succeeded' AND r.idempotency_key IS NULL\n  GROUP BY r.request_id\n  HAVING COUNT(*)>1\n)\nSELECT request_id FROM duplicate_requests;\n"
+      }
+    },
+    {
+      "partId": "cause",
+      "answer": {
+        "structured": {
+          "selections": {
+            "cause": [
+              "missing-retry-idempotency"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "partId": "deployment",
+      "answer": {
+        "structured": {
+          "selections": {
+            "deployment": [
+              "pay-17"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "partId": "citations",
+      "answer": {
+        "structured": {
+          "selections": {
+            "citations": [
+              "config-pay-17",
+              "trace-r2",
+              "trace-r4"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

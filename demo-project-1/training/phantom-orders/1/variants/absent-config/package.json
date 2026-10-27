@@ -1,0 +1,165 @@
+{
+  "schema": "datatug-training-package/1",
+  "id": "phantom-orders-absent-config",
+  "revision": 1,
+  "assets": [
+    {
+      "id": "fixture-absent-config",
+      "kind": "challenge-fixture",
+      "mediaType": "application/vnd.sqlite3",
+      "path": "training/phantom-orders/1/variants/absent-config/fixtures/absent-config.db",
+      "sha256": "ef1ab075fae8cae57eae7c3b0e690177ff26e0e750501440583b753b9b4d6675",
+      "bytes": 20480
+    },
+    {
+      "id": "manifest-root-cause-absent-config",
+      "kind": "challenge-manifest",
+      "mediaType": "application/json",
+      "path": "training/phantom-orders/1/variants/absent-config/challenges/root-cause.json",
+      "sha256": "24269bd157ccb36a3bb20dab062cf6eb9cd85670c00af1475f4526c2e74bfd09",
+      "bytes": 8004
+    },
+    {
+      "id": "trace-r2",
+      "kind": "evidence-log",
+      "mediaType": "application/x-ndjson",
+      "path": "training/phantom-orders/1/evidence/traces/trace-r2.jsonl",
+      "sha256": "4a2b2f0bcd81585e1416f0f42a4c3721dbaad77583958b5023f1c6fe8b90cc74",
+      "bytes": 636
+    },
+    {
+      "id": "trace-r4",
+      "kind": "evidence-log",
+      "mediaType": "application/x-ndjson",
+      "path": "training/phantom-orders/1/evidence/traces/trace-r4.jsonl",
+      "sha256": "2cd4a5fe7e35a41473c03a437011cf2c6b911e158874c9e95491e2c425e46122",
+      "bytes": 636
+    }
+  ],
+  "fictionalActors": [
+    {
+      "id": "sarah",
+      "name": "Sarah"
+    },
+    {
+      "id": "maya",
+      "name": "Maya"
+    },
+    {
+      "id": "daniel",
+      "name": "Daniel"
+    },
+    {
+      "id": "incidentius",
+      "name": "Incidentius"
+    }
+  ],
+  "sources": [],
+  "cases": [
+    {
+      "id": "root-cause-absent-config",
+      "title": "Root cause unconfirmed",
+      "status": "active",
+      "context": {
+        "scenario": {
+          "type": "string",
+          "value": "INC-0042"
+        },
+        "synthetic": {
+          "type": "string",
+          "value": "true"
+        }
+      },
+      "incidentIds": [
+        "incident-0042-absent-config"
+      ],
+      "evidenceIds": [
+        "trace-r2",
+        "trace-r4"
+      ],
+      "findings": [
+        {
+          "id": "cause-unconfirmed",
+          "text": "Retries and deployment timing are correlations; no reviewed configuration diff is declared.",
+          "status": "hypothesis",
+          "evidenceRefs": [
+            "trace-r2",
+            "trace-r4"
+          ]
+        }
+      ],
+      "timeline": [
+        {
+          "id": "variant-evidence",
+          "at": "2026-01-12T11:20:00Z",
+          "actorId": "daniel",
+          "type": "evidence-revealed",
+          "ref": {
+            "kind": "evidence",
+            "id": "trace-r2"
+          }
+        },
+        {
+          "id": "variant-finding",
+          "at": "2026-01-12T11:21:00Z",
+          "actorId": "maya",
+          "type": "finding-recorded",
+          "ref": {
+            "kind": "finding",
+            "id": "cause-unconfirmed"
+          }
+        }
+      ]
+    }
+  ],
+  "incidents": [
+    {
+      "id": "incident-0042-absent-config",
+      "title": "Duplicate charges with no configuration evidence",
+      "description": "Synthetic absent-configuration variant; the reviewed configuration diff is not declared and the cause remains unconfirmed.",
+      "status": "investigating",
+      "evidenceIds": [
+        "trace-r2",
+        "trace-r4"
+      ]
+    }
+  ],
+  "checks": [],
+  "queries": [],
+  "challenges": [
+    {
+      "id": "root-cause-absent-config",
+      "revision": 1,
+      "manifestAssetId": "manifest-root-cause-absent-config",
+      "fixtures": [
+        {
+          "fixtureId": "absent-config",
+          "assetId": "fixture-absent-config"
+        }
+      ]
+    }
+  ],
+  "proposals": [],
+  "presentationTargets": [
+    {
+      "id": "case-root-cause-absent-config",
+      "kind": "case",
+      "refId": "root-cause-absent-config"
+    },
+    {
+      "id": "incident-0042-absent-config",
+      "kind": "incident",
+      "refId": "incident-0042-absent-config"
+    },
+    {
+      "id": "evidence-trace-r2",
+      "kind": "evidence",
+      "refId": "trace-r2"
+    },
+    {
+      "id": "evidence-trace-r4",
+      "kind": "evidence",
+      "refId": "trace-r4"
+    }
+  ]
+}
