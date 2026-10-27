@@ -1,7 +1,11 @@
 {
   "id": "showcase",
   "title": "Orders in motion · DataTug visual showcase",
-  "tags": ["northwind", "chinook", "customers"],
+  "tags": [
+    "northwind",
+    "chinook",
+    "customers"
+  ],
   "access": "public",
   "rows": [
     {
@@ -170,12 +174,22 @@
                   "id": "sqlite-countries",
                   "title": "Northwind · server countries",
                   "widget": {
-                    "name": "SQL",
+                    "name": "chart",
                     "data": {
                       "title": "Inspect all 21 shipping-country counts from an independent live Northwind server query.",
-                      "sql": {
-                        "queryId": "demodb/northwind-country-counts-server"
-                      }
+                      "sources": [
+                        {
+                          "id": "sqlite-countries-rows",
+                          "queryId": "demodb/northwind-country-counts-server"
+                        }
+                      ],
+                      "chart": {
+                        "type": "bar",
+                        "categoryColumn": "ShipCountry",
+                        "valueColumn": "orders",
+                        "unit": "orders"
+                      },
+                      "defaultView": "grid"
                     }
                   }
                 },
@@ -183,12 +197,33 @@
                   "id": "shared-customer-countries",
                   "title": "Northwind + Chinook · shared countries",
                   "widget": {
-                    "name": "SQL",
+                    "name": "chart",
                     "data": {
                       "title": "Customer records, not shared people · exact shared labels; UK variants and nulls excluded.",
-                      "sql": {
-                        "queryId": "demodb/customer-country-comparison-server"
-                      }
+                      "sources": [
+                        {
+                          "id": "shared-customer-countries-rows",
+                          "queryId": "demodb/customer-country-comparison-server"
+                        }
+                      ],
+                      "chart": {
+                        "type": "bar",
+                        "categoryColumn": "country",
+                        "unit": "customer records",
+                        "series": [
+                          {
+                            "id": "northwind",
+                            "title": "Northwind",
+                            "valueColumn": "northwindCustomers"
+                          },
+                          {
+                            "id": "chinook",
+                            "title": "Chinook",
+                            "valueColumn": "chinookCustomers"
+                          }
+                        ]
+                      },
+                      "defaultView": "grid"
                     }
                   }
                 },
@@ -196,12 +231,22 @@
                   "id": "chinook-customers",
                   "title": "Chinook · customer billing",
                   "widget": {
-                    "name": "SQL",
+                    "name": "chart",
                     "data": {
                       "title": "Chinook invoice totals in currency units from its read-only server dataset.",
-                      "sql": {
-                        "queryId": "demodb/chinook-billing-server"
-                      }
+                      "sources": [
+                        {
+                          "id": "chinook-customers-rows",
+                          "queryId": "demodb/chinook-billing-server"
+                        }
+                      ],
+                      "chart": {
+                        "type": "bar",
+                        "categoryColumn": "CustomerId",
+                        "valueColumn": "Total",
+                        "unit": "currency units"
+                      },
+                      "defaultView": "grid"
                     }
                   }
                 }
