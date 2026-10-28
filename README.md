@@ -19,6 +19,23 @@ you, using public data and nothing to install.
   <br><sub>The project's Customer card on datatug.app, signed out: order 11045 has no shipped date.</sub>
 </p>
 
+## Watch
+
+<table>
+  <tr>
+    <td valign="top">
+      <a href="https://youtu.be/mBKmMAXO3z8"><img src="https://datatug.app/static/illustrations/overview-phantom-orders-poster-1280.webp" alt="The Phantom Orders — a data investigation (1:16)" width="420"></a><br>
+      ▶ <b><a href="https://youtu.be/mBKmMAXO3z8">The Phantom Orders — a data investigation (1:16)</a></b><br>
+      A fictional training case in this repository — solve it yourself in the public demo.
+    </td>
+    <td valign="top">
+      <a href="https://youtu.be/_mla67RoPWY"><img src="https://datatug.app/static/illustrations/explainer-sales-per-capita-poster-1280.webp" alt="Where are we underselling? Sales per capita across three sources (1:30)" width="420"></a><br>
+      ▶ <b><a href="https://youtu.be/_mla67RoPWY">Where are we underselling? (1:30)</a></b><br>
+      Uses this repository's saved query <code>sales/chinook-sales-per-capita</code>.
+    </td>
+  </tr>
+</table>
+
 ## What you can do
 
 The story is told in acts. The first five need no account.
