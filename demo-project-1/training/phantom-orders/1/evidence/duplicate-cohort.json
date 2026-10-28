@@ -1,0 +1,34 @@
+{
+  "columns": [
+    {
+      "name": "request_id",
+      "type": "string"
+    },
+    {
+      "name": "successes",
+      "type": "integer"
+    }
+  ],
+  "rows": [
+    [
+      {
+        "type": "string",
+        "value": "r2"
+      },
+      {
+        "type": "integer",
+        "value": "2"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "r4"
+      },
+      {
+        "type": "integer",
+        "value": "2"
+      }
+    ]
+  ]
+}

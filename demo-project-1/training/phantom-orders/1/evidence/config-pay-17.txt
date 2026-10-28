@@ -1,0 +1,9 @@
+Fictional reviewed configuration diff for release pay-17 (synthetic training fixture).
+
+retry_requests:
+-   idempotency_enabled: true
++   idempotency_enabled: false
+
+The released pay-17 retry handler no longer sends the Idempotency-Key header on retry requests.
+Retries reuse a request identifier without an idempotency key, so the provider may accept both attempts.
+This diff is the direct fictional causal evidence for the training scenario.

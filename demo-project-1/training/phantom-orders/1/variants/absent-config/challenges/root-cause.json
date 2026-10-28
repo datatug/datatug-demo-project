@@ -1,0 +1,339 @@
+{
+  "schemaVersion": 1,
+  "gradingVersion": "challenge-grading-v1",
+  "challengeId": "root-cause-absent-config",
+  "revision": 1,
+  "title": "Prove the root cause with no configuration evidence",
+  "objective": "Refuse causal certainty when the reviewed configuration diff is absent.",
+  "difficulty": "intermediate",
+  "dialect": "sqlite",
+  "allowedOperation": "read",
+  "timing": "off",
+  "engine": {
+    "package": "@sqlite.org/sqlite-wasm",
+    "version": "3.54.1-build1",
+    "sqliteVersion": "3.54.1"
+  },
+  "fixtureSuite": {
+    "id": "phantom-orders-root-cause-absent-config",
+    "fixtures": [
+      {
+        "id": "absent-config",
+        "label": "Both deployment idempotency flags NULL",
+        "sha256": "ef1ab075fae8cae57eae7c3b0e690177ff26e0e750501440583b753b9b4d6675",
+        "bytes": 20480,
+        "runs": 1
+      }
+    ]
+  },
+  "visibleSchema": {
+    "tables": [
+      {
+        "name": "orders",
+        "columns": [
+          {
+            "name": "id",
+            "type": "integer",
+            "primaryKey": true
+          },
+          {
+            "name": "customer_id",
+            "type": "integer"
+          },
+          {
+            "name": "total_cents",
+            "type": "integer"
+          }
+        ]
+      },
+      {
+        "name": "payments",
+        "columns": [
+          {
+            "name": "id",
+            "type": "integer",
+            "primaryKey": true
+          },
+          {
+            "name": "order_id",
+            "type": "integer"
+          },
+          {
+            "name": "attempt_id",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "type": "string"
+          },
+          {
+            "name": "amount_cents",
+            "type": "integer"
+          },
+          {
+            "name": "created_at",
+            "type": "datetime"
+          }
+        ]
+      },
+      {
+        "name": "retry_events",
+        "columns": [
+          {
+            "name": "attempt_id",
+            "type": "string"
+          },
+          {
+            "name": "request_id",
+            "type": "string"
+          },
+          {
+            "name": "idempotency_key",
+            "type": "string"
+          },
+          {
+            "name": "outcome",
+            "type": "string"
+          },
+          {
+            "name": "created_at",
+            "type": "datetime"
+          }
+        ]
+      },
+      {
+        "name": "deployments",
+        "columns": [
+          {
+            "name": "version",
+            "type": "string"
+          },
+          {
+            "name": "deployed_at",
+            "type": "datetime"
+          },
+          {
+            "name": "idempotency_enabled",
+            "type": "integer"
+          }
+        ]
+      }
+    ]
+  },
+  "parts": [
+    {
+      "id": "cohort",
+      "title": "Duplicate request cohort",
+      "required": true,
+      "answerKind": "sql",
+      "sql": {
+        "cases": [
+          {
+            "fixture": "absent-config",
+            "oracle": {
+              "kind": "result",
+              "columns": [
+                {
+                  "name": "request_id",
+                  "type": "string"
+                }
+              ],
+              "rows": [
+                [
+                  {
+                    "type": "string",
+                    "value": "r2"
+                  }
+                ],
+                [
+                  {
+                    "type": "string",
+                    "value": "r4"
+                  }
+                ]
+              ],
+              "ordering": "unordered"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "cause",
+      "title": "Supported cause",
+      "required": true,
+      "answerKind": "structured",
+      "structured": {
+        "fields": [
+          {
+            "id": "cause",
+            "label": "Cause",
+            "cardinality": "single",
+            "required": true,
+            "options": [
+              {
+                "id": "missing-retry-idempotency",
+                "label": "Missing retry idempotency safeguard"
+              },
+              {
+                "id": "provider-double-send",
+                "label": "Provider double-send"
+              },
+              {
+                "id": "insufficient-evidence",
+                "label": "Insufficient evidence"
+              }
+            ]
+          }
+        ],
+        "expected": {
+          "selections": {
+            "cause": [
+              "insufficient-evidence"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "deployment",
+      "title": "Proven causal deployment",
+      "required": true,
+      "answerKind": "structured",
+      "structured": {
+        "fields": [
+          {
+            "id": "deployment",
+            "label": "Proven causal deployment",
+            "cardinality": "single",
+            "required": true,
+            "options": [
+              {
+                "id": "pay-16",
+                "label": "Release pay-16"
+              },
+              {
+                "id": "pay-17",
+                "label": "Release pay-17"
+              },
+              {
+                "id": "unknown",
+                "label": "Unknown"
+              }
+            ]
+          }
+        ],
+        "expected": {
+          "selections": {
+            "deployment": [
+              "unknown"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "citations",
+      "title": "Evidence citations",
+      "required": true,
+      "answerKind": "structured",
+      "structured": {
+        "fields": [
+          {
+            "id": "citations",
+            "label": "Citations",
+            "cardinality": "multi",
+            "required": true,
+            "minSelections": 2,
+            "maxSelections": 4,
+            "options": [
+              {
+                "id": "trace-r2",
+                "label": "Trace r2 (a2/a3 duplicate request)"
+              },
+              {
+                "id": "trace-r4",
+                "label": "Trace r4 (a6/a7 duplicate request)"
+              },
+              {
+                "id": "trace-r3",
+                "label": "Trace r3 (harmless recovered retry)"
+              },
+              {
+                "id": "trace-r1",
+                "label": "Trace r1 (single successful charge)"
+              }
+            ]
+          }
+        ],
+        "expected": {
+          "selections": {
+            "citations": [
+              "trace-r2",
+              "trace-r4"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "hints": [
+    {
+      "id": "cohort",
+      "text": "The retry cohort still shows r2 and r4 with NULL idempotency keys."
+    },
+    {
+      "id": "uncertainty",
+      "text": "Deployment timestamps and retries narrow the investigation, but no reviewed configuration diff is declared."
+    },
+    {
+      "id": "answer",
+      "text": "Check each structured field against the declared evidence: can this package support naming a cause or a deployment, and which citations actually carry that conclusion?"
+    }
+  ],
+  "referenceSolutions": [
+    {
+      "partId": "cohort",
+      "answer": {
+        "sql": "WITH duplicate_requests AS (\n  SELECT r.request_id\n  FROM retry_events r\n  JOIN payments p ON p.attempt_id=r.attempt_id\n  WHERE p.status='succeeded' AND r.idempotency_key IS NULL\n  GROUP BY r.request_id\n  HAVING COUNT(*)>1\n)\nSELECT request_id FROM duplicate_requests;\n"
+      }
+    },
+    {
+      "partId": "cause",
+      "answer": {
+        "structured": {
+          "selections": {
+            "cause": [
+              "insufficient-evidence"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "partId": "deployment",
+      "answer": {
+        "structured": {
+          "selections": {
+            "deployment": [
+              "unknown"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "partId": "citations",
+      "answer": {
+        "structured": {
+          "selections": {
+            "citations": [
+              "trace-r2",
+              "trace-r4"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

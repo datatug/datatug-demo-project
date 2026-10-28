@@ -1,0 +1,202 @@
+{
+  "columns": [
+    {
+      "name": "attempt_id",
+      "type": "string"
+    },
+    {
+      "name": "request_id",
+      "type": "string"
+    },
+    {
+      "name": "idempotency_key",
+      "type": "string"
+    },
+    {
+      "name": "outcome",
+      "type": "string"
+    },
+    {
+      "name": "created_at",
+      "type": "datetime"
+    }
+  ],
+  "rows": [
+    [
+      {
+        "type": "string",
+        "value": "a1"
+      },
+      {
+        "type": "string",
+        "value": "r1"
+      },
+      {
+        "type": "string",
+        "value": "k1"
+      },
+      {
+        "type": "string",
+        "value": "succeeded"
+      },
+      {
+        "type": "datetime",
+        "value": "2026-01-12T09:58:00Z"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "a2"
+      },
+      {
+        "type": "string",
+        "value": "r2"
+      },
+      {
+        "type": "null",
+        "value": null
+      },
+      {
+        "type": "string",
+        "value": "provider-success"
+      },
+      {
+        "type": "datetime",
+        "value": "2026-01-12T10:01:00Z"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "a3"
+      },
+      {
+        "type": "string",
+        "value": "r2"
+      },
+      {
+        "type": "null",
+        "value": null
+      },
+      {
+        "type": "string",
+        "value": "provider-success"
+      },
+      {
+        "type": "datetime",
+        "value": "2026-01-12T10:01:03Z"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "a4"
+      },
+      {
+        "type": "string",
+        "value": "r3"
+      },
+      {
+        "type": "null",
+        "value": null
+      },
+      {
+        "type": "string",
+        "value": "failed"
+      },
+      {
+        "type": "datetime",
+        "value": "2026-01-12T10:02:00Z"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "a5"
+      },
+      {
+        "type": "string",
+        "value": "r3"
+      },
+      {
+        "type": "null",
+        "value": null
+      },
+      {
+        "type": "string",
+        "value": "provider-success"
+      },
+      {
+        "type": "datetime",
+        "value": "2026-01-12T10:02:05Z"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "a6"
+      },
+      {
+        "type": "string",
+        "value": "r4"
+      },
+      {
+        "type": "null",
+        "value": null
+      },
+      {
+        "type": "string",
+        "value": "provider-success"
+      },
+      {
+        "type": "datetime",
+        "value": "2026-01-12T10:03:00Z"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "a7"
+      },
+      {
+        "type": "string",
+        "value": "r4"
+      },
+      {
+        "type": "null",
+        "value": null
+      },
+      {
+        "type": "string",
+        "value": "provider-success"
+      },
+      {
+        "type": "datetime",
+        "value": "2026-01-12T10:03:02Z"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "a8"
+      },
+      {
+        "type": "string",
+        "value": "r5"
+      },
+      {
+        "type": "string",
+        "value": "k5"
+      },
+      {
+        "type": "string",
+        "value": "refunded"
+      },
+      {
+        "type": "datetime",
+        "value": "2026-01-12T10:05:00Z"
+      }
+    ]
+  ]
+}

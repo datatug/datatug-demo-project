@@ -1,0 +1,46 @@
+{
+  "columns": [
+    {
+      "name": "version",
+      "type": "string"
+    },
+    {
+      "name": "deployed_at",
+      "type": "datetime"
+    },
+    {
+      "name": "idempotency_enabled",
+      "type": "integer"
+    }
+  ],
+  "rows": [
+    [
+      {
+        "type": "string",
+        "value": "pay-16"
+      },
+      {
+        "type": "datetime",
+        "value": "2026-01-12T09:00:00Z"
+      },
+      {
+        "type": "integer",
+        "value": "1"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "pay-17"
+      },
+      {
+        "type": "datetime",
+        "value": "2026-01-12T10:00:00Z"
+      },
+      {
+        "type": "integer",
+        "value": "0"
+      }
+    ]
+  ]
+}

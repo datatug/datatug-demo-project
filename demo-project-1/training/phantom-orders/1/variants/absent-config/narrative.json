@@ -1,0 +1,176 @@
+{
+  "schemaVersion": 1,
+  "scenarioId": "phantom-orders-absent-config",
+  "revision": 1,
+  "locale": "en",
+  "fallbackLocale": "en",
+  "messageCatalogues": [
+    {
+      "locale": "en",
+      "path": "training/phantom-orders/1/variants/absent-config/messages.en.json",
+      "sha256": "201f4c26893a3860aaf02fb317e2658366ccc398e13d96087036341310742c60",
+      "bytes": 696
+    }
+  ],
+  "chapterRefs": [
+    "root-cause"
+  ],
+  "actors": [
+    {
+      "id": "sarah",
+      "name": "Sarah"
+    },
+    {
+      "id": "maya",
+      "name": "Maya"
+    },
+    {
+      "id": "daniel",
+      "name": "Daniel"
+    },
+    {
+      "id": "incidentius",
+      "name": "Incidentius"
+    }
+  ],
+  "assets": [],
+  "segments": [
+    {
+      "id": "root-cause-debrief",
+      "chapterId": "root-cause",
+      "stepId": "root-cause-debrief",
+      "eventIds": [
+        "absent-open",
+        "absent-focus",
+        "absent-context-label",
+        "absent-daniel",
+        "absent-maya",
+        "absent-sarah",
+        "absent-prompt",
+        "absent-await",
+        "absent-success"
+      ],
+      "prerequisiteContextEventIds": []
+    }
+  ],
+  "events": [
+    {
+      "id": "absent-open",
+      "chapterId": "root-cause",
+      "type": "detective.open",
+      "payload": {
+        "manifestCaseId": "root-cause-absent-config"
+      }
+    },
+    {
+      "id": "absent-focus",
+      "chapterId": "root-cause",
+      "type": "camera.focus",
+      "payload": {
+        "targetId": "case-root-cause-absent-config"
+      }
+    },
+    {
+      "id": "absent-context-label",
+      "chapterId": "root-cause",
+      "type": "chat.message",
+      "payload": {
+        "actorId": "incidentius",
+        "messageKey": "context.supplied",
+        "attachmentIds": []
+      },
+      "presentation": {
+        "delayBeforeMs": 0,
+        "pauseAfterMs": 700,
+        "typingSpeed": "fast",
+        "typingIndicator": true,
+        "transition": "fade"
+      }
+    },
+    {
+      "id": "absent-daniel",
+      "chapterId": "root-cause",
+      "type": "chat.message",
+      "payload": {
+        "actorId": "daniel",
+        "messageKey": "absent.daniel.missing",
+        "attachmentIds": []
+      },
+      "presentation": {
+        "delayBeforeMs": 0,
+        "pauseAfterMs": 700,
+        "typingSpeed": "deliberate",
+        "typingIndicator": true,
+        "transition": "fade"
+      }
+    },
+    {
+      "id": "absent-maya",
+      "chapterId": "root-cause",
+      "type": "chat.message",
+      "payload": {
+        "actorId": "maya",
+        "messageKey": "absent.maya.context",
+        "attachmentIds": []
+      },
+      "presentation": {
+        "delayBeforeMs": 0,
+        "pauseAfterMs": 700,
+        "typingSpeed": "natural",
+        "typingIndicator": true,
+        "transition": "fade"
+      }
+    },
+    {
+      "id": "absent-sarah",
+      "chapterId": "root-cause",
+      "type": "chat.message",
+      "payload": {
+        "actorId": "sarah",
+        "messageKey": "absent.sarah.context",
+        "attachmentIds": []
+      },
+      "presentation": {
+        "delayBeforeMs": 0,
+        "pauseAfterMs": 700,
+        "typingSpeed": "natural",
+        "typingIndicator": true,
+        "transition": "fade"
+      }
+    },
+    {
+      "id": "absent-prompt",
+      "chapterId": "root-cause",
+      "type": "challenge.prompt",
+      "payload": {
+        "stepId": "root-cause-solve"
+      }
+    },
+    {
+      "id": "absent-await",
+      "chapterId": "root-cause",
+      "type": "challenge.await_validation",
+      "payload": {
+        "stepId": "root-cause-solve",
+        "checkpointId": "root-cause-result"
+      }
+    },
+    {
+      "id": "absent-success",
+      "chapterId": "root-cause",
+      "type": "chat.message",
+      "payload": {
+        "actorId": "daniel",
+        "messageKey": "absent.daniel.success",
+        "attachmentIds": []
+      },
+      "presentation": {
+        "delayBeforeMs": 0,
+        "pauseAfterMs": 700,
+        "typingSpeed": "deliberate",
+        "typingIndicator": true,
+        "transition": "fade"
+      }
+    }
+  ]
+}
