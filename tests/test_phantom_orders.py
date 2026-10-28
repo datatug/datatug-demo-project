@@ -2,7 +2,11 @@
 
 The tests import the trusted authoring tool, recompute every authored byte,
 execute reference and alternate SQL against read-only in-memory copies of the
-pinned SQLite fixtures, and prove the named wrong mutations fail. Core native
+pinned SQLite fixtures, and prove the named wrong mutations fail. The
+absent-config variant's declaration is read from its normal project-relative
+loader path (``walkthroughs/phantom-orders-absent-config/walkthrough.json``),
+while its package, narrative and catalogue remain under
+``training/phantom-orders/1/variants/absent-config``. Core native
 package/declaration/narrative admission is exercised separately with the
 temporary Go helper documented in the lane report; these tests do not claim
 browser/WASM execution.
@@ -12,6 +16,7 @@ import importlib.util
 import json
 from pathlib import Path
 import re
+import sqlite3
 import tempfile
 import unittest
 from urllib.parse import urlsplit
@@ -99,6 +104,28 @@ class PhantomOrdersContentTest(unittest.TestCase):
         self.assertFalse(catalogue_ref["path"].startswith("demo-project-1/"))
         self.assertTrue((ROOT / "demo-project-1" / catalogue_ref["path"]).is_file())
 
+        variant_declaration_path = (
+            ROOT
+            / "demo-project-1/walkthroughs/phantom-orders-absent-config/walkthrough.json"
+        )
+        self.assertTrue(variant_declaration_path.is_file())
+        variant_declaration = json.loads(variant_declaration_path.read_bytes())
+        self.assertEqual("phantom-orders-absent-config", variant_declaration["id"])
+        self.assertEqual(variant_declaration_path.parent.name, variant_declaration["id"])
+        self.assertFalse(
+            (
+                ROOT
+                / "demo-project-1/training/phantom-orders/1/variants/absent-config/walkthrough.json"
+            ).exists()
+        )
+        for reference in (
+            variant_declaration["trainingPackage"],
+            variant_declaration["narrative"],
+        ):
+            with self.subTest(variant_path=reference["path"]):
+                self.assertFalse(reference["path"].startswith("demo-project-1/"))
+                self.assertTrue((ROOT / "demo-project-1" / reference["path"]).is_file())
+
     def test_six_ordered_chapters_and_native_engine_pin(self):
         chapter_ids = [chapter["id"] for chapter in self.declaration["chapters"]]
         self.assertEqual(
@@ -113,6 +140,10 @@ class PhantomOrdersContentTest(unittest.TestCase):
             chapter_ids,
         )
         self.assertEqual(len(self.package["challenges"]), 6)
+        for chapter in self.declaration["chapters"]:
+            with self.subTest(why=chapter["id"]):
+                self.assertFalse(chapter["why"].startswith("Training chapter"))
+                self.assertGreater(len(chapter["why"]), 40)
         self.assertEqual(
             chapter_ids,
             [challenge["id"] for challenge in self.package["challenges"]],
@@ -328,6 +359,187 @@ class PhantomOrdersContentTest(unittest.TestCase):
             "provider-double-send",
             root_cause_values["structured"]["expected"]["selections"]["cause"],
         )
+
+    def test_absent_variant_guided_mode_reaches_dialogue_before_challenge(self):
+        variant_declaration = json.loads(
+            (
+                ROOT
+                / "demo-project-1/walkthroughs/phantom-orders-absent-config/walkthrough.json"
+            ).read_bytes()
+        )
+        chapter = variant_declaration["chapters"][0]
+        self.assertEqual(
+            ["root-cause-case", "root-cause-debrief", "root-cause-solve"],
+            [step["id"] for step in chapter["steps"]],
+        )
+
+        def applies(step, mode):
+            modes = step.get("modes", [])
+            return not modes or mode in modes
+
+        guided = [step for step in chapter["steps"] if applies(step, "guided")]
+        self.assertEqual(
+            ["scripted-dialogue", "challenge"],
+            [step["kind"] for step in guided],
+        )
+        self.assertEqual("root-cause-debrief", guided[0]["id"])
+        self.assertEqual("root-cause-debrief", guided[0]["segmentId"])
+        self.assertEqual(["guided"], guided[0]["modes"])
+        self.assertEqual({"kind": "none"}, guided[0]["target"])
+        self.assertEqual({"kind": "dialogue-finished"}, guided[0]["done"])
+        self.assertEqual("root-cause-solve", guided[1]["id"])
+        self.assertEqual(
+            {
+                "kind": "challenge",
+                "challengeId": "root-cause-absent-config",
+                "revision": 1,
+            },
+            guided[1]["target"],
+        )
+        self.assertEqual(
+            {
+                "kind": "challenge-passed",
+                "checkpoints": [
+                    {"id": "root-cause-result", "completion": "whole-challenge"}
+                ],
+            },
+            guided[1]["done"],
+        )
+
+        explore = [step for step in chapter["steps"] if applies(step, "explore")]
+        self.assertEqual(["standard", "challenge"], [step["kind"] for step in explore])
+        self.assertEqual("root-cause-case", explore[0]["id"])
+        self.assertEqual("root-cause-solve", explore[1]["id"])
+
+        # The dialogue still waits on the same challenge/checkpoint pair.
+        sidecar = json.loads(
+            (
+                ROOT
+                / "demo-project-1/training/phantom-orders/1/variants/absent-config/narrative.json"
+            ).read_bytes()
+        )
+        prompt = next(event for event in sidecar["events"] if event["id"] == "absent-prompt")
+        await_validation = next(
+            event for event in sidecar["events"] if event["id"] == "absent-await"
+        )
+        self.assertEqual(
+            {"stepId": "root-cause-solve"},
+            prompt["payload"],
+        )
+        self.assertEqual(
+            {"stepId": "root-cause-solve", "checkpointId": "root-cause-result"},
+            await_validation["payload"],
+        )
+
+    def test_absent_variant_pre_attempt_text_does_not_reveal_graded_answers(self):
+        variant_root = (
+            ROOT / "demo-project-1/training/phantom-orders/1/variants/absent-config"
+        )
+        sidecar = json.loads((variant_root / "narrative.json").read_bytes())
+        catalogue = json.loads((variant_root / "messages.en.json").read_bytes())
+        events = sidecar["events"]
+        prompt_index = next(
+            index for index, event in enumerate(events) if event["id"] == "absent-prompt"
+        )
+        await_index = next(
+            index for index, event in enumerate(events) if event["id"] == "absent-await"
+        )
+        self.assertLess(prompt_index, await_index)
+        pre_attempt_chat = [
+            event
+            for event in events[:prompt_index]
+            if event["type"] == "chat.message"
+        ]
+        self.assertTrue(pre_attempt_chat)
+        prose = " ".join(
+            catalogue["messages"][event["payload"]["messageKey"]]
+            for event in pre_attempt_chat
+        ).lower()
+        for forbidden in (
+            "insufficient-evidence",
+            "insufficient evidence",
+            "missing-retry-idempotency",
+            "provider-double-send",
+            "unknown",
+            "trace-r1",
+            "trace-r2",
+            "trace-r3",
+            "trace-r4",
+            "select only",
+            "choose ",
+            "pick ",
+        ):
+            with self.subTest(forbidden=forbidden):
+                self.assertNotIn(forbidden, prose)
+
+        # The approved absence context stays explicit; the fix must not hide it.
+        self.assertIn("no reviewed configuration diff", prose)
+        self.assertIn("cause is still unconfirmed", prose)
+        maya = next(
+            event
+            for event in pre_attempt_chat
+            if event["payload"]["actorId"] == "maya"
+        )
+        self.assertEqual(
+            tool.MAYA_REFUTE_QUESTION,
+            catalogue["messages"][maya["payload"]["messageKey"]],
+        )
+
+        # Evidence attachment IDs are legitimate and remain allowed.
+        allowed_evidence = {"trace-r1", "trace-r2", "trace-r3", "trace-r4"}
+        for event in events[:prompt_index]:
+            attachment_ids = set(event.get("payload", {}).get("attachmentIds", []))
+            with self.subTest(event=event["id"]):
+                self.assertTrue(attachment_ids.issubset(allowed_evidence))
+
+        manifest = json.loads((variant_root / "challenges/root-cause.json").read_bytes())
+        answer_hint = next(
+            hint["text"] for hint in manifest["hints"] if hint["id"] == "answer"
+        ).lower()
+        self.assertIn("evidence", answer_hint)
+        for forbidden in ("insufficient", "unknown", "trace-r", "select", "choose", "pick"):
+            with self.subTest(hint_forbidden=forbidden):
+                self.assertNotIn(forbidden, answer_hint)
+
+    def test_primary_catalogue_and_success_copy_are_scope_limited(self):
+        primary_catalogue = json.loads(
+            (
+                ROOT / "demo-project-1/walkthroughs/phantom-orders/messages.en.json"
+            ).read_bytes()
+        )
+        messages = primary_catalogue["messages"]
+        self.assertFalse(
+            [key for key in messages if key.startswith("absent.")],
+            "primary catalogue must not carry the variant-only absent.* keys",
+        )
+        for key in ("ch1.maya.success", "ch2.sarah.success", "ch3.daniel.success"):
+            with self.subTest(message=key):
+                self.assertIn("supplied base incident snapshot", messages[key])
+
+    def test_mutated_prevention_fixture_retry_agrees_with_payment(self):
+        fixture = (
+            ROOT
+            / "demo-project-1/training/phantom-orders/1/fixtures/mutated.db"
+        ).read_bytes()
+        connection = sqlite3.connect(":memory:")
+        try:
+            connection.deserialize(fixture)
+            payment = connection.execute(
+                "SELECT status FROM payments WHERE attempt_id='a4'"
+            ).fetchone()
+            retries = connection.execute(
+                "SELECT outcome FROM retry_events WHERE attempt_id='a4'"
+            ).fetchall()
+            affected = connection.execute(
+                "SELECT order_id FROM payments "
+                "WHERE status='succeeded' "
+                "GROUP BY order_id HAVING COUNT(*)>1"
+            ).fetchall()
+        finally:
+            connection.close()
+        self.assertEqual(("succeeded",), payment)
+        self.assertEqual([("provider-success",)], retries)
+        self.assertEqual([(1003,)], affected)
 
     def test_second_success_minute_recap_matches_reference_output(self):
         evidence = json.loads(

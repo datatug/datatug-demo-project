@@ -197,14 +197,14 @@
     },
     {
       "id": "deployment",
-      "title": "Implicated deployment",
+      "title": "Proven causal deployment",
       "required": true,
       "answerKind": "structured",
       "structured": {
         "fields": [
           {
             "id": "deployment",
-            "label": "Deployment",
+            "label": "Proven causal deployment",
             "cardinality": "single",
             "required": true,
             "options": [
@@ -288,7 +288,7 @@
     },
     {
       "id": "answer",
-      "text": "Choose insufficient evidence, an unknown deployment, and only the two duplicate traces."
+      "text": "Check each structured field against the declared evidence: can this package support naming a cause or a deployment, and which citations actually carry that conclusion?"
     }
   ],
   "referenceSolutions": [

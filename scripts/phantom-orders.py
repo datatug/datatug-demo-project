@@ -3,6 +3,11 @@
 
 The package lives entirely under ``demo-project-1/training/phantom-orders/1``
 and is declared by ``demo-project-1/walkthroughs/phantom-orders/walkthrough.json``.
+The focused absent-config variant keeps its package, narrative and catalogue
+under ``training/phantom-orders/1/variants/absent-config``, but its generated
+declaration uses the normal loader path
+``walkthroughs/phantom-orders-absent-config/walkthrough.json`` (matching its
+declared id) and the legacy package-adjacent copy is removed.
 ``regenerate`` is the only writer. ``verify`` never writes committed assets: it
 recomputes every authored byte, checks every pin, executes every reference and
 alternate SQL answer against read-only in-memory copies of the pinned SQLite
@@ -36,10 +41,15 @@ PROJECT = "demo-project-1"
 TRAINING_REL = "training/phantom-orders/1"
 VARIANT_REL = f"{TRAINING_REL}/variants/absent-config"
 DECLARATION_REL = "walkthroughs/phantom-orders"
+VARIANT_DECLARATION_REL = "walkthroughs/phantom-orders-absent-config"
 # Repository-relative paths used only for writing and reading local files.
 TRAINING = f"{PROJECT}/{TRAINING_REL}"
 VARIANT = f"{PROJECT}/{VARIANT_REL}"
 DECLARATION_DIR = f"{PROJECT}/{DECLARATION_REL}"
+VARIANT_DECLARATION_DIR = f"{PROJECT}/{VARIANT_DECLARATION_REL}"
+# The variant declaration used to live beside its package. It is a generated
+# asset too, and only the normal loader path may survive.
+LEGACY_GENERATED_ASSETS = (f"{VARIANT}/walkthrough.json",)
 
 SCHEMA_PACKAGE = "datatug-training-package/1"
 SCHEMA_WALKTHROUGH = "datatug-walkthrough/2"
@@ -64,6 +74,29 @@ CHAPTERS = [
     ("root-cause", "Prove the root cause"),
     ("prevention", "Prevent recurrence"),
 ]
+
+# Why each chapter matters to the learner's investigation, not a restatement of
+# its title.
+CHAPTER_WHY = {
+    "duplicate-payments": (
+        "Establish which orders were charged more than once, counting successful charges only."
+    ),
+    "payment-impact": (
+        "Turn duplicate payments into the customer cohort and excess amount support must explain."
+    ),
+    "failure-window": (
+        "Narrow when the duplicate charges began without confusing first observation with proof of cause."
+    ),
+    "retry-evidence": (
+        "Tie each duplicate charge to its retried request and separate it from a harmless recovered failure."
+    ),
+    "root-cause": (
+        "Decide whether the evidence proves a causal defect or only correlation, and state what would refute it."
+    ),
+    "prevention": (
+        "Make recurrence detection repeatable and leave any production monitor as an unactivated proposal."
+    ),
+}
 
 ACTORS = [
     ("sarah", "Sarah"),
@@ -353,6 +386,10 @@ WRONG_SQL = {
     },
 }
 
+MAYA_REFUTE_QUESTION = (
+    "Does that explanation account for both affected requests, and what would refute it?"
+)
+
 MESSAGES = {
     "context.supplied": (
         "Supplied fictional context only; earlier training cases are not marked complete."
@@ -370,7 +407,7 @@ MESSAGES = {
         "Training case DC-001 opened: identify duplicate successful payments."
     ),
     "ch1.maya.success": (
-        "Orders 1002 and 1004 each have two successful charges. Now quantify the customer impact."
+        "In the supplied base incident snapshot, orders 1002 and 1004 each have two successful charges. Now quantify the customer impact."
     ),
     "ch2.sarah.context": (
         "Support needs affected customers and excess charges, not just payment IDs."
@@ -382,7 +419,7 @@ MESSAGES = {
         "The refunded event is a distractor here. This task measures duplicate successful charges before remediation."
     ),
     "ch2.sarah.success": (
-        "That gives support a precise cohort and 11000 cents of duplicate charges."
+        "In the supplied base incident snapshot, that gives support a precise cohort and 11000 cents of duplicate charges."
     ),
     "ch3.maya.context": (
         "When did the data first demonstrate a second successful charge?"
@@ -394,7 +431,7 @@ MESSAGES = {
         "Please distinguish the earliest observation from the exact moment the defect was introduced."
     ),
     "ch3.daniel.success": (
-        "The first observed duplicate is at 10:01:03. That narrows the search, but does not prove a deployment caused it."
+        "In the supplied base incident snapshot, the first observed duplicate is at 10:01:03. That narrows the search, but does not prove a deployment caused it."
     ),
     "ch4.daniel.context": (
         "The provider accepted a2, then our handler timed out. a3 retried the same request."
@@ -411,9 +448,7 @@ MESSAGES = {
     "ch5.daniel.complete": (
         "Release pay-17 omitted the idempotency header on retry requests. Here is the reviewed configuration diff."
     ),
-    "ch5.maya.context": (
-        "Does that explanation account for both affected requests, and what would refute it?"
-    ),
+    "ch5.maya.context": MAYA_REFUTE_QUESTION,
     "ch5.sarah.context": (
         "Do we have enough evidence to explain this to customers without guessing?"
     ),
@@ -447,9 +482,7 @@ MESSAGES = {
     "absent.daniel.success": (
         "Correct: the retries and timestamps narrow the investigation, but we need the reviewed configuration diff before confirming the cause."
     ),
-    "absent.maya.context": (
-        "Name the uncertainty rather than a cause; select only the duplicate request traces."
-    ),
+    "absent.maya.context": MAYA_REFUTE_QUESTION,
     "absent.sarah.context": (
         "Can we explain this to customers without guessing?"
     ),
@@ -490,7 +523,7 @@ HINTS = {
     "root-cause-absent-config": [
         ("cohort", "The retry cohort still shows r2 and r4 with NULL idempotency keys."),
         ("uncertainty", "Deployment timestamps and retries narrow the investigation, but no reviewed configuration diff is declared."),
-        ("answer", "Choose insufficient evidence, an unknown deployment, and only the two duplicate traces."),
+        ("answer", "Check each structured field against the declared evidence: can this package support naming a cause or a deployment, and which citations actually carry that conclusion?"),
     ],
 }
 
@@ -654,6 +687,12 @@ def _prevention_mutated_tables() -> dict[str, list[tuple[Any, ...]]]:
     tables["payments"] = [
         (payment_id, order_id, attempt_id, "succeeded" if payment_id == 4 else status, amount, created)
         for payment_id, order_id, attempt_id, status, amount, created in tables["payments"]
+    ]
+    # Payment a4 now succeeds in this mutation, so its retry row must agree
+    # with the payment ledger rather than still reporting a failure.
+    tables["retry_events"] = [
+        (attempt_id, request_id, key, "provider-success" if attempt_id == "a4" else status, created)
+        for attempt_id, request_id, key, status, created in tables["retry_events"]
     ]
     return tables
 
@@ -1242,10 +1281,14 @@ def _root_cause_parts(variant: bool) -> list[dict[str, Any]]:
         cause_expected = ["missing-retry-idempotency"]
         deployment_expected = ["pay-17"]
         citations_expected = ["config-pay-17", "trace-r2", "trace-r4"]
+        deployment_title = "Implicated deployment"
+        deployment_label = "Deployment"
     else:
         cause_expected = ["insufficient-evidence"]
         deployment_expected = ["unknown"]
         citations_expected = ["trace-r2", "trace-r4"]
+        deployment_title = "Proven causal deployment"
+        deployment_label = "Proven causal deployment"
     return [
         _structured_part(
             "cause",
@@ -1255,8 +1298,8 @@ def _root_cause_parts(variant: bool) -> list[dict[str, Any]]:
         ),
         _structured_part(
             "deployment",
-            "Implicated deployment",
-            _single_field("deployment", "Deployment", deployment_options),
+            deployment_title,
+            _single_field("deployment", deployment_label, deployment_options),
             deployment_expected,
         ),
         _structured_part(
@@ -2156,13 +2199,6 @@ def _chapter_events(chapter_id: str, chapter_index: int) -> tuple[list[dict[str,
 
 
 def build_narrative() -> tuple[bytes, bytes, dict[str, Any]]:
-    catalogue = {
-        "schemaVersion": SCHEMA_CATALOGUE,
-        "locale": "en",
-        "messages": dict(MESSAGES),
-    }
-    catalogue_bytes = json_bytes(catalogue)
-
     events: list[dict[str, Any]] = []
     segments: list[dict[str, Any]] = []
     for index, (chapter_id, _) in enumerate(CHAPTERS):
@@ -2187,6 +2223,23 @@ def build_narrative() -> tuple[bytes, bytes, dict[str, Any]]:
                 "prerequisiteContextEventIds": prerequisite,
             }
         )
+
+    # A catalogue carries only the messages its own narrative can render. The
+    # absent-configuration variant has a separate catalogue, so its keys must
+    # not linger unused in the primary one.
+    used_message_keys = {
+        event["payload"]["messageKey"]
+        for event in events
+        if event["type"] == "chat.message"
+    }
+    catalogue = {
+        "schemaVersion": SCHEMA_CATALOGUE,
+        "locale": "en",
+        "messages": {
+            key: value for key, value in MESSAGES.items() if key in used_message_keys
+        },
+    }
+    catalogue_bytes = json_bytes(catalogue)
 
     sidecar = {
         "schemaVersion": SCHEMA_NARRATIVE,
@@ -2225,7 +2278,7 @@ def build_declaration(package_ref: dict[str, Any], narrative_bytes: bytes) -> by
             {
                 "id": chapter_id,
                 "title": title,
-                "why": f"Training chapter {title.lower()}.",
+                "why": CHAPTER_WHY[chapter_id],
                 "steps": [
                     {
                         "id": f"{chapter_id}-case",
@@ -2386,6 +2439,16 @@ def build_variant_declaration(package_ref: dict[str, Any], narrative_bytes: byte
                         "done": {"kind": "route-reached"},
                     },
                     {
+                        "id": "root-cause-debrief",
+                        "kind": "scripted-dialogue",
+                        "segmentId": "root-cause-debrief",
+                        "title": "Debrief the uncertainty",
+                        "why": "Read the missing-configuration context and wait for a validated pass.",
+                        "modes": ["guided"],
+                        "target": {"kind": "none"},
+                        "done": {"kind": "dialogue-finished"},
+                    },
+                    {
                         "id": "root-cause-solve",
                         "kind": "challenge",
                         "title": "Solve the pinned variant challenge",
@@ -2401,16 +2464,6 @@ def build_variant_declaration(package_ref: dict[str, Any], narrative_bytes: byte
                                 {"id": "root-cause-result", "completion": "whole-challenge"}
                             ],
                         },
-                    },
-                    {
-                        "id": "root-cause-debrief",
-                        "kind": "scripted-dialogue",
-                        "segmentId": "root-cause-debrief",
-                        "title": "Debrief the uncertainty",
-                        "why": "Read the missing-configuration context and wait for a validated pass.",
-                        "modes": ["guided"],
-                        "target": {"kind": "none"},
-                        "done": {"kind": "dialogue-finished"},
                     },
                 ],
             }
@@ -2458,7 +2511,7 @@ def build_assets() -> dict[str, bytes]:
     assets[f"{DECLARATION_DIR}/walkthrough.json"] = declaration_bytes
     assets[f"{DECLARATION_DIR}/narrative.json"] = narrative_bytes
     assets[f"{DECLARATION_DIR}/messages.en.json"] = catalogue_bytes
-    assets[f"{VARIANT}/walkthrough.json"] = variant_declaration
+    assets[f"{VARIANT_DECLARATION_DIR}/walkthrough.json"] = variant_declaration
     assets[f"{VARIANT}/narrative.json"] = variant_narrative
     assets[f"{VARIANT}/messages.en.json"] = variant_catalogue
     return assets
@@ -2474,6 +2527,10 @@ def _asset_record_for_id(*packages: dict[str, Any], asset_id: str) -> dict[str, 
 
 def regenerate(root: Path = ROOT) -> None:
     assets = build_assets()
+    for relative in LEGACY_GENERATED_ASSETS:
+        legacy = root / relative
+        if legacy.is_file():
+            legacy.unlink()
     for relative, data in sorted(assets.items()):
         path = root / relative
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -2559,6 +2616,7 @@ def verify(root: Path = ROOT) -> dict[str, Any]:
     for owned_root in (
         root / TRAINING,
         root / DECLARATION_DIR,
+        root / VARIANT_DECLARATION_DIR,
     ):
         if not owned_root.exists():
             continue
@@ -2574,7 +2632,7 @@ def verify(root: Path = ROOT) -> dict[str, Any]:
     declaration = json.loads(expected_assets[f"{DECLARATION_DIR}/walkthrough.json"])
     sidecar = json.loads(expected_assets[f"{DECLARATION_DIR}/narrative.json"])
     catalogue = json.loads(expected_assets[f"{DECLARATION_DIR}/messages.en.json"])
-    variant_declaration = json.loads(expected_assets[f"{VARIANT}/walkthrough.json"])
+    variant_declaration = json.loads(expected_assets[f"{VARIANT_DECLARATION_DIR}/walkthrough.json"])
     variant_sidecar = json.loads(expected_assets[f"{VARIANT}/narrative.json"])
     variant_catalogue = json.loads(expected_assets[f"{VARIANT}/messages.en.json"])
 
@@ -2628,6 +2686,8 @@ def verify(root: Path = ROOT) -> dict[str, Any]:
     for key in catalogue["messages"]:
         if not key:
             errors.append("empty catalogue key")
+        if key.startswith("absent."):
+            errors.append(f"primary catalogue carries a variant-only key: {key}")
 
     messages = catalogue["messages"]
     for event in sidecar["events"]:
@@ -2738,7 +2798,7 @@ def verify(root: Path = ROOT) -> dict[str, Any]:
         connection.close()
     if flags != [("pay-16", None), ("pay-17", None)]:
         errors.append("variant deployment idempotency flags are not both NULL")
-    variant_text = json.dumps(variant_package, ensure_ascii=False) + json.dumps(variant_sidecar, ensure_ascii=False) + json.dumps(variant_catalogue, ensure_ascii=False)
+    variant_text = json.dumps(variant_package, ensure_ascii=False) + json.dumps(variant_declaration, ensure_ascii=False) + json.dumps(variant_sidecar, ensure_ascii=False) + json.dumps(variant_catalogue, ensure_ascii=False)
     for forbidden in (
         "config-pay-17",
         "idempotency_enabled=1",

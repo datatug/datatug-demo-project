@@ -34,7 +34,7 @@
       {
         "id": "mutated",
         "label": "Mutated prevention fixture with a different affected order",
-        "sha256": "a7ac06aaaadea5cc7b707672c85100f2d26ac655743b6e20acb17612ef47e4a1",
+        "sha256": "3018d0906fb53c4844f005714ad9d6cb11a9169ac176b373730aecb99f275651",
         "bytes": 20480,
         "runs": 1
       }

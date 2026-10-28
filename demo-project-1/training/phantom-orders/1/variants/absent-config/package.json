@@ -16,8 +16,8 @@
       "kind": "challenge-manifest",
       "mediaType": "application/json",
       "path": "training/phantom-orders/1/variants/absent-config/challenges/root-cause.json",
-      "sha256": "24269bd157ccb36a3bb20dab062cf6eb9cd85670c00af1475f4526c2e74bfd09",
-      "bytes": 8004
+      "sha256": "4b476de3812d40d265c647373e945b5877b607471154a750d19ca8d169d1e24c",
+      "bytes": 8101
     },
     {
       "id": "trace-r2",

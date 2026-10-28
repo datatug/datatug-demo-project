@@ -8,19 +8,19 @@
     "id": "phantom-orders",
     "revision": 1,
     "path": "training/phantom-orders/1/package.json",
-    "sha256": "37ee91f02a8faf3e6f24debe9a74d0059866f79210f5887aed362a846bae9fb5",
+    "sha256": "f999a2b90d9f0d9aa236c5c79711a25b2898681a4c6deaa413f3c81751d327e3",
     "bytes": 25729
   },
   "narrative": {
     "path": "walkthroughs/phantom-orders/narrative.json",
-    "sha256": "960c5ee1512da1040a96c31791f2f39d356cb1d734039207a7c145091bbbc552",
+    "sha256": "eaf37adee0f878f0d406bc9d182d2660b4fd581ddf2ef84d2b8406f72acc9c7f",
     "bytes": 22289
   },
   "chapters": [
     {
       "id": "duplicate-payments",
       "title": "Find duplicate successful payments",
-      "why": "Training chapter find duplicate successful payments.",
+      "why": "Establish which orders were charged more than once, counting successful charges only.",
       "steps": [
         {
           "id": "duplicate-payments-case",
@@ -37,7 +37,7 @@
               "id": "phantom-orders",
               "revision": 1,
               "path": "training/phantom-orders/1/package.json",
-              "sha256": "37ee91f02a8faf3e6f24debe9a74d0059866f79210f5887aed362a846bae9fb5",
+              "sha256": "f999a2b90d9f0d9aa236c5c79711a25b2898681a4c6deaa413f3c81751d327e3",
               "bytes": 25729
             }
           },
@@ -86,7 +86,7 @@
     {
       "id": "payment-impact",
       "title": "Connect payments and orders",
-      "why": "Training chapter connect payments and orders.",
+      "why": "Turn duplicate payments into the customer cohort and excess amount support must explain.",
       "steps": [
         {
           "id": "payment-impact-case",
@@ -103,7 +103,7 @@
               "id": "phantom-orders",
               "revision": 1,
               "path": "training/phantom-orders/1/package.json",
-              "sha256": "37ee91f02a8faf3e6f24debe9a74d0059866f79210f5887aed362a846bae9fb5",
+              "sha256": "f999a2b90d9f0d9aa236c5c79711a25b2898681a4c6deaa413f3c81751d327e3",
               "bytes": 25729
             }
           },
@@ -152,7 +152,7 @@
     {
       "id": "failure-window",
       "title": "Find when the bug began",
-      "why": "Training chapter find when the bug began.",
+      "why": "Narrow when the duplicate charges began without confusing first observation with proof of cause.",
       "steps": [
         {
           "id": "failure-window-case",
@@ -169,7 +169,7 @@
               "id": "phantom-orders",
               "revision": 1,
               "path": "training/phantom-orders/1/package.json",
-              "sha256": "37ee91f02a8faf3e6f24debe9a74d0059866f79210f5887aed362a846bae9fb5",
+              "sha256": "f999a2b90d9f0d9aa236c5c79711a25b2898681a4c6deaa413f3c81751d327e3",
               "bytes": 25729
             }
           },
@@ -218,7 +218,7 @@
     {
       "id": "retry-evidence",
       "title": "Investigate retries and logs",
-      "why": "Training chapter investigate retries and logs.",
+      "why": "Tie each duplicate charge to its retried request and separate it from a harmless recovered failure.",
       "steps": [
         {
           "id": "retry-evidence-case",
@@ -235,7 +235,7 @@
               "id": "phantom-orders",
               "revision": 1,
               "path": "training/phantom-orders/1/package.json",
-              "sha256": "37ee91f02a8faf3e6f24debe9a74d0059866f79210f5887aed362a846bae9fb5",
+              "sha256": "f999a2b90d9f0d9aa236c5c79711a25b2898681a4c6deaa413f3c81751d327e3",
               "bytes": 25729
             }
           },
@@ -284,7 +284,7 @@
     {
       "id": "root-cause",
       "title": "Prove the root cause",
-      "why": "Training chapter prove the root cause.",
+      "why": "Decide whether the evidence proves a causal defect or only correlation, and state what would refute it.",
       "steps": [
         {
           "id": "root-cause-case",
@@ -301,7 +301,7 @@
               "id": "phantom-orders",
               "revision": 1,
               "path": "training/phantom-orders/1/package.json",
-              "sha256": "37ee91f02a8faf3e6f24debe9a74d0059866f79210f5887aed362a846bae9fb5",
+              "sha256": "f999a2b90d9f0d9aa236c5c79711a25b2898681a4c6deaa413f3c81751d327e3",
               "bytes": 25729
             }
           },
@@ -350,7 +350,7 @@
     {
       "id": "prevention",
       "title": "Prevent recurrence",
-      "why": "Training chapter prevent recurrence.",
+      "why": "Make recurrence detection repeatable and leave any production monitor as an unactivated proposal.",
       "steps": [
         {
           "id": "prevention-case",
@@ -367,7 +367,7 @@
               "id": "phantom-orders",
               "revision": 1,
               "path": "training/phantom-orders/1/package.json",
-              "sha256": "37ee91f02a8faf3e6f24debe9a74d0059866f79210f5887aed362a846bae9fb5",
+              "sha256": "f999a2b90d9f0d9aa236c5c79711a25b2898681a4c6deaa413f3c81751d327e3",
               "bytes": 25729
             }
           },

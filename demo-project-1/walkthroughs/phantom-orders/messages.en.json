@@ -7,15 +7,15 @@
     "ch1.maya.context": "First count successful payments per order. Failed attempts must not count as charges.",
     "ch1.daniel.context": "A retry is not automatically a duplicate. Some retries recover failed payments.",
     "ch1.incidentius.open": "Training case DC-001 opened: identify duplicate successful payments.",
-    "ch1.maya.success": "Orders 1002 and 1004 each have two successful charges. Now quantify the customer impact.",
+    "ch1.maya.success": "In the supplied base incident snapshot, orders 1002 and 1004 each have two successful charges. Now quantify the customer impact.",
     "ch2.sarah.context": "Support needs affected customers and excess charges, not just payment IDs.",
     "ch2.maya.context": "Join the successful payment totals to orders. Preserve one result row per affected order.",
     "ch2.daniel.context": "The refunded event is a distractor here. This task measures duplicate successful charges before remediation.",
-    "ch2.sarah.success": "That gives support a precise cohort and 11000 cents of duplicate charges.",
+    "ch2.sarah.success": "In the supplied base incident snapshot, that gives support a precise cohort and 11000 cents of duplicate charges.",
     "ch3.maya.context": "When did the data first demonstrate a second successful charge?",
     "ch3.daniel.context": "Use the second success for each order. A first charge can be entirely valid.",
     "ch3.sarah.context": "Please distinguish the earliest observation from the exact moment the defect was introduced.",
-    "ch3.daniel.success": "The first observed duplicate is at 10:01:03. That narrows the search, but does not prove a deployment caused it.",
+    "ch3.daniel.success": "In the supplied base incident snapshot, the first observed duplicate is at 10:01:03. That narrows the search, but does not prove a deployment caused it.",
     "ch4.daniel.context": "The provider accepted a2, then our handler timed out. a3 retried the same request.",
     "ch4.maya.context": "Find the second affected request and compare it with a harmless retry.",
     "ch4.sarah.context": "Keep the request IDs with the evidence so another person can reproduce this conclusion.",
@@ -30,10 +30,6 @@
     "ch6.incidentius.proposal": "Training recommendation recorded for watch-proposal; it stays disabled and unscheduled.",
     "ch6.maya.success": "The Check detects recurrence in our fixtures. The Watch remains a proposal for a separately authorized owner.",
     "ch6.synthetic": "Synthetic validation only; no production Watch is enrolled.",
-    "ch6.postmortem": "Postmortem cites config-pay-17, trace-r2 and trace-r4; verified broken to fail, repaired to pass, mutated to fail.",
-    "absent.daniel.missing": "We have no reviewed configuration diff for pay-17 yet. We can compare timestamps and retries, but the cause is still unconfirmed.",
-    "absent.daniel.success": "Correct: the retries and timestamps narrow the investigation, but we need the reviewed configuration diff before confirming the cause.",
-    "absent.maya.context": "Name the uncertainty rather than a cause; select only the duplicate request traces.",
-    "absent.sarah.context": "Can we explain this to customers without guessing?"
+    "ch6.postmortem": "Postmortem cites config-pay-17, trace-r2 and trace-r4; verified broken to fail, repaired to pass, mutated to fail."
   }
 }

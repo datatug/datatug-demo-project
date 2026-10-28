@@ -64,7 +64,7 @@
       "kind": "challenge-fixture",
       "mediaType": "application/vnd.sqlite3",
       "path": "training/phantom-orders/1/fixtures/mutated.db",
-      "sha256": "a7ac06aaaadea5cc7b707672c85100f2d26ac655743b6e20acb17612ef47e4a1",
+      "sha256": "3018d0906fb53c4844f005714ad9d6cb11a9169ac176b373730aecb99f275651",
       "bytes": 20480
     },
     {
@@ -112,7 +112,7 @@
       "kind": "challenge-manifest",
       "mediaType": "application/json",
       "path": "training/phantom-orders/1/challenges/prevention.json",
-      "sha256": "3b11f6257b7dfaf27457e73af281029a364a93ef6f2283513a070991debcc031",
+      "sha256": "d1b68d5aab3263d1e1520a6e110c80f650c07548639a93f09755eb23e7bb2428",
       "bytes": 8342
     },
     {

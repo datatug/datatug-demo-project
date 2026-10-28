@@ -8,12 +8,12 @@
     "id": "phantom-orders-absent-config",
     "revision": 1,
     "path": "training/phantom-orders/1/variants/absent-config/package.json",
-    "sha256": "828baa28e1073bee30987fb7e6b114975d02c258ec3f18899ba138a015ecd44c",
+    "sha256": "c5dff61c1963304a95f7f7090cbc55203e0027054b05551ee768efbe8729c5e9",
     "bytes": 4202
   },
   "narrative": {
     "path": "training/phantom-orders/1/variants/absent-config/narrative.json",
-    "sha256": "cbacf0156ec993900ec71f40ce49d8cc91bb1a74d6a0b1c9a0298e7ac9740c6d",
+    "sha256": "4de549f9efc0252beb2e2965fe9edd5581b0c9b20473716517323eae04b475d4",
     "bytes": 4025
   },
   "chapters": [
@@ -37,12 +37,28 @@
               "id": "phantom-orders-absent-config",
               "revision": 1,
               "path": "training/phantom-orders/1/variants/absent-config/package.json",
-              "sha256": "828baa28e1073bee30987fb7e6b114975d02c258ec3f18899ba138a015ecd44c",
+              "sha256": "c5dff61c1963304a95f7f7090cbc55203e0027054b05551ee768efbe8729c5e9",
               "bytes": 4202
             }
           },
           "done": {
             "kind": "route-reached"
+          }
+        },
+        {
+          "id": "root-cause-debrief",
+          "kind": "scripted-dialogue",
+          "segmentId": "root-cause-debrief",
+          "title": "Debrief the uncertainty",
+          "why": "Read the missing-configuration context and wait for a validated pass.",
+          "modes": [
+            "guided"
+          ],
+          "target": {
+            "kind": "none"
+          },
+          "done": {
+            "kind": "dialogue-finished"
           }
         },
         {
@@ -63,22 +79,6 @@
                 "completion": "whole-challenge"
               }
             ]
-          }
-        },
-        {
-          "id": "root-cause-debrief",
-          "kind": "scripted-dialogue",
-          "segmentId": "root-cause-debrief",
-          "title": "Debrief the uncertainty",
-          "why": "Read the missing-configuration context and wait for a validated pass.",
-          "modes": [
-            "guided"
-          ],
-          "target": {
-            "kind": "none"
-          },
-          "done": {
-            "kind": "dialogue-finished"
           }
         }
       ]

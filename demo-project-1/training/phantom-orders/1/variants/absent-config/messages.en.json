@@ -4,7 +4,7 @@
   "messages": {
     "context.supplied": "Supplied fictional context only; earlier training cases are not marked complete.",
     "absent.daniel.missing": "We have no reviewed configuration diff for pay-17 yet. We can compare timestamps and retries, but the cause is still unconfirmed.",
-    "absent.maya.context": "Name the uncertainty rather than a cause; select only the duplicate request traces.",
+    "absent.maya.context": "Does that explanation account for both affected requests, and what would refute it?",
     "absent.sarah.context": "Can we explain this to customers without guessing?",
     "absent.daniel.success": "Correct: the retries and timestamps narrow the investigation, but we need the reviewed configuration diff before confirming the cause."
   }
