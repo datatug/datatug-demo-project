@@ -19,6 +19,16 @@ you, using public data and nothing to install.
   <br><sub>The project's Customer card on datatug.app, signed out: order 11045 has no shipped date.</sub>
 </p>
 
+## Explore the graphs
+
+[Open project graph in CodeGrapher](https://codegrapher.dev/datatug?source=https%3A%2F%2Fraw.githubusercontent.com%2Fdatatug%2Fdatatug-demo-project%2Faa9861dcaa8d97505998a519e7e889bd3644794f%2Fdemo-project-1%2Fgraphs%2Fproject-graph.c5bd5bd0eeedbfc8fd7863429bce540f7b5962d889faae772611a8bfe322dc2e.json&sha256=c5bd5bd0eeedbfc8fd7863429bce540f7b5962d889faae772611a8bfe322dc2e)
+
+[Open stored Chinook schema graph in CodeGrapher](https://codegrapher.dev/datatug?source=https%3A%2F%2Fraw.githubusercontent.com%2Fdatatug%2Fdatatug-demo-project%2Faa9861dcaa8d97505998a519e7e889bd3644794f%2Fdemo-project-1%2Fgraphs%2Fdatabase-graph.000817a072ef95e7285d8ff9139179036203981967e336745197a02fc983a4f5.json&sha256=000817a072ef95e7285d8ff9139179036203981967e336745197a02fc983a4f5)
+
+These public snapshots show declared project relationships and the stored Chinook schema.
+CodeGrapher shows their project revision and generation time; a stored schema is not a live database observation.
+Select an asset to return to its exact DataTug context.
+
 ## Watch
 
 <table>
