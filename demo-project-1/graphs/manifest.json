@@ -3,8 +3,8 @@
   "snapshots": [
     {
       "kind": "project",
-      "path": "demo-project-1/graphs/project-graph.fffa429afea86c64dbfca293f3e0d0288124ffba17851df32089579daaca17ae.json",
-      "sha256": "fffa429afea86c64dbfca293f3e0d0288124ffba17851df32089579daaca17ae"
+      "path": "demo-project-1/graphs/project-graph.c5bd5bd0eeedbfc8fd7863429bce540f7b5962d889faae772611a8bfe322dc2e.json",
+      "sha256": "c5bd5bd0eeedbfc8fd7863429bce540f7b5962d889faae772611a8bfe322dc2e"
     },
     {
       "kind": "database",

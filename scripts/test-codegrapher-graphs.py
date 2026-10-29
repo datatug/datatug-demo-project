@@ -4,6 +4,7 @@ import hashlib
 import json
 import pathlib
 import unittest
+import urllib.parse
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 
@@ -28,6 +29,10 @@ class GraphSnapshots(unittest.TestCase):
                 if 'href' in node:
                     self.assertTrue(node['href'].startswith('https://datatug.app/'))
                     self.assertIn('ref=' + graph['project']['revision'], node['href'])
+                    if node['kind'] == 'query':
+                        self.assertEqual(urllib.parse.parse_qs(urllib.parse.urlparse(node['href']).query)['id'], [json.loads(node['id'])[-1]])
+                    if node['kind'] == 'entity':
+                        self.assertIn('/-/entity/', node['href'])
             if graph['kind'] == 'database':
                 self.assertEqual(len([n for n in graph['nodes'] if n['kind'] == 'table']), 11)
                 self.assertTrue(any(e['kind'] == 'binding' for e in graph['edges']))
