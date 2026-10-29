@@ -1,0 +1,391 @@
+{
+  "version": 1,
+  "source": {
+    "repository": "https://github.com/demo-db/chinook",
+    "revision": "f066aa00672794a7b99621588a6954594098a53b",
+    "path": "model/chinook.meaning.yaml",
+    "license": "CC0-1.0"
+  },
+  "meanings": [
+    {
+      "id": "artist",
+      "label": "Artist",
+      "definition": {
+        "href": "https://github.com/demo-db/chinook/blob/f066aa00672794a7b99621588a6954594098a53b/model/chinook.meaning.yaml",
+        "revision": "f066aa00672794a7b99621588a6954594098a53b"
+      },
+      "bindings": [
+        {
+          "schema": "main",
+          "table": "Artist"
+        },
+        {
+          "schema": "main",
+          "table": "Artist",
+          "column": "ArtistId"
+        },
+        {
+          "schema": "main",
+          "table": "Artist",
+          "column": "Name"
+        },
+        {
+          "schema": "main",
+          "table": "Album",
+          "column": "ArtistId"
+        }
+      ]
+    },
+    {
+      "id": "album",
+      "label": "Album",
+      "definition": {
+        "href": "https://github.com/demo-db/chinook/blob/f066aa00672794a7b99621588a6954594098a53b/model/chinook.meaning.yaml",
+        "revision": "f066aa00672794a7b99621588a6954594098a53b"
+      },
+      "bindings": [
+        {
+          "schema": "main",
+          "table": "Album"
+        },
+        {
+          "schema": "main",
+          "table": "Album",
+          "column": "Title"
+        },
+        {
+          "schema": "main",
+          "table": "Track",
+          "column": "AlbumId"
+        }
+      ]
+    },
+    {
+      "id": "track",
+      "label": "Track",
+      "definition": {
+        "href": "https://github.com/demo-db/chinook/blob/f066aa00672794a7b99621588a6954594098a53b/model/chinook.meaning.yaml",
+        "revision": "f066aa00672794a7b99621588a6954594098a53b"
+      },
+      "bindings": [
+        {
+          "schema": "main",
+          "table": "Track"
+        },
+        {
+          "schema": "main",
+          "table": "Track",
+          "column": "Name"
+        },
+        {
+          "schema": "main",
+          "table": "InvoiceLine",
+          "column": "TrackId"
+        }
+      ]
+    },
+    {
+      "id": "track-length",
+      "label": "Track length",
+      "definition": {
+        "href": "https://github.com/demo-db/chinook/blob/f066aa00672794a7b99621588a6954594098a53b/model/chinook.meaning.yaml",
+        "revision": "f066aa00672794a7b99621588a6954594098a53b"
+      },
+      "bindings": [
+        {
+          "schema": "main",
+          "table": "Track",
+          "column": "Milliseconds"
+        }
+      ]
+    },
+    {
+      "id": "list-price",
+      "label": "List price",
+      "definition": {
+        "href": "https://github.com/demo-db/chinook/blob/f066aa00672794a7b99621588a6954594098a53b/model/chinook.meaning.yaml",
+        "revision": "f066aa00672794a7b99621588a6954594098a53b"
+      },
+      "bindings": [
+        {
+          "schema": "main",
+          "table": "Track",
+          "column": "UnitPrice"
+        }
+      ]
+    },
+    {
+      "id": "genre",
+      "label": "Genre",
+      "definition": {
+        "href": "https://github.com/demo-db/chinook/blob/f066aa00672794a7b99621588a6954594098a53b/model/chinook.meaning.yaml",
+        "revision": "f066aa00672794a7b99621588a6954594098a53b"
+      },
+      "bindings": [
+        {
+          "schema": "main",
+          "table": "Genre"
+        },
+        {
+          "schema": "main",
+          "table": "Genre",
+          "column": "Name"
+        },
+        {
+          "schema": "main",
+          "table": "Track",
+          "column": "GenreId"
+        }
+      ]
+    },
+    {
+      "id": "media-type",
+      "label": "Media type",
+      "definition": {
+        "href": "https://github.com/demo-db/chinook/blob/f066aa00672794a7b99621588a6954594098a53b/model/chinook.meaning.yaml",
+        "revision": "f066aa00672794a7b99621588a6954594098a53b"
+      },
+      "bindings": [
+        {
+          "schema": "main",
+          "table": "MediaType"
+        },
+        {
+          "schema": "main",
+          "table": "MediaType",
+          "column": "Name"
+        },
+        {
+          "schema": "main",
+          "table": "Track",
+          "column": "MediaTypeId"
+        }
+      ]
+    },
+    {
+      "id": "playlist",
+      "label": "Playlist",
+      "definition": {
+        "href": "https://github.com/demo-db/chinook/blob/f066aa00672794a7b99621588a6954594098a53b/model/chinook.meaning.yaml",
+        "revision": "f066aa00672794a7b99621588a6954594098a53b"
+      },
+      "bindings": [
+        {
+          "schema": "main",
+          "table": "Playlist"
+        },
+        {
+          "schema": "main",
+          "table": "Playlist",
+          "column": "Name"
+        },
+        {
+          "schema": "main",
+          "table": "PlaylistTrack",
+          "column": "PlaylistId"
+        }
+      ]
+    },
+    {
+      "id": "customer",
+      "label": "Customer",
+      "definition": {
+        "href": "https://github.com/demo-db/chinook/blob/f066aa00672794a7b99621588a6954594098a53b/model/chinook.meaning.yaml",
+        "revision": "f066aa00672794a7b99621588a6954594098a53b"
+      },
+      "bindings": [
+        {
+          "schema": "main",
+          "table": "Customer"
+        },
+        {
+          "schema": "main",
+          "table": "Invoice",
+          "column": "CustomerId"
+        }
+      ]
+    },
+    {
+      "id": "customer-country",
+      "label": "Customer country",
+      "definition": {
+        "href": "https://github.com/demo-db/chinook/blob/f066aa00672794a7b99621588a6954594098a53b/model/chinook.meaning.yaml",
+        "revision": "f066aa00672794a7b99621588a6954594098a53b"
+      },
+      "bindings": [
+        {
+          "schema": "main",
+          "table": "Customer",
+          "column": "Country"
+        }
+      ]
+    },
+    {
+      "id": "employee",
+      "label": "Employee",
+      "definition": {
+        "href": "https://github.com/demo-db/chinook/blob/f066aa00672794a7b99621588a6954594098a53b/model/chinook.meaning.yaml",
+        "revision": "f066aa00672794a7b99621588a6954594098a53b"
+      },
+      "bindings": [
+        {
+          "schema": "main",
+          "table": "Employee"
+        }
+      ]
+    },
+    {
+      "id": "manager",
+      "label": "Manager",
+      "definition": {
+        "href": "https://github.com/demo-db/chinook/blob/f066aa00672794a7b99621588a6954594098a53b/model/chinook.meaning.yaml",
+        "revision": "f066aa00672794a7b99621588a6954594098a53b"
+      },
+      "bindings": [
+        {
+          "schema": "main",
+          "table": "Employee",
+          "column": "ReportsTo"
+        }
+      ]
+    },
+    {
+      "id": "support-rep",
+      "label": "Support representative",
+      "definition": {
+        "href": "https://github.com/demo-db/chinook/blob/f066aa00672794a7b99621588a6954594098a53b/model/chinook.meaning.yaml",
+        "revision": "f066aa00672794a7b99621588a6954594098a53b"
+      },
+      "bindings": [
+        {
+          "schema": "main",
+          "table": "Customer",
+          "column": "SupportRepId"
+        }
+      ]
+    },
+    {
+      "id": "invoice",
+      "label": "Invoice",
+      "definition": {
+        "href": "https://github.com/demo-db/chinook/blob/f066aa00672794a7b99621588a6954594098a53b/model/chinook.meaning.yaml",
+        "revision": "f066aa00672794a7b99621588a6954594098a53b"
+      },
+      "bindings": [
+        {
+          "schema": "main",
+          "table": "Invoice"
+        },
+        {
+          "schema": "main",
+          "table": "InvoiceLine",
+          "column": "InvoiceId"
+        }
+      ]
+    },
+    {
+      "id": "invoice-date",
+      "label": "Invoice date",
+      "definition": {
+        "href": "https://github.com/demo-db/chinook/blob/f066aa00672794a7b99621588a6954594098a53b/model/chinook.meaning.yaml",
+        "revision": "f066aa00672794a7b99621588a6954594098a53b"
+      },
+      "bindings": [
+        {
+          "schema": "main",
+          "table": "Invoice",
+          "column": "InvoiceDate"
+        }
+      ]
+    },
+    {
+      "id": "billing-country",
+      "label": "Country",
+      "definition": {
+        "href": "https://github.com/demo-db/chinook/blob/f066aa00672794a7b99621588a6954594098a53b/model/chinook.meaning.yaml",
+        "revision": "f066aa00672794a7b99621588a6954594098a53b"
+      },
+      "bindings": [
+        {
+          "schema": "main",
+          "table": "Invoice",
+          "column": "BillingCountry"
+        }
+      ]
+    },
+    {
+      "id": "invoice-line",
+      "label": "Invoice line",
+      "definition": {
+        "href": "https://github.com/demo-db/chinook/blob/f066aa00672794a7b99621588a6954594098a53b/model/chinook.meaning.yaml",
+        "revision": "f066aa00672794a7b99621588a6954594098a53b"
+      },
+      "bindings": [
+        {
+          "schema": "main",
+          "table": "InvoiceLine"
+        }
+      ]
+    },
+    {
+      "id": "invoice-total",
+      "label": "Invoice total",
+      "definition": {
+        "href": "https://github.com/demo-db/chinook/blob/f066aa00672794a7b99621588a6954594098a53b/model/chinook.meaning.yaml",
+        "revision": "f066aa00672794a7b99621588a6954594098a53b"
+      },
+      "bindings": [
+        {
+          "schema": "main",
+          "table": "Invoice",
+          "column": "Total"
+        }
+      ]
+    },
+    {
+      "id": "unit-price",
+      "label": "Unit price",
+      "definition": {
+        "href": "https://github.com/demo-db/chinook/blob/f066aa00672794a7b99621588a6954594098a53b/model/chinook.meaning.yaml",
+        "revision": "f066aa00672794a7b99621588a6954594098a53b"
+      },
+      "bindings": [
+        {
+          "schema": "main",
+          "table": "InvoiceLine",
+          "column": "UnitPrice"
+        }
+      ]
+    },
+    {
+      "id": "quantity",
+      "label": "Quantity",
+      "definition": {
+        "href": "https://github.com/demo-db/chinook/blob/f066aa00672794a7b99621588a6954594098a53b/model/chinook.meaning.yaml",
+        "revision": "f066aa00672794a7b99621588a6954594098a53b"
+      },
+      "bindings": [
+        {
+          "schema": "main",
+          "table": "InvoiceLine",
+          "column": "Quantity"
+        }
+      ]
+    },
+    {
+      "id": "music-sales",
+      "label": "Music sales",
+      "definition": {
+        "href": "https://github.com/demo-db/chinook/blob/f066aa00672794a7b99621588a6954594098a53b/model/chinook.meaning.yaml",
+        "revision": "f066aa00672794a7b99621588a6954594098a53b"
+      },
+      "bindings": [
+        {
+          "schema": "main",
+          "table": "Invoice",
+          "column": "Total"
+        }
+      ]
+    }
+  ]
+}

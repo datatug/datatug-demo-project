@@ -15,4 +15,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+      - name: Validate immutable CodeGrapher snapshots
+        run: python3 scripts/test-codegrapher-graphs.py
       - uses: datatug/datatug-action@v0.0.1
