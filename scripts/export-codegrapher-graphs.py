@@ -54,10 +54,10 @@ def export(revision, generated_at):
     nodes = [{'id': identity(scope, 'project'), 'kind': 'project', 'label': summary['title'], 'href': href()}]
     edges, references, diagnostics = [], [], []
     queries = {}
-    def asset(kind, key, label, page):
+    def asset(kind, key, label, page, query=None):
         node = {'id': identity(scope, kind, key), 'kind': kind, 'label': label}
         if page is not None:
-            node['href'] = href(*page)
+            node['href'] = href(*page, **(query or {}))
         if any(n['id'] == node['id'] for n in nodes):
             return node['id']
         nodes.append(node)
@@ -85,7 +85,7 @@ def export(revision, generated_at):
         elif rel.startswith('queries/') and rel.endswith('.query.json'):
             value = read(path)
             key = rel[len('queries/'):-len('.query.json')]
-            source = asset('query', key, value.get('title', key), ['query', *key.split('/')])
+            source = asset('query', key, value.get('title', key), ['query', *key.split('/')], {'id': key})
             queries[key] = (value, path)
             if value.get('connectionId'):
                 references.append((source, 'source', value['connectionId']))
@@ -102,13 +102,13 @@ def export(revision, generated_at):
         elif rel.startswith('entities/') and rel.count('/') == 2 and rel.endswith('.entity.json'):
             value = read(path)
             key = rel.split('/')[1]
-            asset('entity', key, value.get('title', key), ['meanings'])
+            asset('entity', key, value.get('title', key), ['entity', key])
     meaning_path = 'demo.meaning.yaml'
     try:
         meanings = yaml.safe_load(git('show', revision + ':' + meaning_path))
         for concept in meanings.get('concepts', []):
             key = concept['id']
-            asset('meaning', key, concept.get('labels', {}).get('en', key), ['meanings'])
+            asset('meaning', key, concept.get('labels', {}).get('en', key), None)
             nodes[-1]['definition'] = {'href': 'https://github.com/datatug/datatug-demo-project/blob/' + revision + '/' + meaning_path, 'revision': revision}
         uses_path = FOLDER + '/datatug-meaning-uses.json'
         uses = read(uses_path).get('bindings', []) if uses_path in paths else []
