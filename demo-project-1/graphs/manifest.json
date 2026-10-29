@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "snapshots": [
+    {
+      "kind": "project",
+      "path": "demo-project-1/graphs/project-graph.fffa429afea86c64dbfca293f3e0d0288124ffba17851df32089579daaca17ae.json",
+      "sha256": "fffa429afea86c64dbfca293f3e0d0288124ffba17851df32089579daaca17ae"
+    },
+    {
+      "kind": "database",
+      "path": "demo-project-1/graphs/database-graph.000817a072ef95e7285d8ff9139179036203981967e336745197a02fc983a4f5.json",
+      "sha256": "000817a072ef95e7285d8ff9139179036203981967e336745197a02fc983a4f5"
+    }
+  ]
+}

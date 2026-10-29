@@ -41,7 +41,8 @@
         }
       },
       "query": "ovdb-read",
-      "copy": "explicit-browser-import"
+      "copy": "explicit-browser-import",
+      "schemaMeanings": "graphs/chinook-meanings.json"
     },
     {
       "id": "chinook-postgresql",
