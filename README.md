@@ -36,6 +36,8 @@ you, using public data and nothing to install.
   </tr>
 </table>
 
+Русские версии фильмов: [datatug.app/ru/videos](https://datatug.app/ru/videos/)
+
 ## What you can do
 
 The story is told in acts. The first five need no account.
