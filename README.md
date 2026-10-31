@@ -19,6 +19,14 @@ you, using public data and nothing to install.
   <br><sub>The project's Customer card on datatug.app, signed out: order 11045 has no shipped date.</sub>
 </p>
 
+## Demo content version
+
+This repository's demo content version is `0.1.0`, declared by the root `version`
+field in [`demo-project-1/datatug-project.json`](demo-project-1/datatug-project.json).
+Cloud-copy provenance records this semantic content version alongside the exact
+source commit. The separate `dataModels.version` field versions the data-model
+schema, not the demo content release.
+
 ## Explore the graphs
 
 [Open project graph in CodeGrapher](https://codegrapher.dev/datatug?source=https%3A%2F%2Fraw.githubusercontent.com%2Fdatatug%2Fdatatug-demo-project%2Faa9861dcaa8d97505998a519e7e889bd3644794f%2Fdemo-project-1%2Fgraphs%2Fproject-graph.c5bd5bd0eeedbfc8fd7863429bce540f7b5962d889faae772611a8bfe322dc2e.json&sha256=c5bd5bd0eeedbfc8fd7863429bce540f7b5962d889faae772611a8bfe322dc2e)
