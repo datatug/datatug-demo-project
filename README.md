@@ -42,13 +42,13 @@ Select an asset to return to its exact DataTug context.
 <table>
   <tr>
     <td valign="top">
-      <a href="https://youtu.be/mBKmMAXO3z8"><img src="https://datatug.app/static/illustrations/overview-phantom-orders-poster-1280.webp" alt="The Phantom Orders — a data investigation (1:16)" width="420"></a><br>
-      ▶ <b><a href="https://youtu.be/mBKmMAXO3z8">The Phantom Orders — a data investigation (1:16)</a></b><br>
+      <a href="https://youtu.be/0wjvbZiiZNQ"><img src="https://datatug.app/static/illustrations/overview-phantom-orders-poster-1280.webp" alt="The Phantom Orders — a data investigation (1:16)" width="420"></a><br>
+      ▶ <b><a href="https://youtu.be/0wjvbZiiZNQ">The Phantom Orders — a data investigation (1:16)</a></b><br>
       A fictional training case in this repository — solve it yourself in the public demo.
     </td>
     <td valign="top">
-      <a href="https://youtu.be/_mla67RoPWY"><img src="https://datatug.app/static/illustrations/explainer-sales-per-capita-poster-1280.webp" alt="Where are we underselling? Sales per capita across three sources (1:30)" width="420"></a><br>
-      ▶ <b><a href="https://youtu.be/_mla67RoPWY">Where are we underselling? (1:30)</a></b><br>
+      <a href="https://youtu.be/ENjhplq2SQ0"><img src="https://datatug.app/static/illustrations/explainer-sales-per-capita-poster-1280.webp" alt="Where are we underselling? Sales per capita across three sources (1:30)" width="420"></a><br>
+      ▶ <b><a href="https://youtu.be/ENjhplq2SQ0">Where are we underselling? (1:30)</a></b><br>
       Uses this repository's saved query <code>sales/chinook-sales-per-capita</code>.
     </td>
   </tr>
